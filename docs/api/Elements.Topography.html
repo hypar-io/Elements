@@ -231,9 +231,6 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
       <a class="xref" href="Elements.MeshElement.html#Elements_MeshElement_Tessellate_Elements_Geometry_Mesh__Elements_Geometry_Transform_Elements_Geometry_Color_">MeshElement.Tessellate(Mesh, Transform, Color)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Bounds">GeometricElement.Bounds</a>
-    </div>
-    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
@@ -249,9 +246,6 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
     </div>
     <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_">GeometricElement.UpdateBoundsAndComputeSolid(Boolean)</a>
-    </div>
-    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -259,9 +253,6 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____">GeometricElement.Intersects(Plane, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
@@ -280,15 +271,6 @@ var topo = new Topography(Vector3.Origin, tileSize, elevations);
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -432,32 +414,6 @@ width and the length of the topography will be the same.</p>
         <td><span class="parametername">name</span></td>
         <td><p>The topography's name.</p>
 </td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Topography__ctor_" data-uid="Elements.Topography.#ctor*"></a>
-  <h4 id="Elements_Topography__ctor_Elements_Topography_" data-uid="Elements.Topography.#ctor(Elements.Topography)">Topography(Topography)</h4>
-  <div class="markdown level1 summary"><p>Construct a new Topography by duplicating another one.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Topography(Topography topography)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Topography.html">Topography</a></td>
-        <td><span class="parametername">topography</span></td>
-        <td></td>
       </tr>
     </tbody>
   </table>
@@ -827,38 +783,14 @@ corresponding edge of a target topography.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Topography_TopMesh_" data-uid="Elements.Topography.TopMesh*"></a>
-  <h4 id="Elements_Topography_TopMesh" data-uid="Elements.Topography.TopMesh">TopMesh()</h4>
-  <div class="markdown level1 summary"><p>Returns a new mesh that represents the top surface of this topography.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Mesh TopMesh()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Mesh.html">Mesh</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Topography_Trim_" data-uid="Elements.Topography.Trim*"></a>
-  <h4 id="Elements_Topography_Trim_Elements_Geometry_Profile_" data-uid="Elements.Topography.Trim(Elements.Geometry.Profile)">Trim(Profile)</h4>
+  <h4 id="Elements_Topography_Trim_Elements_Geometry_Polygon_" data-uid="Elements.Topography.Trim(Elements.Geometry.Polygon)">Trim(Polygon)</h4>
   <div class="markdown level1 summary"><p>Trim the topography with the specified perimeter.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Trim(Profile perimeter)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Trim(Polygon perimeter)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -871,63 +803,21 @@ corresponding edge of a target topography.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
         <td><span class="parametername">perimeter</span></td>
         <td><p>The perimeter of the trimmed topography.</p>
 </td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Topography_Trimmed_" data-uid="Elements.Topography.Trimmed*"></a>
-  <h4 id="Elements_Topography_Trimmed_Elements_Geometry_Profile_" data-uid="Elements.Topography.Trimmed(Elements.Geometry.Profile)">Trimmed(Profile)</h4>
-  <div class="markdown level1 summary"><p>Returns a new Topography that is a trimmed version of the current Topography.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Topography Trimmed(Profile perimeter)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
-        <td><span class="parametername">perimeter</span></td>
-        <td><p>The perimeter of the trimmed topography.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Topography.html">Topography</a></td>
-        <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Topography_Tunnel_" data-uid="Elements.Topography.Tunnel*"></a>
-  <h4 id="Elements_Topography_Tunnel_Elements_Geometry_BoundedCurve_System_Double_" data-uid="Elements.Topography.Tunnel(Elements.Geometry.BoundedCurve,System.Double)">Tunnel(BoundedCurve, Double)</h4>
+  <h4 id="Elements_Topography_Tunnel_Elements_Geometry_Curve_System_Double_" data-uid="Elements.Topography.Tunnel(Elements.Geometry.Curve,System.Double)">Tunnel(Curve, Double)</h4>
   <div class="markdown level1 summary"><p>Cut a tunnel through a topography.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Tunnel(BoundedCurve path, double diameter)</code></pre>
+    <pre><code class="lang-csharp hljs">public void Tunnel(Curve path, double diameter)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -940,7 +830,7 @@ corresponding edge of a target topography.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
         <td><span class="parametername">path</span></td>
         <td><p>The path of the tunnel.</p>
 </td>

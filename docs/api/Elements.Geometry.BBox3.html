@@ -621,60 +621,6 @@ equal to this bounding box within Epsilon?</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
-  <a id="Elements_Geometry_BBox3_Extend_" data-uid="Elements.Geometry.BBox3.Extend*"></a>
-  <h4 id="Elements_Geometry_BBox3_Extend_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Extend(Elements.Geometry.Vector3)">Extend(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Extend this bounding box to contain the specified point.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Extend(Vector3 point)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">point</span></td>
-        <td><p>The point to include in the bounding box.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_BBox3_Extend_" data-uid="Elements.Geometry.BBox3.Extend*"></a>
-  <h4 id="Elements_Geometry_BBox3_Extend_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.BBox3.Extend(Elements.Geometry.Vector3[])">Extend(Vector3[])</h4>
-  <div class="markdown level1 summary"><p>Extend this bound box to contain the specified points.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Extend(params Vector3[] points)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
-        <td><span class="parametername">points</span></td>
-        <td><p>The points to include in the bounding box.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Geometry_BBox3_GetHashCode_" data-uid="Elements.Geometry.BBox3.GetHashCode*"></a>
   <h4 id="Elements_Geometry_BBox3_GetHashCode" data-uid="Elements.Geometry.BBox3.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the bounding box.</p>
@@ -740,61 +686,6 @@ equal to this bounding box within Epsilon?</p>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if an intersection occurs, otherwise false.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_BBox3_Intersects_" data-uid="Elements.Geometry.BBox3.Intersects*"></a>
-  <h4 id="Elements_Geometry_BBox3_Intersects_Elements_Geometry_Plane_Elements_Geometry_RelationToPlane__Elements_Geometry_Transform_" data-uid="Elements.Geometry.BBox3.Intersects(Elements.Geometry.Plane,Elements.Geometry.RelationToPlane@,Elements.Geometry.Transform)">Intersects(Plane, out RelationToPlane, Transform)</h4>
-  <div class="markdown level1 summary"><p>Does the bounding box intersect the provided plane?</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Intersects(Plane plane, out RelationToPlane relationToPlane, Transform transform = null)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
-        <td><span class="parametername">plane</span></td>
-        <td><p>The plane.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.RelationToPlane.html">RelationToPlane</a></td>
-        <td><span class="parametername">relationToPlane</span></td>
-        <td><p>The relation of the bounding box to the plane.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>An optional transform of the bounding box to apply before intersection.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>True if the bounding box intersects, otherwise false.</p>
 </td>
       </tr>
     </tbody>

@@ -216,9 +216,9 @@ var f = new Vector3(5, 0, 5);
 var ctrlPts = new List&lt;Vector3&gt; { a, b, c, d, e, f };
 var bezier = new Bezier(ctrlPts);
 
-var lineModelCurve = new ModelCurve(line, new Material(&quot;Red&quot;, Colors.Red) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 5, DashMode = EdgeDisplayDashMode.WorldUnits, DashSize = 0.1 } });
+var lineModelCurve = new ModelCurve(line, new Material(&quot;Red&quot;, Colors.Red) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 5 } });
 var arcModelCurve = new ModelCurve(arc, new Material(&quot;Orange&quot;, Colors.Orange) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 0.1, WidthMode = EdgeDisplayWidthMode.WorldUnits } }, new Transform(5, 0, 0));
-var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Colors.Purple) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 10, WidthMode = EdgeDisplayWidthMode.ScreenUnits, DashMode = EdgeDisplayDashMode.ScreenUnits, DashSize = 10, GapSize = 4 } }, new Transform(10, 0, 0));
+var plineModelCurve = new ModelCurve(pline, new Material(&quot;Purple&quot;, Colors.Purple) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 10, WidthMode = EdgeDisplayWidthMode.ScreenUnits } }, new Transform(10, 0, 0));
 var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Colors.Green) { EdgeDisplaySettings = new EdgeDisplaySettings { LineWidth = 1, WidthMode = EdgeDisplayWidthMode.WorldUnits } }, new Transform(15, 0, 0));
 </code></pre>
   <div class="inheritance">
@@ -234,9 +234,6 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Bounds">GeometricElement.Bounds</a>
-    </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
@@ -256,9 +253,6 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateRepresentations">GeometricElement.UpdateRepresentations()</a>
     </div>
     <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_">GeometricElement.UpdateBoundsAndComputeSolid(Boolean)</a>
-    </div>
-    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -266,9 +260,6 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____">GeometricElement.Intersects(Plane, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -284,15 +275,6 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -325,13 +307,13 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_ModelCurve__ctor_" data-uid="Elements.ModelCurve.#ctor*"></a>
-  <h4 id="Elements_ModelCurve__ctor_Elements_Geometry_BoundedCurve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.ModelCurve.#ctor(Elements.Geometry.BoundedCurve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">ModelCurve(BoundedCurve, Material, Transform, Representation, Boolean, Guid, String)</h4>
+  <h4 id="Elements_ModelCurve__ctor_Elements_Geometry_Curve_Elements_Material_Elements_Geometry_Transform_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.ModelCurve.#ctor(Elements.Geometry.Curve,Elements.Material,Elements.Geometry.Transform,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">ModelCurve(Curve, Material, Transform, Representation, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Create a model curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ModelCurve(BoundedCurve curve, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public ModelCurve(Curve curve, Material material = null, Transform transform = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -344,7 +326,7 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
         <td><span class="parametername">curve</span></td>
         <td><p>The curve.</p>
 </td>
@@ -396,7 +378,7 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BoundedCurve Curve { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Curve Curve { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -408,7 +390,7 @@ var bezierModelCurve = new ModelCurve(bezier, new Material(&quot;Green&quot;, Co
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
         <td></td>
       </tr>
     </tbody>

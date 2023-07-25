@@ -86,8 +86,7 @@
   
   <h1 id="Elements_Geometry_Polyline" data-uid="Elements.Geometry.Polyline" class="text-break">Class Polyline
   </h1>
-  <div class="markdown level0 summary"><p>A continuous set of lines.
-Parameterization of the curve is 0-&gt;n-1 where n is the number of vertices.</p>
+  <div class="markdown level0 summary"><p>A continuous set of lines.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -210,93 +209,22 @@ var offset = pline.Offset(1, EndType.Square);
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
-    <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
-    <div class="level3"><a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a></div>
-    <div class="level4"><span class="xref">Polyline</span></div>
-      <div class="level5"><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></div>
+    <div class="level2"><span class="xref">Polyline</span></div>
+      <div class="level3"><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></div>
-    <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a>&gt;</div>
-    <div><span class="xref">System.Collections.IEnumerable</span></div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Start">IndexedPolycurve.Start</a>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_End">IndexedPolycurve.End</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_CurveIndices">IndexedPolycurve.CurveIndices</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Vertices">IndexedPolycurve.Vertices</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Bounds">IndexedPolycurve.Bounds()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_GetSubdivisionParameters_System_Double_System_Double_">IndexedPolycurve.GetSubdivisionParameters(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ArcLength_System_Double_System_Double_">IndexedPolycurve.ArcLength(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ParameterAtDistanceFromParameter_System_Double_System_Double_">IndexedPolycurve.ParameterAtDistanceFromParameter(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_PointAt_System_Double_">IndexedPolycurve.PointAt(Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_PointAtInternal_System_Double_System_Int32__">IndexedPolycurve.PointAtInternal(Double, Int32)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_TransformedPolycurve_Elements_Geometry_Transform_">IndexedPolycurve.TransformedPolycurve(Transform)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Equals_Elements_Geometry_IndexedPolycurve_">IndexedPolycurve.Equals(IndexedPolycurve)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ToString">IndexedPolycurve.ToString()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ToPolygon">IndexedPolycurve.ToPolygon()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ValidateVertices">IndexedPolycurve.ValidateVertices()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__">IndexedPolycurve.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_GetEnumerator">IndexedPolycurve.GetEnumerator()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_System_Collections_IEnumerable_GetEnumerator">IndexedPolycurve.IEnumerable.GetEnumerator()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_DefaultMinimumChordLength">BoundedCurve.DefaultMinimumChordLength</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Mid">BoundedCurve.Mid()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_IsClosedForRendering">BoundedCurve.IsClosedForRendering</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ToPolyline_System_Int32_">BoundedCurve.ToPolyline(Int32)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_PointAtNormalized_System_Double_">BoundedCurve.PointAtNormalized(Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_TransformAtNormalized_System_Double_">BoundedCurve.TransformAtNormalized(Double)</a>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -321,7 +249,7 @@ var offset = pline.Offset(1, EndType.Square);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polyline_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Polyline : IndexedPolycurve, ICurve, ITransformable&lt;Curve&gt;, IBoundedCurve, IEnumerable&lt;BoundedCurve&gt;, IEnumerable, IEquatable&lt;IndexedPolycurve&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Polyline : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Polyline&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -345,40 +273,6 @@ that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</co
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
-        <td><span class="parametername">vertices</span></td>
-        <td><p>The vertices of the polyline.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polyline__ctor_System_Boolean_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Polyline.#ctor(System.Boolean,Elements.Geometry.Vector3[])">Polyline(Boolean, Vector3[])</h4>
-  <div class="markdown level1 summary"><p>Construct a polyline from points. This is a convenience constructor
-that can be used like this: <code>new Polyline((0,0,0), (10,0,0), (10,10,0))</code></p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polyline(bool disableValidation, params Vector3[] vertices)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">disableValidation</span></td>
-        <td><p>Should self intersection testing be disabled?</p>
-</td>
-      </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
         <td><span class="parametername">vertices</span></td>
@@ -415,14 +309,121 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Polyline__ctor_" data-uid="Elements.Geometry.Polyline.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polyline__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Polyline.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Boolean)">Polyline(IList&lt;Vector3&gt;, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Construct a polyline.</p>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Geometry_Polyline_End_" data-uid="Elements.Geometry.Polyline.End*"></a>
+  <h4 id="Elements_Geometry_Polyline_End" data-uid="Elements.Geometry.Polyline.End">End</h4>
+  <div class="markdown level1 summary"><p>The end of the polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polyline(IList&lt;Vector3&gt; vertices, bool disableValidation = false)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 End { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Start_" data-uid="Elements.Geometry.Polyline.Start*"></a>
+  <h4 id="Elements_Geometry_Polyline_Start" data-uid="Elements.Geometry.Polyline.Start">Start</h4>
+  <div class="markdown level1 summary"><p>The start of the polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public Vector3 Start { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_Vertices_" data-uid="Elements.Geometry.Polyline.Vertices*"></a>
+  <h4 id="Elements_Geometry_Polyline_Vertices" data-uid="Elements.Geometry.Polyline.Vertices">Vertices</h4>
+  <div class="markdown level1 summary"><p>The vertices of the polygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Vertices&quot;, Required = Required.Always)]
+[Required]
+[MinLength(2)]
+public IList&lt;Vector3&gt; Vertices { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_Polyline_Bounds_" data-uid="Elements.Geometry.Polyline.Bounds*"></a>
+  <h4 id="Elements_Geometry_Polyline_Bounds" data-uid="Elements.Geometry.Polyline.Bounds">Bounds()</h4>
+  <div class="markdown level1 summary"><p>Get the bounding box for this curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override BBox3 Bounds()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
+  <a id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow*"></a>
+  <h4 id="Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polyline.CheckCoincidenceAndThrow(System.Collections.Generic.IList{Elements.Geometry.Vector3})">CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Check for coincident vertices in the supplied vertex collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void CheckCoincidenceAndThrow(IList&lt;Vector3&gt; vertices)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -437,48 +438,10 @@ public Polyline(IList&lt;Vector3&gt; vertices)</code></pre>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">vertices</span></td>
-        <td><p>A collection of vertex locations.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">disableValidation</span></td>
-        <td><p>Should self intersection testing be disabled?</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_Geometry_Polyline_Domain_" data-uid="Elements.Geometry.Polyline.Domain*"></a>
-  <h4 id="Elements_Geometry_Polyline_Domain" data-uid="Elements.Geometry.Polyline.Domain">Domain</h4>
-  <div class="markdown level1 summary"><p>The domain of the curve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public override Domain1d Domain { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Domain">IndexedPolycurve.Domain</a></div>
-  <h3 id="methods">Methods
-  </h3>
   <a id="Elements_Geometry_Polyline_CreateMiterTransform_" data-uid="Elements.Geometry.Polyline.CreateMiterTransform*"></a>
   <h4 id="Elements_Geometry_Polyline_CreateMiterTransform_System_Int32_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polyline.CreateMiterTransform(System.Int32,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">CreateMiterTransform(Int32, Vector3, Vector3)</h4>
   <div class="markdown level1 summary"><p>Generates a transform that expresses the plane of a miter join at a point on the curve.</p>
@@ -530,14 +493,14 @@ public override Domain1d Domain { get; }</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Polyline_Fillet_" data-uid="Elements.Geometry.Polyline.Fillet*"></a>
-  <h4 id="Elements_Geometry_Polyline_Fillet_System_Double_" data-uid="Elements.Geometry.Polyline.Fillet(System.Double)">Fillet(Double)</h4>
-  <div class="markdown level1 summary"><p>Fillet all corners on this polygon.</p>
+  <a id="Elements_Geometry_Polyline_Equals_" data-uid="Elements.Geometry.Polyline.Equals*"></a>
+  <h4 id="Elements_Geometry_Polyline_Equals_Elements_Geometry_Polyline_" data-uid="Elements.Geometry.Polyline.Equals(Elements.Geometry.Polyline)">Equals(Polyline)</h4>
+  <div class="markdown level1 summary"><p>Does this polyline equal the provided polyline?</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IndexedPolycurve Fillet(double radius)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Equals(Polyline other)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -545,146 +508,14 @@ public override Domain1d Domain { get; }</code></pre>
       <tr>
         <th>Type</th>
         <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">radius</span></td>
-        <td><p>The fillet radius.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a></td>
-        <td><p>A contour containing trimmed edge segments and fillets.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polyline_ForceAngleCompliance_" data-uid="Elements.Geometry.Polyline.ForceAngleCompliance*"></a>
-  <h4 id="Elements_Geometry_Polyline_ForceAngleCompliance_System_Collections_Generic_IEnumerable_System_Double__Elements_Geometry_Vector3_Elements_Geometry_NormalizationType_" data-uid="Elements.Geometry.Polyline.ForceAngleCompliance(System.Collections.Generic.IEnumerable{System.Double},Elements.Geometry.Vector3,Elements.Geometry.NormalizationType)">ForceAngleCompliance(IEnumerable&lt;Double&gt;, Vector3, NormalizationType)</h4>
-  <div class="markdown level1 summary"><p>Make the polyline correspond to the supported angles by moving the vertices slightly.
-The result polyline will have only allowed angles, but vertices positions can be changed.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polyline ForceAngleCompliance(IEnumerable&lt;double&gt; supportedAngles, Vector3 referenceVector, NormalizationType pathType = NormalizationType.Start)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
-        <td><span class="parametername">supportedAngles</span></td>
-        <td><p>List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">referenceVector</span></td>
-        <td><p>Vector to align first segment of polyline with.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.NormalizationType.html">NormalizationType</a></td>
-        <td><span class="parametername">pathType</span></td>
-        <td><p>The path type.
-For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:</p>
-<ul>
-<li>NormalizationType.Start: move B vertex</li>
-<li>NormalizationType.Middle: move both B and C vertices in approximately equivalent proportions</li>
-<li>NormalizationType.End : move C vertex</li>
-</ul>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
         <th>Description</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
-        <td><p>The result polyline that has only allowed angles.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polyline_ForceAngleCompliance_" data-uid="Elements.Geometry.Polyline.ForceAngleCompliance*"></a>
-  <h4 id="Elements_Geometry_Polyline_ForceAngleCompliance_System_Collections_Generic_IEnumerable_System_Double__Elements_Geometry_Vector3_System_Double__Elements_Geometry_NormalizationType_" data-uid="Elements.Geometry.Polyline.ForceAngleCompliance(System.Collections.Generic.IEnumerable{System.Double},Elements.Geometry.Vector3,System.Double@,Elements.Geometry.NormalizationType)">ForceAngleCompliance(IEnumerable&lt;Double&gt;, Vector3, out Double, NormalizationType)</h4>
-  <div class="markdown level1 summary"><p>Make the polyline correspond to the supported angles by moving the vertices slightly.
-The result polyline will have only allowed angles, but vertices positions can be changed.
-The first vertex is never moved.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polyline ForceAngleCompliance(IEnumerable&lt;double&gt; supportedAngles, Vector3 referenceVector, out double furthestDistancePointsMoved, NormalizationType pathType = NormalizationType.Start)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Double</span>&gt;</td>
-        <td><span class="parametername">supportedAngles</span></td>
-        <td><p>List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">referenceVector</span></td>
-        <td><p>Vector to align first segment of polyline with.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">furthestDistancePointsMoved</span></td>
-        <td><p>The furthest distance that any point moved.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.NormalizationType.html">NormalizationType</a></td>
-        <td><span class="parametername">pathType</span></td>
-        <td><p>The path type.
-For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:</p>
-<ul>
-<li>NormalizationType.Start: move B vertex</li>
-<li>NormalizationType.Middle: move both B and C vertices in approximately equivalent proportions</li>
-<li>NormalizationType.End : move C vertex</li>
-</ul>
-</td>
+        <td><span class="parametername">other</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -698,20 +529,19 @@ For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
-        <td><p>The result polyline that has only allowed angles.</p>
-</td>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polyline_Frames_" data-uid="Elements.Geometry.Polyline.Frames*"></a>
-  <h4 id="Elements_Geometry_Polyline_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Polyline.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Get a collection of Transforms which represent frames along this curve.</p>
+  <h4 id="Elements_Geometry_Polyline_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Polyline.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the transforms used to transform a Profile extruded along this Polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetbackDistance = 0, double endSetbackDistance = 0, double additionalRotation = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -725,21 +555,13 @@ For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">startSetbackDistance</span></td>
-        <td><p>The offset from the start of the ICurve.</p>
-</td>
+        <td><span class="parametername">startSetback</span></td>
+        <td></td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">endSetbackDistance</span></td>
-        <td><p>The offset from the end of the ICurve.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">additionalRotation</span></td>
-        <td><p>An additional rotation of the frame at each point.</p>
-</td>
+        <td><span class="parametername">endSetback</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -754,16 +576,15 @@ For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
-        <td><p>A collection of Transforms.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Frames_System_Double_System_Double_System_Double_">BoundedCurve.Frames(Double, Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a></div>
   <a id="Elements_Geometry_Polyline_GetParameterAt_" data-uid="Elements.Geometry.Polyline.GetParameterAt*"></a>
   <h4 id="Elements_Geometry_Polyline_GetParameterAt_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polyline.GetParameterAt(Elements.Geometry.Vector3)">GetParameterAt(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Find the parameter corresponding to a point along a polyline.</p>
+  <div class="markdown level1 summary"><p>Calculate U parameter for point on polyline</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -783,7 +604,7 @@ For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">point</span></td>
-        <td><p>A point.</p>
+        <td><p>Point on polyline</p>
 </td>
       </tr>
     </tbody>
@@ -799,7 +620,7 @@ For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>A parameter for the point along a polyline if the point is on the polyline. Otherwise, -1.</p>
+        <td><p>Returns U parameter for point on polyline</p>
 </td>
       </tr>
     </tbody>
@@ -988,7 +809,7 @@ For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Length">IndexedPolycurve.Length()</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
   <a id="Elements_Geometry_Polyline_NormalsAtVertices_" data-uid="Elements.Geometry.Polyline.NormalsAtVertices*"></a>
   <h4 id="Elements_Geometry_Polyline_NormalsAtVertices" data-uid="Elements.Geometry.Polyline.NormalsAtVertices">NormalsAtVertices()</h4>
   <div class="markdown level1 summary"><p>Get the normal of each vertex on the polyline.</p>
@@ -1165,51 +986,6 @@ do any self-intersection checking.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Polyline_OffsetWithAcuteAngle_" data-uid="Elements.Geometry.Polyline.OffsetWithAcuteAngle*"></a>
-  <h4 id="Elements_Geometry_Polyline_OffsetWithAcuteAngle_System_Double_" data-uid="Elements.Geometry.Polyline.OffsetWithAcuteAngle(System.Double)">OffsetWithAcuteAngle(Double)</h4>
-  <div class="markdown level1 summary"><p>Offset this polyline by the specified amount. The resulting polygon will have acute angles.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon[] OffsetWithAcuteAngle(double offset)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">offset</span></td>
-        <td><p>The amount to offset.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>[]</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 id="Elements_Geometry_Polyline_OffsetWithAcuteAngle_System_Double__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>This blunts sharp corners to keep widths close to the target.</p>
-</div>
   <a id="Elements_Geometry_Polyline_Plane_" data-uid="Elements.Geometry.Polyline.Plane*"></a>
   <h4 id="Elements_Geometry_Polyline_Plane" data-uid="Elements.Geometry.Polyline.Plane">Plane()</h4>
   <div class="markdown level1 summary"><p>Compute the Plane defined by the first three non-collinear vertices of the Polygon.</p>
@@ -1231,6 +1007,100 @@ do any self-intersection checking.</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
         <td><p>A Plane.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Polyline_PointAt_" data-uid="Elements.Geometry.Polyline.PointAt*"></a>
+  <h4 id="Elements_Geometry_Polyline_PointAt_System_Double_" data-uid="Elements.Geometry.Polyline.PointAt(System.Double)">PointAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get a point on the polygon at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 PointAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
+  <a id="Elements_Geometry_Polyline_PointAtInternal_" data-uid="Elements.Geometry.Polyline.PointAtInternal*"></a>
+  <h4 id="Elements_Geometry_Polyline_PointAtInternal_System_Double_System_Int32__" data-uid="Elements.Geometry.Polyline.PointAtInternal(System.Double,System.Int32@)">PointAtInternal(Double, out Int32)</h4>
+  <div class="markdown level1 summary"><p>Get a point on the polygon at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">segmentIndex</span></td>
+        <td><p>The index of the segment containing parameter u.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</p>
 </td>
       </tr>
     </tbody>
@@ -1304,7 +1174,7 @@ do any self-intersection checking.</p>
   </table>
   <a id="Elements_Geometry_Polyline_Segments_" data-uid="Elements.Geometry.Polyline.Segments*"></a>
   <h4 id="Elements_Geometry_Polyline_Segments" data-uid="Elements.Geometry.Polyline.Segments">Segments()</h4>
-  <div class="markdown level1 summary"><p>Get a collection a line segments which connect the vertices of this polyline.</p>
+  <div class="markdown level1 summary"><p>Get a collection a lines representing each segment of this polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1444,9 +1314,35 @@ of the polyline's segments.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polyline_ToString_" data-uid="Elements.Geometry.Polyline.ToString*"></a>
+  <h4 id="Elements_Geometry_Polyline_ToString" data-uid="Elements.Geometry.Polyline.ToString">ToString()</h4>
+  <div class="markdown level1 summary"><p>Get a string representation of this polyline.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ToString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><span class="xref">System.Object.ToString()</span></div>
   <a id="Elements_Geometry_Polyline_TransformAt_" data-uid="Elements.Geometry.Polyline.TransformAt*"></a>
   <h4 id="Elements_Geometry_Polyline_TransformAt_System_Double_" data-uid="Elements.Geometry.Polyline.TransformAt(System.Double)">TransformAt(Double)</h4>
-  <div class="markdown level1 summary"><p>Get the transform at the specified parameter along the polyline.</p>
+  <div class="markdown level1 summary"><p>Get the Transform at the specified parameter along the Polygon.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1466,7 +1362,7 @@ of the polyline's segments.</p>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>The parameter on the polygon between 0.0 and length.</p>
+        <td><p>The parameter on the Polygon between 0.0 and 1.0.</p>
 </td>
       </tr>
     </tbody>
@@ -1482,18 +1378,16 @@ of the polyline's segments.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><p>A transform with its Z axis aligned trangent to the polyline.</p>
+        <td><p>A Transform with its Z axis aligned trangent to the Polygon.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_TransformAt_System_Double_">IndexedPolycurve.TransformAt(Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
   <a id="Elements_Geometry_Polyline_Transformed_" data-uid="Elements.Geometry.Polyline.Transformed*"></a>
   <h4 id="Elements_Geometry_Polyline_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polyline.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
-  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
-Use of non-affine transforms (i.e. scale) will
-result in unpredictable results for curve methods such as Length().</p>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -1534,7 +1428,7 @@ result in unpredictable results for curve methods such as Length().</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Transformed_Elements_Geometry_Transform_">IndexedPolycurve.Transformed(Transform)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_">Curve.Transformed(Transform)</a></div>
   <a id="Elements_Geometry_Polyline_TransformedPolyline_" data-uid="Elements.Geometry.Polyline.TransformedPolyline*"></a>
   <h4 id="Elements_Geometry_Polyline_TransformedPolyline_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polyline.TransformedPolyline(Elements.Geometry.Transform)">TransformedPolyline(Transform)</h4>
   <div class="markdown level1 summary"><p>Construct a transformed copy of this Polyline.</p>
@@ -1622,21 +1516,21 @@ result in unpredictable results for curve methods such as Length().</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Polyline_ValidateVertices_" data-uid="Elements.Geometry.Polyline.ValidateVertices*"></a>
+  <h4 id="Elements_Geometry_Polyline_ValidateVertices" data-uid="Elements.Geometry.Polyline.ValidateVertices">ValidateVertices()</h4>
+  <div class="markdown level1 summary"><p>Clean up any duplicate vertices, and warn about any vertices that are too close to each other.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void ValidateVertices()</code></pre>
+  </div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a>
-  </div>
-  <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.IEnumerable</span>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

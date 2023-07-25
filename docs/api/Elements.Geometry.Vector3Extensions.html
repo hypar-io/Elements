@@ -217,13 +217,13 @@ public static bool AreCollinear(this IList&lt;Vector3&gt; points)</code></pre>
     </tbody>
   </table>
   <a id="Elements_Geometry_Vector3Extensions_AreCoplanar_" data-uid="Elements.Geometry.Vector3Extensions.AreCoplanar*"></a>
-  <h4 id="Elements_Geometry_Vector3Extensions_AreCoplanar_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Double_" data-uid="Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Double)">AreCoplanar(IList&lt;Vector3&gt;, Double)</h4>
-  <div class="markdown level1 summary"><p>Are the provided points on the same plane, within tolerance?</p>
+  <h4 id="Elements_Geometry_Vector3Extensions_AreCoplanar_System_Collections_Generic_IList_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.AreCoplanar(System.Collections.Generic.IList{Elements.Geometry.Vector3})">AreCoplanar(IList&lt;Vector3&gt;)</h4>
+  <div class="markdown level1 summary"><p>Are the provided points on the same plane?</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool AreCoplanar(this IList&lt;Vector3&gt; points, double tolerance = 1E-05)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool AreCoplanar(this IList&lt;Vector3&gt; points)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -238,14 +238,7 @@ public static bool AreCollinear(this IList&lt;Vector3&gt; points)</code></pre>
       <tr>
         <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
         <td><span class="parametername">points</span></td>
-        <td><p>The points to test.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">tolerance</span></td>
-        <td><p>Acceptable deviation from the plane while still being considered coplanar.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -264,12 +257,6 @@ public static bool AreCollinear(this IList&lt;Vector3&gt; points)</code></pre>
       </tr>
     </tbody>
   </table>
-  <h5 id="Elements_Geometry_Vector3Extensions_AreCoplanar_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Double__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>This method uses the first three non-collinear points to define the
-plane, rather than a best-fit plane. We may return a false negative
-in the case that there is a different best-fit plane that is within
-tolerance of all points.</p>
-</div>
   <a id="Elements_Geometry_Vector3Extensions_Average_" data-uid="Elements.Geometry.Vector3Extensions.Average*"></a>
   <h4 id="Elements_Geometry_Vector3Extensions_Average_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Vector3Extensions.Average(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">Average(IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Find the average of a collection of Vector3.</p>
@@ -577,115 +564,6 @@ points[1]-&gt;points[0].</p>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Vector3Extensions_TryGetThreeNonCollinearPoints_" data-uid="Elements.Geometry.Vector3Extensions.TryGetThreeNonCollinearPoints*"></a>
-  <h4 id="Elements_Geometry_Vector3Extensions_TryGetThreeNonCollinearPoints_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Int32__System_Int32__" data-uid="Elements.Geometry.Vector3Extensions.TryGetThreeNonCollinearPoints(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Int32@,System.Int32@)">TryGetThreeNonCollinearPoints(IList&lt;Vector3&gt;, out Int32, out Int32)</h4>
-  <div class="markdown level1 summary"><p>Check if a collection of points has at least three non-collinear
-points. Returns true if it does, false otherwise. The first two
-points which form a valid triangle with the first point are
-returned via out parameters.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool TryGetThreeNonCollinearPoints(this IList&lt;Vector3&gt; points, out int p1Index, out int p2Index)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">points</span></td>
-        <td><p>The list of points to search.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">p1Index</span></td>
-        <td><p>The index of the first non-collinear point
-after index 0.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">p2Index</span></td>
-        <td><p>The index of the second non-collinear point
-after index 0.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><p>True if there are three non-collinear points.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Vector3Extensions_UniqueWithinTolerance_" data-uid="Elements.Geometry.Vector3Extensions.UniqueWithinTolerance*"></a>
-  <h4 id="Elements_Geometry_Vector3Extensions_UniqueWithinTolerance_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__System_Double_" data-uid="Elements.Geometry.Vector3Extensions.UniqueWithinTolerance(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3},System.Double)">UniqueWithinTolerance(IEnumerable&lt;Vector3&gt;, Double)</h4>
-  <div class="markdown level1 summary"><p>De-duplicate a collection of Vectors, such that no two vectors in the result are within tolerance of each other.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;Vector3&gt; UniqueWithinTolerance(this IEnumerable&lt;Vector3&gt; vectors, double tolerance = 1E-05)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">vectors</span></td>
-        <td><p>List of vectors</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">tolerance</span></td>
-        <td><p>Distance tolerance</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><p>A new collection of vectors with duplicates removed.</p>
-</td>
       </tr>
     </tbody>
   </table>

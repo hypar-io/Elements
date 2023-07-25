@@ -324,57 +324,10 @@ index into another collection of entities which have a spatial context.</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Search_Network_1_FindAllClosedRegions_" data-uid="Elements.Search.Network`1.FindAllClosedRegions*"></a>
-  <h4 id="Elements_Search_Network_1_FindAllClosedRegions_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Search.Network`1.FindAllClosedRegions(System.Collections.Generic.List{Elements.Geometry.Vector3})">FindAllClosedRegions(List&lt;Vector3&gt;)</h4>
-  <div class="markdown level1 summary"><p>Find all the closed regions in the network.
-This method uses the Traverse method internally with a traversal
-function that uses the maximal plane angle to determine the direction
-of traversal.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;List&lt;int&gt;&gt; FindAllClosedRegions(List&lt;Vector3&gt; allNodeLocations)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">allNodeLocations</span></td>
-        <td><p>A collection of all node locations in the network.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;</td>
-        <td><p>A collection of integers representing the indices of the nodes
-forming closed regions in the network.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <a id="Elements_Search_Network_1_FromSegmentableItems_" data-uid="Elements.Search.Network`1.FromSegmentableItems*"></a>
   <h4 id="Elements_Search_Network_1_FromSegmentableItems_System_Collections_Generic_IList__0__System_Func__0_Elements_Geometry_Line__System_Collections_Generic_List_Elements_Geometry_Vector3___System_Collections_Generic_List_Elements_Geometry_Vector3___System_Boolean_" data-uid="Elements.Search.Network`1.FromSegmentableItems(System.Collections.Generic.IList{`0},System.Func{`0,Elements.Geometry.Line},System.Collections.Generic.List{Elements.Geometry.Vector3}@,System.Collections.Generic.List{Elements.Geometry.Vector3}@,System.Boolean)">FromSegmentableItems(IList&lt;T&gt;, Func&lt;T, Line&gt;, out List&lt;Vector3&gt;, out List&lt;Vector3&gt;, Boolean)</h4>
   <div class="markdown level1 summary"><p>Construct a network from the intersections of a collection
-of items which provide segments in a shared plane.</p>
+of items which are segmentable.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -485,48 +438,6 @@ item of type T.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Int32</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Search_Network_1_ToBoundedAreaPanels_" data-uid="Elements.Search.Network`1.ToBoundedAreaPanels*"></a>
-  <h4 id="Elements_Search_Network_1_ToBoundedAreaPanels_System_Collections_Generic_List_Elements_Geometry_Vector3__" data-uid="Elements.Search.Network`1.ToBoundedAreaPanels(System.Collections.Generic.List{Elements.Geometry.Vector3})">ToBoundedAreaPanels(List&lt;Vector3&gt;)</h4>
-  <div class="markdown level1 summary"><p>Draw bounded areas of the network as panels.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;Panel&gt; ToBoundedAreaPanels(List&lt;Vector3&gt; allNodeLocations)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">allNodeLocations</span></td>
-        <td><p>All node locations in the network.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Panel.html">Panel</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -669,7 +580,7 @@ item of type T.</p>
     </tbody>
   </table>
   <a id="Elements_Search_Network_1_Traverse_" data-uid="Elements.Search.Network`1.Traverse*"></a>
-  <h4 id="Elements_Search_Network_1_Traverse_System_Int32_System_Func_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_IEnumerable_System_Int32___System_Collections_Generic_List_Elements_Geometry_Vector3__System_Collections_Generic_List_Elements_Search_LocalEdge__System_Int32__System_Collections_Generic_List_Elements_Geometry_Vector3__System_Collections_Generic_List_Elements_Search_LocalEdge__System_Collections_Generic_List_System_Int32___System_Int32_" data-uid="Elements.Search.Network`1.Traverse(System.Int32,System.Func{System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.IEnumerable{System.Int32}},System.Collections.Generic.List{Elements.Geometry.Vector3},System.Collections.Generic.List{Elements.Search.LocalEdge},System.Int32},System.Collections.Generic.List{Elements.Geometry.Vector3},System.Collections.Generic.List{Elements.Search.LocalEdge},System.Collections.Generic.List{System.Int32}@,System.Int32)">Traverse(Int32, Func&lt;(Int32, Int32, IEnumerable&lt;Int32&gt;), List&lt;Vector3&gt;, List&lt;LocalEdge&gt;, Int32&gt;, List&lt;Vector3&gt;, List&lt;LocalEdge&gt;, out List&lt;Int32&gt;, Int32)</h4>
+  <h4 id="Elements_Search_Network_1_Traverse_System_Int32_System_Func_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_IEnumerable_System_Int32___System_Int32__System_Collections_Generic_List_System_Int32___" data-uid="Elements.Search.Network`1.Traverse(System.Int32,System.Func{System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.IEnumerable{System.Int32}},System.Int32},System.Collections.Generic.List{System.Int32}@)">Traverse(Int32, Func&lt;(Int32 currentNodeIndex, Int32 previousNodeIndex, IEnumerable&lt;Int32&gt; connectedNodes), Int32&gt;, out List&lt;Int32&gt;)</h4>
   <div class="markdown level1 summary"><p>Traverse the network from the specified node index.
 Traversal concludes when there are no more
 available nodes to traverse.</p>
@@ -677,7 +588,7 @@ available nodes to traverse.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public List&lt;int&gt; Traverse(int start, Func&lt;(int, int, IEnumerable&lt;int&gt;), List&lt;Vector3&gt;, List&lt;LocalEdge&gt;, int&gt; next, List&lt;Vector3&gt; allNodeLocations, List&lt;LocalEdge&gt; visitedEdges, out List&lt;int&gt; visited, int prevIndex = -1)</code></pre>
+    <pre><code class="lang-csharp hljs">public List&lt;int&gt; Traverse(int start, Func&lt;(int currentNodeIndex, int previousNodeIndex, IEnumerable&lt;int&gt; connectedNodes), int&gt; next, out List&lt;int&gt; visited)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -696,33 +607,15 @@ available nodes to traverse.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Search.LocalEdge.html">LocalEdge</a>&gt;, <span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;, <span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">next</span></td>
         <td><p>The traversal step delegate.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">allNodeLocations</span></td>
-        <td><p>A collection of all node locations in the network.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Search.LocalEdge.html">LocalEdge</a>&gt;</td>
-        <td><span class="parametername">visitedEdges</span></td>
-        <td><p>A collection of all visited edges.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td><span class="parametername">visited</span></td>
         <td><p>A collection of visited node indices.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><span class="parametername">prevIndex</span></td>
-        <td><p>The previous index found during the traversal</p>
 </td>
       </tr>
     </tbody>
@@ -739,118 +632,6 @@ available nodes to traverse.</p>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
         <td><p>A list of indices of the traversed nodes.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Search_Network_1_TraverseLargestPlaneAngle_" data-uid="Elements.Search.Network`1.TraverseLargestPlaneAngle*"></a>
-  <h4 id="Elements_Search_Network_1_TraverseLargestPlaneAngle_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_IEnumerable_System_Int32___System_Collections_Generic_List_Elements_Geometry_Vector3__System_Collections_Generic_List_Elements_Search_LocalEdge__" data-uid="Elements.Search.Network`1.TraverseLargestPlaneAngle(System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.IEnumerable{System.Int32}},System.Collections.Generic.List{Elements.Geometry.Vector3},System.Collections.Generic.List{Elements.Search.LocalEdge})">TraverseLargestPlaneAngle((Int32 currentIndex, Int32 previousIndex, IEnumerable&lt;Int32&gt; edgeIndices), List&lt;Vector3&gt;, List&lt;LocalEdge&gt;)</h4>
-  <div class="markdown level1 summary"><p>Traverse a network following the smallest plane angle between the current
-edge and the next candidate edge.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static int TraverseLargestPlaneAngle((int currentIndex, int previousIndex, IEnumerable&lt;int&gt; edgeIndices) traversalData, List&lt;Vector3&gt; allNodeLocations, List&lt;LocalEdge&gt; visitedEdges)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;</td>
-        <td><span class="parametername">traversalData</span></td>
-        <td><p>Data about the current step of the traversal.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">allNodeLocations</span></td>
-        <td><p>A collection of all node locations in the network.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Search.LocalEdge.html">LocalEdge</a>&gt;</td>
-        <td><span class="parametername">visitedEdges</span></td>
-        <td><p>A collection of previously visited edges.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><p>The next index to traverse.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Search_Network_1_TraverseSmallestPlaneAngle_" data-uid="Elements.Search.Network`1.TraverseSmallestPlaneAngle*"></a>
-  <h4 id="Elements_Search_Network_1_TraverseSmallestPlaneAngle_System_ValueTuple_System_Int32_System_Int32_System_Collections_Generic_IEnumerable_System_Int32___System_Collections_Generic_List_Elements_Geometry_Vector3__System_Collections_Generic_List_Elements_Search_LocalEdge__" data-uid="Elements.Search.Network`1.TraverseSmallestPlaneAngle(System.ValueTuple{System.Int32,System.Int32,System.Collections.Generic.IEnumerable{System.Int32}},System.Collections.Generic.List{Elements.Geometry.Vector3},System.Collections.Generic.List{Elements.Search.LocalEdge})">TraverseSmallestPlaneAngle((Int32 currentIndex, Int32 previousIndex, IEnumerable&lt;Int32&gt; edgeIndices), List&lt;Vector3&gt;, List&lt;LocalEdge&gt;)</h4>
-  <div class="markdown level1 summary"><p>Traverse a network following the smallest plane angle between the current
-edge and the next candidate edge.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static int TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable&lt;int&gt; edgeIndices) traversalData, List&lt;Vector3&gt; allNodeLocations, List&lt;LocalEdge&gt; visitedEdges)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.Int32</span>&gt;&gt;</td>
-        <td><span class="parametername">traversalData</span></td>
-        <td><p>Data about the current step of the traversal.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">allNodeLocations</span></td>
-        <td><p>A collection of all node locations in the network.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Search.LocalEdge.html">LocalEdge</a>&gt;</td>
-        <td><span class="parametername">visitedEdges</span></td>
-        <td><p>A collection of previously visited edges.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Int32</span></td>
-        <td><p>The next index to traverse.</p>
 </td>
       </tr>
     </tbody>

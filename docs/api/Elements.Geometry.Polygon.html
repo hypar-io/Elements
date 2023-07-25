@@ -86,8 +86,7 @@
   
   <h1 id="Elements_Geometry_Polygon" data-uid="Elements.Geometry.Polygon" class="text-break">Class Polygon
   </h1>
-  <div class="markdown level0 summary"><p>A closed planar polygon.
-Parameterization of the curve is 0-&gt;n-1 where n is the number of vertices..</p>
+  <div class="markdown level0 summary"><p>A closed planar polygon.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -205,22 +204,29 @@ var star = Polygon.Star(5, 3, 5);
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
-    <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
-    <div class="level3"><a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a></div>
-    <div class="level4"><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></div>
-    <div class="level5"><span class="xref">Polygon</span></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></div>
+    <div class="level3"><span class="xref">Polygon</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
-    <div><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></div>
-    <div><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a>&gt;</div>
-    <div><span class="xref">System.Collections.IEnumerable</span></div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a>&gt;</div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Vertices">Polyline.Vertices</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Start">Polyline.Start</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_End">Polyline.End</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAt_System_Double_">Polyline.PointAt(Double)</a>
+    </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformAt_System_Double_">Polyline.TransformAt(Double)</a>
     </div>
@@ -229,6 +235,12 @@ var star = Polygon.Star(5, 3, 5);
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_TransformSegment_Elements_Geometry_Transform_System_Int32_System_Boolean_System_Boolean_">Polyline.TransformSegment(Transform, Int32, Boolean, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Bounds">Polyline.Bounds()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__">Polyline.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_CreateMiterTransform_System_Int32_Elements_Geometry_Vector3_Elements_Geometry_Vector3_">Polyline.CreateMiterTransform(Int32, Vector3, Vector3)</a>
@@ -240,7 +252,7 @@ var star = Polygon.Star(5, 3, 5);
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_OffsetOpen_System_Double_">Polyline.OffsetOpen(Double)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_OffsetWithAcuteAngle_System_Double_">Polyline.OffsetWithAcuteAngle(Double)</a>
+      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Equals_Elements_Geometry_Polyline_">Polyline.Equals(Polyline)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_SharedSegments_Elements_Geometry_Polyline_Elements_Geometry_Polyline_System_Boolean_">Polyline.SharedSegments(Polyline, Polyline, Boolean)</a>
@@ -261,70 +273,10 @@ var star = Polygon.Star(5, 3, 5);
       <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_GetSubsegment_Elements_Geometry_Vector3_Elements_Geometry_Vector3_">Polyline.GetSubsegment(Vector3, Vector3)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_ForceAngleCompliance_System_Collections_Generic_IEnumerable_System_Double__Elements_Geometry_Vector3_System_Double__Elements_Geometry_NormalizationType_">Polyline.ForceAngleCompliance(IEnumerable&lt;Double&gt;, Vector3, Double, NormalizationType)</a>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_ForceAngleCompliance_System_Collections_Generic_IEnumerable_System_Double__Elements_Geometry_Vector3_Elements_Geometry_NormalizationType_">Polyline.ForceAngleCompliance(IEnumerable&lt;Double&gt;, Vector3, NormalizationType)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Start">IndexedPolycurve.Start</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_CurveIndices">IndexedPolycurve.CurveIndices</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Vertices">IndexedPolycurve.Vertices</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Bounds">IndexedPolycurve.Bounds()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_GetSubdivisionParameters_System_Double_System_Double_">IndexedPolycurve.GetSubdivisionParameters(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ArcLength_System_Double_System_Double_">IndexedPolycurve.ArcLength(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ParameterAtDistanceFromParameter_System_Double_System_Double_">IndexedPolycurve.ParameterAtDistanceFromParameter(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_PointAt_System_Double_">IndexedPolycurve.PointAt(Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_PointAtInternal_System_Double_System_Int32__">IndexedPolycurve.PointAtInternal(Double, Int32)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_TransformedPolycurve_Elements_Geometry_Transform_">IndexedPolycurve.TransformedPolycurve(Transform)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_Equals_Elements_Geometry_IndexedPolycurve_">IndexedPolycurve.Equals(IndexedPolycurve)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ToPolygon">IndexedPolycurve.ToPolygon()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_CheckCoincidenceAndThrow_System_Collections_Generic_IList_Elements_Geometry_Vector3__">IndexedPolycurve.CheckCoincidenceAndThrow(IList&lt;Vector3&gt;)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_GetEnumerator">IndexedPolycurve.GetEnumerator()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_System_Collections_IEnumerable_GetEnumerator">IndexedPolycurve.IEnumerable.GetEnumerator()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_DefaultMinimumChordLength">BoundedCurve.DefaultMinimumChordLength</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Mid">BoundedCurve.Mid()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ToPolyline_System_Int32_">BoundedCurve.ToPolyline(Int32)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_PointAtNormalized_System_Double_">BoundedCurve.PointAtNormalized(Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_TransformAtNormalized_System_Double_">BoundedCurve.TransformAtNormalized(Double)</a>
+      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
@@ -343,7 +295,7 @@ var star = Polygon.Star(5, 3, 5);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Polygon_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Polygon : Polyline, ICurve, ITransformable&lt;Curve&gt;, IBoundedCurve, IEnumerable&lt;BoundedCurve&gt;, IEnumerable, IEquatable&lt;IndexedPolycurve&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Polygon : Polyline, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Polyline&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -367,39 +319,6 @@ that can be used like this: <code>new Polygon((0,0,0), (10,0,0), (10,10,0))</cod
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
-        <td><span class="parametername">vertices</span></td>
-        <td><p>The vertices of the polygon.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polygon__ctor_" data-uid="Elements.Geometry.Polygon.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polygon__ctor_System_Boolean_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.Polygon.#ctor(System.Boolean,Elements.Geometry.Vector3[])">Polygon(Boolean, Vector3[])</h4>
-  <div class="markdown level1 summary"><p>Construct a polygon from points.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon(bool disableValidation, params Vector3[] vertices)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">disableValidation</span></td>
-        <td><p>Should self-intersection testing be disabled?</p>
-</td>
-      </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
         <td><span class="parametername">vertices</span></td>
@@ -436,151 +355,17 @@ public Polygon(IList&lt;Vector3&gt; vertices)</code></pre>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Geometry_Polygon__ctor_" data-uid="Elements.Geometry.Polygon.#ctor*"></a>
-  <h4 id="Elements_Geometry_Polygon__ctor_System_Collections_Generic_IList_Elements_Geometry_Vector3__System_Boolean_" data-uid="Elements.Geometry.Polygon.#ctor(System.Collections.Generic.IList{Elements.Geometry.Vector3},System.Boolean)">Polygon(IList&lt;Vector3&gt;, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Construct a polygon.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon(IList&lt;Vector3&gt; vertices, bool disableValidation = false)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">vertices</span></td>
-        <td><p>A collection of vertex locations.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">disableValidation</span></td>
-        <td><p>Should self-intersection testing be disabled?</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h3 id="properties">Properties
-  </h3>
-  <a id="Elements_Geometry_Polygon_Domain_" data-uid="Elements.Geometry.Polygon.Domain*"></a>
-  <h4 id="Elements_Geometry_Polygon_Domain" data-uid="Elements.Geometry.Polygon.Domain">Domain</h4>
-  <div class="markdown level1 summary"><p>The domain of the curve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public override Domain1d Domain { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Domain">Polyline.Domain</a></div>
-  <a id="Elements_Geometry_Polygon_End_" data-uid="Elements.Geometry.Polygon.End*"></a>
-  <h4 id="Elements_Geometry_Polygon_End" data-uid="Elements.Geometry.Polygon.End">End</h4>
-  <div class="markdown level1 summary"><p>The end of the polyline.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonIgnore]
-public override Vector3 End { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_End">IndexedPolycurve.End</a></div>
-  <a id="Elements_Geometry_Polygon_IsClosedForRendering_" data-uid="Elements.Geometry.Polygon.IsClosedForRendering*"></a>
-  <h4 id="Elements_Geometry_Polygon_IsClosedForRendering" data-uid="Elements.Geometry.Polygon.IsClosedForRendering">IsClosedForRendering</h4>
-  <div class="markdown level1 summary"><p>Should the curve be considered closed for rendering?</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override bool IsClosedForRendering { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_IsClosedForRendering">BoundedCurve.IsClosedForRendering</a></div>
   <h3 id="methods">Methods
   </h3>
   <a id="Elements_Geometry_Polygon_Area_" data-uid="Elements.Geometry.Polygon.Area*"></a>
-  <h4 id="Elements_Geometry_Polygon_Area_System_Boolean_" data-uid="Elements.Geometry.Polygon.Area(System.Boolean)">Area(Boolean)</h4>
-  <div class="markdown level1 summary"><p>Calculate the polygon's area in 3D.</p>
+  <h4 id="Elements_Geometry_Polygon_Area" data-uid="Elements.Geometry.Polygon.Area">Area()</h4>
+  <div class="markdown level1 summary"><p>Calculate the polygon's signed area in 3D.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Area(bool signed = false)</code></pre>
+    <pre><code class="lang-csharp hljs">public double Area()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Boolean</span></td>
-        <td><span class="parametername">signed</span></td>
-        <td><p>When true will return a signed area, counter-clockwise polygons will yield
-a positive area, while clockwise polygons will yield a negative area.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -592,31 +377,6 @@ a positive area, while clockwise polygons will yield a negative area.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><p>A double representing the signed or absolute value of this Polygon's area.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polygon_Center_" data-uid="Elements.Geometry.Polygon.Center*"></a>
-  <h4 id="Elements_Geometry_Polygon_Center" data-uid="Elements.Geometry.Polygon.Center">Center()</h4>
-  <div class="markdown level1 summary"><p>Calculate the center of the polygon as the average of vertices.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Center()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -696,31 +456,14 @@ public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_CollinearPointsRemoved_" data-uid="Elements.Geometry.Polygon.CollinearPointsRemoved*"></a>
-  <h4 id="Elements_Geometry_Polygon_CollinearPointsRemoved_System_Double_" data-uid="Elements.Geometry.Polygon.CollinearPointsRemoved(System.Double)">CollinearPointsRemoved(Double)</h4>
+  <h4 id="Elements_Geometry_Polygon_CollinearPointsRemoved" data-uid="Elements.Geometry.Polygon.CollinearPointsRemoved">CollinearPointsRemoved()</h4>
   <div class="markdown level1 summary"><p>Remove collinear points from this Polygon.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Polygon CollinearPointsRemoved(double tolerance = 1E-05)</code></pre>
+    <pre><code class="lang-csharp hljs">public Polygon CollinearPointsRemoved()</code></pre>
   </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">tolerance</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -782,12 +525,12 @@ public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
   </table>
   <a id="Elements_Geometry_Polygon_Contains_" data-uid="Elements.Geometry.Polygon.Contains*"></a>
   <h4 id="Elements_Geometry_Polygon_Contains_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3)">Contains(Vector3)</h4>
-  <div class="markdown level1 summary"><p>Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge or vertex when compared on a shared plane.</p>
+  <div class="markdown level1 summary"><p>Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 point)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 vector)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -801,8 +544,8 @@ public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">point</span></td>
-        <td><p>The point to compare to this polygon.</p>
+        <td><span class="parametername">vector</span></td>
+        <td><p>The Vector3 to compare to this Polygon.</p>
 </td>
       </tr>
     </tbody>
@@ -818,19 +561,19 @@ public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><p>Returns true if the supplied point is within this polygon when compared on a shared plane.</p>
+        <td><p>Returns true if the supplied Vector3 is within this Polygon when compared on a shared plane. Returns false if the Vector3 is outside this Polygon or if the supplied Vector3 is null.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Contains_" data-uid="Elements.Geometry.Polygon.Contains*"></a>
   <h4 id="Elements_Geometry_Polygon_Contains_Elements_Geometry_Vector3_Elements_Geometry_Containment__" data-uid="Elements.Geometry.Polygon.Contains(Elements.Geometry.Vector3,Elements.Geometry.Containment@)">Contains(Vector3, out Containment)</h4>
-  <div class="markdown level1 summary"><p>Tests if the supplied point is within this polygon in 3D, using a 2D method.</p>
+  <div class="markdown level1 summary"><p>Tests if the supplied Vector3 is within this Polygon in 3D, using a 2D method.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 point, out Containment containment)</code></pre>
+    <pre><code class="lang-csharp hljs">public bool Contains(Vector3 vector, out Containment containment)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -844,8 +587,8 @@ public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">point</span></td>
-        <td><p>The point to compare to this polygon.</p>
+        <td><span class="parametername">vector</span></td>
+        <td><p>The position to test.</p>
 </td>
       </tr>
       <tr>
@@ -867,7 +610,7 @@ public static Polygon Circle(double radius = 1, int divisions = 10)</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
-        <td><p>Returns true if the supplied point is within this polygon when compared on a shared plane.</p>
+        <td><p>Returns true if the supplied Vector3 is within this polygon.</p>
 </td>
       </tr>
     </tbody>
@@ -1346,7 +1089,7 @@ Returns a list containing a representation of the perimeter of this Polygon if t
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IndexedPolycurve Fillet(double radius)</code></pre>
+    <pre><code class="lang-csharp hljs">public Contour Fillet(double radius)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1376,20 +1119,20 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Contour.html">Contour</a></td>
         <td><p>A contour containing trimmed edge segments and fillets.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Frames_" data-uid="Elements.Geometry.Polygon.Frames*"></a>
-  <h4 id="Elements_Geometry_Polygon_Frames_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Frames(System.Double,System.Double,System.Double)">Frames(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Get a collection of Transforms which represent frames along this curve.</p>
+  <h4 id="Elements_Geometry_Polygon_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the transforms used to transform a Profile extruded along this Polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback = 0, double endSetback = 0, double additionalRotation = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback, double endSetback)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1411,12 +1154,6 @@ Returns a list containing a representation of the perimeter of this Polygon if t
         <td><span class="parametername">endSetback</span></td>
         <td></td>
       </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">additionalRotation</span></td>
-        <td><p>An additional rotation of the frame at each point.</p>
-</td>
-      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -1430,13 +1167,12 @@ Returns a list containing a representation of the perimeter of this Polygon if t
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
-        <td><p>A collection of Transforms.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_System_Double_">Polyline.Frames(Double, Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Frames_System_Double_System_Double_">Polyline.Frames(Double, Double)</a></div>
   <a id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d*"></a>
   <h4 id="Elements_Geometry_Polygon_FromAlignedBoundingBox2d_System_Collections_Generic_IEnumerable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.FromAlignedBoundingBox2d(System.Collections.Generic.IEnumerable{Elements.Geometry.Vector3})">FromAlignedBoundingBox2d(IEnumerable&lt;Vector3&gt;)</h4>
   <div class="markdown level1 summary"><p>Find the minimum-area rotated rectangle containing a set of points,
@@ -1909,9 +1645,7 @@ run this method on that polygon.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><p>An L shaped polygon with the origin at the outer corner
-of the bend in the L.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -2129,6 +1863,57 @@ of the bend in the L.</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_Plane">Polyline.Plane()</a></div>
+  <a id="Elements_Geometry_Polygon_PointAtInternal_" data-uid="Elements.Geometry.Polygon.PointAtInternal*"></a>
+  <h4 id="Elements_Geometry_Polygon_PointAtInternal_System_Double_System_Int32__" data-uid="Elements.Geometry.Polygon.PointAtInternal(System.Double,System.Int32@)">PointAtInternal(Double, out Int32)</h4>
+  <div class="markdown level1 summary"><p>Get a point on the polygon at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override Vector3 PointAtInternal(double u, out int segmentIndex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A value between 0.0 and 1.0.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">segmentIndex</span></td>
+        <td><p>The index of the segment containing parameter u.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_PointAtInternal_System_Double_System_Int32__">Polyline.PointAtInternal(Double, out Int32)</a></div>
   <a id="Elements_Geometry_Polygon_PointInternal_" data-uid="Elements.Geometry.Polygon.PointInternal*"></a>
   <h4 id="Elements_Geometry_Polygon_PointInternal" data-uid="Elements.Geometry.Polygon.PointInternal">PointInternal()</h4>
   <div class="markdown level1 summary"><p>Find a point that is guaranteed to be internal to the polygon.</p>
@@ -2245,13 +2030,13 @@ of the bend in the L.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Rectangle_" data-uid="Elements.Geometry.Polygon.Rectangle*"></a>
-  <h4 id="Elements_Geometry_Polygon_Rectangle_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Plane_System_Nullable_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Polygon.Rectangle(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Plane,System.Nullable{Elements.Geometry.Vector3})">Rectangle(Vector3, Vector3, Plane, Nullable&lt;Vector3&gt;)</h4>
+  <h4 id="Elements_Geometry_Polygon_Rectangle_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Polygon.Rectangle(Elements.Geometry.Vector3,Elements.Geometry.Vector3)">Rectangle(Vector3, Vector3)</h4>
   <div class="markdown level1 summary"><p>Create a rectangle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(Vector3 min, Vector3 max, Plane plane, Vector3? alignment = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(Vector3 min, Vector3 max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2275,18 +2060,6 @@ of the bend in the L.</p>
         <td><p>The maximum coordinate.</p>
 </td>
       </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
-        <td><span class="parametername">plane</span></td>
-        <td><p>The plane to project the rectangle on.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>&gt;</td>
-        <td><span class="parametername">alignment</span></td>
-        <td><p>The alignment reference to construct the rectangle from.</p>
-</td>
-      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -2300,74 +2073,19 @@ of the bend in the L.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><p>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a plane with a sided alignment.</p>
+        <td><p>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Polygon_Rectangle_" data-uid="Elements.Geometry.Polygon.Rectangle*"></a>
-  <h4 id="Elements_Geometry_Polygon_Rectangle_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polygon.Rectangle(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Transform)">Rectangle(Vector3, Vector3, Transform)</h4>
+  <h4 id="Elements_Geometry_Polygon_Rectangle_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.Rectangle(System.Double,System.Double)">Rectangle(Double, Double)</h4>
   <div class="markdown level1 summary"><p>Create a rectangle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(Vector3 min, Vector3 max, Transform transform = null)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">min</span></td>
-        <td><p>The minimum coordinate.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><span class="parametername">max</span></td>
-        <td><p>The maximum coordinate.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><span class="parametername">transform</span></td>
-        <td><p>The transform reference to construct the rectangle from.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><p>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a transform.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polygon_Rectangle_" data-uid="Elements.Geometry.Polygon.Rectangle*"></a>
-  <h4 id="Elements_Geometry_Polygon_Rectangle_System_Double_System_Double_Elements_Geometry_Plane_" data-uid="Elements.Geometry.Polygon.Rectangle(System.Double,System.Double,Elements.Geometry.Plane)">Rectangle(Double, Double, Plane)</h4>
-  <div class="markdown level1 summary"><p>Create a rectangle.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(double width, double height, Plane plane = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Polygon Rectangle(double width, double height)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -2389,12 +2107,6 @@ of the bend in the L.</p>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">height</span></td>
         <td><p>The height of the rectangle.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
-        <td><span class="parametername">plane</span></td>
-        <td><p>The plane to draw the rectangle on.</p>
 </td>
       </tr>
     </tbody>
@@ -2496,7 +2208,7 @@ of the bend in the L.</p>
   </table>
   <a id="Elements_Geometry_Polygon_Segments_" data-uid="Elements.Geometry.Polygon.Segments*"></a>
   <h4 id="Elements_Geometry_Polygon_Segments" data-uid="Elements.Geometry.Polygon.Segments">Segments()</h4>
-  <div class="markdown level1 summary"><p>Get a collection a line segments which connect the vertices of this polyline.</p>
+  <div class="markdown level1 summary"><p>Get a collection a lines representing each segment of this polyline.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -2685,9 +2397,7 @@ of the polyline's segments.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><p>A star shaped polygon with the specified number of points
-along the outer radius and their compliment along the inner radius.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -2717,7 +2427,7 @@ along the outer radius and their compliment along the inner radius.</p>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ToString">IndexedPolycurve.ToString()</a></div>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_ToString">Polyline.ToString()</a></div>
   <a id="Elements_Geometry_Polygon_ToTransform_" data-uid="Elements.Geometry.Polygon.ToTransform*"></a>
   <h4 id="Elements_Geometry_Polygon_ToTransform" data-uid="Elements.Geometry.Polygon.ToTransform">ToTransform()</h4>
   <div class="markdown level1 summary"><p>Construct a transform in the plane of this polygon, with its Z axis along the polygon's normal.</p>
@@ -2869,9 +2579,7 @@ along the outer radius and their compliment along the inner radius.</p>
   </table>
   <a id="Elements_Geometry_Polygon_Transformed_" data-uid="Elements.Geometry.Polygon.Transformed*"></a>
   <h4 id="Elements_Geometry_Polygon_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Polygon.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
-  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
-Use of non-affine transforms (i.e. scale) will
-result in unpredictable results for curve methods such as Length().</p>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -3151,62 +2859,6 @@ Portions inside the trimming polygons will be discarded.</p>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;</td>
         <td><p>A collection of polygons resulting from the trim or null if no trim occurred.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Polygon_U_" data-uid="Elements.Geometry.Polygon.U*"></a>
-  <h4 id="Elements_Geometry_Polygon_U_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Polygon.U(System.Double,System.Double,System.Double)">U(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Create a U.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Polygon U(double width, double length, double thickness)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">width</span></td>
-        <td><p>The width of the U.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">length</span></td>
-        <td><p>The length of the U.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">thickness</span></td>
-        <td><p>The thickness of the U.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></td>
-        <td><p>A U shaped polygon with the origin at the center of
-the inside bend of the U.</p>
 </td>
       </tr>
     </tbody>
@@ -3516,7 +3168,7 @@ duplicate vertices, and fix any overlapping edges.</p>
     <pre><code class="lang-csharp hljs">protected override void ValidateVertices()</code></pre>
   </div>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.IndexedPolycurve.html#Elements_Geometry_IndexedPolycurve_ValidateVertices">IndexedPolycurve.ValidateVertices()</a></div>
+  <div><a class="xref" href="Elements.Geometry.Polyline.html#Elements_Geometry_Polyline_ValidateVertices">Polyline.ValidateVertices()</a></div>
   <a id="Elements_Geometry_Polygon_XOR_" data-uid="Elements.Geometry.Polygon.XOR*"></a>
   <h4 id="Elements_Geometry_Polygon_XOR_Elements_Geometry_Polygon_System_Double_" data-uid="Elements.Geometry.Polygon.XOR(Elements.Geometry.Polygon,System.Double)">XOR(Polygon, Double)</h4>
   <div class="markdown level1 summary"><p>Returns Polygons representing the symmetric difference between this Polygon and the supplied Polygon.</p>
@@ -3715,15 +3367,6 @@ Returns a representation of all polygons if they do not intersect.</p>
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a>
-  </div>
-  <div>
-      <span class="xref">System.Collections.Generic.IEnumerable&lt;T&gt;</span>
-  </div>
-  <div>
-      <span class="xref">System.Collections.IEnumerable</span>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

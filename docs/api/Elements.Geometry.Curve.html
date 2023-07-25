@@ -93,10 +93,10 @@
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Curve</span></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.Ellipse.html">Ellipse</a></div>
-      <div class="level2"><a class="xref" href="Elements.Geometry.InfiniteLine.html">InfiniteLine</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Bezier.html">Bezier</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Line.html">Line</a></div>
+      <div class="level2"><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -134,16 +134,67 @@
     <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
 public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
   </div>
-  <h3 id="methods">Methods
+  <h3 id="fields">Fields
   </h3>
-  <a id="Elements_Geometry_Curve_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.Curve.ParameterAtDistanceFromParameter*"></a>
-  <h4 id="Elements_Geometry_Curve_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.Curve.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Get the parameter at a distance from the start parameter along the curve.</p>
+  <h4 id="Elements_Geometry_Curve_MinimumChordLength" data-uid="Elements.Geometry.Curve.MinimumChordLength">MinimumChordLength</h4>
+  <div class="markdown level1 summary"><p>The minimum chord length allowed for subdivision of the curve.
+A lower MinimumChordLength results in smoother curves.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract double ParameterAtDistanceFromParameter(double distance, double start)</code></pre>
+    <pre><code class="lang-csharp hljs">public static double MinimumChordLength</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_Curve_Bounds_" data-uid="Elements.Geometry.Curve.Bounds*"></a>
+  <h4 id="Elements_Geometry_Curve_Bounds" data-uid="Elements.Geometry.Curve.Bounds">Bounds()</h4>
+  <div class="markdown level1 summary"><p>Get the bounding box for this curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract BBox3 Bounds()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td><p>A bounding box for this curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Curve_Frames_" data-uid="Elements.Geometry.Curve.Frames*"></a>
+  <h4 id="Elements_Geometry_Curve_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Curve.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get a collection of transforms which represent frames along this curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Transform[] Frames(double startSetback = 0, double endSetback = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -157,18 +208,43 @@ public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">distance</span></td>
-        <td><p>The distance from the start parameter.</p>
+        <td><span class="parametername">startSetback</span></td>
+        <td><p>The offset parameter from the start of the curve.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">start</span></td>
-        <td><p>The parameter from which to measure the distance.</p>
+        <td><span class="parametername">endSetback</span></td>
+        <td><p>The offset parameter from the end of the curve.</p>
 </td>
       </tr>
     </tbody>
   </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
+        <td><p>A collection of transforms.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Curve_Length_" data-uid="Elements.Geometry.Curve.Length*"></a>
+  <h4 id="Elements_Geometry_Curve_Length" data-uid="Elements.Geometry.Curve.Length">Length()</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract double Length()</code></pre>
+  </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -206,8 +282,7 @@ public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>A parameter along the curve between domain.min and domain.max.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -222,7 +297,50 @@ public abstract class Curve : ICurve, ITransformable&lt;Curve&gt;</code></pre>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><p>A point along the curve at parameter u.</p>
+        <td><p>A point on the curve at parameter u.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Curve_ToPolyline_" data-uid="Elements.Geometry.Curve.ToPolyline*"></a>
+  <h4 id="Elements_Geometry_Curve_ToPolyline_System_Int32_" data-uid="Elements.Geometry.Curve.ToPolyline(System.Int32)">ToPolyline(Int32)</h4>
+  <div class="markdown level1 summary"><p>Create a polyline through a set of points along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Polyline ToPolyline(int divisions = 10)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">divisions</span></td>
+        <td><p>The number of divisions of the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>A polyline.</p>
 </td>
       </tr>
     </tbody>
@@ -250,7 +368,7 @@ positive Z axis points along the curve.</p>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>The transform at a parameter along the curve between domain.min and domain.max.</p>
+        <td><p>The parameter along the Line, between 0.0 and 1.0, at which to calculate the Transform.</p>
 </td>
       </tr>
     </tbody>
@@ -266,16 +384,14 @@ positive Z axis points along the curve.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><p>A transform on the curve at parameter u.</p>
+        <td><p>A transform.</p>
 </td>
       </tr>
     </tbody>
   </table>
   <a id="Elements_Geometry_Curve_Transformed_" data-uid="Elements.Geometry.Curve.Transformed*"></a>
   <h4 id="Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Curve.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
-  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
-Use of non-affine transforms (i.e. scale) will
-result in unpredictable results for curve methods such as Length().</p>
+  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -311,6 +427,50 @@ result in unpredictable results for curve methods such as Length().</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="operators">Operators
+  </h3>
+  <a id="Elements_Geometry_Curve_op_Implicit_" data-uid="Elements.Geometry.Curve.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Curve_op_Implicit_Elements_Geometry_Curve__Elements_ModelCurve" data-uid="Elements.Geometry.Curve.op_Implicit(Elements.Geometry.Curve)~Elements.ModelCurve">Implicit(Curve to ModelCurve)</h4>
+  <div class="markdown level1 summary"><p>Implicitly convert a curve to a ModelCurve Element.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ModelCurve(Curve c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The curve to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.ModelCurve.html">ModelCurve</a></td>
         <td></td>
       </tr>
     </tbody>

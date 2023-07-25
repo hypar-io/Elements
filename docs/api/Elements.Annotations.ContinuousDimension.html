@@ -234,7 +234,6 @@ for (var i = 0; i &lt; pts.Count - 1; i++)
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
-    <div><a class="xref" href="Elements.Annotations.IOverrideLinked.html">IOverrideLinked</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -246,9 +245,6 @@ for (var i = 0; i &lt; pts.Count - 1; i++)
     </div>
     <div>
       <a class="xref" href="Elements.Annotations.LinearDimension.html#Elements_Annotations_LinearDimension_ReferencePlane">LinearDimension.ReferencePlane</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Annotations.LinearDimension.html#Elements_Annotations_LinearDimension_LinkedProperty">LinearDimension.LinkedProperty</a>
     </div>
     <div>
       <a class="xref" href="Elements.Annotations.LinearDimension.html#Elements_Annotations_LinearDimension_ToModelArrowsAndText_Elements_Geometry_Color_">LinearDimension.ToModelArrowsAndText(Color)</a>
@@ -281,15 +277,6 @@ for (var i = 0; i &lt; pts.Count - 1; i++)
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
-    </div>
-    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -315,7 +302,7 @@ for (var i = 0; i &lt; pts.Count - 1; i++)
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Annotations_ContinuousDimension_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ContinuousDimension : LinearDimension, INotifyPropertyChanged, IOverrideLinked</code></pre>
+    <pre><code class="lang-csharp hljs">public class ContinuousDimension : LinearDimension, INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -421,9 +408,6 @@ public ContinuousDimension(Vector3 start, Vector3 end, Plane referencePlane, str
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
-  </div>
-  <div>
-      <a class="xref" href="Elements.Annotations.IOverrideLinked.html">IOverrideLinked</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
