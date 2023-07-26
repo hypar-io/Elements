@@ -56,10 +56,27 @@ namespace Hypar.Tests
         }
 
         [Fact]
-        public void GetSampleParametersReversedCurveSucceeds()
+        public void GetSampleParametersSucceeds()
         {
             var arc = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
             var parameters = arc.GetSubdivisionParameters();
+            Assert.Equal(0, parameters.First());
+            foreach (var p in parameters)
+            {
+                arc.PointAt(p);
+            }
+
+            arc = new Arc(Vector3.Origin, 2.0, 45, 90);
+            parameters = arc.GetSubdivisionParameters();
+            Assert.Equal(Units.DegreesToRadians(45), parameters.First());
+            foreach (var p in parameters)
+            {
+                arc.PointAt(p);
+            }
+
+            arc = new Arc(Vector3.Origin, 2.0, 180, 90);
+            parameters = arc.GetSubdivisionParameters();
+            Assert.Equal(Units.DegreesToRadians(180), parameters.First());
             foreach (var p in parameters)
             {
                 arc.PointAt(p);
@@ -121,11 +138,31 @@ namespace Hypar.Tests
             var comp = arc.Complement();
             Assert.Equal(-340, comp.StartAngle);
             Assert.Equal(10, comp.EndAngle);
+            Assert.Equal(Units.DegreesToRadians(350), comp.Length());
 
             arc = new Arc(Vector3.Origin, 1, -10, 10);
             comp = arc.Complement();
             Assert.Equal(-350, comp.StartAngle);
             Assert.Equal(-10, comp.EndAngle);
+            Assert.Equal(Units.DegreesToRadians(340), comp.Length());
+
+            arc = new Arc(Vector3.Origin, 1, 40, 20);
+            comp = arc.Complement();
+            Assert.Equal(20, comp.StartAngle);
+            Assert.Equal(-320, comp.EndAngle);
+            Assert.Equal(Units.DegreesToRadians(340), comp.Length());
+
+            arc = new Arc(Vector3.Origin, 1, -80, -40);
+            comp = arc.Complement();
+            Assert.Equal(-40, comp.StartAngle);
+            Assert.Equal(280, comp.EndAngle);
+            Assert.Equal(Units.DegreesToRadians(320), comp.Length());
+
+            arc = new Arc(Vector3.Origin, 1, -40, -80);
+            comp = arc.Complement();
+            Assert.Equal(280, comp.StartAngle);
+            Assert.Equal(-40, comp.EndAngle);
+            Assert.Equal(Units.DegreesToRadians(320), comp.Length());
         }
 
         [Fact]
@@ -133,6 +170,12 @@ namespace Hypar.Tests
         {
             var arc = new Arc(Vector3.Origin, 1, 10, 20);
             var p = arc.ToPolyline(10);
+            Assert.Equal(10, p.Segments().Length);
+            Assert.Equal(arc.Start, p.Vertices[0]);
+            Assert.Equal(arc.End, p.Vertices[p.Vertices.Count - 1]);
+
+            arc = new Arc(Vector3.Origin, 1, 20, 10);
+            p = arc.ToPolyline(10);
             Assert.Equal(10, p.Segments().Length);
             Assert.Equal(arc.Start, p.Vertices[0]);
             Assert.Equal(arc.End, p.Vertices[p.Vertices.Count - 1]);

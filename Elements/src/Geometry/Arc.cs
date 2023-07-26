@@ -354,17 +354,12 @@ namespace Elements.Geometry
         {
             var min = this.Domain.Min;
             var max = this.Domain.Max;
+            var sign = Math.Sign(max - min);
+            var startSetback = startSetbackDistance * sign;
+            var endSetback = (Length() - endSetbackDistance) * sign;
 
-            var flip = max < min;
-
-            if (flip)
-            {
-                max = this.Domain.Min;
-                min = this.Domain.Max;
-            }
-
-            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, min);
-            var endParam = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, min);
+            var startParam = ParameterAtDistanceFromParameter(startSetback, min);
+            var endParam = ParameterAtDistanceFromParameter(endSetback, min);
 
             // Parameter calculations.
             var angleSpan = endParam - startParam;
@@ -375,7 +370,7 @@ namespace Elements.Geometry
             var two_r = 2 * r;
             var d = Math.Min(DefaultMinimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
-            var div = (int)Math.Ceiling(angleSpan / t);
+            var div = (int)Math.Ceiling(Math.Abs(angleSpan) / t);
 
             var parameters = new double[div + 1];
             var step = angleSpan / div;
@@ -405,13 +400,24 @@ namespace Elements.Geometry
         /// </summary>
         public Arc Complement()
         {
-            var complementSpan = 360.0 - (this.EndAngle - this.StartAngle);
             var newEnd = this.StartAngle;
             var newStart = this.EndAngle;
+
             if (newStart > newEnd)
             {
                 newStart = newStart - 360.0;
             }
+            else
+            {
+                newEnd = newEnd - 360.0;
+            }
+
+            if (newStart <= -360.0 || newEnd <= -360.0)
+            {
+                newStart += 360.0;
+                newEnd += 360.0;
+            }
+
             return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, newStart, newEnd);
         }
 
@@ -465,9 +471,11 @@ namespace Elements.Geometry
         {
             var pts = new List<Vector3>(divisions + 1);
             var step = this.Domain.Length / divisions;
-            for (var t = this.Domain.Min; t < this.Domain.Max; t += step)
+            var t = this.Domain.Min;
+            for (int i = 0; i < divisions; i ++)
             {
                 pts.Add(PointAt(t));
+                t += step;
             }
 
             // We don't go all the way to the end parameter, and 

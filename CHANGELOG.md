@@ -54,6 +54,9 @@
 - Fix the tests for 3dCentroid testing.
 - `Message` created from `Message.FromPoint` now has `Transform.Origin` set exactly on original point.
 - Certain `Triangle` constructors would not correctly update `Vertex.Triangles`, this is fixed.
+- `Arc.GetSubdivisionParameters` returns parameters starting from StartAngle even if StartAngle > EndAngle.EndAngle.
+- `Arc.ToPolyline` now works if StartAngle > EndAngle.EndAngle.
+- `Arc.Complement` now works if StartAngle > EndAngle.EndAngle or if both angles are negative.
 
 ## 1.6.0
 

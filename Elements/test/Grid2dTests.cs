@@ -46,6 +46,60 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void WierdModelCurve()
+        {
+            this.Name = "Grid2d_To_Model_Curve";
+            var width = 0.80000000610351563;
+            var d0 = 1.0144747055053711;
+            var d1 = 0.9144;
+            var d2 = 1.2192;
+            var profile = new Profile(new Polygon(new Vector3[]
+            {
+                new Vector3(60.236613253529327, 51.680307670686396),
+                new Vector3(71.29167, 51.680307670686531),
+                new Vector3(71.29167, 56.25297),
+                new Vector3(60.236613253529327, 56.25297)
+            }));
+
+            var hole = new Polygon(new Vector3[]
+            {
+                new Vector3(64, 53),
+                new Vector3(68, 53),
+                new Vector3(68, 55),
+                new Vector3(64, 55)
+            });
+
+            var inset = profile.Perimeter.Offset(-1.2);
+            Line longestEdge = inset.SelectMany(s => s.Segments()).OrderBy(l => l.Length()).Last();
+            var alignment = new Transform(Vector3.Origin, longestEdge.Direction(), Vector3.ZAxis);
+            var grid = new Grid2d(new List<Polygon> { hole, profile.Perimeter }, alignment);
+            grid.U.DivideByPattern(new[] { ("Forward Rack", d0), ("Hot Aisle", d1), ("Backward Rack", d0), ("Cold Aisle", d2) });
+            grid.V.DivideByFixedLength(width);
+
+            var floorGrid = new Grid2d(new List<Polygon> { hole, profile.Perimeter }, alignment);
+            floorGrid.U.DivideByFixedLength(0.6096);
+            floorGrid.V.DivideByFixedLength(0.6096);
+            Model.AddElements(floorGrid.ToModelCurves());
+            var boundary = grid.GetTrimmedCellGeometry();
+            var uLines = floorGrid.GetCellSeparators(GridDirection.U, true);
+            var vLines = floorGrid.GetCellSeparators(GridDirection.V, true);
+            var curves = boundary.Concat(uLines).Concat(vLines).OfType<BoundedCurve>();
+
+            ModelLines ml = new ModelLines(material: BuiltInMaterials.Black);
+            foreach (var b in boundary.Concat(curves))
+            {
+                var parameters = b.GetSubdivisionParameters();
+                var points = parameters.Select(p => b.PointAt(p)).ToList();
+                for (int i = 0; i < points.Count - 1; i++)
+                {
+                    ml.Lines.Add(new Line(points[i], points[i + 1]));
+                }
+            }
+
+            Model.AddElement(ml);
+        }
+
+        [Fact]
         public void GenerateAndSubdivide2d()
         {
             var grid = new Grid2d(10, 10);
