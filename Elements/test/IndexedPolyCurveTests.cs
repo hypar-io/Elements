@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Newtonsoft.Json;
@@ -60,6 +61,28 @@ namespace Elements.Tests
                     Model.AddElements(arc.BasisCurve.Transform.ToModelCurves());
                 }
             }
+        }
+
+        [Fact]
+        public void PolyCurveWithBackwardsArc()
+        {
+            Name = nameof(PolyCurveWithBackwardsArc);
+            var line1 = new Line((0, 0), (10, 0));
+            var line2 = new Line((10, 0), (10, 8));
+            var arc3 = new Arc((10, 10), 2, 270, 180);
+            var line4 = new Line((8, 10), (0, 10));
+            var line5 = new Line((0, 10), (0, 0));
+            var polycurve = new IndexedPolycurve(new List<BoundedCurve> { line1, line2, arc3, line4, line5 });
+            Model.AddElement(new ModelCurve(polycurve, BuiltInMaterials.XAxis));
+            var vectors = new List<(Vector3 location, Vector3 direction, double magnitude, Color? color)>();
+            for (int i = 0; i < 100; i++)
+            {
+                var transform = polycurve.TransformAtNormalized(i / 100.0);
+                var normal = transform.ZAxis.Negate();
+                vectors.Add((transform.Origin, normal, 0.1, Colors.Magenta));
+            }
+            var ma = new ModelArrows(vectors);
+            Model.AddElement(ma);
         }
 
         private IndexedPolycurve CreateTestPolycurve()
