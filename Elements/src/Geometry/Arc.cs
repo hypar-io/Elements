@@ -67,41 +67,6 @@ namespace Elements.Geometry
             get { return PointAt(this.Domain.Max); }
         }
 
-        /// <summary>
-        /// Create a circular arc.
-        /// </summary>
-        public Arc(double radius)
-        {
-            this.BasisCurve = new Circle();
-            this.StartAngle = 0;
-            this.EndAngle = 360;
-        }
-
-        /// <summary>
-        /// Create an arc.
-        /// </summary>
-        /// <param name="center">The center of the arc.</param>
-        /// <param name="radius">The radius of the arc.</param>
-        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
-        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
-        /// <remarks>If the end angle is smaller than the start angle, they will be flipped and the underlying circle reversed to preserve a positive parameter domain.</remarks>
-        [JsonConstructor]
-        public Arc(Vector3 center, double radius, double startAngle, double endAngle) : base()
-        {
-            Validate(startAngle, endAngle, radius);
-            var circleTransform = new Transform();
-            if (endAngle < startAngle)
-            {
-                circleTransform.Rotate(Vector3.XAxis, 180);
-                circleTransform.Rotate(Vector3.ZAxis, startAngle + endAngle);
-                (endAngle, startAngle) = (startAngle, endAngle);
-            }
-            circleTransform.Move(center);
-            this.BasisCurve = new Circle(circleTransform, radius);
-            this.StartAngle = startAngle;
-            this.EndAngle = endAngle;
-        }
-
         private void Validate(double startAngle, double endAngle, double radius)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -125,6 +90,56 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// If a user supplies a decreasing angle domain, we want to swap the
+        /// start and end angles to force it to be increasing, and do a
+        /// corresponding transform of the underlying circle to preserve the
+        /// user's intuition about which direction the curve is going.
+        /// </summary>
+        private static (double startAngle, double endAngle) EnsureIncreasingAngleDomain(double startAngle, double endAngle, out Transform circleTransform)
+        {
+            circleTransform = new Transform();
+            if (endAngle < startAngle)
+            {
+                // flip the circle's direction
+                circleTransform.Rotate(Vector3.XAxis, 180);
+                // rotate the resulting circle back so that the previous start angle is now aligned with the new start angle
+                circleTransform.Rotate(Vector3.ZAxis, startAngle + endAngle);
+                // swap the start and end angles
+                (endAngle, startAngle) = (startAngle, endAngle);
+            }
+            return (startAngle, endAngle);
+        }
+
+        /// <summary>
+        /// Create a circular arc.
+        /// </summary>
+        public Arc(double radius)
+        {
+            this.BasisCurve = new Circle();
+            this.StartAngle = 0;
+            this.EndAngle = 360;
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// </summary>
+        /// <param name="center">The center of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
+        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
+        /// <remarks>If the end angle is smaller than the start angle, they will be flipped and the underlying circle reversed to preserve a positive parameter domain.</remarks>
+        [JsonConstructor]
+        public Arc(Vector3 center, double radius, double startAngle, double endAngle) : base()
+        {
+            Validate(startAngle, endAngle, radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            circleTransform.Move(center);
+            this.BasisCurve = new Circle(circleTransform, radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
+        }
+
+        /// <summary>
         /// Create an arc.
         /// Constructs a circular basis curve internally with a default transform.
         /// </summary>
@@ -135,13 +150,7 @@ namespace Elements.Geometry
             : base()
         {
             Validate(startAngle, endAngle, radius);
-            var circleTransform = new Transform();
-            if (endAngle < startAngle)
-            {
-                circleTransform.Rotate(Vector3.XAxis, 180);
-                circleTransform.Rotate(Vector3.ZAxis, endAngle + startAngle);
-                (endAngle, startAngle) = (startAngle, endAngle);
-            }
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
             this.BasisCurve = new Circle(circleTransform, radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
@@ -157,14 +166,8 @@ namespace Elements.Geometry
         {
             var startAngle = Units.RadiansToDegrees(startParameter);
             var endAngle = Units.RadiansToDegrees(endParameter);
-            var circleTransform = new Transform();
-            if (endAngle < startAngle)
-            {
-                circleTransform.Rotate(Vector3.XAxis, 180);
-                circleTransform.Rotate(Vector3.ZAxis, endAngle + startAngle);
-                (endAngle, startAngle) = (startAngle, endAngle);
-            }
             Validate(startAngle, endAngle, circle.Radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
             this.BasisCurve = new Circle(circleTransform.Concatenated(circle.Transform), circle.Radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
@@ -186,12 +189,7 @@ namespace Elements.Geometry
             Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), radius);
             var startAngle = Units.RadiansToDegrees(startParameter);
             var endAngle = Units.RadiansToDegrees(endParameter);
-            var circleTransform = new Transform();
-            if (endAngle < startAngle)
-            {
-                (endAngle, startAngle) = (startAngle, endAngle);
-                circleTransform = circleTransform.Rotated(Vector3.XAxis, 180).Rotated(Vector3.ZAxis, endAngle + startAngle);
-            }
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
             this.BasisCurve = new Circle(circleTransform.Concatenated(transform), radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
