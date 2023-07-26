@@ -322,9 +322,11 @@ namespace Hypar.Tests
             Assert.Equal(arc1.Start, arc2.End);
             Assert.Equal(arc2.Start, arc1.End);
             Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             Assert.Equal(arc3.Start, arc4.End);
             Assert.Equal(arc4.Start, arc3.End);
             Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             var xPos = 0.0;
             foreach (var arc in arcs)
             {
@@ -351,9 +353,11 @@ namespace Hypar.Tests
             Assert.Equal(arc1.Start, arc2.End);
             Assert.Equal(arc2.Start, arc1.End);
             Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             Assert.Equal(arc3.Start, arc4.End);
             Assert.Equal(arc4.Start, arc3.End);
             Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             var xPos = 0.0;
             foreach (var arc in arcs)
             {
@@ -382,12 +386,15 @@ namespace Hypar.Tests
             Assert.Equal(arc1.Start, arc2.End);
             Assert.Equal(arc2.Start, arc1.End);
             Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             Assert.Equal(arc3.Start, arc4.End);
             Assert.Equal(arc4.Start, arc3.End);
             Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             Assert.Equal(arc5.Start, arc6.End);
             Assert.Equal(arc6.Start, arc5.End);
             Assert.Equal(arc5.PointAtNormalized(0.2), arc6.PointAtNormalized(0.8));
+            Assert.True(arc5.TransformAtNormalized(0.2).ZAxis.Dot(arc6.TransformAtNormalized(0.8).ZAxis) < -0.9999);
             var xPos = 0.0;
             foreach (var arc in arcs)
             {
