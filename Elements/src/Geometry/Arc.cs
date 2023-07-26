@@ -235,7 +235,7 @@ namespace Elements.Geometry
 
             // Construct new vectors that both
             // point away from the projected intersection.
-            // Use an arbitrary point on the line that 
+            // Use an arbitrary point on the line that
             // isn't the start or the end. This ensures
             // that the vectors will point in the correct direction,
             // regardless of the original lines' original orientation
@@ -311,9 +311,7 @@ namespace Elements.Geometry
             return this.BasisCurve.Radius * theta;
         }
 
-        /// <summary>
-        /// The mid point of the line.
-        /// </summary>
+        /// <inheritdoc/>
         public override Vector3 Mid()
         {
             return PointAt(this.Domain.Min + this.Domain.Length / 2);
@@ -470,7 +468,7 @@ namespace Elements.Geometry
                 pts.Add(PointAt(t));
             }
 
-            // We don't go all the way to the end parameter, and 
+            // We don't go all the way to the end parameter, and
             // add it here explicitly because rounding errors can
             // cause small imprecision which accumulates to make
             // the final parameter slightly more/less than the actual
