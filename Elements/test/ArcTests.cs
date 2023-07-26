@@ -281,6 +281,132 @@ namespace Hypar.Tests
         }
 
         [Fact]
+        private void ReversedArcs_CRAAConstructor()
+        {
+            Name = nameof(ReversedArcs_CRAAConstructor);
+            var line = new Line((0, 0, 0), (6, 0, 0));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var arc1 = new Arc((0, 0, 0), 1, 0, 90);
+            var arc2 = new Arc((0, 0, 0), 1, 90, 0);
+            var arc3 = new Arc((0, 0, 0), 1, -90, 0);
+            var arc4 = new Arc((0, 0, 0), 1, 0, -90);
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var transform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(transform.ToModelCurves(displayXform));
+                xPos += 2.0;
+            }
+        }
+
+        [Fact]
+        private void ReversedArcs_RAAConstructor()
+        {
+            Name = nameof(ReversedArcs_RAAConstructor);
+            var line = new Line((0, 0, 0), (6, 0, 0));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var arc1 = new Arc(1, 0, 90);
+            var arc2 = new Arc(1, 90, 0);
+            var arc3 = new Arc(1, -90, 0);
+            var arc4 = new Arc(1, 0, -90);
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var transform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(transform.ToModelCurves(displayXform));
+                xPos += 2.0;
+            }
+        }
+
+        [Fact]
+        private void ReversedArcs_CPPConstructor()
+        {
+            Name = nameof(ReversedArcs_CPPConstructor);
+            var line = new Line((4, 5, 6), (10, 5, 6));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var circle = new Circle(new Transform((4, 5, 6), new Vector3(1, 1, 1).Unitized()), 1.0);
+            var arc1 = new Arc(circle, 0, Math.PI / 2.0);
+            var arc2 = new Arc(circle, Math.PI / 2.0, 0);
+            var arc3 = new Arc(circle, -Math.PI / 2.0, 0);
+            var arc4 = new Arc(circle, 0, -Math.PI / 2.0);
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var transform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(transform.ToModelCurves(displayXform));
+                xPos += 2.0;
+            }
+        }
+
+        [Fact]
+        private void ReversedArcs_TRPPConstructor()
+        {
+            Name = nameof(ReversedArcs_TRPPConstructor);
+            var line = new Line((4, 5, 6), (4 + 2 * 6, 5, 6));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var transform = new Transform((4, 5, 6), new Vector3((1, 1, 1)).Unitized());
+            var arc1 = new Arc(transform, 2, 0, Math.PI / 2.0);
+            var arc2 = new Arc(transform, 2, Math.PI / 2.0, 0);
+            var arc3 = new Arc(transform, 2, -Math.PI / 2.0, 0);
+            var arc4 = new Arc(transform, 2, 0, -Math.PI / 2.0);
+            var arc5 = new Arc(transform, 4, .234, 0.697);
+            var arc6 = new Arc(transform, 4, 0.697, .234);
+            var arcs = new[] { arc1, arc2, arc3, arc4, arc5, arc6 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc5.Start, arc6.End);
+            Assert.Equal(arc6.Start, arc5.End);
+            Assert.Equal(arc5.PointAtNormalized(0.2), arc6.PointAtNormalized(0.8));
+            Assert.True(arc5.TransformAtNormalized(0.2).ZAxis.Dot(arc6.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var ptTransform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(ptTransform.ToModelCurves(displayXform));
+                xPos += 4.0;
+            }
+        }
+
+        [Fact]
         public void PointAtNormalizedReturnsSameValue()
         {
             var line = ModelTest.TestLine;
@@ -324,6 +450,15 @@ namespace Hypar.Tests
         }
 
         [Fact]
+        public void ReversedArcCreatesPolyline()
+        {
+            Name = nameof(ReversedArcCreatesPolyline);
+            var arc1 = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
+            var p = arc1.ToPolyline();
+            Model.AddElement(new ModelCurve(p, BuiltInMaterials.XAxis));
+        }
+
+        [Fact]
         public void TransformAtNormalizedReturnsSameValue()
         {
             var line = ModelTest.TestLine;
@@ -348,5 +483,6 @@ namespace Hypar.Tests
             Assert.Equal(curve.TransformAt(curve.Domain.Min), curve.TransformAtNormalized(0.0));
             Assert.Equal(curve.TransformAt(curve.Domain.Max), curve.TransformAtNormalized(1.0));
         }
+
     }
 }
