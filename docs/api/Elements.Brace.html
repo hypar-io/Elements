@@ -128,6 +128,9 @@
       <a class="xref" href="Elements.StructuralFraming.html#Elements_StructuralFraming_UpdateRepresentations">StructuralFraming.UpdateRepresentations()</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Bounds">GeometricElement.Bounds</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
@@ -143,6 +146,9 @@
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_">GeometricElement.UpdateBoundsAndComputeSolid(Boolean)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -150,6 +156,9 @@
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____">GeometricElement.Intersects(Plane, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
@@ -168,6 +177,15 @@
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -200,13 +218,13 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Brace__ctor_" data-uid="Elements.Brace.#ctor*"></a>
-  <h4 id="Elements_Brace__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.Brace.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">Brace(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)</h4>
+  <h4 id="Elements_Brace__ctor_Elements_Geometry_BoundedCurve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.Brace.#ctor(Elements.Geometry.BoundedCurve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">Brace(BoundedCurve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)</h4>
   <div class="markdown level1 summary"><p>Construct a Brace.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Brace(Curve curve, Profile profile, Material material = null, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Brace(BoundedCurve curve, Profile profile, Material material = null, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -219,7 +237,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td><span class="parametername">curve</span></td>
         <td><p>The brace's center line.</p>
 </td>
