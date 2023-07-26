@@ -29,6 +29,7 @@
 - `Polyline` is now parameterized 0->length.
 - `Arc` now inherits from `TrimmedCurve<Circle>`.
 - `Arc` is now parameterized 0->2Pi
+- `Arc` now automatically corrects decreasing angle domains to be increasing, while preserving direction.
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
 - `Bezier` now inherits from `BoundedCurve`.

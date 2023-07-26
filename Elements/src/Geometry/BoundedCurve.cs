@@ -52,9 +52,7 @@ namespace Elements.Geometry
         /// </summary>
         public abstract double ArcLength(double start, double end);
 
-        /// <summary>
-        /// The mid point of the curve.
-        /// </summary>
+        /// <inheritdoc/>
         public virtual Vector3 Mid()
         {
             return PointAt(this.Domain.Mid());
