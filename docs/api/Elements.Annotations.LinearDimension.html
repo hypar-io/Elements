@@ -101,6 +101,7 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.ComponentModel.INotifyPropertyChanged</span></div>
+    <div><a class="xref" href="Elements.Annotations.IOverrideLinked.html">IOverrideLinked</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -129,6 +130,15 @@
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
     </div>
     <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
+    </div>
+    <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
     <div>
@@ -154,7 +164,7 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Annotations_LinearDimension_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class LinearDimension : Annotation, INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class LinearDimension : Annotation, INotifyPropertyChanged, IOverrideLinked</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -239,6 +249,30 @@ points will be projected.</p>
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Annotations_LinearDimension_LinkedProperty_" data-uid="Elements.Annotations.LinearDimension.LinkedProperty*"></a>
+  <h4 id="Elements_Annotations_LinearDimension_LinkedProperty" data-uid="Elements.Annotations.LinearDimension.LinkedProperty">LinkedProperty</h4>
+  <div class="markdown level1 summary"><p>Information about the element and property that this dimension is linked to, if any.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LinkedPropertyInfo LinkedProperty { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Annotations.LinkedPropertyInfo.html">LinkedPropertyInfo</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -383,6 +417,9 @@ points will be projected.</p>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.ComponentModel.INotifyPropertyChanged</span>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Annotations.IOverrideLinked.html">IOverrideLinked</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>

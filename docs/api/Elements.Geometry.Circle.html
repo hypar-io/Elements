@@ -86,82 +86,24 @@
   
   <h1 id="Elements_Geometry_Circle" data-uid="Elements.Geometry.Circle" class="text-break">Class Circle
   </h1>
-  <div class="markdown level0 summary"><p>An arc with a start angle of 0 (+X) and
-an end angle of 360.0.</p>
+  <div class="markdown level0 summary"><p>A circle.
+Parameterization of the circle is 0 -&gt; 2PI.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
-    <div class="level2"><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></div>
-    <div class="level3"><span class="xref">Circle</span></div>
+    <div class="level2"><span class="xref">Circle</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
-    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Arc.html">Arc</a>&gt;</div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IConic.html">IConic</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Center">Arc.Center</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Radius">Arc.Radius</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_StartAngle">Arc.StartAngle</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_EndAngle">Arc.EndAngle</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Length">Arc.Length()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Start">Arc.Start</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_End">Arc.End</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_PointAt_System_Double_">Arc.PointAt(Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_TransformAt_System_Double_">Arc.TransformAt(Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Reversed">Arc.Reversed()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Bounds">Arc.Bounds()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Plane">Arc.Plane()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Equals_Elements_Geometry_Arc_">Arc.Equals(Arc)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Complement">Arc.Complement()</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_Transformed_Elements_Geometry_Transform_">Arc.Transformed(Transform)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Arc.html#Elements_Geometry_Arc_TransformedArc_Elements_Geometry_Transform_">Arc.TransformedArc(Transform)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
-    </div>
-    <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
-    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -188,10 +130,41 @@ an end angle of 360.0.</p>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Circle_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Circle : Arc, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Arc&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Circle : Curve, ICurve, ITransformable&lt;Curve&gt;, IConic</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
+  <a id="Elements_Geometry_Circle__ctor_" data-uid="Elements.Geometry.Circle.#ctor*"></a>
+  <h4 id="Elements_Geometry_Circle__ctor_Elements_Geometry_Transform_System_Double_" data-uid="Elements.Geometry.Circle.#ctor(Elements.Geometry.Transform,System.Double)">Circle(Transform, Double)</h4>
+  <div class="markdown level1 summary"><p>Construct a circle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Circle(Transform transform, double radius = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Circle__ctor_" data-uid="Elements.Geometry.Circle.#ctor*"></a>
   <h4 id="Elements_Geometry_Circle__ctor_Elements_Geometry_Vector3_System_Double_" data-uid="Elements.Geometry.Circle.#ctor(Elements.Geometry.Vector3,System.Double)">Circle(Vector3, Double)</h4>
   <div class="markdown level1 summary"><p>Construct a circle.</p>
@@ -253,11 +226,183 @@ public Circle(Vector3 center, double radius = 1)</code></pre>
       </tr>
     </tbody>
   </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Geometry_Circle_Center_" data-uid="Elements.Geometry.Circle.Center*"></a>
+  <h4 id="Elements_Geometry_Circle_Center" data-uid="Elements.Geometry.Circle.Center">Center</h4>
+  <div class="markdown level1 summary"><p>The center of the circle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Center&quot;, Required = Required.AllowNull)]
+public Vector3 Center { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Circle_Radius_" data-uid="Elements.Geometry.Circle.Radius*"></a>
+  <h4 id="Elements_Geometry_Circle_Radius" data-uid="Elements.Geometry.Circle.Radius">Radius</h4>
+  <div class="markdown level1 summary"><p>The radius of the circle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Radius&quot;, Required = Required.Always)]
+[Range(0, 1.7976931348623157E+308)]
+public double Radius { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Circle_Transform_" data-uid="Elements.Geometry.Circle.Transform*"></a>
+  <h4 id="Elements_Geometry_Circle_Transform" data-uid="Elements.Geometry.Circle.Transform">Transform</h4>
+  <div class="markdown level1 summary"><p>The coordinate system of the plane containing the circle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Transform Transform { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Geometry_Circle_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.Circle.ParameterAtDistanceFromParameter*"></a>
+  <h4 id="Elements_Geometry_Circle_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.Circle.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the parameter at a distance from the start parameter along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ParameterAtDistanceFromParameter(double distance, double start)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance from the start parameter.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The parameter from which to measure the distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ParameterAtDistanceFromParameter_System_Double_System_Double_">Curve.ParameterAtDistanceFromParameter(Double, Double)</a></div>
+  <a id="Elements_Geometry_Circle_PointAt_" data-uid="Elements.Geometry.Circle.PointAt*"></a>
+  <h4 id="Elements_Geometry_Circle_PointAt_System_Double_" data-uid="Elements.Geometry.Circle.PointAt(System.Double)">PointAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Return the point at parameter u on the arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 PointAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A parameter on the arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A Vector3 representing the point along the arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
   <a id="Elements_Geometry_Circle_ToPolygon_" data-uid="Elements.Geometry.Circle.ToPolygon*"></a>
   <h4 id="Elements_Geometry_Circle_ToPolygon_System_Int32_" data-uid="Elements.Geometry.Circle.ToPolygon(System.Int32)">ToPolygon(Int32)</h4>
-  <div class="markdown level1 summary"><p>Create a polygon through a set of points along the arc.</p>
+  <div class="markdown level1 summary"><p>Create a polygon through a set of points along the circle.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -277,7 +422,7 @@ public Circle(Vector3 center, double radius = 1)</code></pre>
       <tr>
         <td><span class="xref">System.Int32</span></td>
         <td><span class="parametername">divisions</span></td>
-        <td><p>The number of divisions of the arc.</p>
+        <td><p>The number of divisions of the circle.</p>
 </td>
       </tr>
     </tbody>
@@ -298,6 +443,182 @@ public Circle(Vector3 center, double radius = 1)</code></pre>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Circle_TransformAt_" data-uid="Elements.Geometry.Circle.TransformAt*"></a>
+  <h4 id="Elements_Geometry_Circle_TransformAt_System_Double_" data-uid="Elements.Geometry.Circle.TransformAt(System.Double)">TransformAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Return transform on the arc at parameter u.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>A parameter on the arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><p>A transform with its origin at u along the curve and its Z axis tangent to the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <a id="Elements_Geometry_Circle_Transformed_" data-uid="Elements.Geometry.Circle.Transformed*"></a>
+  <h4 id="Elements_Geometry_Circle_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Circle.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
+  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
+Use of non-affine transforms (i.e. scale) will
+result in unpredictable results for curve methods such as Length().</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Curve Transformed(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_">Curve.Transformed(Transform)</a></div>
+  <h3 id="operators">Operators
+  </h3>
+  <a id="Elements_Geometry_Circle_op_Implicit_" data-uid="Elements.Geometry.Circle.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Circle_op_Implicit_Elements_Geometry_Circle__Elements_Geometry_Arc" data-uid="Elements.Geometry.Circle.op_Implicit(Elements.Geometry.Circle)~Elements.Geometry.Arc">Implicit(Circle to Arc)</h4>
+  <div class="markdown level1 summary"><p>Convert a circle to a circular arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator Arc(Circle c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></td>
+        <td><span class="parametername">c</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Circle_op_Implicit_" data-uid="Elements.Geometry.Circle.op_Implicit*"></a>
+  <h4 id="Elements_Geometry_Circle_op_Implicit_Elements_Geometry_Circle__Elements_ModelCurve" data-uid="Elements.Geometry.Circle.op_Implicit(Elements.Geometry.Circle)~Elements.ModelCurve">Implicit(Circle to ModelCurve)</h4>
+  <div class="markdown level1 summary"><p>Convert a circle to a circular model curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator ModelCurve(Circle c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The bounded curve to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.ModelCurve.html">ModelCurve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
@@ -306,7 +627,7 @@ public Circle(Vector3 center, double radius = 1)</code></pre>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
   </div>
   <div>
-      <span class="xref">System.IEquatable&lt;T&gt;</span>
+      <a class="xref" href="Elements.Geometry.Interfaces.IConic.html">IConic</a>
   </div>
 </article>
           </div>
