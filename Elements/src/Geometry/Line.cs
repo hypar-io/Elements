@@ -575,9 +575,7 @@ namespace Elements.Geometry
             return lines;
         }
 
-        /// <summary>
-        /// The mid point of the line.
-        /// </summary>
+        /// <inheritdoc/>
         public override Vector3 Mid()
         {
             return Start.Average(End);
@@ -925,7 +923,7 @@ namespace Elements.Geometry
             // line vectors are not collinear, their directions share the common plane.
             else
             {
-                // dStartStart length is distance to the common plane. 
+                // dStartStart length is distance to the common plane.
                 dStartStart = dStartStart.ProjectOnto(cross);
                 Vector3 vStartStart = other.Start + dStartStart - this.Start;
                 Vector3 vStartEnd = other.Start + dStartStart - this.End;
@@ -1028,8 +1026,8 @@ namespace Elements.Geometry
                 var B = intersectionsOrdered[i + 1];
                 if (A.IsAlmostEqualTo(B)) // skip duplicate points
                 {
-                    // it's possible that A is outside, but B is at an edge, even 
-                    // if they are within tolerance of each other. 
+                    // it's possible that A is outside, but B is at an edge, even
+                    // if they are within tolerance of each other.
                     // This can happen due to floating point error when the point is almost exactly
                     // epsilon distance from the edge.
                     // so if we have duplicate points, we have to update the containment value.
