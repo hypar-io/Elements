@@ -1,0 +1,713 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class EllipticalArc
+   | Hypar Docs </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class EllipticalArc
+   | Hypar Docs ">
+    <meta name="generator" content="docfx 2.59.0.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/vs2015.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script defer="" src="https://unpkg.com/es-module-shims@0.4.6/dist/es-module-shims.js"></script>
+    <script type="importmap-shim">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.137.5/build/three.module.js",
+          "three/examples/jsm/": "https://unpkg.com/three@0.137.5/examples/jsm/"
+        }
+      }
+      </script>
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <!--<a class="navbar-brand" href="../index.html">
+          <img id="logo" class="svg" src="../logo.svg" alt="" >
+        </a>
+        -->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Elements.Geometry.EllipticalArc">
+  
+  <h1 id="Elements_Geometry_EllipticalArc" data-uid="Elements.Geometry.EllipticalArc" class="text-break">Class EllipticalArc
+  </h1>
+  <div class="markdown level0 summary"><p>An elliptical arc.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
+    <div class="level3"><a class="xref" href="Elements.Geometry.TrimmedCurve-1.html">TrimmedCurve</a>&lt;<a class="xref" href="Elements.Geometry.Ellipse.html">Ellipse</a>&gt;</div>
+    <div class="level4"><span class="xref">EllipticalArc</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITrimmedCurve-1.html">ITrimmedCurve</a>&lt;<a class="xref" href="Elements.Geometry.Ellipse.html">Ellipse</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Elements.Geometry.TrimmedCurve-1.html#Elements_Geometry_TrimmedCurve_1_BasisCurve">TrimmedCurve&lt;Ellipse&gt;.BasisCurve</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_DefaultMinimumChordLength">BoundedCurve.DefaultMinimumChordLength</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Start">BoundedCurve.Start</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_End">BoundedCurve.End</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Mid">BoundedCurve.Mid()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_IsClosedForRendering">BoundedCurve.IsClosedForRendering</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Frames_System_Double_System_Double_System_Double_">BoundedCurve.Frames(Double, Double, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ToPolyline_System_Int32_">BoundedCurve.ToPolyline(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_PointAtNormalized_System_Double_">BoundedCurve.PointAtNormalized(Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_TransformAtNormalized_System_Double_">BoundedCurve.TransformAtNormalized(Double)</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.html">Elements.Geometry</a></h6>
+  <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
+  <h5 id="Elements_Geometry_EllipticalArc_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class EllipticalArc : TrimmedCurve&lt;Ellipse&gt;, ICurve, ITransformable&lt;Curve&gt;, IBoundedCurve, ITrimmedCurve&lt;Ellipse&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <a id="Elements_Geometry_EllipticalArc__ctor_" data-uid="Elements.Geometry.EllipticalArc.#ctor*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc__ctor_Elements_Geometry_Ellipse_System_Double_System_Double_" data-uid="Elements.Geometry.EllipticalArc.#ctor(Elements.Geometry.Ellipse,System.Double,System.Double)">EllipticalArc(Ellipse, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Create an elliptical arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EllipticalArc(Ellipse ellipse, double startAngle, double endAngle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Ellipse.html">Ellipse</a></td>
+        <td><span class="parametername">ellipse</span></td>
+        <td><p>The ellipse on which this trim is based.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startAngle</span></td>
+        <td><p>The start angle of the trim in degrees.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endAngle</span></td>
+        <td><p>The end parameter of the trim in degrees.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_EllipticalArc__ctor_" data-uid="Elements.Geometry.EllipticalArc.#ctor*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.EllipticalArc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double,System.Double)">EllipticalArc(Vector3, Double, Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Create an elliptical arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public EllipticalArc(Vector3 center, double majorAxis, double minorAxis, double startAngle, double endAngle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">center</span></td>
+        <td><p>The center of the ellipse.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">majorAxis</span></td>
+        <td><p>The major axis (X) of the ellipse.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">minorAxis</span></td>
+        <td><p>The minor axis (Y) of the ellipse.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startAngle</span></td>
+        <td><p>The start parameter of the trim.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endAngle</span></td>
+        <td><p>The end parameter of the trim.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <a id="Elements_Geometry_EllipticalArc_Domain_" data-uid="Elements.Geometry.EllipticalArc.Domain*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_Domain" data-uid="Elements.Geometry.EllipticalArc.Domain">Domain</h4>
+  <div class="markdown level1 summary"><p>The domain of the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public override Domain1d Domain { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Domain">BoundedCurve.Domain</a></div>
+  <a id="Elements_Geometry_EllipticalArc_EndAngle_" data-uid="Elements.Geometry.EllipticalArc.EndAngle*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_EndAngle" data-uid="Elements.Geometry.EllipticalArc.EndAngle">EndAngle</h4>
+  <div class="markdown level1 summary"><p>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndAngle&quot;, Required = Required.Always)]
+[Range(0, 360)]
+public double EndAngle { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_EllipticalArc_StartAngle_" data-uid="Elements.Geometry.EllipticalArc.StartAngle*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_StartAngle" data-uid="Elements.Geometry.EllipticalArc.StartAngle">StartAngle</h4>
+  <div class="markdown level1 summary"><p>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartAngle&quot;, Required = Required.Always)]
+[Range(0, 360)]
+public double StartAngle { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <a id="Elements_Geometry_EllipticalArc_ArcLength_" data-uid="Elements.Geometry.EllipticalArc.ArcLength*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_ArcLength_System_Double_System_Double_" data-uid="Elements.Geometry.EllipticalArc.ArcLength(System.Double,System.Double)">ArcLength(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the elliptical arc between start and end parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ArcLength(double start, double end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">end</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>The length of the elliptical arc between start and end.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ArcLength_System_Double_System_Double_">BoundedCurve.ArcLength(Double, Double)</a></div>
+  <a id="Elements_Geometry_EllipticalArc_Bounds_" data-uid="Elements.Geometry.EllipticalArc.Bounds*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_Bounds" data-uid="Elements.Geometry.EllipticalArc.Bounds">Bounds()</h4>
+  <div class="markdown level1 summary"><p>The bounds of the elliptical arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override BBox3 Bounds()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Bounds">BoundedCurve.Bounds()</a></div>
+  <a id="Elements_Geometry_EllipticalArc_GetSubdivisionParameters_" data-uid="Elements.Geometry.EllipticalArc.GetSubdivisionParameters*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_GetSubdivisionParameters_System_Double_System_Double_" data-uid="Elements.Geometry.EllipticalArc.GetSubdivisionParameters(System.Double,System.Double)">GetSubdivisionParameters(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get parameters to be used to find points along the curve for visualization.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startSetbackDistance</span></td>
+        <td><p>An optional setback from the start of the curve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endSetbackDistance</span></td>
+        <td><p>An optional setback from the end of the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><p>A collection of parameter values.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_GetSubdivisionParameters_System_Double_System_Double_">BoundedCurve.GetSubdivisionParameters(Double, Double)</a></div>
+  <a id="Elements_Geometry_EllipticalArc_Length_" data-uid="Elements.Geometry.EllipticalArc.Length*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_Length" data-uid="Elements.Geometry.EllipticalArc.Length">Length()</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the elliptical arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double Length()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>The length of the elliptical arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Length">BoundedCurve.Length()</a></div>
+  <a id="Elements_Geometry_EllipticalArc_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.EllipticalArc.ParameterAtDistanceFromParameter*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.EllipticalArc.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the parameter at a distance from the start parameter along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ParameterAtDistanceFromParameter(double distance, double start)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance from the start parameter.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The parameter from which to measure the distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ParameterAtDistanceFromParameter_System_Double_System_Double_">Curve.ParameterAtDistanceFromParameter(Double, Double)</a></div>
+  <a id="Elements_Geometry_EllipticalArc_PointAt_" data-uid="Elements.Geometry.EllipticalArc.PointAt*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_PointAt_System_Double_" data-uid="Elements.Geometry.EllipticalArc.PointAt(System.Double)">PointAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get a point at a parameter on the elliptical arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 PointAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The parameter at which to find a point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><p>A point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_PointAt_System_Double_">Curve.PointAt(Double)</a></div>
+  <a id="Elements_Geometry_EllipticalArc_TransformAt_" data-uid="Elements.Geometry.EllipticalArc.TransformAt*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_TransformAt_System_Double_" data-uid="Elements.Geometry.EllipticalArc.TransformAt(System.Double)">TransformAt(Double)</h4>
+  <div class="markdown level1 summary"><p>Get a transform at a parameter on the elliptical arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Transform TransformAt(double u)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">u</span></td>
+        <td><p>The parameter at which to find a transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><p>A transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
+  <a id="Elements_Geometry_EllipticalArc_Transformed_" data-uid="Elements.Geometry.EllipticalArc.Transformed*"></a>
+  <h4 id="Elements_Geometry_EllipticalArc_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.EllipticalArc.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
+  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
+Use of non-affine transforms (i.e. scale) will
+result in unpredictable results for curve methods such as Length().</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Curve Transformed(Transform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform to apply.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Transformed_Elements_Geometry_Transform_">Curve.Transformed(Transform)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITrimmedCurve-1.html">ITrimmedCurve&lt;TBasis&gt;</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

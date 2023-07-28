@@ -203,28 +203,43 @@ var z = 0.0;
 var specularFactor = 0.0;
 var glossinessFactor = 0.0;
 
-var rectangle = Polygon.Rectangle(0.5, 0.5);
+var textData = new List&lt;(Vector3, Vector3, Vector3, string, Color?)&gt;();
+
+var sphere = Mesh.Sphere(0.5, 20);
 
 for (var r = 0.0; r &lt;= 1.0; r += 0.2)
 {
     for (var g = 0.0; g &lt;= 1.0; g += 0.2)
     {
+        if (r == 0)
+        {
+            textData.Add((new Vector3(-1.5, y), Vector3.ZAxis, Vector3.XAxis, $&quot;roughness: {1 - glossinessFactor:f2}&quot;, Colors.Black));
+        }
+        if (g == 0)
+        {
+            textData.Add((new Vector3(x, -1), Vector3.ZAxis, Vector3.XAxis, $&quot;specular: {specularFactor:f2}&quot;, Colors.Black));
+        }
         for (var b = 0.0; b &lt;= 1.0; b += 0.2)
         {
-            var color = new Color(r, g, b, 1.0);
+            var color = new Color(r, g, b, 1 - b);
+            if (r == 1.0 &amp;&amp; g == 0.0)
+            {
+                textData.Add((new Vector3(x + 1.5, y, z), Vector3.YAxis.Negate(), Vector3.XAxis, $&quot;alpha: {color.Alpha:f2}&quot;, Colors.Black));
+            }
             var material = new Material($&quot;{r}_{g}_{b}&quot;, color, specularFactor, glossinessFactor);
-            var mass = new Mass(rectangle, 0.5, material, new Transform(new Vector3(x, y, z)));
-            this.Model.AddElement(mass);
+            Model.AddElement(new MeshElement(sphere, new Transform(new Vector3(x, y, z)), material));
             z += 2.0;
         }
         z = 0;
         y += 2.0;
+        glossinessFactor += 0.2;
     }
+    glossinessFactor = 0.0;
     y = 0;
     x += 2.0;
     specularFactor += 0.2;
-    glossinessFactor += 0.2;
 }
+Model.AddElement(new ModelText(textData, FontSize.PT72));
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -252,6 +267,15 @@ for (var r = 0.0; r &lt;= 1.0; r += 0.2)
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
@@ -399,7 +423,7 @@ public Material(Color color, double specularFactor, double glossinessFactor, boo
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, bool repeatTexture = true, string normalTexture = null, bool interpolateTexture = true, string emissiveTexture = null, double emissiveFactor = 1, bool drawInFront = false, Guid id = default(Guid))</code></pre>
+    <pre><code class="lang-csharp hljs">public Material(string name, Color color, double specularFactor = 0.1, double glossinessFactor = 0.1, string texture = null, bool unlit = false, bool doubleSided = false, bool repeatTexture = true, string normalTexture = null, bool interpolateTexture = true, string emissiveTexture = null, double emissiveFactor = 0, bool drawInFront = false, Guid id = default(Guid))</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">

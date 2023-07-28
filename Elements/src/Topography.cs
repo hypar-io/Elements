@@ -233,7 +233,7 @@ namespace Elements
             this.RowWidth = topography.RowWidth;
             this.CellWidth = topography.CellWidth;
             this.CellHeight = topography.CellHeight;
-            this.Elevations = topography.Elevations.ToArray();
+            this.Elevations = topography.Elevations?.ToArray();
             this._depthBelowMinimumElevation = topography._depthBelowMinimumElevation;
             this._absoluteMinimumElevation = topography._absoluteMinimumElevation;
             this._minElevation = topography._minElevation;

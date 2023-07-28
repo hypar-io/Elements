@@ -280,13 +280,14 @@ namespace Elements.Tests
             var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
 
             var closedRegions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(closedRegions, allNodeLocations);
 
             this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
             this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Black));
 
-            Assert.Equal(5, closedRegions.Count);
+            Assert.Equal(5, counterClockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, closedRegions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
         }
 
         [Fact]
@@ -356,10 +357,11 @@ namespace Elements.Tests
             var lines = rect.Segments().Concat(new[] { a, b, c, d }).ToList();
             var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
             var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
 
-            Assert.Equal(5, regions.Count);
+            Assert.Equal(5, counterClockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, regions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
         }
 
         [Fact]
@@ -454,8 +456,76 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
 
-            Assert.Equal(2, regions.Count);
+            Assert.Equal(2, counterClockwiseRegions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
+        }
+
+        [Fact]
+        public void EShapeNetworkClosedRegions()
+        {
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+
+            this.Name = nameof(EShapeNetwork1);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Empty(regions);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void TwoInnerLeavesClosedRegions()
+        {
+            // 3              2
+            // ---------------
+            // |         8   |
+            // |          ---| 1
+            // |    7   9/   |
+            // |     \6      | 
+            // |      |      |
+            // ---------------
+            // 4      5       0
+
+            this.Name = nameof(IntersectingLeafPathFindsCorrectClosedRegions);
+            var lines = new List<Line> {
+                // Room
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                // First leaf
+                new Line((5.00, 0.00), (5.00, 2.00)),
+                new Line((5.00, 2.00), (4.00, 3.00)),
+                // Second leaf
+                new Line((10.00, 7.00), (8.00, 7.00)),
+                new Line((8.00, 7.00), (7.00, 6.00))
+            };
+
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
+
+            Assert.Single(counterClockwiseRegions);
 
             DrawNetwork(network, allNodeLocations, this.Model, regions);
         }
@@ -478,10 +548,11 @@ namespace Elements.Tests
             };
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
 
-            Assert.Equal(5, regions.Count);
+            Assert.Equal(5, counterClockwiseRegions.Count);
 
-            DrawNetwork(network, allNodeLocations, this.Model, regions);
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
         }
 
         [Fact]
@@ -671,6 +742,18 @@ namespace Elements.Tests
             }
             model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
             model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+        }
+
+        private static List<List<int>> GetCounterClockwiseRegions(List<List<int>> closedRegions, List<Vector3> allNodeLocations)
+        {
+            var result = closedRegions.Where(r => !IsClockwise(r, allNodeLocations)).ToList();
+            return result;
+        }
+
+        private static bool IsClockwise(List<int> nodeIds, List<Vector3> allNodeLocations)
+        {
+            var vertices = nodeIds.Select(i => allNodeLocations[i]).ToList();
+            return new Polygon(vertices).IsClockWise();
         }
     }
 }

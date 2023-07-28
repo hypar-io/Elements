@@ -147,14 +147,14 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Solids_Sweep__ctor_" data-uid="Elements.Geometry.Solids.Sweep.#ctor*"></a>
-  <h4 id="Elements_Geometry_Solids_Sweep__ctor_Elements_Geometry_Profile_Elements_Geometry_Curve_System_Double_System_Double_System_Double_System_Boolean_" data-uid="Elements.Geometry.Solids.Sweep.#ctor(Elements.Geometry.Profile,Elements.Geometry.Curve,System.Double,System.Double,System.Double,System.Boolean)">Sweep(Profile, Curve, Double, Double, Double, Boolean)</h4>
+  <h4 id="Elements_Geometry_Solids_Sweep__ctor_Elements_Geometry_Profile_Elements_Geometry_BoundedCurve_System_Double_System_Double_System_Double_System_Boolean_" data-uid="Elements.Geometry.Solids.Sweep.#ctor(Elements.Geometry.Profile,Elements.Geometry.BoundedCurve,System.Double,System.Double,System.Double,System.Boolean)">Sweep(Profile, BoundedCurve, Double, Double, Double, Boolean)</h4>
   <div class="markdown level1 summary"><p>Construct a sweep.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonConstructor]
-public Sweep(Profile profile, Curve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
+public Sweep(Profile profile, BoundedCurve curve, double startSetback, double endSetback, double profileRotation, bool isVoid)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -172,7 +172,7 @@ public Sweep(Profile profile, Curve curve, double startSetback, double endSetbac
         <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td><span class="parametername">curve</span></td>
         <td></td>
       </tr>
@@ -208,7 +208,7 @@ public Sweep(Profile profile, Curve curve, double startSetback, double endSetbac
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Curve&quot;, Required = Required.AllowNull)]
-public Curve Curve { get; set; }</code></pre>
+public BoundedCurve Curve { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -220,7 +220,7 @@ public Curve Curve { get; set; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td></td>
       </tr>
     </tbody>

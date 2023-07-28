@@ -100,6 +100,7 @@
       <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
       <div class="level2"><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></div>
       <div class="level2"><a class="xref" href="Elements.Light.html">Light</a></div>
+      <div class="level2"><a class="xref" href="Elements.MappingBase.html">MappingBase</a></div>
       <div class="level2"><a class="xref" href="Elements.Material.html">Material</a></div>
       <div class="level2"><a class="xref" href="Elements.Spatial.CellComplex.CellComplex.html">CellComplex</a></div>
   </div>
@@ -234,7 +235,7 @@ public Guid Id { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Name&quot;, Required = Required.AllowNull)]
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Name&quot;, Required = Required.Default)]
 public string Name { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -254,6 +255,108 @@ public string Name { get; set; }</code></pre>
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Element_GetMapping_" data-uid="Elements.Element.GetMapping*"></a>
+  <h4 id="Elements_Element_GetMapping_System_String_" data-uid="Elements.Element.GetMapping(System.String)">GetMapping(String)</h4>
+  <div class="markdown level1 summary"><p>Retrieve a mapping for a given context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MappingBase GetMapping(string context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context of the mapping being requested.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.MappingBase.html">MappingBase</a></td>
+        <td><p>The mapping if it exists, null if not.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Element_GetMapping_" data-uid="Elements.Element.GetMapping*"></a>
+  <h4 id="Elements_Element_GetMapping__1_System_String_" data-uid="Elements.Element.GetMapping``1(System.String)">GetMapping&lt;T&gt;(String)</h4>
+  <div class="markdown level1 summary"><p>Retrieve a mapping for a given context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T GetMapping&lt;T&gt;(string context)
+    where T : MappingBase</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context of the mapping being requested.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The Type of mapping expected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Element_RaisePropertyChanged_" data-uid="Elements.Element.RaisePropertyChanged*"></a>
   <h4 id="Elements_Element_RaisePropertyChanged_System_String_" data-uid="Elements.Element.RaisePropertyChanged(System.String)">RaisePropertyChanged(String)</h4>
   <div class="markdown level1 summary"><p>Raise a property change event.</p>
@@ -278,6 +381,37 @@ public string Name { get; set; }</code></pre>
         <td><span class="parametername">propertyName</span></td>
         <td><p>The name of the property.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Element_SetMapping_" data-uid="Elements.Element.SetMapping*"></a>
+  <h4 id="Elements_Element_SetMapping_System_String_Elements_MappingBase_" data-uid="Elements.Element.SetMapping(System.String,Elements.MappingBase)">SetMapping(String, MappingBase)</h4>
+  <div class="markdown level1 summary"><p>The method used to set a mapping for a given context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetMapping(string context, MappingBase mapping)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">context</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.MappingBase.html">MappingBase</a></td>
+        <td><span class="parametername">mapping</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
