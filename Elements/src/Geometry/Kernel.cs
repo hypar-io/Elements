@@ -29,9 +29,18 @@ namespace Elements.Geometry
         /// Create a sweep along a curve.
         /// </summary>
         /// <returns>A solid.</returns>
-        public Solid CreateSweepAlongCurve(Profile profile, BoundedCurve curve, double startSetback, double endSetback, double profileRotation)
+        public Solid CreateSweepAlongCurve(Profile profile,
+                                           BoundedCurve curve,
+                                           double startSetback,
+                                           double endSetback,
+                                           double profileRotation)
         {
-            return Solid.SweepFaceAlongCurve(profile.Perimeter, profile.Voids != null && profile.Voids.Count > 0 ? profile.Voids : null, curve, startSetback, endSetback, profileRotation);
+            return Solid.SweepFaceAlongCurve(profile.Perimeter,
+                                             profile.Voids != null && profile.Voids.Count > 0 ? profile.Voids : null,
+                                             curve,
+                                             startSetback,
+                                             endSetback,
+                                             profileRotation);
         }
 
         /// <summary>

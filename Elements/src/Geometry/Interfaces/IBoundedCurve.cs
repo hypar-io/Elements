@@ -17,7 +17,7 @@ namespace Elements.Geometry.Interfaces
         Vector3 End { get; }
 
         /// <summary>
-        /// The mid point of the curve.
+        /// The point at the middle of the curve's parameter space.
         /// </summary>
         Vector3 Mid();
 
@@ -25,6 +25,11 @@ namespace Elements.Geometry.Interfaces
         /// Calculate the length of the curve.
         /// </summary>
         double Length();
+
+        /// <summary>
+        /// Calculate the length of the curve between two parameters.
+        /// </summary>
+        double ArcLength(double start, double end);
 
         /// <summary>
         /// Get the bounding box of this curve.
@@ -38,7 +43,9 @@ namespace Elements.Geometry.Interfaces
         /// <param name="endSetbackDistance">The offset from the end of the ICurve.</param>
         /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
         /// <returns>A collection of Transforms.</returns>
-        Transform[] Frames(double startSetbackDistance = 0.0, double endSetbackDistance = 0.0, double additionalRotation = 0.0);
+        Transform[] Frames(double startSetbackDistance = 0.0,
+                           double endSetbackDistance = 0.0,
+                           double additionalRotation = 0.0);
 
         /// <summary>
         /// The domain of the curve.
@@ -51,7 +58,8 @@ namespace Elements.Geometry.Interfaces
         /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
         /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
         /// <returns>A collection of parameter values.</returns>
-        double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
+        double[] GetSubdivisionParameters(double startSetbackDistance = 0,
+                                          double endSetbackDistance = 0);
 
         /// <summary>
         /// Get a point along the curve at parameter u.

@@ -18,13 +18,18 @@ namespace Elements.Geometry
     public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>
     {
         /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(this.Start.DistanceTo(BasisCurve.Origin), this.End.DistanceTo(BasisCurve.Origin));
+
+        /// <summary>
         /// Create a line of one unit length along the X axis.
         /// </summary>
         public Line()
         {
             this.Start = Vector3.Origin;
             this.End = new Vector3(1, 0, 0);
-            this.Domain = new Domain1d(0, 1);
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -46,7 +51,6 @@ namespace Elements.Geometry
 
             this.Start = @start;
             this.End = @end;
-            this.Domain = new Domain1d(0, this.Start.DistanceTo(this.End));
             this.BasisCurve = new InfiniteLine(this.Start, (this.End - this.Start).Unitized());
         }
 
@@ -60,7 +64,6 @@ namespace Elements.Geometry
         {
             this.Start = start;
             this.End = start + direction.Unitized() * length;
-            this.Domain = new Domain1d(0, length);
             this.BasisCurve = new InfiniteLine(this.Start, direction);
         }
 
@@ -68,12 +71,9 @@ namespace Elements.Geometry
         /// Create a line from a trimmed segment of an infinite line.
         /// </summary>
         /// <param name="line">The infinite line from which this segment is trimmed.</param>
-        /// <param name="startParameter">The start parameter of the line segment.</param>
-        /// <param name="endParameter">The end parameter of the line segment.</param>
-        public Line(InfiniteLine line, double startParameter, double endParameter)
+        public Line(InfiniteLine line)
         {
             this.BasisCurve = line;
-            this.Domain = new Domain1d(startParameter, endParameter);
             this.Start = this.BasisCurve.Origin + this.Domain.Min * this.BasisCurve.Direction;
             this.End = this.BasisCurve.Origin + this.Domain.Max * this.BasisCurve.Direction;
         }
@@ -84,6 +84,14 @@ namespace Elements.Geometry
         public override double Length()
         {
             return this.Start.DistanceTo(this.End);
+        }
+
+        /// <summary>
+        /// Calculate the length of the line between two parameters.
+        /// </summary>
+        public override double ArcLength(double start, double end)
+        {
+            return Math.Abs(end - start);
         }
 
         /// <summary>
@@ -104,7 +112,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Get a point along the line at parameter u.
         /// </summary>
-        /// <param name="u"></param>
+        /// <param name="u">A parameter on the curve between 0.0 and length.</param>
         /// <returns>A point on the curve at parameter u.</returns>
         public override Vector3 PointAt(double u)
         {
@@ -115,10 +123,7 @@ namespace Elements.Geometry
             return this.BasisCurve.PointAt(u);
         }
 
-        /// <summary>
-        /// Create new line transformed by transform.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             if (transform == null)
@@ -570,9 +575,7 @@ namespace Elements.Geometry
             return lines;
         }
 
-        /// <summary>
-        /// The mid point of the line.
-        /// </summary>
+        /// <inheritdoc/>
         public override Vector3 Mid()
         {
             return Start.Average(End);
@@ -920,7 +923,7 @@ namespace Elements.Geometry
             // line vectors are not collinear, their directions share the common plane.
             else
             {
-                // dStartStart length is distance to the common plane. 
+                // dStartStart length is distance to the common plane.
                 dStartStart = dStartStart.ProjectOnto(cross);
                 Vector3 vStartStart = other.Start + dStartStart - this.Start;
                 Vector3 vStartEnd = other.Start + dStartStart - this.End;
@@ -1023,8 +1026,8 @@ namespace Elements.Geometry
                 var B = intersectionsOrdered[i + 1];
                 if (A.IsAlmostEqualTo(B)) // skip duplicate points
                 {
-                    // it's possible that A is outside, but B is at an edge, even 
-                    // if they are within tolerance of each other. 
+                    // it's possible that A is outside, but B is at an edge, even
+                    // if they are within tolerance of each other.
                     // This can happen due to floating point error when the point is almost exactly
                     // epsilon distance from the edge.
                     // so if we have duplicate points, we have to update the containment value.
@@ -1338,12 +1341,9 @@ namespace Elements.Geometry
             return start + distance;
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)
+        /// <inheritdoc/>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0,
+                                                          double endSetbackDistance = 0)
         {
             return new[] { ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min), ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, this.Domain.Min) };
         }

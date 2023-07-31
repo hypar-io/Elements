@@ -103,7 +103,7 @@ namespace Elements
                 throw new InvalidOperationException("Volume calculation for non-linear elements is not yet supported");
             }
             //TODO: Support all curve / profile calculations.
-            return Math.Abs(this.Profile.Area()) * this.Curve.Length();
+            return this.Profile.Area() * this.Curve.Length();
         }
 
         /// <summary>
@@ -121,12 +121,27 @@ namespace Elements
         {
             if (this.Representation.SolidOperations.Count == 0)
             {
-                this.Representation.SolidOperations.Add(new Sweep(this.Profile,
-                                                            this.Curve,
-                                                            this.StartSetback,
-                                                            this.EndSetback,
-                                                            this.Rotation,
-                                                            false));
+                if (this.Curve is IndexedPolycurve pc)
+                {
+                    foreach (var curve in pc)
+                    {
+                        this.Representation.SolidOperations.Add(new Sweep(this.Profile,
+                                                                curve,
+                                                                this.StartSetback,
+                                                                this.EndSetback,
+                                                                this.Rotation,
+                                                                false));
+                    }
+                }
+                else
+                {
+                    this.Representation.SolidOperations.Add(new Sweep(this.Profile,
+                                                                this.Curve,
+                                                                this.StartSetback,
+                                                                this.EndSetback,
+                                                                this.Rotation,
+                                                                false));
+                }
             }
         }
     }

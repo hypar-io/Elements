@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+### Fixed
+
+- `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+
 ## 2.0.0
 
 ### Added
@@ -14,10 +20,14 @@
 - `Arc.Fillet`
 - `Ellipse`
 - `EllipticalArc`
+- `IndexedPolycurve`
 - `Grid1d.GetCellDomains`
 - `Message.Info`
 - `Message.Error`
 - `Message.Warning`
+- `Topography.Trimmed`
+- `new Topography(Topography other)`
+- `Topography.TopMesh()`
 
 ### Changed
 
@@ -25,6 +35,7 @@
 - `Polyline` is now parameterized 0->length.
 - `Arc` now inherits from `TrimmedCurve<Circle>`.
 - `Arc` is now parameterized 0->2Pi
+- `Arc` now automatically corrects decreasing angle domains to be increasing, while preserving direction.
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
 - `Bezier` now inherits from `BoundedCurve`.
@@ -37,6 +48,7 @@
 - `EdgeInfo`: obsolete attribute is removed from `HasVerticalChange` property.
 - `RoutingConfiguration`: removed obsolete `MainLayer` and `LayerPenalty` properties.
 - `Material.EmissiveFactor` is now 0.0 by default.
+- `Polygon.Area()` now returns an unsigned area by default, accepts a bool `signed` parameter to preserve the previous signed behavior.
 
 ### Fixed
 
@@ -48,7 +60,7 @@
 - Fix the polygon centroid calculation to remove collinear vertices.
 - Fix the tests for 3dCentroid testing.
 - `Message` created from `Message.FromPoint` now has `Transform.Origin` set exactly on original point.
-- `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+- Certain `Triangle` constructors would not correctly update `Vertex.Triangles`, this is fixed.
 
 ## 1.6.0
 

@@ -1088,13 +1088,13 @@ from the intersection or null if there was no intersection.</p>
     </tbody>
   </table>
   <a id="Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_" data-uid="Elements.Geometry.Solids.Solid.SweepFaceAlongCurve*"></a>
-  <h4 id="Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_ICurve_System_Double_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.ICurve,System.Double,System.Double)">SweepFaceAlongCurve(Polygon, IList&lt;Polygon&gt;, ICurve, Double, Double)</h4>
+  <h4 id="Elements_Geometry_Solids_Solid_SweepFaceAlongCurve_Elements_Geometry_Polygon_System_Collections_Generic_IList_Elements_Geometry_Polygon__Elements_Geometry_Interfaces_IBoundedCurve_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Solids.Solid.SweepFaceAlongCurve(Elements.Geometry.Polygon,System.Collections.Generic.IList{Elements.Geometry.Polygon},Elements.Geometry.Interfaces.IBoundedCurve,System.Double,System.Double,System.Double)">SweepFaceAlongCurve(Polygon, IList&lt;Polygon&gt;, IBoundedCurve, Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Construct a solid by sweeping a face along a curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static Solid SweepFaceAlongCurve(Polygon perimeter, IList&lt;Polygon&gt; holes, ICurve curve, double startSetback = 0, double endSetback = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Solid SweepFaceAlongCurve(Polygon perimeter, IList&lt;Polygon&gt; holes, IBoundedCurve curve, double startSetback = 0, double endSetback = 0, double profileRotation = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1119,7 +1119,7 @@ from the intersection or null if there was no intersection.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></td>
+        <td><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></td>
         <td><span class="parametername">curve</span></td>
         <td><p>The curve along which to sweep.</p>
 </td>
@@ -1134,6 +1134,12 @@ from the intersection or null if there was no intersection.</p>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">endSetback</span></td>
         <td><p>The setback distance of the sweep from the end of the curve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">profileRotation</span></td>
+        <td><p>The rotation of the profile.</p>
 </td>
       </tr>
     </tbody>

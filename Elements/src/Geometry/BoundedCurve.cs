@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
@@ -9,6 +10,16 @@ namespace Elements.Geometry
     /// </summary>
     public abstract class BoundedCurve : Curve, IBoundedCurve
     {
+        /// <summary>
+        /// The minimum chord length allowed for subdivision of the curve. A smaller MinimumChordLength results in smoother curves. For polylines and polygons this parameter will have no effect.
+        /// </summary>
+        /// TODO: This should not live here. Curve resolution for rendering should
+        /// live in the rendering code. Unfortunately, we current build BREPs using
+        /// this subdivision. When we have non-planar BREP surfaces, we will be able
+        /// to decouple BREPs and tessellation and this setting can be passed into
+        /// the glTF serializer.
+        public const double DefaultMinimumChordLength = 0.1;
+
         /// <summary>
         /// The start of the curve.
         /// </summary>
@@ -23,7 +34,7 @@ namespace Elements.Geometry
         /// The domain of the curve.
         /// </summary>
         [JsonIgnore]
-        public Domain1d Domain { get; protected set; }
+        public virtual Domain1d Domain => new Domain1d(0, Length());
 
         /// <summary>
         /// Get the bounding box for this curve.
@@ -37,8 +48,11 @@ namespace Elements.Geometry
         public abstract double Length();
 
         /// <summary>
-        /// The mid point of the curve.
+        /// Calculate the length of the curve between two parameters.
         /// </summary>
+        public abstract double ArcLength(double start, double end);
+
+        /// <inheritdoc/>
         public virtual Vector3 Mid()
         {
             return PointAt(this.Domain.Mid());
@@ -49,15 +63,10 @@ namespace Elements.Geometry
         /// Curves marked true will use LINE_LOOP mode for rendering.
         /// Curves marked false will use LINE_STRIP for rendering.
         /// </summary>
+        [JsonIgnore]
         public virtual bool IsClosedForRendering => false;
 
-        /// <summary>
-        /// Get a collection of transforms which represent frames along this curve.
-        /// </summary>
-        /// <param name="startSetbackDistance">The offset parameter from the start of the curve.</param>
-        /// <param name="endSetbackDistance">The offset parameter from the end of the curve.</param>
-        /// <param name="additionalRotation">An additional rotation of the frame at each point.</param>
-        /// <returns>A collection of transforms.</returns>
+        /// <inheritdoc/>
         public virtual Transform[] Frames(double startSetbackDistance = 0.0,
                                           double endSetbackDistance = 0.0,
                                           double additionalRotation = 0.0)
@@ -102,13 +111,9 @@ namespace Elements.Geometry
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(BoundedCurve c) => new ModelCurve(c);
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
-        /// <returns>A collection of parameter values.</returns>
-        public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0);
+        /// <inheritdoc/>
+        public abstract double[] GetSubdivisionParameters(double startSetbackDistance = 0,
+                                                          double endSetbackDistance = 0);
 
         /// <summary>
         /// Get a point along the curve at parameter u.
@@ -117,6 +122,10 @@ namespace Elements.Geometry
         /// <returns>A point along the curve at parameter u.</returns>
         public Vector3 PointAtNormalized(double u)
         {
+            if (u < 0 || u > 1)
+            {
+                throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
+            }
             return PointAt(u.MapToDomain(this.Domain));
         }
 
@@ -128,8 +137,13 @@ namespace Elements.Geometry
         /// <returns>A transform.</returns>
         public Transform TransformAtNormalized(double u)
         {
+            if (u < 0 || u > 1)
+            {
+                throw new ArgumentOutOfRangeException($"The parameter {u} must be between 0.0 and 1.0.");
+            }
             return TransformAt(u.MapToDomain(this.Domain));
         }
+
 
         /// <summary>
         /// Get a collection of vertices used to render the curve.

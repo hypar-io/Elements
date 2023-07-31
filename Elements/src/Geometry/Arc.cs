@@ -13,14 +13,18 @@ namespace Elements.Geometry
     /// </example>
     public partial class Arc : TrimmedCurve<Circle>, IEquatable<Arc>
     {
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
+
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
         [JsonProperty("StartAngle", Required = Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
         public double StartAngle { get; protected set; }
 
         /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
         [JsonProperty("EndAngle", Required = Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
         public double EndAngle { get; protected set; }
 
         /// <summary>
@@ -63,34 +67,6 @@ namespace Elements.Geometry
             get { return PointAt(this.Domain.Max); }
         }
 
-        /// <summary>
-        /// Create a circular arc.
-        /// </summary>
-        public Arc(double radius)
-        {
-            this.BasisCurve = new Circle();
-            this.StartAngle = 0;
-            this.EndAngle = 360;
-            this.Domain = new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
-        }
-
-        /// <summary>
-        /// Create an arc.
-        /// </summary>
-        /// <param name="center">The center of the arc.</param>
-        /// <param name="radius">The radius of the arc.</param>
-        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
-        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
-        [JsonConstructor]
-        public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle) : base()
-        {
-            Validate(startAngle, endAngle, radius);
-            this.BasisCurve = new Circle(@center, @radius);
-            this.StartAngle = @startAngle;
-            this.EndAngle = @endAngle;
-            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
-        }
-
         private void Validate(double startAngle, double endAngle, double radius)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -114,6 +90,56 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// If a user supplies a decreasing angle domain, we want to swap the
+        /// start and end angles to force it to be increasing, and do a
+        /// corresponding transform of the underlying circle to preserve the
+        /// user's intuition about which direction the curve is going.
+        /// </summary>
+        private static (double startAngle, double endAngle) EnsureIncreasingAngleDomain(double startAngle, double endAngle, out Transform circleTransform)
+        {
+            circleTransform = new Transform();
+            if (endAngle < startAngle)
+            {
+                // flip the circle's direction
+                circleTransform.Rotate(Vector3.XAxis, 180);
+                // rotate the resulting circle back so that the previous start angle is now aligned with the new start angle
+                circleTransform.Rotate(Vector3.ZAxis, startAngle + endAngle);
+                // swap the start and end angles
+                (endAngle, startAngle) = (startAngle, endAngle);
+            }
+            return (startAngle, endAngle);
+        }
+
+        /// <summary>
+        /// Create a circular arc.
+        /// </summary>
+        public Arc(double radius)
+        {
+            this.BasisCurve = new Circle();
+            this.StartAngle = 0;
+            this.EndAngle = 360;
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// </summary>
+        /// <param name="center">The center of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
+        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
+        /// <remarks>If the end angle is smaller than the start angle, they will be flipped and the underlying circle reversed to preserve a positive parameter domain.</remarks>
+        [JsonConstructor]
+        public Arc(Vector3 center, double radius, double startAngle, double endAngle) : base()
+        {
+            Validate(startAngle, endAngle, radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            circleTransform.Move(center);
+            this.BasisCurve = new Circle(circleTransform, radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
+        }
+
+        /// <summary>
         /// Create an arc.
         /// Constructs a circular basis curve internally with a default transform.
         /// </summary>
@@ -124,10 +150,10 @@ namespace Elements.Geometry
             : base()
         {
             Validate(startAngle, endAngle, radius);
-            this.BasisCurve = new Circle(radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            this.BasisCurve = new Circle(circleTransform, radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
-            this.Domain = new Domain1d(Units.DegreesToRadians(@startAngle), Units.DegreesToRadians(@endAngle));
         }
 
         /// <summary>
@@ -138,11 +164,13 @@ namespace Elements.Geometry
         /// <param name="endParameter">The parameter, from 0.0->2PI, of the end of the arc.</param>
         public Arc(Circle circle, double startParameter, double endParameter)
         {
-            Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), circle.Radius);
-            this.BasisCurve = circle;
-            this.Domain = new Domain1d(startParameter, endParameter);
-            this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
-            this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
+            var startAngle = Units.RadiansToDegrees(startParameter);
+            var endAngle = Units.RadiansToDegrees(endParameter);
+            Validate(startAngle, endAngle, circle.Radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            this.BasisCurve = new Circle(circleTransform.Concatenated(circle.Transform), circle.Radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
         }
 
         /// <summary>
@@ -159,10 +187,12 @@ namespace Elements.Geometry
                    double endParameter = Math.PI * 2)
         {
             Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), radius);
-            this.BasisCurve = new Circle(transform, radius);
-            this.Domain = new Domain1d(startParameter, endParameter);
-            this.StartAngle = Units.RadiansToDegrees(this.Domain.Min);
-            this.EndAngle = Units.RadiansToDegrees(this.Domain.Max);
+            var startAngle = Units.RadiansToDegrees(startParameter);
+            var endAngle = Units.RadiansToDegrees(endParameter);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            this.BasisCurve = new Circle(circleTransform.Concatenated(transform), radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
         }
 
         /// <summary>
@@ -234,7 +264,7 @@ namespace Elements.Geometry
 
             // Construct new vectors that both
             // point away from the projected intersection.
-            // Use an arbitrary point on the line that 
+            // Use an arbitrary point on the line that
             // isn't the start or the end. This ensures
             // that the vectors will point in the correct direction,
             // regardless of the original lines' original orientation
@@ -286,12 +316,31 @@ namespace Elements.Geometry
         /// </summary>
         public override double Length()
         {
-            return 2 * Math.PI * this.BasisCurve.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
+            // Arc length = theta * radius
+            var theta = Units.DegreesToRadians(Math.Abs(this.EndAngle - this.StartAngle));
+            return this.BasisCurve.Radius * theta;
         }
 
         /// <summary>
-        /// The mid point of the line.
+        /// Calculate the length of the arc between start and end parameters.
         /// </summary>
+        public override double ArcLength(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            // Arc length = theta * radius
+            var theta = Math.Abs(end - start);
+            return this.BasisCurve.Radius * theta;
+        }
+
+        /// <inheritdoc/>
         public override Vector3 Mid()
         {
             return PointAt(this.Domain.Min + this.Domain.Length / 2);
@@ -326,13 +375,9 @@ namespace Elements.Geometry
             return BasisCurve.Transform.XY();
         }
 
-        /// <summary>
-        /// Get parameters to be used to find points along the curve for visualization.
-        /// </summary>
-        /// <param name="startSetbackDistance">An optional setback from the start of the curve.</param>
-        /// <param name="endSetbackDistance">An optional setback from the end of the curve.</param>
+        /// <inheritdoc/>
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
-                                                       double endSetbackDistance = 0.0)
+                                                          double endSetbackDistance = 0.0)
         {
             var min = this.Domain.Min;
             var max = this.Domain.Max;
@@ -355,7 +400,7 @@ namespace Elements.Geometry
             // d = 2 * r * sin(t/2)
             var r = this.BasisCurve.Radius;
             var two_r = 2 * r;
-            var d = Math.Min(MinimumChordLength, two_r);
+            var d = Math.Min(DefaultMinimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
             var div = (int)Math.Ceiling(angleSpan / t);
 
@@ -397,10 +442,7 @@ namespace Elements.Geometry
             return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, newStart, newEnd);
         }
 
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return TransformedArc(transform);
@@ -412,7 +454,7 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Arc TransformedArc(Transform transform)
         {
-            return new Arc(transform.OfPoint(this.BasisCurve.Transform.Origin), this.BasisCurve.Radius, StartAngle, EndAngle);
+            return new Arc(BasisCurve.Transform.Concatenated(transform), this.BasisCurve.Radius, Units.DegreesToRadians(StartAngle), Units.DegreesToRadians(EndAngle));
         }
 
         /// <summary>
@@ -455,7 +497,7 @@ namespace Elements.Geometry
                 pts.Add(PointAt(t));
             }
 
-            // We don't go all the way to the end parameter, and 
+            // We don't go all the way to the end parameter, and
             // add it here explicitly because rounding errors can
             // cause small imprecision which accumulates to make
             // the final parameter slightly more/less than the actual
