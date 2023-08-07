@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1
+
+### Fixed
+
+- `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+
 ## 2.0.0
 
 ### Added
@@ -77,6 +83,7 @@
 - `AdaptiveGrid.AggregateFactorMultiply(double a, double b)`
 
 ### Changed
+
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
 - `AdaptiveGrid.AddPlanarWeightModifier` - added `group` parameter.
 - `WeightModifier` - added `group` parameter to constructor.
