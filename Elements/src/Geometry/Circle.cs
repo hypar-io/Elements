@@ -126,7 +126,7 @@ namespace Elements.Geometry
         {
             var local = Transform.Inverted().OfPoint(pt);
             if (local.Z.ApproximatelyEquals(0) &&
-                (local - Center).LengthSquared().ApproximatelyEquals(
+                local.LengthSquared().ApproximatelyEquals(
                     Radius * Radius, Vector3.EPSILON * Vector3.EPSILON))
             {
                 parameter = ParameterAtUntransformed(local);
