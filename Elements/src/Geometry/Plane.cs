@@ -177,6 +177,25 @@ namespace Elements.Geometry
             return false;
         }
 
+        public bool Intersects(Plane other, out InfiniteLine result)
+        {
+            var cross = this.Normal.Cross(other.Normal);
+            if (cross.IsZero())
+            {
+                result = default;
+                return false;
+            }
+
+            var dir = other.Normal.Cross(cross);
+            var distance = this.Normal.Dot(dir);
+            Vector3 planeDelta = Origin - other.Origin;
+            var t = Normal.Dot(planeDelta) / distance;
+            var p = other.Origin + t * dir;
+
+            result = new InfiniteLine(p, cross);
+            return true;
+        }
+
         /// <summary>
         /// The world XY Plane.
         /// </summary>

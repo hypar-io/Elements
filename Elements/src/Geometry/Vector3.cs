@@ -1,3 +1,4 @@
+using ClipperLib;
 using Elements.Validators;
 using Newtonsoft.Json;
 using System;
@@ -849,6 +850,14 @@ namespace Elements.Geometry
             var prod = a.Dot(b.Cross(c));
             return prod;
         }
+
+        public Vector3 ClosestPointOn(InfiniteLine line)
+        {
+            var v = this - line.Origin;
+            var d = v.Dot(line.Direction);
+            return line.Origin + line.Direction * d;
+        }
+
 
         /// <summary>
         /// Get the closest point on the line from this point.

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace Elements.Geometry
 {
     /// TODO: Rename this class to Line
@@ -56,6 +59,17 @@ namespace Elements.Geometry
             return new Transform(PointAt(u), Direction.Negate());
         }
 
+        public bool ParameterAt(Vector3 pt, out double t)
+        { 
+            t = (pt - Origin).Dot(Direction) / Direction.LengthSquared();
+            var pointOnLine = Origin + Direction * t;
+            if (pointOnLine.IsAlmostEqualTo(pt))
+            {
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Get the parameter at a distance from the start parameter along the curve.
         /// </summary>
@@ -64,6 +78,44 @@ namespace Elements.Geometry
         public override double ParameterAtDistanceFromParameter(double distance, double start)
         {
             return start + distance;
+        }
+
+        public bool Intersects(Plane plane, out Vector3 result)
+        {
+            result = default;
+            
+            // Test for perpendicular.
+            if (plane.Normal.Dot(Direction).ApproximatelyEquals(0))
+            {
+                return false;
+            }
+
+            var t = (plane.Normal.Dot(plane.Origin) - plane.Normal.Dot(Origin)) / plane.Normal.Dot(Direction);
+            result = Origin + Direction * t;
+            return true;
+        }
+
+        public bool Intersects(InfiniteLine other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            // Check and return if two lines are parallel.
+            var normal = Direction.Cross(other.Direction);
+            if (normal.LengthSquared() < Vector3.EPSILON * Vector3.EPSILON)
+            {
+                return false;
+            }
+
+            // Check and return if two lines are not coplanar 
+            if (Math.Abs((Origin - other.Origin).Dot(normal)) > Vector3.EPSILON)
+            {
+                return false;
+            }
+
+            normal = other.Direction.Cross(normal);
+            var t = (normal.Dot(other.Origin) - normal.Dot(Origin)) / normal.Dot(Direction);
+            results.Add(Origin + Direction * t);
+            return true;
         }
     }
 }

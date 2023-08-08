@@ -462,6 +462,55 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        public bool Intersects(InfiniteLine other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            if (BasisCurve.Intersects(other, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    if (PointOnLine(item, true))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            return results.Any();
+        }
+
+        public bool Intersects(Line other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            if (BasisCurve.Intersects(other.BasisCurve, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    if (PointOnLine(item, true) && other.PointOnLine(item, true))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            return results.Any();
+        }
+
+        public bool Intersects(Circle circle, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            if (circle.Intersects(BasisCurve, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    if (this.PointOnLine(item, true))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            return results.Any();
+        }
+
+
         private static bool IsAlmostZero(double a)
         {
             return Math.Abs(a) < Vector3.EPSILON;

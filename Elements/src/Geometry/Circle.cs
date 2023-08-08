@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -30,6 +31,16 @@ namespace Elements.Geometry
         /// The coordinate system of the plane containing the circle.
         /// </summary>
         public Transform Transform { get; protected set; }
+
+        /// <summary>The normal direction of the circle.</summary>
+        [JsonIgnore]
+        public Vector3 Normal
+        {
+            get
+            {
+                return this.Transform.ZAxis;
+            }
+        }
 
         /// <summary>
         /// Construct a circle.
@@ -111,6 +122,27 @@ namespace Elements.Geometry
             return new Vector3(x, y);
         }
 
+        public bool ParameterAt(Vector3 pt, out double parameter)
+        {
+            var local = Transform.Inverted().OfPoint(pt);
+            if (local.Z.ApproximatelyEquals(0) &&
+                (local - Center).LengthSquared().ApproximatelyEquals(
+                    Radius * Radius, Vector3.EPSILON * Vector3.EPSILON))
+            {
+                parameter = ParameterAtUntransformed(local);
+                return true;
+            }
+
+            parameter = 0;
+            return false;
+        }
+
+        private double ParameterAtUntransformed(Vector3 pt)
+        {
+            var v = (pt - this.Center) / Radius;
+            return Math.Atan2(v.Y, v.X);
+        }
+
         /// <summary>
         /// Return transform on the arc at parameter u.
         /// </summary>
@@ -147,6 +179,103 @@ namespace Elements.Geometry
             var theta = distance / this.Radius;
 
             return start + theta;
+        }
+
+        public bool Intersects(Circle other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane planeA = new Plane(Center, Normal);
+            Plane planeB = new Plane(other.Center, other.Normal);
+
+            // Check if two circles are on the same plane. 
+            if (Normal.IsAlmostEqualTo(other.Normal) &&
+                other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
+            {
+                var delta = other.Center - Center;
+                var dist = delta.Length();
+                // Check if circles are on correct distance for intersection to happen.
+                if (dist.ApproximatelyEquals(0) ||
+                    dist > Radius + other.Radius || dist < Math.Abs(Radius - other.Radius))
+                {
+                    return false;
+                }
+
+                // Build triangle with center of one circle and two intersection points.
+                var r1squre = Radius * Radius;
+                var r2squre = other.Radius * other.Radius;
+                var lineDist = (r1squre - r2squre + dist * dist) / (2 * dist);
+                var linePoint = Center + lineDist * delta.Unitized();
+                double perpDistance = Math.Sqrt(r1squre - lineDist * lineDist);
+                // If triangle side is 0 - circles touches. Only one intersection recorded.
+                if (perpDistance.ApproximatelyEquals(0))
+                {
+                    results.Add(linePoint);
+                }
+                else
+                {
+                    Vector3 perpDirection = delta.Cross(Normal).Unitized();
+                    results.Add(linePoint + perpDirection * perpDistance);
+                    results.Add(linePoint - perpDirection * perpDistance);
+                }
+            }
+            // Ignore circles on parallel planes.
+            // Find intersection line between two planes.
+            else if (planeA.Intersects(planeB, out var line) &&
+                     Intersects(line, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    // Check each point that lays on intersection line and one of the circles.
+                    // They are on both if they have correct distance to circle centers.
+                    if (item.DistanceTo(other.Center).ApproximatelyEquals(other.Radius))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+
+            return results.Any();
+        }
+
+        public bool Intersects(InfiniteLine line, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane circlePlane = new Plane(Center, Normal);
+            Vector3 closestPoint;
+            bool lineOnPlane = line.Origin.DistanceTo(circlePlane).ApproximatelyEquals(0) &&
+                line.Direction.Dot(Normal).ApproximatelyEquals(0);
+
+            // If line share a plane with circle - find closest point on it to circle center.
+            // If not - check if there an intersection between line and circle plane.
+            if (lineOnPlane)
+            {
+                closestPoint = Center.ClosestPointOn(line);
+            }
+            else if (!line.Intersects(circlePlane, out closestPoint))
+            {
+                return false;
+            }
+
+            var delta = closestPoint - Center;
+            var lengthSquared = delta.LengthSquared();
+            var radiusSquared = Radius * Radius;
+            var toleranceSquared = Vector3.EPSILON * Vector3.EPSILON;
+            // if line not on circle plane - only one intersection is possible if it's radius away.
+            // this will also happen if line is on plane but only touches the circle.
+            if (lengthSquared.ApproximatelyEquals(radiusSquared, toleranceSquared))
+            {
+                results.Add(closestPoint);
+            }
+            else if (lineOnPlane && lengthSquared < radiusSquared)
+            {
+                var distance = Math.Sqrt(radiusSquared - lengthSquared);
+                results.Add(closestPoint + line.Direction * distance);
+                results.Add(closestPoint - line.Direction * distance);
+            }
+
+            return results.Any();
         }
     }
 }

@@ -136,6 +136,94 @@ namespace Elements.Geometry.Tests
             Assert.False(l1.Intersects2D(l4));    // Coincident.
         }
 
+
+        [Fact]
+        public void IntersectsCircle()
+        {
+            Circle c = new Circle(new Vector3(5, 5, 5), 5);
+            
+            // Intersects circle at one point and touches at other.
+            Line l = new Line(new Vector3(0, 5, 5), new Vector3(15, 5, 5));
+            Assert.True(l.Intersects(c, out var results));
+            Assert.Equal(2, results.Count());
+            Assert.Contains(new Vector3(0, 5, 5), results);
+            Assert.Contains(new Vector3(10, 5, 5), results);
+
+            // Intersects circle at one point.
+            l = new Line(new Vector3(3, 5, 5), new Vector3(15, 5, 5));
+            Assert.True(l.Intersects(c, out results));
+            Assert.Single(results);
+            Assert.Contains(new Vector3(10, 5, 5), results);
+
+            // Line inside the circle.
+            l = new Line(new Vector3(3, 5, 5), new Vector3(8, 5, 5));
+            Assert.False(l.Intersects(c, out results));
+
+            // Lin is not on circle plane and just touches the circle.
+            l = new Line(new Vector3(0, 5, 0), new Vector3(0, 5, 10));
+            Assert.True(l.Intersects(c, out results));
+            Assert.Single(results);
+            Assert.Contains(new Vector3(0, 5, 5), results);
+
+            // Line is not on circle plane and does not intersect the circle.
+            l = new Line(new Vector3(0, 5, 6), new Vector3(0, 5, 10));
+            Assert.False(l.Intersects(c, out results));
+        }
+
+        [Fact]
+        public void IntersectsInfiniteLine()
+        {
+            var inf = new InfiniteLine(new Vector3(0, 0), Vector3.XAxis);
+
+            // Line intersects infinite line.
+            var line = new Line(new Vector3(0, 10), new Vector3(0, -10));
+            Assert.True(line.Intersects(inf, out var intersections));
+            Assert.Single(intersections);
+            Assert.Equal(new Vector3(0, 0), intersections.First());
+
+            // Line touches infinite line.
+            line = new Line(new Vector3(5, 5, 5), new Vector3(5, 0, 0));
+            Assert.True(line.Intersects(inf, out intersections));
+            Assert.Single(intersections);
+            Assert.Equal(new Vector3(5, 0, 0), intersections.First());
+
+            // Line too short to intersect infinite line.
+            line = new Line(new Vector3(4, 3, 0), new Vector3(1, 1, 0));
+            Assert.False(line.Intersects(inf, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsLine()
+        {
+            var l0 = new Line(new Vector3(5, 0), new Vector3(5, 10));
+            var l1 = new Line(new Vector3(0, 5), new Vector3(10, 5));
+
+            // Intersecting lines.
+            Assert.True(l0.Intersects(l1, out var intersections));
+            Assert.Single(intersections);
+            Assert.Equal(new Vector3(5, 5), intersections.First());
+
+            // One line touches other in the middle.
+            l0 = new Line(new Vector3(5, 0), new Vector3(5, 5));
+            Assert.True(l0.Intersects(l1, out intersections));
+            Assert.Single(intersections);
+            Assert.Equal(new Vector3(5, 5), intersections.First());
+
+            // One line can't reach other.
+            l0 = new Line(new Vector3(5, 0), new Vector3(5, 4));
+            Assert.False(l0.Intersects(l1, out intersections));
+
+            // Two lines meet at a end point.
+            l1 = new Line(new Vector3(0, 5), new Vector3(5, 4));
+            Assert.True(l0.Intersects(l1, out intersections));
+            Assert.Single(intersections);
+            Assert.Equal(new Vector3(5, 4), intersections.First());
+
+            // Two lines are too short to intersect.
+            l1 = new Line(new Vector3(0, 5), new Vector3(4, 5));
+            Assert.False(l0.Intersects(l1, out intersections));
+        }
+
         [Fact]
         public void DivideIntoEqualSegments()
         {
