@@ -139,7 +139,7 @@ namespace Elements.Geometry
 
         private double ParameterAtUntransformed(Vector3 pt)
         {
-            var v = (pt - this.Center) / Radius;
+            var v = pt / Radius;
             return Math.Atan2(v.Y, v.X);
         }
 

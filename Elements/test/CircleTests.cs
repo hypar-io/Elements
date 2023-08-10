@@ -21,6 +21,11 @@ namespace Hypar.Tests
             Assert.Equal(2, results.Count());
             Assert.Contains(new Vector3(4, 3, 0), results);
             Assert.Contains(new Vector3(4, -3, 0), results);
+            c1 = new Circle(new Vector3(3, 0, 0), 5);
+            Assert.True(c0.Intersects(c1, out results));
+            Assert.Equal(2, results.Count());
+            Assert.Contains(new Vector3(1.5, 4.769696, 0), results);
+            Assert.Contains(new Vector3(1.5, -4.769696, 0), results);
 
             // Planar touching circles
             c1 = new Circle(new Vector3(8, 0, 0), 3);

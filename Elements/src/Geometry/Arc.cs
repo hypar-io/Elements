@@ -591,7 +591,7 @@ namespace Elements.Geometry
             return results.Any();
         }
 
-        private bool PointOnDomain(Vector3 point)
+        public bool PointOnDomain(Vector3 point)
         {
             if (!BasisCurve.ParameterAt(point, out var parameter))
             {
