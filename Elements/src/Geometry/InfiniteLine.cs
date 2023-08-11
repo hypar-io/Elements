@@ -1,3 +1,4 @@
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -95,6 +96,23 @@ namespace Elements.Geometry
             return true;
         }
 
+        public override bool Intersects(ICurve curve, out List<Vector3> results)
+        {
+            switch (curve)
+            {
+                case BoundedCurve boundedCurve:
+                    return boundedCurve.Intersects(this, out results);
+                case Circle circle:
+                    return Intersects(circle, out results);
+                case Ellipse elliplse:
+                    return Intersects(elliplse, out results);
+                case InfiniteLine line:
+                    return Intersects(line, out results);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public bool Intersects(InfiniteLine other, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -116,6 +134,21 @@ namespace Elements.Geometry
             var t = (normal.Dot(other.Origin) - normal.Dot(Origin)) / normal.Dot(Direction);
             results.Add(Origin + Direction * t);
             return true;
+        }
+
+        public bool Intersects(Circle circle, out List<Vector3> results)
+        {
+            return circle.Intersects(this, out results);
+        }
+
+        public bool Intersects(Ellipse ellipse, out List<Vector3> results)
+        {
+            return ellipse.Intersects(this, out results);
+        }
+
+        public bool Intersects(BoundedCurve bounded, out List<Vector3> results)
+        {
+            return bounded.Intersects(this, out results);
         }
     }
 }

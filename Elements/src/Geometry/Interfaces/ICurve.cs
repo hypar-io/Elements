@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Elements.Geometry.Interfaces
 {
     /// <summary>
@@ -25,5 +27,7 @@ namespace Elements.Geometry.Interfaces
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="parameter">The parameter from which to measure the distance.</param>
         double ParameterAtDistanceFromParameter(double distance, double parameter);
+
+        bool Intersects(ICurve curve, out List<Vector3> results);
     }
 }

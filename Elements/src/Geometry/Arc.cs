@@ -527,71 +527,7 @@ namespace Elements.Geometry
             return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start);
         }
 
-        public bool Intersects(Arc other, out List<Vector3> results)
-        {
-            results = new List<Vector3>();
-            if (BasisCurve.Intersects(other.BasisCurve, out var candidates))
-            {
-                foreach (var item in candidates)
-                {
-                    if (this.PointOnDomain(item) && other.PointOnDomain(item))
-                    {
-                        results.Add(item);
-                    }
-                }
-            }
-            return results.Any();
-        }
-
-        public bool Intersects(Circle other, out List<Vector3> results)
-        {
-            results = new List<Vector3>();
-            if (BasisCurve.Intersects(other, out var candidates))
-            {
-                foreach (var item in candidates)
-                {
-                    if (this.PointOnDomain(item))
-                    {
-                        results.Add(item);
-                    }
-                }
-            }
-            return results.Any();
-        }
-
-        public bool Intersects(InfiniteLine other, out List<Vector3> results)
-        {
-            results = new List<Vector3>();
-            if (BasisCurve.Intersects(other, out var candidates))
-            {
-                foreach (var item in candidates)
-                {
-                    if (PointOnDomain(item))
-                    {
-                        results.Add(item);
-                    }
-                }
-            }
-            return results.Any();
-        }
-
-        public bool Intersects(Line line, out List<Vector3> results)
-        {
-            results = new List<Vector3>();
-            if (BasisCurve.Intersects(line.BasisCurve, out var candidates))
-            {
-                foreach (var item in candidates)
-                {
-                    if (this.PointOnDomain(item) && line.PointOnLine(item, true))
-                    {
-                        results.Add(item);
-                    }
-                }
-            }
-            return results.Any();
-        }
-
-        public bool PointOnDomain(Vector3 point)
+        public override bool PointOnDomain(Vector3 point)
         {
             if (!BasisCurve.ParameterAt(point, out var parameter))
             {

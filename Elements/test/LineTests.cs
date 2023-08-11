@@ -199,7 +199,7 @@ namespace Elements.Geometry.Tests
             var l1 = new Line(new Vector3(0, 5), new Vector3(10, 5));
 
             // Intersecting lines.
-            Assert.True(l0.Intersects(l1, out var intersections));
+            Assert.True(l0.Intersects(l1, out List<Vector3> intersections));
             Assert.Single(intersections);
             Assert.Equal(new Vector3(5, 5), intersections.First());
 

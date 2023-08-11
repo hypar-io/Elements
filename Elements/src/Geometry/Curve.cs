@@ -1,5 +1,7 @@
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace Elements.Geometry
 {
@@ -38,5 +40,7 @@ namespace Elements.Geometry
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="start">The parameter from which to measure the distance.</param>
         public abstract double ParameterAtDistanceFromParameter(double distance, double start);
+
+        public abstract bool Intersects(ICurve curve, out List<Vector3> results);
     }
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
@@ -340,6 +342,46 @@ namespace Elements.Geometry
         {
             ArcLengthUntil(start, distance, out var end);
             return end;
+        }
+
+        public override bool Intersects(ICurve curve, out List<Vector3> results)
+        {
+            switch (curve)
+            {
+                case Line line:
+                    return line.Intersects(this, out results);
+                case Arc arc:
+                    return arc.Intersects(this, out results);
+                case EllipticalArc ellipticArc:
+                    return ellipticArc.Intersects(this, out results);
+                case InfiniteLine line:
+                    return Intersects(line, out results);
+                case Circle circle:
+                    return Intersects(circle, out results);
+                case Ellipse elliplse:
+                    return Intersects(elliplse, out results);
+                case IndexedPolycurve polycurve:
+                    return polycurve.Intersects(this, out results);
+                case Bezier bezier:
+                    return Intersects(bezier, out results);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public bool Intersects(InfiniteLine line, out List<Vector3> results)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Intersects(Circle circle, out List<Vector3> results)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Intersects(Ellipse line, out List<Vector3> results)
+        {
+            throw new NotImplementedException();
         }
     }
 }
