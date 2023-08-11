@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -188,6 +189,41 @@ namespace Elements.Geometry
 
             this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, distance, out var end);
             return end;
+        }
+
+        public bool Intersects(EllipticalArc other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            if (BasisCurve.Intersects(other.BasisCurve, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    if (this.PointOnDomain(item) && other.PointOnDomain(item))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+            return results.Any();
+        }
+
+        public override bool PointOnDomain(Vector3 point)
+        {
+            if (!BasisCurve.ParameterAt(point, out var parameter))
+            {
+                return false;
+            }
+
+            parameter = NormalizedParameter(parameter);
+            var normalizedDomain = new Domain1d(NormalizedParameter(Domain.Min), NormalizedParameter(Domain.Max));
+            return parameter >= normalizedDomain.Min && parameter <= normalizedDomain.Max;
+        }
+
+        private double NormalizedParameter(double parameter)
+        {
+            var numberOfRotation = Math.Floor(parameter / (2 * Math.PI));
+            var normalized = parameter - numberOfRotation * 2 * Math.PI;
+            return normalized;
         }
     }
 }

@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
+using System.Linq;
+using SixLabors.ImageSharp.ColorSpaces;
 
 namespace Elements.Geometry
 {
@@ -19,6 +22,16 @@ namespace Elements.Geometry
             get
             {
                 return this.Transform.Origin;
+            }
+        }
+
+        /// <summary>The normal direction of the circle.</summary>
+        [JsonIgnore]
+        public Vector3 Normal
+        {
+            get
+            {
+                return this.Transform.ZAxis;
             }
         }
 
@@ -112,6 +125,31 @@ namespace Elements.Geometry
             return new Vector3(x, y);
         }
 
+        public bool ParameterAt(Vector3 pt, out double parameter)
+        {
+            var local = Transform.Inverted().OfPoint(pt);
+            if (local.Z.ApproximatelyEquals(0) && OnEllipseUntransformed(pt))
+            {
+                parameter = ParameterAtUntransformed(local);
+                return true;
+            }
+        
+            parameter = 0;
+            return false;
+        }
+        
+        private double ParameterAtUntransformed(Vector3 pt)
+        {
+            return Math.Atan2(pt.Y / MinorAxis , pt.X / MajorAxis);
+        }
+
+        private bool OnEllipseUntransformed(Vector3 pt)
+        {
+            var h = Math.Pow(pt.X / MajorAxis, 2);
+            var v = Math.Pow(pt.Y / MinorAxis, 2);
+            return (h + v).ApproximatelyEquals(1);
+        }
+
         /// <summary>
         /// Get a transform along the ellipse at parameter u.
         /// </summary>
@@ -180,6 +218,217 @@ namespace Elements.Geometry
             // until you reach the desired distance.
             ArcLengthUntil(start, Math.PI * 2, distance, out var end);
             return end;
+        }
+
+        public override bool Intersects(ICurve curve, out List<Vector3> results)
+        {
+            switch (curve)
+            {
+                case BoundedCurve boundedCurve:
+                    return boundedCurve.Intersects(this, out results);
+                case InfiniteLine line:
+                    return Intersects(line, out results);
+                case Circle circle:
+                    return Intersects(circle, out results);
+                case Ellipse elliplse:
+                    return Intersects(elliplse, out results);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public bool Intersects(InfiniteLine line, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane ellipsePlane = new Plane(Center, Normal);
+            Vector3 closestPoint;
+            bool lineOnPlane = line.Origin.DistanceTo(ellipsePlane).ApproximatelyEquals(0) &&
+                (line.Origin + line.Direction).DistanceTo(ellipsePlane).ApproximatelyEquals(0);
+
+            if (lineOnPlane)
+            {
+                closestPoint = Center.ClosestPointOn(line);
+            }
+            else if (!line.Intersects(ellipsePlane, out closestPoint))
+            {
+                return false;
+            }
+
+            var transformInverted = this.Transform.Inverted();
+            var localPoint = transformInverted.OfPoint(closestPoint);
+            if (OnEllipseUntransformed(localPoint))
+            {
+                results.Add(closestPoint);
+            }
+            else if (lineOnPlane)
+            {
+                double a2 = MajorAxis * MajorAxis;
+                double b2 = MinorAxis * MinorAxis;
+                Vector3 localDirection = transformInverted.OfVector(line.Direction);
+
+                double dx2 = localDirection.X * localDirection.X;
+                double dy2 = localDirection.Y * localDirection.Y;
+
+                // Coefficients for the quadratic equation
+                double A = a2 * dy2 + b2 * dx2;
+                double B = -2 * (localPoint.Y * a2 * localDirection.Y + localPoint.X * b2 * localDirection.X);
+                double C = a2 * localPoint.Y * localPoint.Y + b2 * localPoint.X * localPoint.X - a2 * b2;
+
+                foreach (var root in Equations.SolveQuadratic(A, B, C))
+                {
+                    double x = localPoint.X + root * localDirection.X;
+                    double y = localPoint.Y + root * localDirection.Y;
+                    results.Add(Transform.OfPoint(new Vector3(x, y)));
+                }
+            }
+
+            return results.Any();
+        }
+
+        public bool Intersects(Circle circle, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane planeA = new Plane(Center, Normal);
+            Plane planeB = new Plane(circle.Center, circle.Normal);
+
+            // Check if circle and ellipse are on the same plane. 
+            if (Normal.IsAlmostEqualTo(circle.Normal) &&
+                circle.Center.DistanceTo(planeA).ApproximatelyEquals(0))
+            {
+                // Circle and Ellipse are the same.
+                if (Center.IsAlmostEqualTo(circle.Center) &&
+                    MajorAxis.ApproximatelyEquals(MinorAxis) &&
+                    MajorAxis.ApproximatelyEquals(circle.Radius))
+                {
+                    return false;
+                }
+
+                if (Center.DistanceTo(circle.Center) > MajorAxis + circle.Radius)
+                {
+                    return false;
+                }
+
+                var localCenter = Transform.Inverted().OfPoint(circle.Center);
+                var roots = Equations.SolveIterative(0, Math.PI * 2,
+                    new Func<double, double>((t) =>
+                    {
+                        var d = PointAtUntransformed(t) - localCenter;
+                        return d.LengthSquared() - circle.Radius * circle.Radius;
+                    }));
+                foreach (var root in roots)
+                {
+                    Vector3 intersection = PointAtUntransformed(root);
+                    var global = Transform.OfPoint(intersection);
+                    if (!results.Any() || !global.IsAlmostEqualTo(results.Last()))
+                    {
+                        results.Add(global);
+                    }
+                }
+            }
+            // Ignore parallel planes.
+            // Find intersection line between two planes.
+            else if (planeA.Intersects(planeB, out var line) &&
+                     Intersects(line, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    // Check each point that lays on intersection line and one of the circles.
+                    // They are on both if they have correct distance to circle centers.
+                    if (item.DistanceTo(circle.Center).ApproximatelyEquals(circle.Radius))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+
+            return results.Any();
+        }
+
+        public bool Intersects(Ellipse other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane planeA = new Plane(Center, Normal);
+            Plane planeB = new Plane(other.Center, other.Normal);
+
+            // Check if circle and ellipse are on the same plane. 
+            if (Normal.IsAlmostEqualTo(other.Normal) &&
+                other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
+            {
+                // Ellipses are the same.
+                if (Center.IsAlmostEqualTo(other.Center))
+                {
+                    if (MajorAxis.ApproximatelyEquals(other.MajorAxis) &&
+                        Transform.XAxis.IsParallelTo(other.Transform.XAxis) &&
+                        MinorAxis.ApproximatelyEquals(other.MinorAxis) &&
+                        Transform.YAxis.IsParallelTo(other.Transform.YAxis))
+                    {
+                        return false;
+                    }
+
+                    if (MajorAxis.ApproximatelyEquals(other.MinorAxis) &&
+                        Transform.XAxis.IsParallelTo(other.Transform.YAxis) &&
+                        MinorAxis.ApproximatelyEquals(other.MajorAxis) &&
+                        Transform.YAxis.IsParallelTo(other.Transform.XAxis))
+                    {
+                        return false;
+                    }
+                }
+
+                // Too far away
+                if (Center.DistanceTo(other.Center) > MajorAxis + other.MajorAxis)
+                {
+                    return false;
+                }
+
+                var inverted = Transform.Inverted();
+                var ellipseToEllipse = Transform.Concatenated(other.Transform.Inverted());
+
+                var roots = Equations.SolveIterative(0, Math.PI * 2,
+                    new Func<double, double>((t) =>
+                    {
+                        var d = PointAtUntransformed(t);
+                        var otherD = ellipseToEllipse.OfPoint(d);
+                        var dx = Math.Pow(otherD.X / other.MajorAxis, 2);
+                        var dy = Math.Pow(otherD.Y / other.MinorAxis, 2);
+                        return dx + dy - 1;
+                    }));
+                foreach (var root in roots)
+                {
+                    Vector3 intersection = PointAtUntransformed(root);
+                    var global = Transform.OfPoint(intersection);
+                    if (!results.Any() || !global.IsAlmostEqualTo(results.Last()))
+                    {
+                        results.Add(global);
+                    }
+                }
+            }
+            // Ignore parallel planes.
+            // Find intersection line between two planes.
+            else if (planeA.Intersects(planeB, out var line) &&
+                     Intersects(line, out var candidates))
+            {
+                var inverted = other.Transform.Inverted();
+                foreach (var item in candidates)
+                {
+                    // Check each point that lays on intersection line and one of the circles.
+                    // They are on both if they have correct distance to circle centers.
+                    var local = inverted.OfPoint(item);
+                    if (other.OnEllipseUntransformed(local))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+
+            return results.Any();
+        }
+
+        public bool Intersects(BoundedCurve bounded, out List<Vector3> results)
+        {
+            return bounded.Intersects(this, out results);
         }
 
         internal double ArcLength(double t0,
