@@ -3,7 +3,7 @@
 ## 2.0.1
 
 ### Fixed
-
+- IFC export now includes openings for `ElementInstance` objects
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 
 ## 2.0.0
