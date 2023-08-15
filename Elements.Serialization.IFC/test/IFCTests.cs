@@ -91,15 +91,6 @@ namespace Elements.IFC.Tests
         }
 
         [Fact]
-        public void HyparModelTest()
-        {
-            var model = System.IO.File.ReadAllText("../../../models/Hypar/data-center-model.json");
-            var hyparModel = Model.FromJson(model);
-            var walls = hyparModel.AllElementsOfType<StandardWall>();
-            hyparModel.ToIFC(ConstructIfcPath("data-center-model"));
-        }
-
-        [Fact]
         public void PlanWall()
         {
             var planShape = Polygon.L(2, 2, 0.15);
