@@ -535,10 +535,16 @@ namespace Elements.Geometry
             {
                 if (segment.Intersects(curve, out var intersections))
                 {
-                    results.AddRange(intersections);
+                    foreach (var item in intersections)
+                    {
+                        if (!results.Any() || 
+                            !results.First().IsAlmostEqualTo(item) && !results.Last().IsAlmostEqualTo(item))
+                        {
+                            results.Add(item);
+                        }
+                    }
                 }
             }
-            results = results.Distinct().ToList();
             return results.Any();
         }
 
