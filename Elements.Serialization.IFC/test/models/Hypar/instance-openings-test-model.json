@@ -1,0 +1,976 @@
+{
+  "Transform": {
+    "Matrix": {
+      "Components": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ]
+    }
+  },
+  "Elements": {
+    "f616193d-6cca-42bc-b0d8-ccdc4f457693": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.800000011920929,
+        "Green": 0.8999999761581421,
+        "Blue": 0.30000001192092896,
+        "Alpha": 0.10000000149011612
+      },
+      "SpecularFactor": 0.10000000149011612,
+      "GlossinessFactor": 0.10000000149011612,
+      "Unlit": false,
+      "DoubleSided": false,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 0.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "f616193d-6cca-42bc-b0d8-ccdc4f457693",
+      "Name": "void"
+    },
+    "1315175c-fc79-490e-af0f-017cc976fd94": {
+      "discriminator": "Elements.Geometry.Profile",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          },
+          {
+            "X": -0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Voids": [],
+      "Id": "1315175c-fc79-490e-af0f-017cc976fd94",
+      "Name": null
+    },
+    "6ab84562-438c-4183-a738-9bb8ddea612b": {
+      "discriminator": "Elements.Opening",
+      "Profile": null,
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          },
+          {
+            "X": -0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "DepthFront": 1.0,
+      "DepthBack": 1.0,
+      "Normal": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 1.0
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            2.0,
+            0.0,
+            0.0,
+            -1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            2.0
+          ]
+        }
+      },
+      "Material": "f616193d-6cca-42bc-b0d8-ccdc4f457693",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Extrude",
+            "Profile": "5a1eede8-76d2-4fa5-a921-a3653b8da4cc",
+            "Height": 2.0,
+            "Direction": {
+              "X": 0.0,
+              "Y": 0.0,
+              "Z": 1.0
+            },
+            "Reverse Winding": false,
+            "LocalTransform": {
+              "Matrix": {
+                "Components": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  -1.0
+                ]
+              }
+            },
+            "IsVoid": true
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "6ab84562-438c-4183-a738-9bb8ddea612b",
+      "Name": null
+    },
+    "e7492160-3d9c-4fde-83a9-618abd381169": {
+      "discriminator": "Elements.Material",
+      "Color": {
+        "Red": 0.5,
+        "Green": 0.5,
+        "Blue": 0.5,
+        "Alpha": 1.0
+      },
+      "SpecularFactor": 0.0,
+      "GlossinessFactor": 0.0,
+      "Unlit": false,
+      "DoubleSided": false,
+      "RepeatTexture": true,
+      "InterpolateTexture": true,
+      "EmissiveFactor": 0.0,
+      "Draw In Front": false,
+      "EdgeDisplaySettings": null,
+      "Id": "e7492160-3d9c-4fde-83a9-618abd381169",
+      "Name": "concrete"
+    },
+    "b59cad25-4b3e-4877-be67-25b7f280e5a8": {
+      "discriminator": "Elements.Geometry.Profile",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": 0.0,
+            "Y": -0.125,
+            "Z": 0.0
+          },
+          {
+            "X": 5.0,
+            "Y": -0.125,
+            "Z": 0.0
+          },
+          {
+            "X": 5.0,
+            "Y": 0.125,
+            "Z": 0.0
+          },
+          {
+            "X": 0.0,
+            "Y": 0.125,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Voids": [],
+      "Id": "b59cad25-4b3e-4877-be67-25b7f280e5a8",
+      "Name": null
+    },
+    "b9cbe47e-2734-434a-aee4-5fa7b051ebbd": {
+      "discriminator": "Elements.StandardWall",
+      "CenterLine": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 5.0,
+          "Y": 0.0,
+          "Z": 0.0
+        }
+      },
+      "Thickness": 0.25,
+      "Height": 4.0,
+      "Profile": null,
+      "Openings": [
+        "6ab84562-438c-4183-a738-9bb8ddea612b"
+      ],
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "e7492160-3d9c-4fde-83a9-618abd381169",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Extrude",
+            "Profile": "11862c05-d053-4936-8c44-7023a45cc8de",
+            "Height": 4.0,
+            "Direction": {
+              "X": 0.0,
+              "Y": 0.0,
+              "Z": 1.0
+            },
+            "Reverse Winding": false,
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": true,
+      "Id": "b9cbe47e-2734-434a-aee4-5fa7b051ebbd",
+      "Name": null
+    },
+    "7f9dda84-2708-4a3b-9a34-41766f5e6956": {
+      "discriminator": "Elements.ElementInstance",
+      "BaseDefinition": "b9cbe47e-2734-434a-aee4-5fa7b051ebbd",
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Id": "7f9dda84-2708-4a3b-9a34-41766f5e6956",
+      "Name": null
+    },
+    "270326d6-2bb8-4c12-9fbf-bbc934388c7b": {
+      "discriminator": "Elements.ElementInstance",
+      "BaseDefinition": "b9cbe47e-2734-434a-aee4-5fa7b051ebbd",
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Id": "270326d6-2bb8-4c12-9fbf-bbc934388c7b",
+      "Name": null
+    },
+    "fc37cf28-f3ac-4470-b63d-15348b313104": {
+      "discriminator": "Elements.Geometry.Profile",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          },
+          {
+            "X": -0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Voids": [],
+      "Id": "fc37cf28-f3ac-4470-b63d-15348b313104",
+      "Name": null
+    },
+    "01f9b16b-a625-4bde-baec-13a885027214": {
+      "discriminator": "Elements.Opening",
+      "Profile": null,
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          },
+          {
+            "X": -0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "DepthFront": 2.0,
+      "DepthBack": 2.0,
+      "Normal": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 1.0
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            7.0,
+            0.0,
+            0.0,
+            -1.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            2.0
+          ]
+        }
+      },
+      "Material": "f616193d-6cca-42bc-b0d8-ccdc4f457693",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Extrude",
+            "Profile": "7178ba51-58ee-4548-8074-8f054e70ee0e",
+            "Height": 4.0,
+            "Direction": {
+              "X": 0.0,
+              "Y": 0.0,
+              "Z": 1.0
+            },
+            "Reverse Winding": false,
+            "LocalTransform": {
+              "Matrix": {
+                "Components": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  -2.0
+                ]
+              }
+            },
+            "IsVoid": true
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "01f9b16b-a625-4bde-baec-13a885027214",
+      "Name": null
+    },
+    "79fb9000-2e3b-46cb-ad0a-341672d4296f": {
+      "discriminator": "Elements.Geometry.Profile",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": 5.0,
+            "Y": -0.125,
+            "Z": 0.0
+          },
+          {
+            "X": 10.0,
+            "Y": -0.125,
+            "Z": 0.0
+          },
+          {
+            "X": 10.0,
+            "Y": 0.125,
+            "Z": 0.0
+          },
+          {
+            "X": 5.0,
+            "Y": 0.125,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Voids": [],
+      "Id": "79fb9000-2e3b-46cb-ad0a-341672d4296f",
+      "Name": null
+    },
+    "fb50f7f5-7e55-408a-8c06-8e07510f7315": {
+      "discriminator": "Elements.StandardWall",
+      "CenterLine": {
+        "discriminator": "Elements.Geometry.Line",
+        "Start": {
+          "X": 5.0,
+          "Y": 0.0,
+          "Z": 0.0
+        },
+        "End": {
+          "X": 10.0,
+          "Y": 0.0,
+          "Z": 0.0
+        }
+      },
+      "Thickness": 0.25,
+      "Height": 4.0,
+      "Profile": null,
+      "Openings": [
+        "01f9b16b-a625-4bde-baec-13a885027214"
+      ],
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "e7492160-3d9c-4fde-83a9-618abd381169",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Extrude",
+            "Profile": "0915f072-5e2f-44fa-8862-9593ce5615f0",
+            "Height": 4.0,
+            "Direction": {
+              "X": 0.0,
+              "Y": 0.0,
+              "Z": 1.0
+            },
+            "Reverse Winding": false,
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": true,
+      "Id": "fb50f7f5-7e55-408a-8c06-8e07510f7315",
+      "Name": null
+    },
+    "041d750b-315b-43da-a445-e27202f75a94": {
+      "discriminator": "Elements.ElementInstance",
+      "BaseDefinition": "fb50f7f5-7e55-408a-8c06-8e07510f7315",
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Id": "041d750b-315b-43da-a445-e27202f75a94",
+      "Name": null
+    },
+    "3976b4ba-8cd5-4835-85df-56005902fa74": {
+      "discriminator": "Elements.ElementInstance",
+      "BaseDefinition": "fb50f7f5-7e55-408a-8c06-8e07510f7315",
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            5.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Id": "3976b4ba-8cd5-4835-85df-56005902fa74",
+      "Name": null
+    },
+    "1dd87782-f608-4f25-9d75-19dac8e850aa": {
+      "discriminator": "Elements.Geometry.Profile",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -5.0,
+            "Y": -5.0,
+            "Z": 0.0
+          },
+          {
+            "X": 5.0,
+            "Y": -5.0,
+            "Z": 0.0
+          },
+          {
+            "X": 5.0,
+            "Y": 5.0,
+            "Z": 0.0
+          },
+          {
+            "X": -5.0,
+            "Y": 5.0,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Voids": [],
+      "Id": "1dd87782-f608-4f25-9d75-19dac8e850aa",
+      "Name": null
+    },
+    "47c71f09-bfdd-4642-93fd-762efffa5025": {
+      "discriminator": "Elements.Geometry.Profile",
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          },
+          {
+            "X": -0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "Voids": [],
+      "Id": "47c71f09-bfdd-4642-93fd-762efffa5025",
+      "Name": null
+    },
+    "eb220b22-871e-4906-8fd5-adeb82f31533": {
+      "discriminator": "Elements.Opening",
+      "Profile": null,
+      "Perimeter": {
+        "discriminator": "Elements.Geometry.Polygon",
+        "CurveIndices": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "Vertices": [
+          {
+            "X": -0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": -0.5,
+            "Z": 0.0
+          },
+          {
+            "X": 0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          },
+          {
+            "X": -0.5,
+            "Y": 0.5,
+            "Z": 0.0
+          }
+        ]
+      },
+      "DepthFront": 1.0,
+      "DepthBack": 1.0,
+      "Normal": {
+        "X": 0.0,
+        "Y": 0.0,
+        "Z": 1.0
+      },
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "f616193d-6cca-42bc-b0d8-ccdc4f457693",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Extrude",
+            "Profile": "47c71f09-bfdd-4642-93fd-762efffa5025",
+            "Height": 2.0,
+            "Direction": {
+              "X": 0.0,
+              "Y": 0.0,
+              "Z": 1.0
+            },
+            "Reverse Winding": false,
+            "LocalTransform": {
+              "Matrix": {
+                "Components": [
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  0.0,
+                  1.0,
+                  -1.0
+                ]
+              }
+            },
+            "IsVoid": true
+          }
+        ]
+      },
+      "IsElementDefinition": false,
+      "Id": "eb220b22-871e-4906-8fd5-adeb82f31533",
+      "Name": null
+    },
+    "61a1345b-0c1d-4f15-8958-d35d0bc366c1": {
+      "discriminator": "Elements.Floor",
+      "Thickness": 0.5,
+      "Profile": "1dd87782-f608-4f25-9d75-19dac8e850aa",
+      "Openings": [
+        "eb220b22-871e-4906-8fd5-adeb82f31533"
+      ],
+      "Level": null,
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Material": "e7492160-3d9c-4fde-83a9-618abd381169",
+      "Representation": {
+        "SolidOperations": [
+          {
+            "discriminator": "Elements.Geometry.Solids.Extrude",
+            "Profile": "1dd87782-f608-4f25-9d75-19dac8e850aa",
+            "Height": 0.5,
+            "Direction": {
+              "X": 0.0,
+              "Y": 0.0,
+              "Z": 1.0
+            },
+            "Reverse Winding": false,
+            "LocalTransform": null,
+            "IsVoid": false
+          }
+        ]
+      },
+      "IsElementDefinition": true,
+      "Id": "61a1345b-0c1d-4f15-8958-d35d0bc366c1",
+      "Name": null
+    },
+    "971eb46b-f6ad-41a7-b9d4-d9b90768593e": {
+      "discriminator": "Elements.ElementInstance",
+      "BaseDefinition": "61a1345b-0c1d-4f15-8958-d35d0bc366c1",
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1.0,
+            0.0,
+            0.0,
+            5.0,
+            0.0,
+            1.0,
+            0.0,
+            2.5,
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ]
+        }
+      },
+      "Id": "971eb46b-f6ad-41a7-b9d4-d9b90768593e",
+      "Name": null
+    }
+  }
+}

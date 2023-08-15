@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
+using System.Linq;
 
 namespace Elements.IFC.Tests
 {
@@ -67,6 +68,35 @@ namespace Elements.IFC.Tests
             model.AddElement(wall);
             model.AddElement(wall1);
             model.ToIFC(ConstructIfcPath("IfcWall"));
+        }
+
+        [Fact]
+        public void InstanceOpenings()
+        {
+            var model = System.IO.File.ReadAllText("../../../models/Hypar/instance-openings-test-model.json");
+            var hyparModel = Model.FromJson(model);
+            var walls = hyparModel.AllElementsOfType<StandardWall>();
+            var path = ConstructIfcPath("instance-openings-test");
+            hyparModel.ToIFC(path);
+
+            var file = System.IO.File.ReadAllLines(path);
+
+            var wallCount = file.Count(x => x.Contains("IFCWALLSTANDARDCASE"));
+            var openingCount = file.Count(x => x.Contains("IFCRELVOIDSELEMENT"));
+            var floorCount = file.Count(x => x.Contains("IFCSLAB"));
+
+            Assert.Equal(wallCount, 4);
+            Assert.Equal(openingCount, 5);
+            Assert.Equal(floorCount, 1);
+        }
+
+        [Fact]
+        public void HyparModelTest()
+        {
+            var model = System.IO.File.ReadAllText("../../../models/Hypar/data-center-model.json");
+            var hyparModel = Model.FromJson(model);
+            var walls = hyparModel.AllElementsOfType<StandardWall>();
+            hyparModel.ToIFC(ConstructIfcPath("data-center-model"));
         }
 
         [Fact]
