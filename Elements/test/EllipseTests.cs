@@ -71,12 +71,11 @@ namespace Hypar.Tests
             Assert.True(ellipse.Intersects(circle, out results));
             Assert.Equal(2, results.Count());
 
-            // TO DO: make it work
             // Planar intersection 1 intersection.
-            //ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
-            //circle = new Circle(new Vector3(0, 1, 0), 1);
-            //Assert.True(ellipse.Intersects(circle, out results));
-            //Assert.Single(results);
+            ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
+            circle = new Circle(new Vector3(0, 1, 0), 1);
+            Assert.True(ellipse.Intersects(circle, out results));
+            Assert.Single(results);
 
             // Planar no intersection
             ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
@@ -128,12 +127,11 @@ namespace Hypar.Tests
             Assert.True(ellipse.Intersects(other, out results));
             Assert.Equal(2, results.Count());
 
-            // TO DO: make it work
             // Planar intersection 1 intersection.
-            //ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
-            //circle = new Circle(new Vector3(0, 1, 0), 1);
-            //Assert.True(ellipse.Intersects(circle, out results));
-            //Assert.Single(results);
+            ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
+            other = new Ellipse(new Vector3(1, 8), 2, 1);
+            Assert.True(ellipse.Intersects(other, out results));
+            Assert.Single(results);
 
             // Planar no intersection
             ellipse = new Ellipse(new Vector3(1, 1), 2, 6);

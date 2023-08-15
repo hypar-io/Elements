@@ -316,16 +316,8 @@ namespace Elements.Geometry
                     {
                         var d = PointAtUntransformed(t) - localCenter;
                         return d.LengthSquared() - circle.Radius * circle.Radius;
-                    }));
-                foreach (var root in roots)
-                {
-                    Vector3 intersection = PointAtUntransformed(root);
-                    var global = Transform.OfPoint(intersection);
-                    if (!results.Any() || !global.IsAlmostEqualTo(results.Last()))
-                    {
-                        results.Add(global);
-                    }
-                }
+                    }), Vector3.EPSILON * Vector3.EPSILON);
+                results.AddRange(Equations.ConvertRoots(this, roots));
             }
             // Ignore parallel planes.
             // Find intersection line between two planes.
@@ -378,7 +370,8 @@ namespace Elements.Geometry
                 }
 
                 // Too far away
-                if (Center.DistanceTo(other.Center) > MajorAxis + other.MajorAxis)
+                if (Center.DistanceTo(other.Center) > 
+                    Math.Max(MajorAxis, MinorAxis) + Math.Max(other.MajorAxis, other.MinorAxis))
                 {
                     return false;
                 }
@@ -394,16 +387,8 @@ namespace Elements.Geometry
                         var dx = Math.Pow(otherD.X / other.MajorAxis, 2);
                         var dy = Math.Pow(otherD.Y / other.MinorAxis, 2);
                         return dx + dy - 1;
-                    }));
-                foreach (var root in roots)
-                {
-                    Vector3 intersection = PointAtUntransformed(root);
-                    var global = Transform.OfPoint(intersection);
-                    if (!results.Any() || !global.IsAlmostEqualTo(results.Last()))
-                    {
-                        results.Add(global);
-                    }
-                }
+                    }), Vector3.EPSILON * Vector3.EPSILON);
+                results.AddRange(Equations.ConvertRoots(this, roots));
             }
             // Ignore parallel planes.
             // Find intersection line between two planes.

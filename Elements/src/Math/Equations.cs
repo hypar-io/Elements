@@ -1,4 +1,5 @@
 ﻿using Elements.Geometry;
+using Elements.Geometry.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,13 @@ namespace Elements
 {
     public static class Equations
     {
-        public static IEnumerable<double> SolveQuadratic(double a, double b, double c)
+        public static IEnumerable<double> SolveQuadratic(
+            double a, double b, double c,
+            double tolerance = Vector3.EPSILON )
         {
             double discriminant = b * b - 4 * a * c;
 
-            if (discriminant.ApproximatelyEquals(0))
+            if (discriminant.ApproximatelyEquals(0, tolerance))
             {
                 double t = -b / (2 * a);
                 yield return t;
@@ -31,47 +34,83 @@ namespace Elements
         }
 
         public static IEnumerable<double> SolveIterative(
-            double start, double end, Func<double, double> evaluate)
+            double start, double end,
+            Func<double, double> evaluate,
+            double tolerance = Vector3.EPSILON)
         {
-            var step = (end - start) / 45;
+            int numSteps = 45;
+            var step = (end - start) / numSteps;
             int lastSign = 0;
             double lastFx = 0;
             double lastDelta = 0;
+            double? lastRoot = null;
 
-            for (double i = start; i < end; i += step)
+            for (int  i = 0; i <= numSteps; i++)
             {
-                var fx = evaluate(i);
-                if (fx.ApproximatelyEquals(0, Vector3.EPSILON * Vector3.EPSILON))
+                var t = i == numSteps ? end : start + i * step;
+                var fx = evaluate(t);
+                if (fx.ApproximatelyEquals(0, tolerance))
                 {
-                    yield return i;
-                    lastSign = 0;
+                    if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
+                    {
+                        yield return t;
+                        lastSign = 0;
+                        lastRoot = fx;
+                    }
                 }
                 else
                 {
                     var sign = Math.Sign(fx);
                     if (lastSign != 0 && sign != lastSign)
                     {
-                        foreach(var r in SolveIterative(i - step, i, evaluate))
+                        foreach (var r in SolveIterative(t - step, t, evaluate, tolerance))
                         {
-                            yield return r;
+                            if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
+                            {
+                                yield return r;
+                                lastRoot = fx;
+                            }
                         }
                     }
-                    else if (lastDelta < 0 && fx - lastFx >= 0 && Math.Min(fx, lastFx) < step * 2)
+                    else if (lastDelta < 0 && fx - lastFx >= 0)
                     {
-                        foreach (var r in SolveIterative(i - step * 2, i, evaluate))
+                        var min = Math.Min(fx, lastFx);
+                        if (min > 0 && min < step * 2)
                         {
-                            yield return r;
+                            foreach (var r in SolveIterative(t - step * 2, t, evaluate, tolerance))
+                            {
+                                if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
+                                {
+                                    yield return r;
+                                    lastRoot = fx;
+                                }
+                            }
                         }
                     }
                     lastSign = sign;
                 }
-                lastFx = fx;
 
                 if (lastFx != 0)
                 {
                     lastDelta = fx - lastFx;
                 }
+                lastFx = fx;
             }
+        }
+
+        public static List<Vector3> ConvertRoots(ICurve curve, IEnumerable<double> roots)
+        {
+            var results = new List<Vector3>();
+            foreach (var root in roots)
+            {
+                var p = curve.PointAt(root);
+                if (!results.Any() || (!p.IsAlmostEqualTo(results.First()) &&
+                                       !p.IsAlmostEqualTo(results.Last())))
+                {
+                    results.Add(p);
+                }
+            }
+            return results;
         }
     }
 }
