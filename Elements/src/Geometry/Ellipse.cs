@@ -311,7 +311,7 @@ namespace Elements.Geometry
                 }
 
                 var localCenter = Transform.Inverted().OfPoint(circle.Center);
-                var roots = Equations.SolveIterative(0, Math.PI * 2,
+                var roots = Equations.SolveIterative(0, Math.PI * 2, 45,
                     new Func<double, double>((t) =>
                     {
                         var d = PointAtUntransformed(t) - localCenter;
@@ -379,7 +379,7 @@ namespace Elements.Geometry
                 var inverted = Transform.Inverted();
                 var ellipseToEllipse = Transform.Concatenated(other.Transform.Inverted());
 
-                var roots = Equations.SolveIterative(0, Math.PI * 2,
+                var roots = Equations.SolveIterative(0, Math.PI * 2, 45,
                     new Func<double, double>((t) =>
                     {
                         var d = PointAtUntransformed(t);

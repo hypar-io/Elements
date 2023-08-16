@@ -34,20 +34,19 @@ namespace Elements
         }
 
         public static IEnumerable<double> SolveIterative(
-            double start, double end,
+            double start, double end, int steps,
             Func<double, double> evaluate,
             double tolerance = Vector3.EPSILON)
         {
-            int numSteps = 45;
-            var step = (end - start) / numSteps;
+            var step = (end - start) / steps;
             int lastSign = 0;
             double lastFx = 0;
             double lastDelta = 0;
             double? lastRoot = null;
 
-            for (int  i = 0; i <= numSteps; i++)
+            for (int  i = 0; i <= steps; i++)
             {
-                var t = i == numSteps ? end : start + i * step;
+                var t = i == steps ? end : start + i * step;
                 var fx = evaluate(t);
                 if (fx.ApproximatelyEquals(0, tolerance))
                 {
@@ -63,7 +62,7 @@ namespace Elements
                     var sign = Math.Sign(fx);
                     if (lastSign != 0 && sign != lastSign)
                     {
-                        foreach (var r in SolveIterative(t - step, t, evaluate, tolerance))
+                        foreach (var r in SolveIterative(t - step, t, steps, evaluate, tolerance))
                         {
                             if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
                             {
@@ -77,7 +76,7 @@ namespace Elements
                         var min = Math.Min(fx, lastFx);
                         if (min > 0 && min < step * 2)
                         {
-                            foreach (var r in SolveIterative(t - step * 2, t, evaluate, tolerance))
+                            foreach (var r in SolveIterative(t - step * 2, t, steps, evaluate, tolerance))
                             {
                                 if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
                                 {
@@ -104,6 +103,8 @@ namespace Elements
             foreach (var root in roots)
             {
                 var p = curve.PointAt(root);
+                // Filter roots that are too close together.
+                // Also, if domain is periodic, first root can also be duplicated.
                 if (!results.Any() || (!p.IsAlmostEqualTo(results.First()) &&
                                        !p.IsAlmostEqualTo(results.Last())))
                 {

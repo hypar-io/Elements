@@ -379,7 +379,7 @@ namespace Elements.Geometry
                 return false;
             }
 
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
                     new Func<double, double>((t) =>
                     {
                         var p = PointAt(t);
@@ -393,7 +393,7 @@ namespace Elements.Geometry
         public bool Intersects(Circle circle, out List<Vector3> results)
         {
             var invertedT = circle.Transform.Inverted();
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
                     new Func<double, double>((t) =>
                     {
                         var p = PointAt(t);
@@ -417,7 +417,7 @@ namespace Elements.Geometry
             }
 
             var invertedT = ellipse.Transform.Inverted();
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
                 new Func<double, double>((t) =>
                 {
                     var p = PointAt(t);
