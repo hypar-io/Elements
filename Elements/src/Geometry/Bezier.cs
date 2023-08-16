@@ -436,215 +436,127 @@ namespace Elements.Geometry
             results = new List<Vector3>();
             int leftSteps = ControlPoints.Count * 8 - 1;
             int rightSteps = other.ControlPoints.Count * 8 - 1;
-            double step = Domain.Length / leftSteps;
 
-            Dictionary<double, Vector3> evaluateLeft = new Dictionary<double, Vector3>();
-            Dictionary<double, Vector3> evaluateRight = new Dictionary<double, Vector3>();
+            var leftCache = new Dictionary<double, Vector3>();
+            var rightCache = new Dictionary<double, Vector3>();
 
-            List<Vector3> points = new List<Vector3>();
-            for (int i = 0; i < leftSteps; i++)
-            {
-                var t = Domain.Min + i * step;
-                var p = PointAt(t);
-                evaluateLeft.Add(t, p);
-                points.Add(p);
-            }
-            var max = PointAt(Domain.Max);
-            points.Add(max);
-            evaluateLeft.Add(Domain.Max, max);
-            BBox3 box = new BBox3(points);
+            BBox3 box = CurveBox(leftSteps, leftCache);
+            BBox3 otherBox = other.CurveBox(rightSteps, rightCache);
 
-            points.Clear();
+            Intersects(other,
+                       (box, Domain, leftSteps),
+                       (otherBox, other.Domain, rightSteps), 
+                       leftCache,
+                       rightCache,
+                       ref results);
 
-            double otherStep = other.Domain.Length / rightSteps;
-            for (int i = 0; i < rightSteps; i++)
-            {
-                var t = other.Domain.Min + i * otherStep;
-                var p = other.PointAt(t);
-                points.Add(p);
-                evaluateRight.Add(t, p);
-            }
-            max = other.PointAt(other.Domain.Max);
-            points.Add(max);
-            evaluateRight.Add(other.Domain.Max, max);
-            BBox3 otherBox = new BBox3(points);
-
-            Intersects(other, box, Domain, step, otherBox, other.Domain, otherStep, 
-                       evaluateLeft, evaluateRight, ref results);
-
-            List<List<Vector3>> groups = new List<List<Vector3>>();
-             foreach (var p in results)
-            {
-                bool found = false;
-                foreach (var group in groups)
-                {
-                    if (p.IsAlmostEqualTo(group.First()))
-                    {
-                        group.Add(p);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found)
-                {
-                    groups.Add(new List<Vector3>() { p });
-                }
-            }
-
-            results = groups.Select(g => g.Average()).ToList();
+            results = results.UniqueAverageWithinTolerance().ToList();
             return results.Any();
         }
 
+        private BBox3 CurveBox(int numSteps, Dictionary<double, Vector3> cache)
+        {
+            List<Vector3> points = new List<Vector3>();
+            double step = Domain.Length / numSteps;
+            for (int i = 0; i < numSteps; i++)
+            {
+                var t = Domain.Min + i * step;
+                points.Add(PointAtCached(t, cache));
+            }
+            points.Add(PointAtCached(Domain.Max, cache));
+            BBox3 box = new BBox3(points);
+            return box;
+        }
+
         private void Intersects(Bezier other,
-                                BBox3 lb, Domain1d leftDomain, double leftResolution,
-                                BBox3 rb, Domain1d rightDomain, double rightResolution,
-                                Dictionary<double, Vector3> evaluateLeft,
-                                Dictionary<double, Vector3> evaluateRight,
+                                (BBox3 Box, Domain1d Domain, double Steps) left,
+                                (BBox3 Box, Domain1d Domain, double Steps) right,
+                                Dictionary<double, Vector3> leftCache,
+                                Dictionary<double, Vector3> rightCache,
                                 ref List<Vector3> results)
         {
-            if (!lb.Intersects(rb))
+            if (!left.Box.Intersects(right.Box))
             {
                 return;
             }
 
-            bool leftConvergent = false;
-            bool rightConvergent = false;
-            BBox3 lowerLeftBox = new BBox3();
-            BBox3 upperLeftBox = new BBox3();
-            BBox3 lowerRightBox = new BBox3();
-            BBox3 upperRightBox = new BBox3();
-            Domain1d lowerLeftDomain = new Domain1d();
-            Domain1d upperLeftDomain = new Domain1d();
-            Domain1d lowerRightDomain = new Domain1d();
-            Domain1d upperRightDomain = new Domain1d();
-            double lowerLeftResolution = 0;
-            double upperLeftResolution = 0;
-            double lowerRightResolution = 0;
-            double upperRightResolution = 0;
+            var epsilon2 = Vector3.EPSILON * Vector3.EPSILON;
+            (BBox3 Box, Domain1d Domain, double Resolution) loLeft = (default, default, 0);
+            (BBox3 Box, Domain1d Domain, double Resolution) hiLeft = (default, default, 0);
+            (BBox3 Box, Domain1d Domain, double Resolution) loRight = (default, default, 0);
+            (BBox3 Box, Domain1d Domain, double Resolution) hiRight = (default, default, 0);
 
-            if ((rb.Max - rb.Min).LengthSquared() < Vector3.EPSILON * Vector3.EPSILON * 2)
+            var leftConvergent = (left.Box.Max - left.Box.Min).LengthSquared() < epsilon2 * 2;
+            if (!leftConvergent)
             {
-                rightConvergent = true;
-            }
-            else
-            {
-                int numSteps = (int)Math.Round(rightDomain.Length / rightResolution);
-                double step = (rightDomain.Length / 2) / numSteps;
-                List<Vector3> points = new List<Vector3>();
-                for (int i = 0; i < numSteps; i++)
-                {
-                    var t = rightDomain.Min + i * step;
-                    points.Add(other.EvaluateCached(t, evaluateRight));
-                }
-                points.Add(other.EvaluateCached(rightDomain.Min + rightDomain.Length / 2, evaluateRight));
-                lowerRightBox = new BBox3(points);
-                lowerRightDomain = new Domain1d(rightDomain.Min, rightDomain.Min + rightDomain.Length / 2);
-                lowerRightResolution = rightResolution / 2;
-                
-                points.Clear();
-                for (int i = 0; i < numSteps; i++)
-                {
-                    var t = rightDomain.Min + i * step + rightDomain.Length / 2;
-                    points.Add(other.EvaluateCached(t, evaluateRight));
-                }
-                points.Add(other.EvaluateCached(rightDomain.Max, evaluateRight));
-                upperRightBox = new BBox3(points);
-                upperRightDomain = new Domain1d(rightDomain.Min + rightDomain.Length / 2, rightDomain.Max);
-                upperRightResolution = rightResolution / 2;
+                loLeft = SplitCurveBox(left, leftCache, true);
+                hiLeft = SplitCurveBox(left, leftCache, false);
             }
 
-            if ((lb.Max - lb.Min).LengthSquared() < Vector3.EPSILON * Vector3.EPSILON * 2)
+            bool rightConvergent = (right.Box.Max - right.Box.Min).LengthSquared() < epsilon2 * 2;
+            if (!rightConvergent)
             {
-                leftConvergent = true;
-            }
-            else
-            {
-                int numSteps = (int)Math.Round(leftDomain.Length / leftResolution);
-                double step = (leftDomain.Length / 2) / numSteps;
-                List<Vector3> points = new List<Vector3>();
-                for (int i = 0; i < numSteps; i++)
-                {
-                    var t = leftDomain.Min + i * step;
-                    points.Add(EvaluateCached(t, evaluateLeft));
-                }
-                points.Add(EvaluateCached(leftDomain.Min + leftDomain.Length / 2, evaluateLeft));
-                lowerLeftBox = new BBox3(points);
-                lowerLeftDomain = new Domain1d(leftDomain.Min, leftDomain.Min + leftDomain.Length / 2);
-                lowerLeftResolution = leftResolution / 2;
-                
-                points.Clear();
-                for (int i = 0; i < numSteps; i++)
-                {
-                    var t = leftDomain.Min + i * step + leftDomain.Length / 2;
-                    points.Add(EvaluateCached(t, evaluateLeft));
-                }
-                points.Add(EvaluateCached(leftDomain.Max, evaluateLeft));
-                upperLeftBox = new BBox3(points);
-                upperLeftDomain = new Domain1d(leftDomain.Min + leftDomain.Length / 2, leftDomain.Max);
-                upperLeftResolution = leftResolution / 2;
+                loRight = other.SplitCurveBox(right, rightCache, true);
+                hiRight = other.SplitCurveBox(right, rightCache, false);
             }
 
             if (leftConvergent && rightConvergent)
             {
-                results.Add(lb.Center().Average(rb.Center()));
+                results.Add(left.Box.Center().Average(right.Box.Center()));
                 return;
             }
 
             if (leftConvergent)
             {
-                Intersects(other,
-                          lb, leftDomain, leftResolution,
-                          lowerRightBox, lowerRightDomain, lowerRightResolution,
-                          evaluateLeft, evaluateRight, ref results);
-                Intersects(other,
-                          lb, leftDomain, leftResolution,
-                          upperRightBox, upperRightDomain, upperRightResolution,
-                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other, left, loRight, leftCache, rightCache, ref results);
+                Intersects(other, left, hiRight, leftCache, rightCache, ref results);
             }
             else if (rightConvergent) 
             {
-                Intersects(other,
-                          lowerLeftBox, lowerLeftDomain, lowerLeftResolution,
-                          rb, rightDomain, rightResolution,
-                          evaluateLeft, evaluateRight, ref results);
-                Intersects(other,
-                          upperLeftBox, upperLeftDomain, upperLeftResolution,
-                          rb, rightDomain, rightResolution,
-                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other, loLeft, right, leftCache, rightCache, ref results);
+                Intersects(other, hiLeft, right, leftCache, rightCache, ref results);
             }
             else
             {
-                Intersects(other,
-                          lowerLeftBox, lowerLeftDomain, lowerLeftResolution,
-                          lowerRightBox, lowerRightDomain, lowerRightResolution,
-                          evaluateLeft, evaluateRight, ref results);
-                Intersects(other,
-                          upperLeftBox, upperLeftDomain, upperLeftResolution,
-                          lowerRightBox, lowerRightDomain, lowerRightResolution,
-                          evaluateLeft, evaluateRight, ref results);
-                Intersects(other,
-                          lowerLeftBox, lowerLeftDomain, lowerLeftResolution,
-                          upperRightBox, upperRightDomain, upperRightResolution,
-                          evaluateLeft, evaluateRight, ref results);
-                Intersects(other,
-                          upperLeftBox, upperLeftDomain, upperLeftResolution,
-                           upperRightBox, upperRightDomain, upperRightResolution,
-                          evaluateLeft, evaluateRight, ref results);
-
+                Intersects(other, loLeft, loRight, leftCache, rightCache, ref results);
+                Intersects(other, hiLeft, loRight, leftCache, rightCache, ref results);
+                Intersects(other, loLeft, hiRight, leftCache, rightCache, ref results);
+                Intersects(other, hiLeft, hiRight, leftCache, rightCache, ref results);
             }
         }
 
-        private Vector3 EvaluateCached(double t, Dictionary<double, Vector3> cached)
+        private (BBox3 Box, Domain1d Domain, double Steps) SplitCurveBox(
+            (BBox3 Box, Domain1d Domain, double Steps) def,
+            Dictionary<double, Vector3> cache,
+            bool low)
         {
-            if (cached.TryGetValue(t, out var p))
+            double step = (def.Domain.Length / 2) / def.Steps;
+            var min = low ? def.Domain.Min : def.Domain.Min + def.Domain.Length / 2;
+            var max = low ? def.Domain.Min + def.Domain.Length / 2 : def.Domain.Max;
+
+            List<Vector3> points = new List<Vector3>();
+            for (int i = 0; i < def.Steps; i++)
+            {
+                var t = min + i * step;
+                points.Add(PointAtCached(t, cache));
+            }
+            points.Add(PointAtCached(max, cache));
+
+            var box = new BBox3(points);
+            var domain = new Domain1d(min, max);
+            return (box, domain, def.Steps);
+        }
+
+        private Vector3 PointAtCached(double t, Dictionary<double, Vector3> cache)
+        {
+            if (cache.TryGetValue(t, out var p))
             {
                 return p;
             }
             else
             {
                 p = PointAt(t);
-                cached.Add(t, p);
+                cache.Add(t, p);
                 return p;
             }
         }

@@ -308,7 +308,8 @@ namespace Elements.Geometry
         /// <param name="vectors">List of vectors</param>
         /// <param name="tolerance">Distance tolerance</param>
         /// <returns>A new collection of vectors with duplicates removed.</returns>
-        public static IEnumerable<Vector3> UniqueWithinTolerance(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        public static IEnumerable<Vector3> UniqueWithinTolerance(
+            this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
         {
             var output = new List<Vector3>();
             foreach (var vector in vectors)
@@ -321,6 +322,32 @@ namespace Elements.Geometry
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// De-duplicate a collection of Vectors, averaging vectors within tolerance of each other.
+        /// </summary>
+        /// <param name="vectors">List of vectors</param>
+        /// <param name="tolerance">Distance tolerance</param>
+        /// <returns>A new collection of vectors with only averaged vectors.</returns>
+        public static IEnumerable<Vector3> UniqueAverageWithinTolerance(
+            this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        {
+            List<List<Vector3>> groups = new List<List<Vector3>>();
+            foreach (var v in vectors)
+            {
+                var group = groups.FirstOrDefault(g => g.First().IsAlmostEqualTo(v, tolerance));
+                if (group != null)
+                {
+                    group.Add(v);
+                }
+                else
+                {
+                    groups.Add(new List<Vector3>() { v });
+                }
+            }
+
+            return groups.Select(g => g.Average());
         }
     }
 
