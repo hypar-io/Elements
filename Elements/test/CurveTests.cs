@@ -58,12 +58,12 @@ namespace Elements
                 (3, 3)
             });
 
-            //left.Intersects(right, out _);
-            //right.Intersects(left, out _);
+            left.Intersects(right, out _);
+            right.Intersects(left, out _);
 
-            //right = new Line((0, 0), (10, 10));
-            //left.Intersects(right, out _);
-            //right.Intersects(left, out _);
+            right = new Line((0, 0), (10, 10));
+            left.Intersects(right, out _);
+            right.Intersects(left, out _);
         }
 
         [Fact]

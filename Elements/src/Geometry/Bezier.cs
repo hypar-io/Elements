@@ -371,17 +371,282 @@ namespace Elements.Geometry
 
         public bool Intersects(InfiniteLine line, out List<Vector3> results)
         {
-            throw new NotImplementedException();
+            BBox3 box = new BBox3(ControlPoints);
+            if (!new Line(line.Origin, line.Origin + line.Direction).Intersects(
+                box, out _, true))
+            {
+                results = new List<Vector3>();
+                return false;
+            }
+
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max,
+                    new Func<double, double>((t) =>
+                    {
+                        var p = PointAt(t);
+                        return (p - p.ClosestPointOn(line)).LengthSquared();
+                    }), Vector3.EPSILON * Vector3.EPSILON);
+
+            results = Equations.ConvertRoots(this, roots);
+            return results.Any();
         }
 
         public bool Intersects(Circle circle, out List<Vector3> results)
         {
-            throw new NotImplementedException();
+            var invertedT = circle.Transform.Inverted();
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max,
+                    new Func<double, double>((t) =>
+                    {
+                        var p = PointAt(t);
+                        var local = invertedT.OfPoint(p);
+                        return local.LengthSquared() - circle.Radius * circle.Radius;
+                    }), Vector3.EPSILON * Vector3.EPSILON);
+
+            results = Equations.ConvertRoots(this, roots);
+            return results.Any();
         }
 
-        public bool Intersects(Ellipse line, out List<Vector3> results)
+        public bool Intersects(Ellipse ellipse, out List<Vector3> results)
         {
-            throw new NotImplementedException();
+            BBox3 box = new BBox3(ControlPoints);
+            var boxCenter = box.Center();
+            if (ellipse.Center.DistanceTo(boxCenter) > 
+                Math.Max(ellipse.MajorAxis, ellipse.MinorAxis) + (box.Max - boxCenter).Length())
+            {
+                results = new List<Vector3>();
+                return false;
+            }
+
+            var invertedT = ellipse.Transform.Inverted();
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max,
+                new Func<double, double>((t) =>
+                {
+                    var p = PointAt(t);
+                    var local = invertedT.OfPoint(p);
+                    var dx = Math.Pow(local.X / ellipse.MajorAxis, 2);
+                    var dy = Math.Pow(local.Y / ellipse.MinorAxis, 2);
+                    return dx + dy + local.Z * local.Z - 1;
+                }), Vector3.EPSILON * Vector3.EPSILON);
+
+            results = Equations.ConvertRoots(this, roots);
+            return results.Any();
+        }
+
+        public bool Intersects(Bezier other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            int leftSteps = ControlPoints.Count * 8 - 1;
+            int rightSteps = other.ControlPoints.Count * 8 - 1;
+            double step = Domain.Length / leftSteps;
+
+            Dictionary<double, Vector3> evaluateLeft = new Dictionary<double, Vector3>();
+            Dictionary<double, Vector3> evaluateRight = new Dictionary<double, Vector3>();
+
+            List<Vector3> points = new List<Vector3>();
+            for (int i = 0; i < leftSteps; i++)
+            {
+                var t = Domain.Min + i * step;
+                var p = PointAt(t);
+                evaluateLeft.Add(t, p);
+                points.Add(p);
+            }
+            var max = PointAt(Domain.Max);
+            points.Add(max);
+            evaluateLeft.Add(Domain.Max, max);
+            BBox3 box = new BBox3(points);
+
+            points.Clear();
+
+            double otherStep = other.Domain.Length / rightSteps;
+            for (int i = 0; i < rightSteps; i++)
+            {
+                var t = other.Domain.Min + i * otherStep;
+                var p = other.PointAt(t);
+                points.Add(p);
+                evaluateRight.Add(t, p);
+            }
+            max = other.PointAt(other.Domain.Max);
+            points.Add(max);
+            evaluateRight.Add(other.Domain.Max, max);
+            BBox3 otherBox = new BBox3(points);
+
+            Intersects(other, box, Domain, step, otherBox, other.Domain, otherStep, 
+                       evaluateLeft, evaluateRight, ref results);
+
+            List<List<Vector3>> groups = new List<List<Vector3>>();
+             foreach (var p in results)
+            {
+                bool found = false;
+                foreach (var group in groups)
+                {
+                    if (p.IsAlmostEqualTo(group.First()))
+                    {
+                        group.Add(p);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    groups.Add(new List<Vector3>() { p });
+                }
+            }
+
+            results = groups.Select(g => g.Average()).ToList();
+            return results.Any();
+        }
+
+        private void Intersects(Bezier other,
+                                BBox3 lb, Domain1d leftDomain, double leftResolution,
+                                BBox3 rb, Domain1d rightDomain, double rightResolution,
+                                Dictionary<double, Vector3> evaluateLeft,
+                                Dictionary<double, Vector3> evaluateRight,
+                                ref List<Vector3> results)
+        {
+            if (!lb.Intersects(rb))
+            {
+                return;
+            }
+
+            bool leftConvergent = false;
+            bool rightConvergent = false;
+            BBox3 lowerLeftBox = new BBox3();
+            BBox3 upperLeftBox = new BBox3();
+            BBox3 lowerRightBox = new BBox3();
+            BBox3 upperRightBox = new BBox3();
+            Domain1d lowerLeftDomain = new Domain1d();
+            Domain1d upperLeftDomain = new Domain1d();
+            Domain1d lowerRightDomain = new Domain1d();
+            Domain1d upperRightDomain = new Domain1d();
+            double lowerLeftResolution = 0;
+            double upperLeftResolution = 0;
+            double lowerRightResolution = 0;
+            double upperRightResolution = 0;
+
+            if ((rb.Max - rb.Min).LengthSquared() < Vector3.EPSILON * Vector3.EPSILON * 2)
+            {
+                rightConvergent = true;
+            }
+            else
+            {
+                int numSteps = (int)Math.Round(rightDomain.Length / rightResolution);
+                double step = (rightDomain.Length / 2) / numSteps;
+                List<Vector3> points = new List<Vector3>();
+                for (int i = 0; i < numSteps; i++)
+                {
+                    var t = rightDomain.Min + i * step;
+                    points.Add(other.EvaluateCached(t, evaluateRight));
+                }
+                points.Add(other.EvaluateCached(rightDomain.Min + rightDomain.Length / 2, evaluateRight));
+                lowerRightBox = new BBox3(points);
+                lowerRightDomain = new Domain1d(rightDomain.Min, rightDomain.Min + rightDomain.Length / 2);
+                lowerRightResolution = rightResolution / 2;
+                
+                points.Clear();
+                for (int i = 0; i < numSteps; i++)
+                {
+                    var t = rightDomain.Min + i * step + rightDomain.Length / 2;
+                    points.Add(other.EvaluateCached(t, evaluateRight));
+                }
+                points.Add(other.EvaluateCached(rightDomain.Max, evaluateRight));
+                upperRightBox = new BBox3(points);
+                upperRightDomain = new Domain1d(rightDomain.Min + rightDomain.Length / 2, rightDomain.Max);
+                upperRightResolution = rightResolution / 2;
+            }
+
+            if ((lb.Max - lb.Min).LengthSquared() < Vector3.EPSILON * Vector3.EPSILON * 2)
+            {
+                leftConvergent = true;
+            }
+            else
+            {
+                int numSteps = (int)Math.Round(leftDomain.Length / leftResolution);
+                double step = (leftDomain.Length / 2) / numSteps;
+                List<Vector3> points = new List<Vector3>();
+                for (int i = 0; i < numSteps; i++)
+                {
+                    var t = leftDomain.Min + i * step;
+                    points.Add(EvaluateCached(t, evaluateLeft));
+                }
+                points.Add(EvaluateCached(leftDomain.Min + leftDomain.Length / 2, evaluateLeft));
+                lowerLeftBox = new BBox3(points);
+                lowerLeftDomain = new Domain1d(leftDomain.Min, leftDomain.Min + leftDomain.Length / 2);
+                lowerLeftResolution = leftResolution / 2;
+                
+                points.Clear();
+                for (int i = 0; i < numSteps; i++)
+                {
+                    var t = leftDomain.Min + i * step + leftDomain.Length / 2;
+                    points.Add(EvaluateCached(t, evaluateLeft));
+                }
+                points.Add(EvaluateCached(leftDomain.Max, evaluateLeft));
+                upperLeftBox = new BBox3(points);
+                upperLeftDomain = new Domain1d(leftDomain.Min + leftDomain.Length / 2, leftDomain.Max);
+                upperLeftResolution = leftResolution / 2;
+            }
+
+            if (leftConvergent && rightConvergent)
+            {
+                results.Add(lb.Center().Average(rb.Center()));
+                return;
+            }
+
+            if (leftConvergent)
+            {
+                Intersects(other,
+                          lb, leftDomain, leftResolution,
+                          lowerRightBox, lowerRightDomain, lowerRightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other,
+                          lb, leftDomain, leftResolution,
+                          upperRightBox, upperRightDomain, upperRightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+            }
+            else if (rightConvergent) 
+            {
+                Intersects(other,
+                          lowerLeftBox, lowerLeftDomain, lowerLeftResolution,
+                          rb, rightDomain, rightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other,
+                          upperLeftBox, upperLeftDomain, upperLeftResolution,
+                          rb, rightDomain, rightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+            }
+            else
+            {
+                Intersects(other,
+                          lowerLeftBox, lowerLeftDomain, lowerLeftResolution,
+                          lowerRightBox, lowerRightDomain, lowerRightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other,
+                          upperLeftBox, upperLeftDomain, upperLeftResolution,
+                          lowerRightBox, lowerRightDomain, lowerRightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other,
+                          lowerLeftBox, lowerLeftDomain, lowerLeftResolution,
+                          upperRightBox, upperRightDomain, upperRightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+                Intersects(other,
+                          upperLeftBox, upperLeftDomain, upperLeftResolution,
+                           upperRightBox, upperRightDomain, upperRightResolution,
+                          evaluateLeft, evaluateRight, ref results);
+
+            }
+        }
+
+        private Vector3 EvaluateCached(double t, Dictionary<double, Vector3> cached)
+        {
+            if (cached.TryGetValue(t, out var p))
+            {
+                return p;
+            }
+            else
+            {
+                p = PointAt(t);
+                cached.Add(t, p);
+                return p;
+            }
         }
     }
 }
