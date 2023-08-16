@@ -214,16 +214,15 @@ namespace Elements.Geometry
                 return false;
             }
 
-            parameter = NormalizedParameter(parameter);
-            var normalizedDomain = new Domain1d(NormalizedParameter(Domain.Min), NormalizedParameter(Domain.Max));
+            parameter = Units.NormalizedRadian(parameter);
+            var min = Units.NormalizedRadian(Domain.Min);
+            var max = Units.NormalizedRadian(Domain.Max);
+            if (min > max)
+            {
+                (max, min) = (min, max);
+            }
+            var normalizedDomain = new Domain1d(min, max);
             return parameter >= normalizedDomain.Min && parameter <= normalizedDomain.Max;
-        }
-
-        private double NormalizedParameter(double parameter)
-        {
-            var numberOfRotation = Math.Floor(parameter / (2 * Math.PI));
-            var normalized = parameter - numberOfRotation * 2 * Math.PI;
-            return normalized;
         }
     }
 }

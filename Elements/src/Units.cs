@@ -195,6 +195,13 @@ namespace Elements
             return string.Format("{0}{1} {2}\"", sign, inches, fraction).Trim();
         }
 
+        public static double NormalizedRadian(double parameter)
+        {
+            var numberOfRotation = Math.Floor(parameter / (2 * Math.PI));
+            var normalized = parameter - numberOfRotation * 2 * Math.PI;
+            return normalized;
+        }
+
         private static double RoundToSignificantDigits(double value, int digits)
         {
             if (value.ApproximatelyEquals(0))
