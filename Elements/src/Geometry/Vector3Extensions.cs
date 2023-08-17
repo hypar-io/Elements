@@ -326,6 +326,7 @@ namespace Elements.Geometry
 
         /// <summary>
         /// De-duplicate a collection of Vectors, averaging vectors within tolerance of each other.
+        /// Points that are further than tolerance away can still be in one group if they are connected by other points.
         /// </summary>
         /// <param name="vectors">List of vectors</param>
         /// <param name="tolerance">Distance tolerance</param>
@@ -336,7 +337,7 @@ namespace Elements.Geometry
             List<List<Vector3>> groups = new List<List<Vector3>>();
             foreach (var v in vectors)
             {
-                var group = groups.FirstOrDefault(g => g.First().IsAlmostEqualTo(v, tolerance));
+                var group = groups.FirstOrDefault(g => g.Any(p => p.IsAlmostEqualTo(v, tolerance)));
                 if (group != null)
                 {
                     group.Add(v);

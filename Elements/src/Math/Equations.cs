@@ -97,21 +97,12 @@ namespace Elements
             }
         }
 
-        public static List<Vector3> ConvertRoots(ICurve curve, IEnumerable<double> roots)
+        public static List<Vector3> ConvertRoots(ICurve curve,
+                                                 IEnumerable<double> roots,
+                                                 double tolerance = Vector3.EPSILON)
         {
-            var results = new List<Vector3>();
-            foreach (var root in roots)
-            {
-                var p = curve.PointAt(root);
-                // Filter roots that are too close together.
-                // Also, if domain is periodic, first root can also be duplicated.
-                if (!results.Any() || (!p.IsAlmostEqualTo(results.First()) &&
-                                       !p.IsAlmostEqualTo(results.Last())))
-                {
-                    results.Add(p);
-                }
-            }
-            return results;
+            var results = roots.Select(r => curve.PointAt(r)).UniqueAverageWithinTolerance(tolerance);
+            return results.ToList();
         }
     }
 }
