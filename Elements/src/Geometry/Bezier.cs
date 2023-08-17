@@ -386,7 +386,7 @@ namespace Elements.Geometry
                         return (p - p.ClosestPointOn(line)).LengthSquared();
                     }), Vector3.EPSILON * Vector3.EPSILON);
 
-            results = Equations.ConvertRoots(this, roots);
+            results = Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2);
             return results.Any();
         }
 
@@ -401,7 +401,7 @@ namespace Elements.Geometry
                         return local.LengthSquared() - circle.Radius * circle.Radius;
                     }), Vector3.EPSILON * Vector3.EPSILON);
 
-            results = Equations.ConvertRoots(this, roots);
+            results = Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2);
             return results.Any();
         }
 
@@ -427,7 +427,7 @@ namespace Elements.Geometry
                     return dx + dy + local.Z * local.Z - 1;
                 }), Vector3.EPSILON * Vector3.EPSILON);
 
-            results = Equations.ConvertRoots(this, roots);
+            results = Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2);
             return results.Any();
         }
 

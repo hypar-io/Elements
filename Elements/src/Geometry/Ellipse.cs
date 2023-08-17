@@ -317,7 +317,7 @@ namespace Elements.Geometry
                         var d = PointAtUntransformed(t) - localCenter;
                         return d.LengthSquared() - circle.Radius * circle.Radius;
                     }), Vector3.EPSILON * Vector3.EPSILON);
-                results.AddRange(Equations.ConvertRoots(this, roots));
+                results.AddRange(Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2));
             }
             // Ignore parallel planes.
             // Find intersection line between two planes.
@@ -388,7 +388,7 @@ namespace Elements.Geometry
                         var dy = Math.Pow(otherD.Y / other.MinorAxis, 2);
                         return dx + dy - 1;
                     }), Vector3.EPSILON * Vector3.EPSILON);
-                results.AddRange(Equations.ConvertRoots(this, roots));
+                results.AddRange(Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2));
             }
             // Ignore parallel planes.
             // Find intersection line between two planes.

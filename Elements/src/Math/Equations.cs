@@ -11,7 +11,7 @@ namespace Elements
     {
         public static IEnumerable<double> SolveQuadratic(
             double a, double b, double c,
-            double tolerance = Vector3.EPSILON )
+            double tolerance = Vector3.EPSILON)
         {
             double discriminant = b * b - 4 * a * c;
 
@@ -42,7 +42,6 @@ namespace Elements
             int lastSign = 0;
             double lastFx = 0;
             double lastDelta = 0;
-            double? lastRoot = null;
 
             for (int  i = 0; i <= steps; i++)
             {
@@ -50,12 +49,8 @@ namespace Elements
                 var fx = evaluate(t);
                 if (fx.ApproximatelyEquals(0, tolerance))
                 {
-                    if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
-                    {
-                        yield return t;
-                        lastSign = 0;
-                        lastRoot = fx;
-                    }
+                    yield return t;
+                    lastSign = 0;
                 }
                 else
                 {
@@ -64,11 +59,7 @@ namespace Elements
                     {
                         foreach (var r in SolveIterative(t - step, t, steps, evaluate, tolerance))
                         {
-                            if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
-                            {
-                                yield return r;
-                                lastRoot = fx;
-                            }
+                            yield return r;
                         }
                     }
                     else if (lastDelta < 0 && fx - lastFx >= 0)
@@ -78,11 +69,7 @@ namespace Elements
                         {
                             foreach (var r in SolveIterative(t - step * 2, t, steps, evaluate, tolerance))
                             {
-                                if (!lastRoot.HasValue || Math.Abs(fx - lastRoot.Value) > tolerance * 2)
-                                {
-                                    yield return r;
-                                    lastRoot = fx;
-                                }
+                                yield return r;
                             }
                         }
                     }
