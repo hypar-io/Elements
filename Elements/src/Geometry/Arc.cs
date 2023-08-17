@@ -534,15 +534,9 @@ namespace Elements.Geometry
                 return false;
             }
 
-            parameter = Units.NormalizedRadian(parameter);
-            var min = Units.NormalizedRadian(Domain.Min);
-            var max = Units.NormalizedRadian(Domain.Max);
-            if (min > max)
-            {
-                (max, min) = (min, max);
-            }
-            var normalizedDomain = new Domain1d(min, max);
-            return parameter >= normalizedDomain.Min && parameter <= normalizedDomain.Max;
+            parameter = Units.AdjustRadian(parameter, Domain.Min);
+            return parameter - Domain.Min > -Vector3.EPSILON * Vector3.EPSILON &&
+                   parameter - Domain.Max < Vector3.EPSILON * Vector3.EPSILON;
         }
     }
 }

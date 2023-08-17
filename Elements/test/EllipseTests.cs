@@ -135,7 +135,7 @@ namespace Hypar.Tests
 
             // Planar no intersection
             ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
-            other = new Ellipse(new Vector3(0, 1, 0), 1.5, 0.5);
+            other = new Ellipse(new Vector3(0, 1, 0), 0.5, 1.5);
             Assert.False(ellipse.Intersects(other, out results));
 
             // Overlapping 

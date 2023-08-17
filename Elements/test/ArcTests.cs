@@ -552,7 +552,7 @@ namespace Hypar.Tests
             Assert.Contains(new Vector3(0, 4.8989795), intersections);
 
             // Arc doesn't intersect
-            arc = new Arc(new Vector3(1, 0, 0), 5, -180, 180);
+            arc = new Arc(new Vector3(1, 0, 0), 5, -80, 80);
             Assert.False(arc.Intersects(c, out intersections));
         }
 

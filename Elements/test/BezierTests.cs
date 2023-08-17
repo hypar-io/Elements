@@ -124,11 +124,10 @@ namespace Hypar.Tests
             var ctrlPts = new List<Vector3> { a, b, c, d };
             var bezier = new Bezier(ctrlPts);
 
-            var arc = new EllipticalArc(new Vector3(2.5, 2), 3.5, 2, 0, 270);
+            var arc = new EllipticalArc(new Vector3(2.5, 2), 3.5, 1, 0, 270);
             Assert.True(bezier.Intersects(arc, out var results));
             Assert.Equal(3, results.Count);
 
-            Transform t = new Transform(new Vector3(2.5, 0), Vector3.YAxis);
             arc = new EllipticalArc(new Vector3(2.5, 0), 2.5, 2, 0, -180);
             Assert.True(bezier.Intersects(arc, out results));
             Assert.Equal(2, results.Count);

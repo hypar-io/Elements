@@ -195,11 +195,11 @@ namespace Elements
             return string.Format("{0}{1} {2}\"", sign, inches, fraction).Trim();
         }
 
-        public static double NormalizedRadian(double parameter)
+        public static double AdjustRadian(double parameter, double reference)
         {
-            var numberOfRotation = Math.Floor(parameter / (2 * Math.PI));
-            var normalized = parameter - numberOfRotation * 2 * Math.PI;
-            return normalized;
+            double delta = parameter - reference;
+            double numberOfRotations = Math.Floor(delta / (Math.PI * 2));
+            return parameter - numberOfRotations * Math.PI * 2;
         }
 
         private static double RoundToSignificantDigits(double value, int digits)

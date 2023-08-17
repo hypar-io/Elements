@@ -128,7 +128,7 @@ namespace Elements.Geometry
         public bool ParameterAt(Vector3 pt, out double parameter)
         {
             var local = Transform.Inverted().OfPoint(pt);
-            if (local.Z.ApproximatelyEquals(0) && OnEllipseUntransformed(pt))
+            if (local.Z.ApproximatelyEquals(0) && OnEllipseUntransformed(local))
             {
                 parameter = ParameterAtUntransformed(local);
                 return true;
