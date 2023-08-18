@@ -20,14 +20,15 @@ namespace Hypar.Tests
             var minorOffset = ellipse.Transform.YAxis * ellipse.MinorAxis;
 
             // Planar intersecting
-            var line = new InfiniteLine(origin, ellipse.Transform.XAxis);
+            var p = origin + majorOffset / 2;
+            var line = new InfiniteLine(p, ellipse.Transform.XAxis);
             Assert.True(ellipse.Intersects(line, out var results));
             Assert.Equal(2, results.Count());
             Assert.Contains(origin + majorOffset, results);
             Assert.Contains(origin - majorOffset, results);
 
             // Planar touching
-            var p = origin + majorOffset + minorOffset;
+            p = origin + majorOffset + minorOffset + majorOffset / 3;
             line = new InfiniteLine(p, ellipse.Transform.XAxis);
             Assert.True(ellipse.Intersects(line, out results));
             Assert.Single(results);

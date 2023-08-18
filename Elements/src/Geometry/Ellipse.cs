@@ -242,45 +242,46 @@ namespace Elements.Geometry
             results = new List<Vector3>();
 
             Plane ellipsePlane = new Plane(Center, Normal);
-            Vector3 closestPoint;
-            bool lineOnPlane = line.Origin.DistanceTo(ellipsePlane).ApproximatelyEquals(0) &&
-                (line.Origin + line.Direction).DistanceTo(ellipsePlane).ApproximatelyEquals(0);
-
-            if (lineOnPlane)
-            {
-                closestPoint = Center.ClosestPointOn(line);
-            }
-            else if (!line.Intersects(ellipsePlane, out closestPoint))
-            {
-                return false;
-            }
-
             var transformInverted = this.Transform.Inverted();
-            var localPoint = transformInverted.OfPoint(closestPoint);
-            if (OnEllipseUntransformed(localPoint))
+            bool lineOnPlane = line.Origin.DistanceTo(ellipsePlane).ApproximatelyEquals(0) &&
+                line.Direction.Dot(ellipsePlane.Normal).ApproximatelyEquals(0);
+
+            // If the line is on the plane, just check if it intersects ellipse plane 
+            // and if the intersection point is on the ellipse.
+            if (!lineOnPlane)
             {
-                results.Add(closestPoint);
-            }
-            else if (lineOnPlane)
-            {
-                double a2 = MajorAxis * MajorAxis;
-                double b2 = MinorAxis * MinorAxis;
-                Vector3 localDirection = transformInverted.OfVector(line.Direction);
-
-                double dx2 = localDirection.X * localDirection.X;
-                double dy2 = localDirection.Y * localDirection.Y;
-
-                // Coefficients for the quadratic equation
-                double A = a2 * dy2 + b2 * dx2;
-                double B = -2 * (localPoint.Y * a2 * localDirection.Y + localPoint.X * b2 * localDirection.X);
-                double C = a2 * localPoint.Y * localPoint.Y + b2 * localPoint.X * localPoint.X - a2 * b2;
-
-                foreach (var root in Equations.SolveQuadratic(A, B, C))
+                if (!line.Intersects(ellipsePlane, out var closestPoint))
                 {
-                    double x = localPoint.X + root * localDirection.X;
-                    double y = localPoint.Y + root * localDirection.Y;
-                    results.Add(Transform.OfPoint(new Vector3(x, y)));
+                    return false;
                 }
+                var local = transformInverted.OfPoint(closestPoint);
+                if (OnEllipseUntransformed(local))
+                {
+                    results.Add(closestPoint);
+                }
+                return results.Any();
+            }
+            
+            // When line and ellipse share a plane their intersections can be solved as
+            // quadratic equation since ellipse formula quadratic, line formula linear.
+            // There are up to two intersections possible with is also aligned with the amount of roots.
+            double a2 = MajorAxis * MajorAxis;
+            double b2 = MinorAxis * MinorAxis;
+            Vector3 localPoint = transformInverted.OfPoint(line.Origin);
+            Vector3 localDirection = transformInverted.OfVector(line.Direction);
+
+            double dx2 = localDirection.X * localDirection.X;
+            double dy2 = localDirection.Y * localDirection.Y;
+
+            double A = a2 * dy2 + b2 * dx2;
+            double B = -2 * (localPoint.Y * a2 * localDirection.Y + localPoint.X * b2 * localDirection.X);
+            double C = a2 * localPoint.Y * localPoint.Y + b2 * localPoint.X * localPoint.X - a2 * b2;
+
+            foreach (var root in Equations.SolveQuadratic(A, B, C))
+            {
+                double x = localPoint.X - root * localDirection.X;
+                double y = localPoint.Y - root * localDirection.Y;
+                results.Add(Transform.OfPoint(new Vector3(x, y)));
             }
 
             return results.Any();
