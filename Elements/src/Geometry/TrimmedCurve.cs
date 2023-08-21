@@ -105,6 +105,44 @@ namespace Elements.Geometry
                     }
                 }
             }
+            else
+            {
+                // Overlapping curves are not considered intersecting.
+                // However, if their domains are not overlap,
+                // end points that belongs to both curves are recorded as intersections.
+                bool startOnStart = Start.IsAlmostEqualTo(curve.Start);
+                bool startOnEnd = Start.IsAlmostEqualTo(curve.End);
+                bool endOnStart = End.IsAlmostEqualTo(curve.Start);
+                bool endOnEnd = End.IsAlmostEqualTo(curve.End);
+                if (startOnStart || startOnEnd)
+                {
+                    if (endOnStart || endOnEnd)
+                    {
+                        if (!curve.PointOnDomain(Mid()))
+                        {
+                            results.Add(Start);
+                            results.Add(End);
+                        }
+                    }
+                    else
+                    {
+                        var other = startOnStart ? curve.End : curve.Start;
+                        if (!curve.PointOnDomain(End) && !PointOnDomain(other))
+                        {
+                            results.Add(Start);
+                        }
+                    }
+                }
+                else if (endOnStart || endOnEnd)
+                {
+                    var other = endOnStart ? curve.End : curve.Start;
+                    if (!curve.PointOnDomain(Start) && !PointOnDomain(other))
+                    {
+                        results.Add(End);
+                    }
+                }
+            }
+
             return results.Any();
         }
 

@@ -578,6 +578,21 @@ namespace Hypar.Tests
             // Arc doesn't intersect
             a0 = new Arc(t, 5, Math.PI / 4, Math.PI);
             Assert.False(a0.Intersects(a1, out intersections));
+
+            // Overlapping arcs
+            a1 = new Arc(t, 5, 0, Math.PI);
+            Assert.False(a0.Intersects(a1, out intersections));
+
+            // Touching overlapping arcs
+            a1 = new Arc(t, 5, Math.PI, Math.PI * 2);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 0, 6), intersections);
+            a1 = new Arc(t, 5, Math.PI, Math.PI * 2 + Math.PI / 4);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 0, 6), intersections);
+            Assert.Contains(new Vector3(0, 3.5355339, -2.5355339), intersections);
         }
 
         private void TestTransformAtNormalized(BoundedCurve curve)
