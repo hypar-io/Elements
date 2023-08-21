@@ -78,6 +78,20 @@ namespace Hypar.Tests
             Assert.True(ellipse.Intersects(circle, out results));
             Assert.Single(results);
 
+            // Planar intersection 1 intersection high slope.
+            ellipse = new Ellipse(new Vector3(0, 0), 2, 1000);
+            circle = new Circle(new Vector3(0, 1001), 1);
+            Assert.True(ellipse.Intersects(circle, out results));
+            Assert.Single(results);
+            circle = new Circle(new Vector3(3, 0), 1);
+            Assert.True(ellipse.Intersects(circle, out results));
+            Assert.Single(results);
+
+            // Planar no intersection close.
+            ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
+            circle = new Circle(new Vector3(0, 1, 0), 0.999);
+            Assert.False(ellipse.Intersects(circle, out results));
+
             // Planar no intersection
             ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
             circle = new Circle(new Vector3(0, 1, 0), 0.5);

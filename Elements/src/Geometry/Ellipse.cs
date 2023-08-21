@@ -328,14 +328,14 @@ namespace Elements.Geometry
                 }
 
                 // Too far away (rough estimation)
-                if (Center.DistanceTo(circle.Center) > MajorAxis + circle.Radius)
+                if (Center.DistanceTo(circle.Center) > Math.Max(MajorAxis, MinorAxis) + circle.Radius)
                 {
                     return false;
                 }
 
                 // Iteratively, find points in ellipse with distance to circle equal its radius. 
                 var localCenter = Transform.Inverted().OfPoint(circle.Center);
-                var roots = Equations.SolveIterative(0, Math.PI * 2, 45,
+                var roots = Equations.SolveIterative(0, Math.PI * 2, 90,
                     new Func<double, double>((t) =>
                     {
                         var d = PointAtUntransformed(t) - localCenter;
@@ -414,7 +414,7 @@ namespace Elements.Geometry
 
                 // Iteratively, find points on ellipse with distance
                 // to other ellipse equal to its focal distance.
-                var roots = Equations.SolveIterative(0, Math.PI * 2, 45,
+                var roots = Equations.SolveIterative(0, Math.PI * 2, 90,
                     new Func<double, double>((t) =>
                     {
                         var d = PointAtUntransformed(t);

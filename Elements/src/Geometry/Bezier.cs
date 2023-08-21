@@ -391,7 +391,7 @@ namespace Elements.Geometry
 
             // Iteratively, find points on Bezier with 0 distance to the line.
             // It Bezier was limited to 4 points - more effective approach could be used.
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 100,
                     new Func<double, double>((t) =>
                     {
                         var p = PointAt(t);
@@ -425,7 +425,7 @@ namespace Elements.Geometry
 
             // Iteratively, find points on Bezier with radius distance to the circle.
             var invertedT = circle.Transform.Inverted();
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 100,
                     new Func<double, double>((t) =>
                     {
                         var p = PointAt(t);
@@ -461,7 +461,7 @@ namespace Elements.Geometry
             // Iteratively, find points on ellipse with distance
             // to other ellipse equal to its focal distance.
             var invertedT = ellipse.Transform.Inverted();
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 100,
                 new Func<double, double>((t) =>
                 {
                     var p = PointAt(t);
