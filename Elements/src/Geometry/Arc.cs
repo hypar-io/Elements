@@ -527,6 +527,7 @@ namespace Elements.Geometry
             return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start);
         }
 
+        /// <inheritdoc/>
         public override bool PointOnDomain(Vector3 point)
         {
             if (!BasisCurve.ParameterAt(point, out var parameter))

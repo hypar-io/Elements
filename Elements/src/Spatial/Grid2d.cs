@@ -1046,7 +1046,7 @@ namespace Elements.Spatial
 
             var newLine = new Line(line.Start, line.End);
 
-            if (newLine.Intersects(possiblySkewedLine, out Vector3 intersection))
+            if (newLine.Intersects(possiblySkewedLine, out var intersection))
             {
                 // move to start and extend
                 var toStart = possiblySkewedLine.Start - intersection;

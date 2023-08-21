@@ -17,8 +17,14 @@ namespace Elements.Geometry
         [JsonIgnore]
         public TBasis BasisCurve { get; protected set; }
 
+        /// <summary>
+        /// Check if point is on the domain of the curve.
+        /// </summary>
+        /// <param name="point">Point to check.</param>
+        /// <returns>True if point is on trimmed domain of the curve.</returns>
         public abstract bool PointOnDomain(Vector3 point);
 
+        /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
             switch (curve)
@@ -44,6 +50,14 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// Does this trimmed curve intersects with an infinite line?
+        /// If they coincides, they are not considered as intersecting,
+        /// unless their domain only touches each other at end points.
+        /// </summary>
+        /// <param name="line">Infinite line to intersect.</param>
+        /// <param name="results">List containing up to twp intersection points.</param>
+        /// <returns>True if intersection exists, otherwise false.</returns>
         public bool Intersects(InfiniteLine line, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -60,6 +74,14 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this trimmed curve intersects with a circle?
+        /// If they coincides, they are not considered as intersecting,
+        /// unless their domain only touches each other at end points.
+        /// </summary>
+        /// <param name="circle">Circle to intersect.</param>
+        /// <param name="results">List containing up to four intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Circle circle, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -76,6 +98,14 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this trimmed curve intersects with an ellipse?
+        /// If they coincides, they are not considered as intersecting,
+        /// unless their domain only touches each other at end points.
+        /// </summary>
+        /// <param name="ellipse">Ellipse to intersect.</param>
+        /// <param name="results">List containing up to four intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Ellipse ellipse, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -92,6 +122,14 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this trimmed curve intersects with other trimmed curve?
+        /// If they coincides, they are not considered as intersecting,
+        /// unless their domain only touches each other at end points.
+        /// </summary>
+        /// <param name="curve">Trimmed curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects<T>(TrimmedCurve<T> curve, out List<Vector3> results) where T : ICurve
         {
             results = new List<Vector3>();
@@ -146,6 +184,12 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this trimmed curve intersects with a Bezier curve?
+        /// </summary>
+        /// <param name="bezier">Bezier curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Bezier bezier, out List<Vector3> results)
         {
             results = new List<Vector3>();

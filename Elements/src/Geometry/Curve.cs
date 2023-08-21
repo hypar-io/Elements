@@ -41,6 +41,7 @@ namespace Elements.Geometry
         /// <param name="start">The parameter from which to measure the distance.</param>
         public abstract double ParameterAtDistanceFromParameter(double distance, double start);
 
+        /// <inheritdoc/>
         public abstract bool Intersects(ICurve curve, out List<Vector3> results);
     }
 }

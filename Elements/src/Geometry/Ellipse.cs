@@ -125,16 +125,22 @@ namespace Elements.Geometry
             return new Vector3(x, y);
         }
 
-        public bool ParameterAt(Vector3 pt, out double parameter)
+        /// <summary>
+        /// Check if certain point is on the ellipse.
+        /// </summary>
+        /// <param name="pt">Point to check.</param>
+        /// <param name="t">Calculated parameter of point on ellipse.</param>
+        /// <returns>True if point lays on the ellipse.</returns>
+        public bool ParameterAt(Vector3 pt, out double t)
         {
             var local = Transform.Inverted().OfPoint(pt);
             if (local.Z.ApproximatelyEquals(0) && OnEllipseUntransformed(local))
             {
-                parameter = ParameterAtUntransformed(local);
+                t = ParameterAtUntransformed(local);
                 return true;
             }
         
-            parameter = 0;
+            t = 0;
             return false;
         }
         
@@ -220,6 +226,7 @@ namespace Elements.Geometry
             return end;
         }
 
+        /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
             switch (curve)
@@ -237,6 +244,12 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// Does this ellipse intersects with an infinite line?
+        /// </summary>
+        /// <param name="line">Infinite line to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(InfiniteLine line, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -287,6 +300,14 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this ellipse intersects with a circle?
+        /// Circle and ellipse that are coincides are not considered as intersecting.
+        /// If circle and ellipse are on the same plane - iterative approximation is used to find intersections.
+        /// </summary>
+        /// <param name="circle">Circle to intersect.</param>
+        /// <param name="results">List containing up to four intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Circle circle, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -306,11 +327,13 @@ namespace Elements.Geometry
                     return false;
                 }
 
+                // Too far away (rough estimation)
                 if (Center.DistanceTo(circle.Center) > MajorAxis + circle.Radius)
                 {
                     return false;
                 }
 
+                // Iteratively, find points in ellipse with distance to circle equal its radius. 
                 var localCenter = Transform.Inverted().OfPoint(circle.Center);
                 var roots = Equations.SolveIterative(0, Math.PI * 2, 45,
                     new Func<double, double>((t) =>
@@ -340,6 +363,14 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this ellipse intersects with other ellipse?
+        /// Ellipses that are coincides are not considered as intersecting.
+        /// If ellipses are on the same plane - iterative approximation is used to find intersections.
+        /// </summary>
+        /// <param name="other">Ellipse to intersect.</param>
+        /// <param name="results">List containing up to four intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Ellipse other, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -371,7 +402,7 @@ namespace Elements.Geometry
                     }
                 }
 
-                // Too far away
+                // Too far away (rough estimation)
                 if (Center.DistanceTo(other.Center) > 
                     Math.Max(MajorAxis, MinorAxis) + Math.Max(other.MajorAxis, other.MinorAxis))
                 {
@@ -381,6 +412,8 @@ namespace Elements.Geometry
                 var inverted = Transform.Inverted();
                 var ellipseToEllipse = Transform.Concatenated(other.Transform.Inverted());
 
+                // Iteratively, find points on ellipse with distance
+                // to other ellipse equal to its focal distance.
                 var roots = Equations.SolveIterative(0, Math.PI * 2, 45,
                     new Func<double, double>((t) =>
                     {
@@ -414,9 +447,15 @@ namespace Elements.Geometry
             return results.Any();
         }
 
-        public bool Intersects(BoundedCurve bounded, out List<Vector3> results)
+        /// <summary>
+        /// Does this ellipse intersects with a bounded curve?
+        /// </summary>
+        /// <param name="curve">Curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(BoundedCurve curve, out List<Vector3> results)
         {
-            return bounded.Intersects(this, out results);
+            return curve.Intersects(this, out results);
         }
 
         internal double ArcLength(double t0,

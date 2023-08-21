@@ -177,6 +177,12 @@ namespace Elements.Geometry
             return false;
         }
 
+        /// <summary>
+        /// Does this plane intersect the other plane?
+        /// </summary>
+        /// <param name="other">The other plane.</param>
+        /// <param name="result">The line of intersection.</param>
+        /// <returns>True if an intersection exists, otherwise false.</returns>
         public bool Intersects(Plane other, out InfiniteLine result)
         {
             var cross = this.Normal.Cross(other.Normal);

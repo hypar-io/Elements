@@ -122,18 +122,24 @@ namespace Elements.Geometry
             return new Vector3(x, y);
         }
 
-        public bool ParameterAt(Vector3 pt, out double parameter)
+        /// <summary>
+        /// Check if certain point is on the circle.
+        /// </summary>
+        /// <param name="pt">Point to check.</param>
+        /// <param name="t">Calculated parameter of point on circle.</param>
+        /// <returns>True if point lays on the circle.</returns>
+        public bool ParameterAt(Vector3 pt, out double t)
         {
             var local = Transform.Inverted().OfPoint(pt);
             if (local.Z.ApproximatelyEquals(0) &&
                 local.LengthSquared().ApproximatelyEquals(
                     Radius * Radius, Vector3.EPSILON * Vector3.EPSILON))
             {
-                parameter = ParameterAtUntransformed(local);
+                t = ParameterAtUntransformed(local);
                 return true;
             }
 
-            parameter = 0;
+            t = 0;
             return false;
         }
 
@@ -181,6 +187,7 @@ namespace Elements.Geometry
             return start + theta;
         }
 
+        /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
             switch (curve)
@@ -198,6 +205,13 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// Does this circle intersects with other circle?
+        /// Circles with the same positions and radii are not considered as intersecting.
+        /// </summary>
+        /// <param name="other">Other circle to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Circle other, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -255,6 +269,12 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this circle intersects with an infinite line?
+        /// </summary>
+        /// <param name="line">Infinite line to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(InfiniteLine line, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -295,14 +315,28 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this circle intersects with an ellipse?
+        /// Circle and ellipse that are coincides are not considered as intersecting.
+        /// <see cref="Ellipse.Intersects(Circle, out List{Vector3})"/>
+        /// </summary>
+        /// <param name="ellipse">Ellipse to intersect.</param>
+        /// <param name="results">List containing up to four intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Ellipse ellipse, out List<Vector3> results)
         {
             return ellipse.Intersects(this, out results);
         }
 
-        public bool Intersects(BoundedCurve bounded, out List<Vector3> results)
+        /// <summary>
+        /// Does this circle intersects with a bounded curve?
+        /// </summary>
+        /// <param name="curve">Curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(BoundedCurve curve, out List<Vector3> results)
         {
-            return bounded.Intersects(this, out results);
+            return curve.Intersects(this, out results);
         }
     }
 }

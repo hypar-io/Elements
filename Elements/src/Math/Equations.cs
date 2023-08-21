@@ -7,8 +7,20 @@ using System.Text;
 
 namespace Elements
 {
+    /// <summary>
+    /// Finding roots of a function.
+    /// </summary>
     public static class Equations
     {
+        /// <summary>
+        /// Solve a quadratic equation and return the roots if any.
+        /// https://en.wikipedia.org/wiki/Quadratic_equation
+        /// </summary>
+        /// <param name="a">A parameter of quadratic equation.</param>
+        /// <param name="b">B parameter of quadratic equation.</param>
+        /// <param name="c">C parameter of quadratic equation.</param>
+        /// <param name="tolerance">Zero discriminant tolerance.</param>
+        /// <returns>One or two roots if equation can be solved, empty if it can't be.</returns>
         public static IEnumerable<double> SolveQuadratic(
             double a, double b, double c,
             double tolerance = Vector3.EPSILON)
@@ -33,6 +45,16 @@ namespace Elements
             }
         }
 
+        /// <summary>
+        /// Solve equation by iterating through parametric range with certain step.
+        /// TODO INTERSECT
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <param name="steps"></param>
+        /// <param name="evaluate"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
         public static IEnumerable<double> SolveIterative(
             double start, double end, int steps,
             Func<double, double> evaluate,

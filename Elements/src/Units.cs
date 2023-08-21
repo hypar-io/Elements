@@ -195,6 +195,12 @@ namespace Elements
             return string.Format("{0}{1} {2}\"", sign, inches, fraction).Trim();
         }
 
+        /// <summary>
+        /// Convert radian value to be bigger that reference but in the same rotation cycle, preserving its angle.
+        /// </summary>
+        /// <param name="parameter">Radian parameter with any value.</param>
+        /// <param name="reference">Reference value.</param>
+        /// <returns>Value with the same angle as parameter but in between reference and reference plus 2 PI.</returns>
         public static double AdjustRadian(double parameter, double reference)
         {
             double delta = parameter - reference;

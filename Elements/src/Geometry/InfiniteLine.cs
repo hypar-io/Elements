@@ -60,6 +60,12 @@ namespace Elements.Geometry
             return new Transform(PointAt(u), Direction.Negate());
         }
 
+        /// <summary>
+        /// Check if certain point is on the infinite line.
+        /// </summary>
+        /// <param name="pt">Point to check.</param>
+        /// <param name="t">Calculated parameter of point on infinite line.</param>
+        /// <returns>True if point lays on the infinite line.</returns>
         public bool ParameterAt(Vector3 pt, out double t)
         { 
             t = (pt - Origin).Dot(Direction) / Direction.LengthSquared();
@@ -81,6 +87,12 @@ namespace Elements.Geometry
             return start + distance;
         }
 
+        /// <summary>
+        /// Does infinite line intersect with a plane but not on it?
+        /// </summary>
+        /// <param name="plane">Plane to intersect.</param>
+        /// <param name="result">True if plane intersects with the line, false if not intersects or line is lying on it.</param>
+        /// <returns></returns>
         public bool Intersects(Plane plane, out Vector3 result)
         {
             result = default;
@@ -96,6 +108,7 @@ namespace Elements.Geometry
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
             switch (curve)
@@ -113,6 +126,13 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// Does this infinite line intersects with other infinite line?
+        /// Same lines are not considered as intersecting.
+        /// </summary>
+        /// <param name="other">Other infinite line to intersect.</param>
+        /// <param name="results">List containing up to one intersection point.</param>
+        /// <returns>True if intersection exists, otherwise false.</returns>
         public bool Intersects(InfiniteLine other, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -136,19 +156,39 @@ namespace Elements.Geometry
             return true;
         }
 
+        /// <summary>
+        /// Does this infinite line intersects with a circle?
+        /// <see cref="Circle.Intersects(InfiniteLine, out List{Vector3})"/>
+        /// </summary>
+        /// <param name="circle">Circle to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Circle circle, out List<Vector3> results)
         {
             return circle.Intersects(this, out results);
         }
 
+        /// <summary>
+        /// Does this infinite line intersects with an ellipse?
+        /// <see cref="Ellipse.Intersects(InfiniteLine, out List{Vector3})"/>
+        /// </summary>
+        /// <param name="ellipse">Ellipse to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Ellipse ellipse, out List<Vector3> results)
         {
             return ellipse.Intersects(this, out results);
         }
 
-        public bool Intersects(BoundedCurve bounded, out List<Vector3> results)
+        /// <summary>
+        /// Does this infinite line intersects with a bounded curve?
+        /// </summary>
+        /// <param name="curve">Curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(BoundedCurve curve, out List<Vector3> results)
         {
-            return bounded.Intersects(this, out results);
+            return curve.Intersects(this, out results);
         }
     }
 }

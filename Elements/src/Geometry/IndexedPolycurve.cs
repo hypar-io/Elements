@@ -528,6 +528,7 @@ namespace Elements.Geometry
             return true;
         }
 
+        /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
             results = new List<Vector3>();

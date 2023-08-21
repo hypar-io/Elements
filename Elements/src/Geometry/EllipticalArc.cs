@@ -191,22 +191,7 @@ namespace Elements.Geometry
             return end;
         }
 
-        public bool Intersects(EllipticalArc other, out List<Vector3> results)
-        {
-            results = new List<Vector3>();
-            if (BasisCurve.Intersects(other.BasisCurve, out var candidates))
-            {
-                foreach (var item in candidates)
-                {
-                    if (this.PointOnDomain(item) && other.PointOnDomain(item))
-                    {
-                        results.Add(item);
-                    }
-                }
-            }
-            return results.Any();
-        }
-
+        /// <inheritdoc/>
         public override bool PointOnDomain(Vector3 point)
         {
             if (!BasisCurve.ParameterAt(point, out var parameter))

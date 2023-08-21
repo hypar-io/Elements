@@ -344,6 +344,7 @@ namespace Elements.Geometry
             return end;
         }
 
+        /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
             switch (curve)
@@ -369,9 +370,18 @@ namespace Elements.Geometry
             }
         }
 
+        /// <summary>
+        /// Does this bezier curve intersects with an infinite line?
+        /// Iterative approximation is used to find intersections.
+        /// </summary>
+        /// <param name="line">Infinite line to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if intersection exists, otherwise false.</returns>
         public bool Intersects(InfiniteLine line, out List<Vector3> results)
         {
             BBox3 box = new BBox3(ControlPoints);
+            // Bezier curve always inside it's bounding box.
+            // Rough check if line intersects curve box.
             if (!new Line(line.Origin, line.Origin + line.Direction).Intersects(
                 box, out _, true))
             {
@@ -379,6 +389,8 @@ namespace Elements.Geometry
                 return false;
             }
 
+            // Iteratively, find points on Bezier with 0 distance to the line.
+            // It Bezier was limited to 4 points - more effective approach could be used.
             var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
                     new Func<double, double>((t) =>
                     {
@@ -391,8 +403,27 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this Bezier curve intersects with a circle?
+        /// Iterative approximation is used to find intersections.
+        /// </summary>
+        /// <param name="circle">Circle to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Circle circle, out List<Vector3> results)
         {
+            BBox3 box = new BBox3(ControlPoints);
+            // Bezier curve always inside it's bounding box.
+            // Rough check if curve is too far away.
+            var boxCenter = box.Center();
+            if (circle.Center.DistanceTo(boxCenter) >
+                circle.Radius + (box.Max - boxCenter).Length())
+            {
+                results = new List<Vector3>();
+                return false;
+            }
+
+            // Iteratively, find points on Bezier with radius distance to the circle.
             var invertedT = circle.Transform.Inverted();
             var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
                     new Func<double, double>((t) =>
@@ -407,9 +438,18 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this Bezier curve intersects with an ellipse?
+        /// Iterative approximation is used to find intersections.
+        /// </summary>
+        /// <param name="ellipse">Ellipse to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Ellipse ellipse, out List<Vector3> results)
         {
             BBox3 box = new BBox3(ControlPoints);
+            // Bezier curve always inside it's bounding box.
+            // Rough check if curve is too far away.
             var boxCenter = box.Center();
             if (ellipse.Center.DistanceTo(boxCenter) > 
                 Math.Max(ellipse.MajorAxis, ellipse.MinorAxis) + (box.Max - boxCenter).Length())
@@ -418,6 +458,8 @@ namespace Elements.Geometry
                 return false;
             }
 
+            // Iteratively, find points on ellipse with distance
+            // to other ellipse equal to its focal distance.
             var invertedT = ellipse.Transform.Inverted();
             var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 45,
                 new Func<double, double>((t) =>
@@ -434,6 +476,13 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <summary>
+        /// Does this Bezier curve intersects with other Bezier curve?
+        /// Iterative approximation is used to find intersections.
+        /// </summary>
+        /// <param name="other">Other Bezier curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
         public bool Intersects(Bezier other, out List<Vector3> results)
         {
             results = new List<Vector3>();
@@ -453,6 +502,8 @@ namespace Elements.Geometry
                        rightCache,
                        ref results);
 
+            // Subdivision algorithm produces duplicates, all tolerance away from real answer.
+            // Grouping and averaging them improves output as we as eliminates duplications.
             results = results.UniqueAverageWithinTolerance().ToList();
             return results.Any();
         }
@@ -478,6 +529,8 @@ namespace Elements.Geometry
                                 Dictionary<double, Vector3> rightCache,
                                 ref List<Vector3> results)
         {
+            // If bounding boxes of two curves (not control points) are not intersect
+            // curves not intersect.
             if (!left.Box.Intersects(right.Box))
             {
                 return;
@@ -489,6 +542,8 @@ namespace Elements.Geometry
             (BBox3 Box, Domain1d Domain, double Resolution) loRight = (default, default, 0);
             (BBox3 Box, Domain1d Domain, double Resolution) hiRight = (default, default, 0);
 
+            // If curve bounding box is tolerance size - it's considered as intersection.
+            // Otherwise calculate new boxes of two halves of the curve. 
             var leftConvergent = (left.Box.Max - left.Box.Min).LengthSquared() < epsilon2 * 2;
             if (!leftConvergent)
             {
@@ -496,6 +551,7 @@ namespace Elements.Geometry
                 hiLeft = SplitCurveBox(left, leftCache, false);
             }
 
+            // Same as above but for the other curve.
             bool rightConvergent = (right.Box.Max - right.Box.Min).LengthSquared() < epsilon2 * 2;
             if (!rightConvergent)
             {
@@ -503,12 +559,16 @@ namespace Elements.Geometry
                 hiRight = other.SplitCurveBox(right, rightCache, false);
             }
 
+            // If boxes of two curves are tolerance sized -
+            // average point of their centers is treated as intersection point.
             if (leftConvergent && rightConvergent)
             {
                 results.Add(left.Box.Center().Average(right.Box.Center()));
                 return;
             }
 
+            // Recursively repeat process on box of subdivided curves until they are small enough.
+            // Each pair, which bounding boxes are not intersecting are discarded.
             if (leftConvergent)
             {
                 Intersects(other, left, loRight, leftCache, rightCache, ref results);
@@ -528,6 +588,14 @@ namespace Elements.Geometry
             }
         }
 
+
+        /// <summary>
+        /// Get bounding box of curve segment (not control points) for half of given domain.
+        /// </summary>
+        /// <param name="def">Curve segment definition - box, domain and number of subdivisions.</param>
+        /// <param name="cache">Dictionary of precomputed points at parameter.</param>
+        /// <param name="low">Take lower of higher part of curve.</param>
+        /// <returns>Definition of curve segment that is half of given.</returns>
         private (BBox3 Box, Domain1d Domain, double Steps) SplitCurveBox(
             (BBox3 Box, Domain1d Domain, double Steps) def,
             Dictionary<double, Vector3> cache,
