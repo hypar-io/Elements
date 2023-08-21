@@ -109,5 +109,24 @@ namespace Hypar.Tests
             line = new InfiniteLine(new Vector3(1, 1, 1), Vector3.ZAxis);
             Assert.False(circle.Intersects(line, out _));
         }
+
+        [Fact]
+        public void AdjustRadian()
+        {
+            double reference = Units.DegreesToRadians(45);
+            Assert.Equal(Units.DegreesToRadians(385), Units.AdjustRadian(Units.DegreesToRadians(25), reference), 6);
+            Assert.Equal(Units.DegreesToRadians(60), Units.AdjustRadian(Units.DegreesToRadians(420), reference), 6);
+            Assert.Equal(Units.DegreesToRadians(260), Units.AdjustRadian(Units.DegreesToRadians(-100), reference), 6);
+
+            reference = Units.DegreesToRadians(400);
+            Assert.Equal(Units.DegreesToRadians(745), Units.AdjustRadian(Units.DegreesToRadians(25), reference), 6);
+            Assert.Equal(Units.DegreesToRadians(400), Units.AdjustRadian(Units.DegreesToRadians(400), reference), 6);
+            Assert.Equal(Units.DegreesToRadians(620), Units.AdjustRadian(Units.DegreesToRadians(-100), reference), 6);
+
+            reference = Units.DegreesToRadians(-160);
+            Assert.Equal(Units.DegreesToRadians(25), Units.AdjustRadian(Units.DegreesToRadians(25), reference), 6);
+            Assert.Equal(Units.DegreesToRadians(60), Units.AdjustRadian(Units.DegreesToRadians(420), reference), 6);
+            Assert.Equal(Units.DegreesToRadians(-100), Units.AdjustRadian(Units.DegreesToRadians(-100), reference), 6);
+        }
     }
 }

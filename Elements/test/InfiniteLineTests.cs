@@ -32,5 +32,17 @@ namespace Hypar.Tests
             Assert.Single(intersections);
             Assert.True(intersections.First().Equals(new Vector3(5, 0)));
         }
+
+        [Fact]
+        public void LineIntersectsPlane()
+        {
+            var l = new InfiniteLine(new Vector3(5, 0, 5), new Vector3(1, 1, 1));
+            var p = new Plane(Vector3.Origin, Vector3.ZAxis);
+            Assert.True(l.Intersects(p, out var intersection));
+            Assert.Equal(new Vector3(0, -5, 0), intersection);
+
+            l = new InfiniteLine(Vector3.Origin, Vector3.XAxis);
+            Assert.False(l.Intersects(p, out _));
+        }
     }
 }

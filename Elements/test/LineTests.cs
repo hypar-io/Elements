@@ -221,7 +221,18 @@ namespace Elements.Geometry.Tests
 
             // Two lines are too short to intersect.
             l1 = new Line(new Vector3(0, 5), new Vector3(4, 5));
-            Assert.False(l0.Intersects(l1, out intersections));
+            Assert.False(l0.Intersects(l1, out _));
+
+            // Overlapping coincident lines
+            l0 = new Line(new Vector3(0, 0), new Vector3(10, 0));
+            l1 = new Line(new Vector3(10, 0), new Vector3(0, 0));
+            Assert.False(l0.Intersects(l1, out _));
+
+            // Touching coincident lines
+            l1 = new Line(new Vector3(0, 0), new Vector3(-5, 0));
+            Assert.True(l0.Intersects(l1, out intersections));
+            Assert.Single(intersections);
+            Assert.Equal(new Vector3(0, 0), intersections.First());
         }
 
         [Fact]
