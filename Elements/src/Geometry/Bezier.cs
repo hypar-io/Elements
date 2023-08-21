@@ -386,7 +386,8 @@ namespace Elements.Geometry
                         return (p - p.ClosestPointOn(line)).LengthSquared();
                     }), Vector3.EPSILON * Vector3.EPSILON);
 
-            results = Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2);
+            results = roots.Select(r => PointAt(r)).UniqueAverageWithinTolerance(
+                Vector3.EPSILON * 2).ToList();
             return results.Any();
         }
 
@@ -401,7 +402,8 @@ namespace Elements.Geometry
                         return local.LengthSquared() - circle.Radius * circle.Radius;
                     }), Vector3.EPSILON * Vector3.EPSILON);
 
-            results = Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2);
+            results = roots.Select(r => PointAt(r)).UniqueAverageWithinTolerance(
+                Vector3.EPSILON * 2).ToList();
             return results.Any();
         }
 
@@ -427,7 +429,8 @@ namespace Elements.Geometry
                     return dx + dy + local.Z * local.Z - 1;
                 }), Vector3.EPSILON * Vector3.EPSILON);
 
-            results = Equations.ConvertRoots(this, roots, Vector3.EPSILON * 2);
+            results = roots.Select(r => PointAt(r)).UniqueAverageWithinTolerance(
+                Vector3.EPSILON * 2).ToList();
             return results.Any();
         }
 

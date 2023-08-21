@@ -83,13 +83,5 @@ namespace Elements
                 lastFx = fx;
             }
         }
-
-        public static List<Vector3> ConvertRoots(ICurve curve,
-                                                 IEnumerable<double> roots,
-                                                 double tolerance = Vector3.EPSILON)
-        {
-            var results = roots.Select(r => curve.PointAt(r)).UniqueAverageWithinTolerance(tolerance);
-            return results.ToList();
-        }
     }
 }
