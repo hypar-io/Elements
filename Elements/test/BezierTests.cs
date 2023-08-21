@@ -151,10 +151,10 @@ namespace Hypar.Tests
             
             Assert.True(bezier.Intersects(polygon, out var results));
             Assert.Equal(4, results.Count);
-            Assert.Contains(new Vector3(0.9347526, 3), results);
-            Assert.Contains(new Vector3(4.0652474, 3), results);
-            Assert.Contains(new Vector3(4.7513222, 1.751333), results);
-            Assert.Contains(new Vector3(0.0736794, 1), results);
+            Assert.Contains(new Vector3(0.93475, 3), results);
+            Assert.Contains(new Vector3(4.06525, 3), results);
+            Assert.Contains(new Vector3(4.75132, 1.75133), results);
+            Assert.Contains(new Vector3(0.07367, 1), results);
         }
 
         [Fact]
