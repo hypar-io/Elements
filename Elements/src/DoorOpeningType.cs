@@ -6,7 +6,8 @@ namespace Elements
 {
     public enum DoorOpeningType
     {
-        SingleSwing,
-        DoubleSwing
+        Undefined = -1,
+        SingleSwing = 0,
+        DoubleSwing = 1
     }
 }

@@ -167,7 +167,96 @@ namespace Elements.Serialization.IFC
             return floor;
         }
 
-        internal static Wall ToWall(this IfcWallStandardCase wall,
+        internal static Door ToDoor(this IfcDoor ifcDoor, List<Wall> allWalls)
+        {
+            if (ifcDoor.PredefinedType != IfcDoorTypeEnum.DOOR)
+            {
+                throw new Exception("Door types except DOOR are not supported yet.");
+            }
+
+            var openingSide = ifcDoor.GetDoorOpeningSide();
+            var openingType = ifcDoor.GetDoorOpeningType();
+
+            if (openingSide == DoorOpeningSide.Undefined || openingType == DoorOpeningType.Undefined)
+            {
+                throw new Exception("This DoorOperationType is not supported yet.");
+            }
+
+            var transform = new Transform();
+            transform.Concatenate(ifcDoor.ObjectPlacement.ToTransform());
+
+            // Check if the door is contained in a building storey
+            foreach (var cis in ifcDoor.ContainedInStructure)
+            {
+                transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
+            }
+
+            // TODO: AC20-Institute-Var-2.ifc model contains doors with IfcFacetedBrep based representation.
+            var repItems = ifcDoor.Representation.Representations.SelectMany(r => r.Items).OfType<IfcMappedItem>();
+            if (!repItems.Any())
+            {
+                throw new Exception("The provided IfcDoor does not have any representations.");
+            }
+
+            var representation = repItems.FirstOrDefault();
+            var localOrigin = representation.MappingTarget.LocalOrigin.ToVector3();
+
+
+            var wall = GetWallFromDoor(ifcDoor, allWalls);
+
+            var result = new Door(wall, transform, (IfcLengthMeasure)ifcDoor.OverallWidth - Door.DOOR_FRAME_WIDTH, (IfcLengthMeasure)ifcDoor.OverallHeight - Door.DOOR_FRAME_WIDTH, openingSide, openingType);
+            return result;
+        }
+
+        internal static Wall GetWallFromDoor(IfcDoor door, List<Wall> allWalls)
+        {
+            var walls = door.Decomposes.Select(rel => rel.RelatingObject).OfType<IfcWall>();
+
+            if (!walls.Any())
+            {
+                return null;
+            }
+
+            var ifcWall = walls.First();
+            var matchingWalls = allWalls.Where(w => w.Id.Equals(IfcGuid.FromIfcGUID(ifcWall.GlobalId)));
+
+            return matchingWalls.Any() ? matchingWalls.First() : null;
+        }
+
+        internal static DoorOpeningSide GetDoorOpeningSide(this IfcDoor ifcDoor)
+        {
+            switch(ifcDoor.OperationType)
+            {
+                case IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT:
+                case IfcDoorTypeOperationEnum.DOUBLE_SWING_LEFT:
+                    return DoorOpeningSide.LeftHand;
+                case IfcDoorTypeOperationEnum.SINGLE_SWING_RIGHT:
+                case IfcDoorTypeOperationEnum.DOUBLE_SWING_RIGHT:
+                    return DoorOpeningSide.RightHand;
+                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_SINGLE_SWING:
+                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_DOUBLE_SWING:
+                    return DoorOpeningSide.DoubleDoor;
+            }
+            return DoorOpeningSide.Undefined;
+        }
+
+        internal static DoorOpeningType GetDoorOpeningType(this IfcDoor ifcDoor)
+        {
+            switch (ifcDoor.OperationType)
+            {
+                case IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT:
+                case IfcDoorTypeOperationEnum.SINGLE_SWING_RIGHT:
+                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_SINGLE_SWING:
+                    return DoorOpeningType.SingleSwing;
+                case IfcDoorTypeOperationEnum.DOUBLE_SWING_LEFT:
+                case IfcDoorTypeOperationEnum.DOUBLE_SWING_RIGHT:
+                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_DOUBLE_SWING:
+                    return DoorOpeningType.DoubleSwing;
+            }
+            return DoorOpeningType.Undefined;
+        }
+
+        internal static Wall ToWall(this IfcWall wall,
             IEnumerable<IfcOpeningElement> openings)
         {
             var transform = new Transform();
@@ -271,6 +360,7 @@ namespace Elements.Serialization.IFC
                     var pline = (IfcPolyline)profileDef.OuterCurve;
                     var outline = pline.ToPolygon(true);
                     var solid = Solid.SweepFace(outline, null, (IfcLengthMeasure)eas.Depth);
+                    return solid;
                 }
                 else if (r is IfcFacetedBrep brep)
                 {

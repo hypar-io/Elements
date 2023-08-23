@@ -6,8 +6,9 @@ namespace Elements
 {
     public enum DoorOpeningSide
     {
-        LeftHand,
-        RightHand,
-        DoubleDoor
+        Undefined = -1,
+        LeftHand = 0,
+        RightHand = 1,
+        DoubleDoor = 2
     }
 }
