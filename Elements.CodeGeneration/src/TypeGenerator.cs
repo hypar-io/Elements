@@ -413,8 +413,8 @@ namespace Elements.Generate
                 TypeNameGenerator = new ElementsTypeNameGenerator(),
                 PropertyNameGenerator = new ElementsPropertyNameGenerator(),
             };
-
-            var generator = new CSharpGenerator(schema, settings);
+            var typeResolver = new TypeResolver(settings);
+            var generator = new CSharpGenerator(schema, settings, typeResolver);
 
             var typeFiles = new Dictionary<string, string>();
             // We still need this call to GenerateFile() even though we don't use the file's
