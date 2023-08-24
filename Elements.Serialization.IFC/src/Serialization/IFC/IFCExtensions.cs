@@ -182,30 +182,51 @@ namespace Elements.Serialization.IFC
                 throw new Exception("This DoorOperationType is not supported yet.");
             }
 
-            var transform = new Transform();
-            transform.Concatenate(ifcDoor.ObjectPlacement.ToTransform());
-
-            // Check if the door is contained in a building storey
-            foreach (var cis in ifcDoor.ContainedInStructure)
-            {
-                transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
-            }
-
-            // TODO: AC20-Institute-Var-2.ifc model contains doors with IfcFacetedBrep based representation.
-            var repItems = ifcDoor.Representation.Representations.SelectMany(r => r.Items).OfType<IfcMappedItem>();
-            if (!repItems.Any())
-            {
-                throw new Exception("The provided IfcDoor does not have any representations.");
-            }
-
-            var representation = repItems.FirstOrDefault();
-            var localOrigin = representation.MappingTarget.LocalOrigin.ToVector3();
-
+            var transform = GetTransformFromIfcElement(ifcDoor);
 
             var wall = GetWallFromDoor(ifcDoor, allWalls);
 
             var result = new Door(wall, transform, (IfcLengthMeasure)ifcDoor.OverallWidth - Door.DOOR_FRAME_WIDTH, (IfcLengthMeasure)ifcDoor.OverallHeight - Door.DOOR_FRAME_WIDTH, openingSide, openingType);
             return result;
+        }
+
+        internal static Transform GetTransformFromIfcElement(IfcElement ifcElement)
+        {
+            // TODO: AC20-Institute-Var-2.ifc model contains doors with IfcFacetedBrep based representation.
+            var repItems = ifcElement.Representation.Representations.SelectMany(r => r.Items);
+            if (!repItems.Any())
+            {
+                throw new Exception("The provided IfcDoor does not have any representations.");
+            }
+
+            var containedInStructureTransform = new Transform();
+            containedInStructureTransform.Concatenate(ifcElement.ObjectPlacement.ToTransform());
+
+            // Check if the door is contained in a building storey
+            foreach (var cis in ifcElement.ContainedInStructure)
+            {
+                containedInStructureTransform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
+            }
+
+            var repMappedItems = repItems.OfType<IfcMappedItem>();
+
+            if (repMappedItems.Any())
+            {
+                var representation = repMappedItems.FirstOrDefault();
+                var localOrigin = representation.MappingTarget.LocalOrigin.ToVector3();
+                return new Transform(localOrigin).Concatenated(containedInStructureTransform);
+            }
+
+            var repSolidItems = repItems.OfType<IfcExtrudedAreaSolid>();
+
+            if (repSolidItems.Any())
+            {
+                var representation = repSolidItems.FirstOrDefault();
+                var solidTransform = representation.Position.ToTransform();
+                return solidTransform.Concatenated(containedInStructureTransform);
+            }
+
+            return containedInStructureTransform;
         }
 
         internal static Wall GetWallFromDoor(IfcDoor door, List<Wall> allWalls)
