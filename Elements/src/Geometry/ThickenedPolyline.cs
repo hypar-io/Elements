@@ -1,5 +1,14 @@
+using System;
+using System.Linq;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Elements.Search;
+
 namespace Elements.Geometry
 {
+    /// <summary>
+    /// A polyline with a thickness.
+    /// </summary>
     public class ThickenedPolyline
     {
         /// <summary>
@@ -16,17 +25,55 @@ namespace Elements.Geometry
             this.RightWidth = rightWidth;
         }
 
+        /// <summary>
+        /// Construct a thickened polyline.
+        /// </summary>
+        /// <param name="vertices">The vertices of the polyline.</param>
+        /// <param name="leftWidth">The amount to thicken the polyline on its "left" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the left side extends into the -X quadrant.</param>
+        /// <param name="rightWidth">The amount to thicken the polyline on its "right" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the right side extends into the +X quadrant.</param>
+        public ThickenedPolyline(IList<Vector3> vertices, double leftWidth, double rightWidth) : this(new Polyline(vertices), leftWidth, rightWidth)
+        {
+        }
+
+        /// <summary>
+        /// Construct a thickened polyline.
+        /// </summary>
+        /// <param name="line">The line to thicken.</param>
+        /// <param name="leftWidth">The amount to thicken the polyline on its "left" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the left side extends into the -X quadrant.</param>
+        /// <param name="rightWidth">The amount to thicken the polyline on its "right" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the right side extends into the +X quadrant.</param>
+        public ThickenedPolyline(Line line, double leftWidth, double rightWidth) : this(new Polyline(new[] { line.Start, line.End }), leftWidth, rightWidth)
+        {
+        }
+
         /// <summary>The base polyline to thicken.</summary>
-        [Newtonsoft.Json.JsonProperty("polyline", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("polyline", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
         public Polyline Polyline { get; set; }
 
         /// <summary>The amount to thicken the polyline on its "left" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the left side extends into the -X quadrant.</summary>
-        [Newtonsoft.Json.JsonProperty("leftWidth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("leftWidth", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public double LeftWidth { get; set; }
 
         /// <summary>The amount to thicken the polyline on its "right" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the right side extends into the +X quadrant.</summary>
-        [Newtonsoft.Json.JsonProperty("rightWidth", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("rightWidth", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
         public double RightWidth { get; set; }
+
+        private struct EdgeInfo
+        {
+
+            public EdgeInfo(int otherPointIndex, Vector3 otherPoint, double leftWidth, double rightWidth, bool pointingAway)
+            {
+                this.OtherPointIndex = otherPointIndex;
+                this.OtherPoint = otherPoint;
+                this.LeftWidth = leftWidth;
+                this.RightWidth = rightWidth;
+                this.PointingAway = pointingAway;
+            }
+            public int OtherPointIndex;
+            public Vector3 OtherPoint;
+            public double LeftWidth;
+            public double RightWidth;
+            public bool PointingAway;
+        }
 
         /// <summary>
         /// Construct the thickened geometry for a collection of thickened
@@ -42,7 +89,7 @@ namespace Elements.Geometry
         {
             if (!polylines.Any())
             {
-                return new();
+                return new List<(Polygon offsetPolygon, Line offsetLine)>();
             }
             var resultList = new Dictionary<int, (Polygon offsetPolygon, Line offsetLine)>();
             // Initialize a graph to manage nodes and edges of the thickened polylines
@@ -50,13 +97,7 @@ namespace Elements.Geometry
             {
                 nodes = new List<(
                     Vector3 position,
-                    List<(
-                        int otherPointIndex,
-                        Vector3 otherPoint,
-                        double leftWidth,
-                        double rightWidth,
-                        bool pointingAway
-                        )> edges,
+                    List<EdgeInfo> edges,
                         Dictionary<int, Vector3[]> offsetVertexMap
                     )>(),
                 edges = new List<(int a, int b, int origPlIndex)>()
@@ -80,8 +121,8 @@ namespace Elements.Geometry
                     pointSet.Add(indexA, ptA);
                     graph.nodes.Add((
                         ptA,
-                        new(),
-                        new()
+                        new List<EdgeInfo>(),
+                        new Dictionary<int, Vector3[]>()
                         ));
                 }
                 if (indexB == null)
@@ -90,19 +131,19 @@ namespace Elements.Geometry
                     pointSet.Add(indexB, ptB);
                     graph.nodes.Add((
                         ptB,
-                        new(),
-                        new()
+                        new List<EdgeInfo>(),
+                        new Dictionary<int, Vector3[]>()
                         ));
                 }
 
                 graph.edges.Add((indexA.Value, indexB.Value, i));
-                graph.nodes[indexA.Value].edges.Add((
+                graph.nodes[indexA.Value].edges.Add(new EdgeInfo(
                     indexB.Value,
                     ptB,
                     segment.LeftWidth,
                     segment.RightWidth,
                     true));
-                graph.nodes[indexB.Value].edges.Add((
+                graph.nodes[indexB.Value].edges.Add(new EdgeInfo(
                     indexA.Value,
                     ptA,
                     segment.LeftWidth,
@@ -118,19 +159,19 @@ namespace Elements.Geometry
                 var projectionPlane = new Plane(position, normal ?? Vector3.ZAxis);
                 var edgesSorted = edges.Select((edge) =>
                 {
-                    var otherPoint = edge.otherPoint;
+                    var otherPoint = edge.OtherPoint;
                     var edgeVector = otherPoint - position;
                     var edgeAngle = Vector3.XAxis.PlaneAngleTo(edgeVector, normal ?? Vector3.ZAxis);
                     var edgeLength = edgeVector.Length();
-                    offsetVertexMap[edge.otherPointIndex] = new Vector3[3];
-                    offsetVertexMap[edge.otherPointIndex][1] = position;
+                    offsetVertexMap[edge.OtherPointIndex] = new Vector3[3];
+                    offsetVertexMap[edge.OtherPointIndex][1] = position;
                     return (edge, edgeVector, edgeAngle, edgeLength);
                 }).OrderBy((edge) => edge.edgeAngle).ToArray();
                 for (int i = 0; i < edgesSorted.Length; i++)
                 {
                     var edge = edgesSorted[i];
-                    var nextOffsetDist = edge.edge.pointingAway ? edge.edge.leftWidth : edge.edge.rightWidth;
-                    var consistentCenterLine = new[] { position, edge.edge.otherPoint };
+                    var nextOffsetDist = edge.edge.PointingAway ? edge.edge.LeftWidth : edge.edge.RightWidth;
+                    var consistentCenterLine = new[] { position, edge.edge.OtherPoint };
                     var awayDir = edge.edgeVector;
                     var perpendicular = awayDir.Cross(normal ?? Vector3.ZAxis).Unitized();
                     var leftOffsetLine = new Line(
@@ -139,8 +180,8 @@ namespace Elements.Geometry
                     ).Projected(projectionPlane);
 
                     var nextEdge = edgesSorted[(i + 1) % edgesSorted.Length];
-                    var nextCenterLine = new[] { position, nextEdge.edge.otherPoint };
-                    var nextOffsetDist2 = nextEdge.edge.pointingAway ? nextEdge.edge.rightWidth : nextEdge.edge.leftWidth;
+                    var nextCenterLine = new[] { position, nextEdge.edge.OtherPoint };
+                    var nextOffsetDist2 = nextEdge.edge.PointingAway ? nextEdge.edge.RightWidth : nextEdge.edge.LeftWidth;
                     var nextAwayDir = nextEdge.edgeVector;
                     var nextPerpendicular = nextAwayDir.Cross(normal ?? Vector3.ZAxis).Unitized();
                     var rightOffsetLine = new Line(
@@ -161,8 +202,8 @@ namespace Elements.Geometry
                             {
                                 intersection = position + toIntersectionVec.Unitized() * maxLength;
                             }
-                            offsetVertexMap[edge.edge.otherPointIndex][0] = intersection;
-                            offsetVertexMap[nextEdge.edge.otherPointIndex][2] = intersection;
+                            offsetVertexMap[edge.edge.OtherPointIndex][0] = intersection;
+                            offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = intersection;
                         }
                         else if (angleDiff > 360 - angleThreshold)
                         {
@@ -170,26 +211,26 @@ namespace Elements.Geometry
                             var squareEndLeft = leftOffsetLine.Start + awayDir.Unitized() * -1 * nextOffsetDist;
                             var squareEndRight = rightOffsetLine.Start + nextAwayDir.Unitized() * -1 * nextOffsetDist;
                             var newInt = (squareEndLeft + squareEndRight) * 0.5;
-                            offsetVertexMap[edge.edge.otherPointIndex][0] = squareEndLeft;
-                            offsetVertexMap[edge.edge.otherPointIndex][1] = newInt;
-                            offsetVertexMap[nextEdge.edge.otherPointIndex][1] = newInt;
-                            offsetVertexMap[nextEdge.edge.otherPointIndex][2] = squareEndRight;
+                            offsetVertexMap[edge.edge.OtherPointIndex][0] = squareEndLeft;
+                            offsetVertexMap[edge.edge.OtherPointIndex][1] = newInt;
+                            offsetVertexMap[nextEdge.edge.OtherPointIndex][1] = newInt;
+                            offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = squareEndRight;
                         }
                         else if (Math.Abs(360 - angleDiff) < angleThreshold / 2 && intersection.DistanceTo(position) > maxLength)
                         {
-                            offsetVertexMap[edge.edge.otherPointIndex][0] = leftOffsetLine.Start;
-                            offsetVertexMap[nextEdge.edge.otherPointIndex][2] = rightOffsetLine.Start;
+                            offsetVertexMap[edge.edge.OtherPointIndex][0] = leftOffsetLine.Start;
+                            offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = rightOffsetLine.Start;
                         }
                         else
                         {
-                            offsetVertexMap[edge.edge.otherPointIndex][0] = intersection;
-                            offsetVertexMap[nextEdge.edge.otherPointIndex][2] = intersection;
+                            offsetVertexMap[edge.edge.OtherPointIndex][0] = intersection;
+                            offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = intersection;
                         }
                     }
                     else
                     {
-                        offsetVertexMap[edge.edge.otherPointIndex][0] = leftOffsetLine.Start;
-                        offsetVertexMap[nextEdge.edge.otherPointIndex][2] = rightOffsetLine.Start;
+                        offsetVertexMap[edge.edge.OtherPointIndex][0] = leftOffsetLine.Start;
+                        offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = rightOffsetLine.Start;
                     }
                 }
             }
@@ -227,6 +268,18 @@ namespace Elements.Geometry
 
             }
             return resultList.Values.ToList();
+        }
+
+        /// <summary>
+        /// Get the thickened geometry for this polyline.
+        /// </summary>
+        /// <param name="normal">The normal of the plane in which to thicken. Z+ by default.</param>
+        /// <returns>A collection of thickened geometry. Polylines with
+        /// thickness > 0 will yield `offsetPolygon`s, those with thickness = 0
+        /// will yield `offsetLine` segments.</returns>
+        public List<(Polygon offsetPolygon, Line offsetLine)> GetPolygons(Vector3? normal = null)
+        {
+            return GetPolygons(new[] { this }, normal);
         }
     }
 }
