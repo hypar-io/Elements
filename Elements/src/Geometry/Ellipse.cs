@@ -333,9 +333,11 @@ namespace Elements.Geometry
                     return false;
                 }
 
+                var div = (int)Math.Round(this.Circumference() / BoundedCurve.DefaultMinimumChordLength);
+
                 // Iteratively, find points in ellipse with distance to circle equal its radius. 
                 var localCenter = Transform.Inverted().OfPoint(circle.Center);
-                var roots = Equations.SolveIterative(0, Math.PI * 2, 90,
+                var roots = Equations.SolveIterative(0, Math.PI * 2, div,
                     new Func<double, double>((t) =>
                     {
                         var d = PointAtUntransformed(t) - localCenter;
@@ -411,10 +413,11 @@ namespace Elements.Geometry
 
                 var inverted = Transform.Inverted();
                 var ellipseToEllipse = Transform.Concatenated(other.Transform.Inverted());
+                var div = (int)Math.Round(this.Circumference() / BoundedCurve.DefaultMinimumChordLength);
 
                 // Iteratively, find points on ellipse with distance
                 // to other ellipse equal to its focal distance.
-                var roots = Equations.SolveIterative(0, Math.PI * 2, 90,
+                var roots = Equations.SolveIterative(0, Math.PI * 2, div,
                     new Func<double, double>((t) =>
                     {
                         var d = PointAtUntransformed(t);
@@ -456,6 +459,15 @@ namespace Elements.Geometry
         public bool Intersects(BoundedCurve curve, out List<Vector3> results)
         {
             return curve.Intersects(this, out results);
+        }
+
+        /// <summary>
+        /// Approximate circumference of the ellipse.
+        /// </summary>
+        public double Circumference()
+        {
+            return Math.PI * (3 * (MajorAxis + MinorAxis) - 
+                Math.Sqrt((3 * MajorAxis + MinorAxis) * (MajorAxis + 3 * MinorAxis)));
         }
 
         internal double ArcLength(double t0,

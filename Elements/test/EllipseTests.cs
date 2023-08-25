@@ -177,5 +177,15 @@ namespace Hypar.Tests
             other = new Ellipse(new Vector3(0, 0, 0), 3, 2);
             Assert.False(ellipse.Intersects(other, out results));
         }
+
+        [Fact]
+        public void Circumference()
+        {
+            var ellipse = new Ellipse(2, 2);
+            Assert.Equal(4 * Math.PI, ellipse.Circumference());
+
+            ellipse = new Ellipse(3, 4);
+            Assert.Equal(22.1035, ellipse.Circumference(), 4);
+        }
     }
 }

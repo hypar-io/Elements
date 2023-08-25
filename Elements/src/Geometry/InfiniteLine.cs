@@ -117,8 +117,8 @@ namespace Elements.Geometry
                     return boundedCurve.Intersects(this, out results);
                 case Circle circle:
                     return Intersects(circle, out results);
-                case Ellipse elliplse:
-                    return Intersects(elliplse, out results);
+                case Ellipse ellipse:
+                    return Intersects(ellipse, out results);
                 case InfiniteLine line:
                     return Intersects(line, out results);
                 default:

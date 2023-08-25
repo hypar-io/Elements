@@ -23,6 +23,7 @@
 `Circle.Intersects(Ellipse ellipse, out List<Vector3> results)`
 `Circle.Intersects(BoundedCurve curve, out List<Vector3> results)`
 `Ellipse.Normal`
+`Ellipse.Circumference()`
 `Ellipse.ParameterAt(Vector3 pt, out double t)`
 `Ellipse.Intersects(InfiniteLine line, out List<Vector3> results)`
 `Ellipse.Intersects(Circle circle, out List<Vector3> results)`

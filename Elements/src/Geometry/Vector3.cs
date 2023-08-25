@@ -1,4 +1,3 @@
-using ClipperLib;
 using Elements.Validators;
 using Newtonsoft.Json;
 using System;

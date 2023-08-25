@@ -359,8 +359,8 @@ namespace Elements.Geometry
                     return Intersects(line, out results);
                 case Circle circle:
                     return Intersects(circle, out results);
-                case Ellipse elliplse:
-                    return Intersects(elliplse, out results);
+                case Ellipse ellipse:
+                    return Intersects(ellipse, out results);
                 case IndexedPolycurve polycurve:
                     return polycurve.Intersects(this, out results);
                 case Bezier bezier:
@@ -389,9 +389,13 @@ namespace Elements.Geometry
                 return false;
             }
 
+            var l = this.Length();
+            var div = (int)Math.Round(l / DefaultMinimumChordLength);
+            div = Math.Min(div, _lengthSamples);
+
             // Iteratively, find points on Bezier with 0 distance to the line.
             // It Bezier was limited to 4 points - more effective approach could be used.
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 100,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, div,
                     new Func<double, double>((t) =>
                     {
                         var p = PointAt(t);
@@ -423,9 +427,13 @@ namespace Elements.Geometry
                 return false;
             }
 
+            var l = this.Length();
+            var div = (int)Math.Round(l / DefaultMinimumChordLength);
+            div = Math.Min(div, _lengthSamples);
+
             // Iteratively, find points on Bezier with radius distance to the circle.
             var invertedT = circle.Transform.Inverted();
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 100,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, div,
                     new Func<double, double>((t) =>
                     {
                         var p = PointAt(t);
@@ -458,10 +466,14 @@ namespace Elements.Geometry
                 return false;
             }
 
+            var l = this.Length();
+            var div = (int)Math.Round(l / DefaultMinimumChordLength);
+            div = Math.Min(div, _lengthSamples);
+
             // Iteratively, find points on ellipse with distance
             // to other ellipse equal to its focal distance.
             var invertedT = ellipse.Transform.Inverted();
-            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, 100,
+            var roots = Equations.SolveIterative(Domain.Min, Domain.Max, div,
                 new Func<double, double>((t) =>
                 {
                     var p = PointAt(t);
@@ -486,8 +498,8 @@ namespace Elements.Geometry
         public bool Intersects(Bezier other, out List<Vector3> results)
         {
             results = new List<Vector3>();
-            int leftSteps = ControlPoints.Count * 8 - 1;
-            int rightSteps = other.ControlPoints.Count * 8 - 1;
+            int leftSteps = BoxApproximationStepsCount();
+            int rightSteps = other.BoxApproximationStepsCount();
 
             var leftCache = new Dictionary<double, Vector3>();
             var rightCache = new Dictionary<double, Vector3>();
@@ -496,8 +508,8 @@ namespace Elements.Geometry
             BBox3 otherBox = other.CurveBox(rightSteps, rightCache);
 
             Intersects(other,
-                       (box, Domain, leftSteps),
-                       (otherBox, other.Domain, rightSteps), 
+                       (box, Domain),
+                       (otherBox, other.Domain), 
                        leftCache,
                        rightCache,
                        ref results);
@@ -523,8 +535,8 @@ namespace Elements.Geometry
         }
 
         private void Intersects(Bezier other,
-                                (BBox3 Box, Domain1d Domain, double Steps) left,
-                                (BBox3 Box, Domain1d Domain, double Steps) right,
+                                (BBox3 Box, Domain1d Domain) left,
+                                (BBox3 Box, Domain1d Domain) right,
                                 Dictionary<double, Vector3> leftCache,
                                 Dictionary<double, Vector3> rightCache,
                                 ref List<Vector3> results)
@@ -536,32 +548,12 @@ namespace Elements.Geometry
                 return;
             }
 
-            var epsilon2 = Vector3.EPSILON * Vector3.EPSILON;
-            (BBox3 Box, Domain1d Domain, double Resolution) loLeft = (default, default, 0);
-            (BBox3 Box, Domain1d Domain, double Resolution) hiLeft = (default, default, 0);
-            (BBox3 Box, Domain1d Domain, double Resolution) loRight = (default, default, 0);
-            (BBox3 Box, Domain1d Domain, double Resolution) hiRight = (default, default, 0);
-
-            // If curve bounding box is tolerance size - it's considered as intersection.
-            // Otherwise calculate new boxes of two halves of the curve. 
-            var leftConvergent = (left.Box.Max - left.Box.Min).LengthSquared() < epsilon2 * 2;
-            if (!leftConvergent)
-            {
-                loLeft = SplitCurveBox(left, leftCache, true);
-                hiLeft = SplitCurveBox(left, leftCache, false);
-            }
-
-            // Same as above but for the other curve.
-            bool rightConvergent = (right.Box.Max - right.Box.Min).LengthSquared() < epsilon2 * 2;
-            if (!rightConvergent)
-            {
-                loRight = other.SplitCurveBox(right, rightCache, true);
-                hiRight = other.SplitCurveBox(right, rightCache, false);
-            }
+            var leftSplit = SplitCurveBox(left, leftCache, out var loLeft, out var hiLeft);
+            var rightSplit = other.SplitCurveBox(right, rightCache, out var loRight, out var hiRight);
 
             // If boxes of two curves are tolerance sized -
             // average point of their centers is treated as intersection point.
-            if (leftConvergent && rightConvergent)
+            if (!leftSplit && !rightSplit)
             {
                 results.Add(left.Box.Center().Average(right.Box.Center()));
                 return;
@@ -569,12 +561,12 @@ namespace Elements.Geometry
 
             // Recursively repeat process on box of subdivided curves until they are small enough.
             // Each pair, which bounding boxes are not intersecting are discarded.
-            if (leftConvergent)
+            if (!leftSplit)
             {
                 Intersects(other, left, loRight, leftCache, rightCache, ref results);
                 Intersects(other, left, hiRight, leftCache, rightCache, ref results);
             }
-            else if (rightConvergent) 
+            else if (!rightSplit) 
             {
                 Intersects(other, loLeft, right, leftCache, rightCache, ref results);
                 Intersects(other, hiLeft, right, leftCache, rightCache, ref results);
@@ -588,6 +580,29 @@ namespace Elements.Geometry
             }
         }
 
+        private bool SplitCurveBox((BBox3 Box, Domain1d Domain) def,
+                                   Dictionary<double, Vector3> cache,
+                                   out (BBox3 Box, Domain1d Domain) low,
+                                   out (BBox3 Box, Domain1d Domain) high)
+        {
+            low = (default, default);
+            high = (default, default);
+
+            // If curve bounding box is tolerance size - it's considered as intersection.
+            // Otherwise calculate new boxes of two halves of the curve. 
+            var epsilon2 = Vector3.EPSILON * Vector3.EPSILON;
+            var leftConvergent = (def.Box.Max - def.Box.Min).LengthSquared() < epsilon2 * 2;
+            if (leftConvergent)
+            {
+                return false;
+            }
+
+            // If curve bounding box is tolerance size - it's considered as intersection.
+            // Otherwise calculate new boxes of two halves of the curve. 
+            low = CurveBoxHalf(def, cache, true);
+            high = CurveBoxHalf(def, cache, false);
+            return true;
+        }
 
         /// <summary>
         /// Get bounding box of curve segment (not control points) for half of given domain.
@@ -596,17 +611,18 @@ namespace Elements.Geometry
         /// <param name="cache">Dictionary of precomputed points at parameter.</param>
         /// <param name="low">Take lower of higher part of curve.</param>
         /// <returns>Definition of curve segment that is half of given.</returns>
-        private (BBox3 Box, Domain1d Domain, double Steps) SplitCurveBox(
-            (BBox3 Box, Domain1d Domain, double Steps) def,
+        private (BBox3 Box, Domain1d Domain) CurveBoxHalf(
+            (BBox3 Box, Domain1d Domain) def,
             Dictionary<double, Vector3> cache,
             bool low)
         {
-            double step = (def.Domain.Length / 2) / def.Steps;
+            var steps = BoxApproximationStepsCount();
+            double step = (def.Domain.Length / 2) / steps;
             var min = low ? def.Domain.Min : def.Domain.Min + def.Domain.Length / 2;
             var max = low ? def.Domain.Min + def.Domain.Length / 2 : def.Domain.Max;
 
             List<Vector3> points = new List<Vector3>();
-            for (int i = 0; i < def.Steps; i++)
+            for (int i = 0; i < steps; i++)
             {
                 var t = min + i * step;
                 points.Add(PointAtCached(t, cache));
@@ -615,7 +631,7 @@ namespace Elements.Geometry
 
             var box = new BBox3(points);
             var domain = new Domain1d(min, max);
-            return (box, domain, def.Steps);
+            return (box, domain);
         }
 
         private Vector3 PointAtCached(double t, Dictionary<double, Vector3> cache)
@@ -630,6 +646,11 @@ namespace Elements.Geometry
                 cache.Add(t, p);
                 return p;
             }
+        }
+
+        private int BoxApproximationStepsCount()
+        {
+            return ControlPoints.Count * 8 - 1;
         }
     }
 }

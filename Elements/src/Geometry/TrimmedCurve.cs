@@ -39,8 +39,8 @@ namespace Elements.Geometry
                     return Intersects(line, out results);
                 case Circle circle:
                     return Intersects(circle, out results);
-                case Ellipse elliplse:
-                    return Intersects(elliplse, out results);
+                case Ellipse ellipse:
+                    return Intersects(ellipse, out results);
                 case IndexedPolycurve polycurve:
                     return polycurve.Intersects(this, out results);
                 case Bezier bezier:
