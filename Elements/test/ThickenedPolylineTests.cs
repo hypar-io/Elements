@@ -56,5 +56,23 @@ namespace Elements.Geometry.Tests
                 Model.AddElement(new ModelCurve(p.offsetPolygon, BuiltInMaterials.YAxis));
             }
         }
+
+        [Fact]
+        public void CorrectCornerConditions()
+        {
+            Name = nameof(CorrectCornerConditions);
+            for (double thickness = 0.1; thickness < 2.5; thickness += 0.25)
+            {
+                var segmentA = new ThickenedPolyline(new Line((0, 0), (-10, 0)), thickness / 2, thickness / 2);
+                for (double angle = 10; angle < 360; angle += 10)
+                {
+                    var rotation = new Transform().Rotated(Vector3.ZAxis, angle);
+                    var segmentB = new ThickenedPolyline(new Line((0, 0), (-10, 0)).TransformedLine(rotation), thickness / 2, thickness / 2);
+                    var polygons = ThickenedPolyline.GetPolygons(new[] { segmentA, segmentB });
+                    var displayTransform = new Transform(0, angle * 1.5, thickness);
+                    Model.AddElements(polygons.Select(p => new ModelCurve(p.offsetPolygon, BuiltInMaterials.XAxis, displayTransform)));
+                }
+            }
+        }
     }
 }

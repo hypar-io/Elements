@@ -87,6 +87,7 @@ namespace Elements.Geometry
         /// <remarks>This is a direct translation of the corresponding javascript method on the Hypar front end. It is important that this code match the behavior, so that the "thickened polyline" preview shows the same thing as will be generated here.</remarks>
         public static List<(Polygon offsetPolygon, Line offsetLine)> GetPolygons(IEnumerable<ThickenedPolyline> polylines, Vector3? normal = null)
         {
+            var normalDir = normal ?? Vector3.ZAxis;
             if (!polylines.Any())
             {
                 return new List<(Polygon offsetPolygon, Line offsetLine)>();
@@ -156,24 +157,36 @@ namespace Elements.Geometry
             // construct our polygons.
             foreach (var (position, edges, offsetVertexMap) in graph.nodes)
             {
-                var projectionPlane = new Plane(position, normal ?? Vector3.ZAxis);
+                var projectionPlane = new Plane(position, normalDir);
+                // for each edge, compute all the info we'll need for it: its left
+                // thickness / right thickness, its plane angle to the x axis, and
+                // whether it is pointing towards or away from this point. Sort the
+                // results by the plane angle.
                 var edgesSorted = edges.Select((edge) =>
                 {
                     var otherPoint = edge.OtherPoint;
                     var edgeVector = otherPoint - position;
-                    var edgeAngle = Vector3.XAxis.PlaneAngleTo(edgeVector, normal ?? Vector3.ZAxis);
+                    var edgeAngle = Vector3.XAxis.PlaneAngleTo(edgeVector, normalDir);
                     var edgeLength = edgeVector.Length();
                     offsetVertexMap[edge.OtherPointIndex] = new Vector3[3];
                     offsetVertexMap[edge.OtherPointIndex][1] = position;
                     return (edge, edgeVector, edgeAngle, edgeLength);
                 }).OrderBy((edge) => edge.edgeAngle).ToArray();
+
+                // for each edge in the sorted set, find the next edge, and compute the
+                // offset intersection with that edge. If the next edge is the same
+                // edge, just use the perpendicular offset point. If the next edge is
+                // nearly at 180 degrees, use the perpendicular offset point.
                 for (int i = 0; i < edgesSorted.Length; i++)
                 {
                     var edge = edgesSorted[i];
+                    // If the edge is pointing away from this node, its "left" offset distance matches the "left" width of the edge. Otherwise, it matches the "right" width.
                     var nextOffsetDist = edge.edge.PointingAway ? edge.edge.LeftWidth : edge.edge.RightWidth;
                     var consistentCenterLine = new[] { position, edge.edge.OtherPoint };
                     var awayDir = edge.edgeVector;
-                    var perpendicular = awayDir.Cross(normal ?? Vector3.ZAxis).Unitized();
+                    var perpendicular = awayDir.Cross(normalDir).Unitized();
+
+                    // construct a virtual line which is just this edge offset by the correct offset distance
                     var leftOffsetLine = new Line(
                         consistentCenterLine[0] + perpendicular * nextOffsetDist * -1,
                         consistentCenterLine[1] + perpendicular * nextOffsetDist * -1
@@ -181,13 +194,22 @@ namespace Elements.Geometry
 
                     var nextEdge = edgesSorted[(i + 1) % edgesSorted.Length];
                     var nextCenterLine = new[] { position, nextEdge.edge.OtherPoint };
+                    // If the edge is pointing away from this node, its "right" offset distance matches the "right" width of the edge. Otherwise, it matches the "left" width.
                     var nextOffsetDist2 = nextEdge.edge.PointingAway ? nextEdge.edge.RightWidth : nextEdge.edge.LeftWidth;
                     var nextAwayDir = nextEdge.edgeVector;
-                    var nextPerpendicular = nextAwayDir.Cross(normal ?? Vector3.ZAxis).Unitized();
+                    var nextPerpendicular = nextAwayDir.Cross(normalDir).Unitized();
+
+                    // construct a virtual line which is just the next edge offset by the correct offset distance
                     var rightOffsetLine = new Line(
                         nextCenterLine[0] + nextPerpendicular * nextOffsetDist2,
                         nextCenterLine[1] + nextPerpendicular * nextOffsetDist2
                     ).Projected(projectionPlane);
+
+                    // For each pair of edges, compute an intersection point. If the
+                    // lines intersect, store the intersection twice — once as the
+                    // "left" point for the current edge, and again as the "right" point
+                    // for the next edge. If the lines don't intersect, just use the
+                    // perpendicular offset points, for a "square" end.
                     var intersects = leftOffsetLine.Intersects(rightOffsetLine, out var intersection, true);
                     var angleThreshold = 90;
                     var angleDiff = (nextEdge.edgeAngle - edge.edgeAngle + 360) % 360;
@@ -229,6 +251,7 @@ namespace Elements.Geometry
                     }
                     else
                     {
+                        // an open "square" end
                         offsetVertexMap[edge.edge.OtherPointIndex][0] = leftOffsetLine.Start;
                         offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = rightOffsetLine.Start;
                     }
