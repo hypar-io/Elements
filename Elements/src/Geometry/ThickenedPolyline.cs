@@ -161,10 +161,11 @@ namespace Elements.Geometry
                 // for each edge, compute all the info we'll need for it: its left
                 // thickness / right thickness, its plane angle to the x axis, and
                 // whether it is pointing towards or away from this point. Sort the
-                // results by the plane angle.
+                // results by the plane angle. 
                 var edgesSorted = edges.Select((edge) =>
                 {
                     var otherPoint = edge.OtherPoint;
+                    // Edge vector is consistent w/r/t this node: it is always pointing away
                     var edgeVector = otherPoint - position;
                     var edgeAngle = Vector3.XAxis.PlaneAngleTo(edgeVector, normalDir);
                     var edgeLength = edgeVector.Length();
@@ -182,6 +183,7 @@ namespace Elements.Geometry
                     var edge = edgesSorted[i];
                     // If the edge is pointing away from this node, its "left" offset distance matches the "left" width of the edge. Otherwise, it matches the "right" width.
                     var nextOffsetDist = edge.edge.PointingAway ? edge.edge.LeftWidth : edge.edge.RightWidth;
+                    // create a centerline for this edge which points from this node to the other point.
                     var consistentCenterLine = new[] { position, edge.edge.OtherPoint };
                     var awayDir = edge.edgeVector;
                     var perpendicular = awayDir.Cross(normalDir).Unitized();
@@ -193,8 +195,9 @@ namespace Elements.Geometry
                     ).Projected(projectionPlane);
 
                     var nextEdge = edgesSorted[(i + 1) % edgesSorted.Length];
+                    // create a centerline for the next edge which points from this node to the other point.
                     var nextCenterLine = new[] { position, nextEdge.edge.OtherPoint };
-                    // If the edge is pointing away from this node, its "right" offset distance matches the "right" width of the edge. Otherwise, it matches the "left" width.
+                    // If the next edge is pointing away from this node, its "right" offset distance matches the "right" width of the edge. Otherwise, it matches the "left" width.
                     var nextOffsetDist2 = nextEdge.edge.PointingAway ? nextEdge.edge.RightWidth : nextEdge.edge.LeftWidth;
                     var nextAwayDir = nextEdge.edgeVector;
                     var nextPerpendicular = nextAwayDir.Cross(normalDir).Unitized();
@@ -212,14 +215,17 @@ namespace Elements.Geometry
                     // perpendicular offset points, for a "square" end.
                     var intersects = leftOffsetLine.Intersects(rightOffsetLine, out var intersection, true);
                     var angleThreshold = 90;
+                    var parallelThreshold = 3;
                     var angleDiff = (nextEdge.edgeAngle - edge.edgeAngle + 360) % 360;
                     if (intersects)
                     {
                         var maxLength = Math.Min(edge.edgeLength, nextEdge.edgeLength);
                         if (angleDiff < angleThreshold)
                         {
-                            // acute angle
+                            // angle < 90 degrees, acute angle
+                            // we're on the "outside" of a sharp angle.
                             var toIntersectionVec = intersection - position;
+                            // for very sharp angles, pull the intersection back to top out at a max length. This has the effect of creating a "cap" on the end of the polyline.
                             if (toIntersectionVec.Length() > maxLength)
                             {
                                 intersection = position + toIntersectionVec.Unitized() * maxLength;
@@ -229,7 +235,7 @@ namespace Elements.Geometry
                         }
                         else if (angleDiff > 360 - angleThreshold)
                         {
-                            // reflex angle
+                            // angle > 270 degrees, explement of acute angle.
                             var squareEndLeft = leftOffsetLine.Start + awayDir.Unitized() * -1 * nextOffsetDist;
                             var squareEndRight = rightOffsetLine.Start + nextAwayDir.Unitized() * -1 * nextOffsetDist;
                             var newInt = (squareEndLeft + squareEndRight) * 0.5;
@@ -238,13 +244,15 @@ namespace Elements.Geometry
                             offsetVertexMap[nextEdge.edge.OtherPointIndex][1] = newInt;
                             offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = squareEndRight;
                         }
-                        else if (Math.Abs(360 - angleDiff) < angleThreshold / 2 && intersection.DistanceTo(position) > maxLength)
-                        {
+                        else if (Math.Abs(180 - angleDiff) < parallelThreshold && intersection.DistanceTo(position) > maxLength)
+                        { 
+                            // angle is nearly parallel. Use the perpendicular offset points.
                             offsetVertexMap[edge.edge.OtherPointIndex][0] = leftOffsetLine.Start;
                             offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = rightOffsetLine.Start;
                         }
                         else
                         {
+                            // all other angles use the intersection
                             offsetVertexMap[edge.edge.OtherPointIndex][0] = intersection;
                             offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = intersection;
                         }

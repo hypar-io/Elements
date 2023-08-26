@@ -70,7 +70,7 @@ namespace Elements.Geometry.Tests
                     var segmentB = new ThickenedPolyline(new Line((0, 0), (-10, 0)).TransformedLine(rotation), thickness / 2, thickness / 2);
                     var polygons = ThickenedPolyline.GetPolygons(new[] { segmentA, segmentB });
                     var displayTransform = new Transform(0, angle * 1.5, thickness);
-                    Model.AddElements(polygons.Select(p => new ModelCurve(p.offsetPolygon, BuiltInMaterials.XAxis, displayTransform)));
+                    Model.AddElements(polygons.Select(p => new ModelCurve(p.offsetPolygon, BuiltInMaterials.YAxis, displayTransform)));
                 }
             }
         }
