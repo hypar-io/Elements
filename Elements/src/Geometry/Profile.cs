@@ -21,6 +21,16 @@ namespace Elements.Geometry
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>
+        /// Some profiles may have additional data representing the thickness
+        /// of their edges. This data is stored as a list of double pairs, where the
+        /// first double is the inner thickness, and the second double is the outer thickness.
+        /// This is not guaranteed to have a value, and the thickness values may be 0.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("EdgeThickness", Required = Required.AllowNull)]
+        private List<double[]> _edgeThickness { get; set; }
+
+        /// <summary>
         /// The default constructor is used by derived classes,
         /// and is not intended to be used directly.
         /// </summary>
@@ -610,6 +620,47 @@ namespace Elements.Geometry
         public List<Line> Segments()
         {
             return Perimeter.Segments().Union(Voids?.SelectMany(v => v.Segments()) ?? new Line[0]).ToList();
+        }
+
+        /// <summary>
+        /// Returns a list of polygons representing the thickened edges of the
+        /// profile, provided the profile has thickness information for its
+        /// edges.
+        /// </summary>
+        public List<Polygon> ThickenedEdgePolygons()
+        {
+            var polygons = new List<Polygon>();
+            if (this._edgeThickness == null || this._edgeThickness.Count != this.Perimeter.Vertices.Count)
+            {
+                return polygons;
+            }
+            var segments = this.Perimeter.Segments();
+            var thickenedSegments = new List<ThickenedPolyline>();
+            for (int i = 0; i < segments.Length; i++)
+            {
+                var segment = segments[i];
+                var thicknessInfo = this._edgeThickness[i];
+                var thicknedPolylineSegment = new ThickenedPolyline(segment, thicknessInfo[0], thicknessInfo[1]);
+                thickenedSegments.Add(thicknedPolylineSegment);
+            }
+            return ThickenedPolyline.GetPolygons(thickenedSegments).Where(p => p.offsetPolygon != null).Select(p => p.offsetPolygon).ToList();
+        }
+
+        /// <summary>
+        /// If this Profile has edge thickness information,
+        /// </summary>
+        /// <returns>A new profile with the edge thickness subtracted from the perimeter.</returns>
+        public Profile ThickenedInteriorProfile()
+        {
+            try
+            {
+                var polygon = ThickenedPolyline.GetLoopBoundary(this.Perimeter.Vertices, this._edgeThickness);
+                return new Profile(polygon, this.Voids);
+            }
+            catch
+            {
+                return new Profile(this.Perimeter, this.Voids);
+            }
         }
     }
 

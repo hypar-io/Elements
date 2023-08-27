@@ -75,36 +75,29 @@ namespace Elements.Geometry
             public bool PointingAway;
         }
 
-        /// <summary>
-        /// Construct the thickened geometry for a collection of thickened
-        /// polylines.
-        /// </summary>
-        /// <param name="polylines">The polylines to thicken.</param>
-        /// <param name="normal">The normal of the plane in which to thicken. Z+ by default.</param>
-        /// <returns>A collection of thickened geometry. Polylines with
-        /// thickness > 0 will yield `offsetPolygon`s, those with thickness = 0
-        /// will yield `offsetLine` segments.</returns>
-        /// <remarks>This is a direct translation of the corresponding javascript method on the Hypar front end. It is important that this code match the behavior, so that the "thickened polyline" preview shows the same thing as will be generated here.</remarks>
-        public static List<(Polygon offsetPolygon, Line offsetLine)> GetPolygons(IEnumerable<ThickenedPolyline> polylines, Vector3? normal = null)
+        private class ThickenedPolylineGraph
         {
-            var normalDir = normal ?? Vector3.ZAxis;
-            if (!polylines.Any())
+            public PointOctree<int?> PointToNodeIndexMap;
+            public List<(Vector3 position, List<EdgeInfo> edges, Dictionary<int, Vector3[]> offsetVertexMap)> Nodes;
+            public List<(int a, int b, int origPlIndex)> Edges;
+        }
+
+        /// <summary>
+        /// Construct a graph of the supplied thickened polylines, where each node is a point
+        /// </summary>
+        private static ThickenedPolylineGraph ConstructThickenedPolylineGraph(IEnumerable<ThickenedPolyline> polylines)
+        {
+            var graph = new ThickenedPolylineGraph
             {
-                return new List<(Polygon offsetPolygon, Line offsetLine)>();
-            }
-            var resultList = new Dictionary<int, (Polygon offsetPolygon, Line offsetLine)>();
-            // Initialize a graph to manage nodes and edges of the thickened polylines
-            var graph = new
-            {
-                nodes = new List<(
+                // Initialize a point set for efficient spatial queries and build a collection of segments from the polylines
+                PointToNodeIndexMap = new PointOctree<int?>(10, polylines.First().Polyline.Vertices.First(), Vector3.EPSILON),
+                Nodes = new List<(
                     Vector3 position,
                     List<EdgeInfo> edges,
                         Dictionary<int, Vector3[]> offsetVertexMap
                     )>(),
-                edges = new List<(int a, int b, int origPlIndex)>()
+                Edges = new List<(int a, int b, int origPlIndex)>()
             };
-            // Initialize a point set for efficient spatial queries and build a collection of segments from the polylines
-            var pointSet = new PointOctree<int?>(10, polylines.First().Polyline.Vertices.First(), Vector3.EPSILON);
             // Deconstruct all polylines into individual thickened segments. Each segment will be an edge in the graph.
             var segments = polylines.SelectMany((polyline) => polyline.Polyline.Segments().Select(s => (Line: s, polyline.LeftWidth, polyline.RightWidth))).ToArray();
             // build up the graph, finding existing nodes or creating new ones as needed
@@ -114,13 +107,13 @@ namespace Elements.Geometry
                 var ptA = segment.Line.Start;
                 var ptB = segment.Line.End;
 
-                var indexA = pointSet.GetNearby(ptA, Vector3.EPSILON).FirstOrDefault();
-                var indexB = pointSet.GetNearby(ptB, Vector3.EPSILON).FirstOrDefault();
+                var indexA = graph.PointToNodeIndexMap.GetNearby(ptA, Vector3.EPSILON).FirstOrDefault();
+                var indexB = graph.PointToNodeIndexMap.GetNearby(ptB, Vector3.EPSILON).FirstOrDefault();
                 if (indexA == null)
                 {
-                    indexA = graph.nodes.Count;
-                    pointSet.Add(indexA, ptA);
-                    graph.nodes.Add((
+                    indexA = graph.Nodes.Count;
+                    graph.PointToNodeIndexMap.Add(indexA, ptA);
+                    graph.Nodes.Add((
                         ptA,
                         new List<EdgeInfo>(),
                         new Dictionary<int, Vector3[]>()
@@ -128,23 +121,23 @@ namespace Elements.Geometry
                 }
                 if (indexB == null)
                 {
-                    indexB = graph.nodes.Count;
-                    pointSet.Add(indexB, ptB);
-                    graph.nodes.Add((
+                    indexB = graph.Nodes.Count;
+                    graph.PointToNodeIndexMap.Add(indexB, ptB);
+                    graph.Nodes.Add((
                         ptB,
                         new List<EdgeInfo>(),
                         new Dictionary<int, Vector3[]>()
                         ));
                 }
 
-                graph.edges.Add((indexA.Value, indexB.Value, i));
-                graph.nodes[indexA.Value].edges.Add(new EdgeInfo(
+                graph.Edges.Add((indexA.Value, indexB.Value, i));
+                graph.Nodes[indexA.Value].edges.Add(new EdgeInfo(
                     indexB.Value,
                     ptB,
                     segment.LeftWidth,
                     segment.RightWidth,
                     true));
-                graph.nodes[indexB.Value].edges.Add(new EdgeInfo(
+                graph.Nodes[indexB.Value].edges.Add(new EdgeInfo(
                     indexA.Value,
                     ptA,
                     segment.LeftWidth,
@@ -152,10 +145,18 @@ namespace Elements.Geometry
                     false
                     ));
             }
+            return graph;
+        }
+
+        /// <summary>
+        /// Populate the offset vertex map for each node in the graph. These points can be used to construct the thickened geometry.
+        /// </summary>
+        private static void PopulateOffsetVertexMap(ThickenedPolylineGraph graph, Vector3 normalDir)
+        {
             // Walk all nodes, building up the offset vertex map for each node.
             // These vertices will ultimately become the vertices from which we
             // construct our polygons.
-            foreach (var (position, edges, offsetVertexMap) in graph.nodes)
+            foreach (var (position, edges, offsetVertexMap) in graph.Nodes)
             {
                 var projectionPlane = new Plane(position, normalDir);
                 // for each edge, compute all the info we'll need for it: its left
@@ -273,14 +274,39 @@ namespace Elements.Geometry
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Construct the thickened geometry for a collection of thickened
+        /// polylines.
+        /// </summary>
+        /// <param name="polylines">The polylines to thicken.</param>
+        /// <param name="normal">The normal of the plane in which to thicken. Z+ by default.</param>
+        /// <returns>A collection of thickened geometry. Polylines with
+        /// thickness > 0 will yield `offsetPolygon`s, those with thickness = 0
+        /// will yield `offsetLine` segments.</returns>
+        /// <remarks>This is a direct translation of the corresponding javascript method on the Hypar front end. It is important that this code match the behavior, so that the "thickened polyline" preview shows the same thing as will be generated here.</remarks>
+        public static List<(Polygon offsetPolygon, Line offsetLine)> GetPolygons(IEnumerable<ThickenedPolyline> polylines, Vector3? normal = null)
+        {
+            var normalDir = normal ?? Vector3.ZAxis;
+            if (!polylines.Any())
+            {
+                return new List<(Polygon offsetPolygon, Line offsetLine)>();
+            }
+            var resultList = new Dictionary<int, (Polygon offsetPolygon, Line offsetLine)>();
+            // Initialize a graph to manage nodes and edges of the thickened polylines
+            var graph = ConstructThickenedPolylineGraph(polylines);
+            // Populate the offset vertex map for each node in the graph. These points can be used to construct the thickened geometry.
+            PopulateOffsetVertexMap(graph, normalDir);
+
             var polygons = new List<Polygon>();
             var lines = new List<Line>();
             // For each edge in the graph, construct a new polygon from the points in the offset vertex map.
-            foreach (var (a, b, origPlIndex) in graph.edges)
+            foreach (var (a, b, origPlIndex) in graph.Edges)
             {
 
-                var abc = graph.nodes[a].offsetVertexMap[b];
-                var def = graph.nodes[b].offsetVertexMap[a];
+                var abc = graph.Nodes[a].offsetVertexMap[b];
+                var def = graph.Nodes[b].offsetVertexMap[a];
                 try
                 {
                     var pgonOutput = new Polygon(abc.Concat(def).ToArray());
@@ -319,6 +345,49 @@ namespace Elements.Geometry
         public List<(Polygon offsetPolygon, Line offsetLine)> GetPolygons(Vector3? normal = null)
         {
             return GetPolygons(new[] { this }, normal);
+        }
+
+        /// <summary>
+        /// Given an ordered list of vertices representing a loop, and a
+        /// corresponding list of thicknesses for each edge, construct the
+        /// polygonal boundary taking into account those thickness offsets.
+        /// </summary>
+        /// <param name="vertices">An ordered list of vertices representing a closed polygon</param>
+        /// <param name="edgeThickness">An ordered list of leftWidth/rightWidth pairs, representing the thickness of the edge beginning at each vertex.</param>
+        /// <param name="normal">The normal defining the plane in which to calculate the boundary.</param>
+        public static Polygon GetLoopBoundary(IList<Vector3> vertices, IList<double[]> edgeThickness, Vector3? normal = null)
+        {
+            var normalDir = normal ?? Vector3.ZAxis;
+            if (vertices.Count != edgeThickness.Count)
+            {
+                throw new ArgumentException("The number of vertices must match the number of edge thicknesses.");
+            }
+            var polylines = new List<ThickenedPolyline>();
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                var vertex = vertices[i];
+                var nextVertex = vertices[(i + 1) % vertices.Count];
+                var thickness = edgeThickness[i];
+                polylines.Add(new ThickenedPolyline(new[] { vertex, nextVertex }, thickness[0], thickness[1]));
+            }
+            // Initialize a graph to manage nodes and edges of the thickened polylines
+            var graph = ConstructThickenedPolylineGraph(polylines);
+            // Populate the offset vertex map for each node in the graph. These points can be used to construct the thickened geometry.
+            PopulateOffsetVertexMap(graph, normalDir);
+            var offsetPoints = new List<Vector3>();
+
+            // Map our original vertices to the nodes in the graph. Since we
+            // constructed the graph from these vertices, we can assume that the
+            // nodes are there.
+            var nodeIndicesPerVertex = vertices.Select((v) => graph.PointToNodeIndexMap.GetNearby(v, Vector3.EPSILON).FirstOrDefault()).ToList();
+            for (int i = 0; i < vertices.Count; i++) {
+                var index1 = nodeIndicesPerVertex[i];
+                var index2 = nodeIndicesPerVertex[(i + 1) % vertices.Count];
+                var node1 = graph.Nodes[index1.Value];
+                var offsetVertices = node1.offsetVertexMap[index2.Value];
+                offsetPoints.Add(offsetVertices[0]);
+            }
+            return new Polygon(offsetPoints);
         }
     }
 }
