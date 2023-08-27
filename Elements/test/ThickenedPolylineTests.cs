@@ -74,5 +74,19 @@ namespace Elements.Geometry.Tests
                 }
             }
         }
+
+        [Fact]
+        public void DifferentAlignmentsAtCorners()
+        {
+            Name = nameof(DifferentAlignmentsAtCorners);
+            var a = new ThickenedPolyline(new Line((0, 0), (10, 0)), 0.5, 0.5);
+            var b = new ThickenedPolyline(new Line((10, 0), (9.9, 10)), 1, 0);
+            var c = new ThickenedPolyline(new Line((9.9, 10), (0, 10)), 0.5, 0.5);
+            var d = new ThickenedPolyline(new Line((0, 10), (0, 0)), 0.5, 0.5);
+            var abcd = new[] { a, b, c, d };
+            var polygons = ThickenedPolyline.GetPolygons(abcd);
+            Model.AddElements(polygons.Select(p => new ModelCurve(p.offsetPolygon, BuiltInMaterials.YAxis)));
+            Model.AddElements(abcd.Select(p => new ModelCurve(p.Polyline, BuiltInMaterials.XAxis, new Transform(0, 0, 0.1))));
+        }
     }
 }

@@ -171,7 +171,7 @@ namespace Elements.Geometry
                     var edgeLength = edgeVector.Length();
                     offsetVertexMap[edge.OtherPointIndex] = new Vector3[3];
                     offsetVertexMap[edge.OtherPointIndex][1] = position;
-                    return (edge, edgeVector, edgeAngle, edgeLength);
+                    return new { edge, edgeVector, edgeAngle, edgeLength };
                 }).OrderBy((edge) => edge.edgeAngle).ToArray();
 
                 // for each edge in the sorted set, find the next edge, and compute the
@@ -239,13 +239,21 @@ namespace Elements.Geometry
                             var squareEndLeft = leftOffsetLine.Start + awayDir.Unitized() * -1 * nextOffsetDist;
                             var squareEndRight = rightOffsetLine.Start + nextAwayDir.Unitized() * -1 * nextOffsetDist;
                             var newInt = (squareEndLeft + squareEndRight) * 0.5;
-                            offsetVertexMap[edge.edge.OtherPointIndex][0] = squareEndLeft;
-                            offsetVertexMap[edge.edge.OtherPointIndex][1] = newInt;
-                            offsetVertexMap[nextEdge.edge.OtherPointIndex][1] = newInt;
-                            offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = squareEndRight;
+                            if (newInt.DistanceTo(position) > intersection.DistanceTo(position))
+                            {
+                                offsetVertexMap[edge.edge.OtherPointIndex][0] = intersection;
+                                offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = intersection;
+                            }
+                            else
+                            {
+                                offsetVertexMap[edge.edge.OtherPointIndex][0] = squareEndLeft;
+                                offsetVertexMap[edge.edge.OtherPointIndex][1] = newInt;
+                                offsetVertexMap[nextEdge.edge.OtherPointIndex][1] = newInt;
+                                offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = squareEndRight;
+                            }
                         }
                         else if (Math.Abs(180 - angleDiff) < parallelThreshold && intersection.DistanceTo(position) > maxLength)
-                        { 
+                        {
                             // angle is nearly parallel. Use the perpendicular offset points.
                             offsetVertexMap[edge.edge.OtherPointIndex][0] = leftOffsetLine.Start;
                             offsetVertexMap[nextEdge.edge.OtherPointIndex][2] = rightOffsetLine.Start;
