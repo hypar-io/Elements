@@ -49,7 +49,7 @@ namespace Elements
             Material = new Material("Door material", Colors.White);
             Transform = GetDoorTransform(currentPosition, wallLine, flip);
             Representation = new Representation(new List<SolidOperation>() { });
-            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform(wallLine.Direction()));
+            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
         }
 
         public Door(Wall wall,
@@ -69,7 +69,7 @@ namespace Elements
             ClearWidth = WidthWithoutFrame(width, openingSide);
             Material = new Material("Door material", Colors.White);
             Representation = new Representation(new List<SolidOperation>() { });
-            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform(transform.XAxis));
+            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
             OriginalPosition = Transform.Origin;
         }
 
@@ -97,10 +97,10 @@ namespace Elements
         {
         }
 
-        private Transform GetOpeningTransform(Vector3 xAxis)
+        private Transform GetOpeningTransform()
         {
             var halfHeightDir = 0.5 * (ClearHeight + DOOR_FRAME_THICKNESS) * Vector3.ZAxis;
-            var openingTransform = new Transform(Transform.Origin + halfHeightDir, xAxis, xAxis.Cross(Vector3.ZAxis));
+            var openingTransform = new Transform(Transform.Origin + halfHeightDir, Transform.XAxis, Transform.XAxis.Cross(Vector3.ZAxis));
             return openingTransform;
         }
 
