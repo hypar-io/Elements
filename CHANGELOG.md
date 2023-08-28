@@ -5,6 +5,7 @@
 ### Fixed
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+- Code generation supports `Vector3?` and `Color?` types.
 
 ## 2.0.0
 
