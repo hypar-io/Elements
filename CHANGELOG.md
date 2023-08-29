@@ -2,6 +2,9 @@
 
 ## 2.0.1
 
+### Added
+- `Elements.Geometry.ThickenedPolyline`
+
 ### Fixed
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
