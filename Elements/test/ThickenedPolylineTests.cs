@@ -2,9 +2,6 @@ using Elements.Tests;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using Elements.Geometry;
-using Xunit.Sdk;
-using System;
 
 namespace Elements.Geometry.Tests
 {
@@ -127,13 +124,15 @@ namespace Elements.Geometry.Tests
             var tp4 = new ThickenedPolyline(new Polyline((0, 0, 0), (10, 0, 0), (0, 10, 0)), 0.5, 0.5);
             pgon = tp4.GetPolygons();
             Assert.Equal(2, pgon.Count);
-            var expectedVertices4 = new Vector3[] { (-0.35355339, 9.64644660), (0.35355339, 10.35355339), (11.20710678, -0.5), (8.7928932, 0.5), (0, -0.5), (0, 0.5) };
+            var expectedVertices4 = new Vector3[] { (0, 0.5), (0, 0), (0, -0.5), (10.5, -0.5), (10.603553, -0.25), (8.792893, 0.5), (8.792893, 0.5), (10.603553, -0.25), (10.707107, 0), (0.353553, 10.353553), (0, 10), (-0.353553, 9.646447) };
+            Assert.True(containsExpectedVertices(expectedVertices4, pgon.SelectMany(p => p.offsetPolygon.Vertices)));
 
             // Acute Angle with cap
             var tp5 = new ThickenedPolyline(new Polyline((0, 0, 0), (10, 0, 0), (0, 3, 0)), 0.5, 0.5);
             pgon = tp5.GetPolygons();
             Assert.Equal(2, pgon.Count);
-            var expectedVertices5 = new Vector3[] { (0, 0.5), (0, 0), (0, -0.5), (10.5, -0.5), (10.5613, -0.0824), (6.5933, 0.5), (6.5933, 0.5), (10.5613, -0.0824), (10.6226, 0.3352), (0.1437, 3.4789), (0, 3), (-0.1437, 2.5211) };
+            var expectedVertices5 = new Vector3[] { (0, 0.5), (0, 0), (0, -0.5), (10.5, -0.5), (10.561294, -0.08238), (6.593282, 0.5), (6.593282, 0.5), (10.561294, -0.08238), (10.622587, 0.335239), (0.143674, 3.478913), (0, 3), (-0.143674, 2.521087) };
+            Assert.True(containsExpectedVertices(expectedVertices5, pgon.SelectMany(p => p.offsetPolygon.Vertices)));
         }
     }
 }
