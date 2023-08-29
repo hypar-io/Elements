@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Elements.Geometry;
+using Xunit.Sdk;
+using System;
 
 namespace Elements.Geometry.Tests
 {
@@ -87,6 +89,51 @@ namespace Elements.Geometry.Tests
             var polygons = ThickenedPolyline.GetPolygons(abcd);
             Model.AddElements(polygons.Select(p => new ModelCurve(p.offsetPolygon, BuiltInMaterials.YAxis)));
             Model.AddElements(abcd.Select(p => new ModelCurve(p.Polyline, BuiltInMaterials.XAxis, new Transform(0, 0, 0.1))));
+        }
+
+        [Fact]
+        public void TestCorners()
+        {
+            var containsExpectedVertices = (Vector3[] expectedVertices, IEnumerable<Vector3> v) =>
+            {
+                // We want to make sure that all the vertices we expect are
+                // present in v. We don't care about cases where there are
+                // vertices in v that are not in expected vertices.
+                return expectedVertices.All(ev => v.Any(vv => vv.IsAlmostEqualTo(ev)));
+            };
+
+            // Single Line
+            var tp1 = new ThickenedPolyline(new Line((0, 0, 0), (10, 0, 0)), 0.5, 0.5);
+            var pgon = tp1.GetPolygons();
+            Assert.Equal(1, pgon.Count);
+            var expectedVertices = new Vector3[] { (0, 0.5), (10, 0.5), (10, -0.5), (0, -0.5) };
+            Assert.True(containsExpectedVertices(expectedVertices, pgon[0].offsetPolygon.Vertices));
+
+            // 90 degree L
+            var tp2 = new ThickenedPolyline(new Polyline((0, 0, 0), (10, 0, 0), (10, 10, 0)), 0.5, 0.5);
+            pgon = tp2.GetPolygons();
+            Assert.Equal(2, pgon.Count);
+            var expectedVertices2 = new Vector3[] { (9.5, 10.0), (10.5, 10.0), (9.5, 0.5), (10.5, -0.5), (0.0, -0.5), (0.0, 0.5) };
+            Assert.True(containsExpectedVertices(expectedVertices2, pgon.SelectMany(p => p.offsetPolygon.Vertices)));
+
+            // 90 degree L with different thicknesses
+            var tps3 = new[] { new ThickenedPolyline(new Line((0, 0), (10, 0)), 0.5, 0.5), new ThickenedPolyline(new Line((10, 0), (10, 10)), 1, 1) };
+            pgon = ThickenedPolyline.GetPolygons(tps3);
+            Assert.Equal(2, pgon.Count);
+            var expectedVertices3 = new Vector3[] { (11.0, 10.0), (9.0, 10.0), (11.0, -0.5), (9.0, 0.5), (0.0, -0.5), (0.0, 0.5) };
+            Assert.True(containsExpectedVertices(expectedVertices3, pgon.SelectMany(p => p.offsetPolygon.Vertices)));
+
+            // Acute Angle with no cap
+            var tp4 = new ThickenedPolyline(new Polyline((0, 0, 0), (10, 0, 0), (0, 10, 0)), 0.5, 0.5);
+            pgon = tp4.GetPolygons();
+            Assert.Equal(2, pgon.Count);
+            var expectedVertices4 = new Vector3[] { (-0.35355339, 9.64644660), (0.35355339, 10.35355339), (11.20710678, -0.5), (8.7928932, 0.5), (0, -0.5), (0, 0.5) };
+
+            // Acute Angle with cap
+            var tp5 = new ThickenedPolyline(new Polyline((0, 0, 0), (10, 0, 0), (0, 3, 0)), 0.5, 0.5);
+            pgon = tp5.GetPolygons();
+            Assert.Equal(2, pgon.Count);
+            var expectedVertices5 = new Vector3[] { (0, 0.5), (0, 0), (0, -0.5), (10.5, -0.5), (10.5613, -0.0824), (6.5933, 0.5), (6.5933, 0.5), (10.5613, -0.0824), (10.6226, 0.3352), (0.1437, 3.4789), (0, 3), (-0.1437, 2.5211) };
         }
     }
 }
