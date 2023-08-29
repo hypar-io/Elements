@@ -1,5 +1,6 @@
 using Elements.Analysis;
 using Elements.Geometry;
+using Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters;
 using IFC;
 using STEP;
 using System;

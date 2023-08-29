@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Elements;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using IFC;
 
-namespace Elements.Serialization.IFC
+namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
 {
     /// <summary>
     /// Extension methods for converting IFC entities to elements.
@@ -246,7 +245,7 @@ namespace Elements.Serialization.IFC
 
         internal static DoorOpeningSide GetDoorOpeningSide(this IfcDoor ifcDoor)
         {
-            switch(ifcDoor.OperationType)
+            switch (ifcDoor.OperationType)
             {
                 case IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT:
                 case IfcDoorTypeOperationEnum.DOUBLE_SWING_LEFT:
@@ -421,7 +420,7 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static IEnumerable<T> RepresentationsOfType<T>(this IfcProduct product) where T : IfcGeometricRepresentationItem
+        internal static IEnumerable<T> RepresentationsOfType<T>(this IfcProduct product) where T : IfcGeometricRepresentationItem
         {
             var reps = product.Representation.Representations.SelectMany(r => r.Items);
             if (reps.Any())
@@ -465,7 +464,7 @@ namespace Elements.Serialization.IFC
         //     return ifcOpening;
         // }
 
-        private static ICurve ToCurve(this IfcProfileDef profile)
+        internal static ICurve ToCurve(this IfcProfileDef profile)
         {
             if (profile is IfcCircleProfileDef cpd)
             {
@@ -496,7 +495,7 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static ICurve ToCurve(this IfcParameterizedProfileDef profile)
+        internal static ICurve ToCurve(this IfcParameterizedProfileDef profile)
         {
             if (profile is IfcRectangleProfileDef rect)
             {
@@ -514,17 +513,17 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static ICurve ToCurve(this IfcArbitraryOpenProfileDef profile)
+        internal static ICurve ToCurve(this IfcArbitraryOpenProfileDef profile)
         {
             return profile.Curve.ToCurve(false);
         }
 
-        private static ICurve ToCurve(this IfcArbitraryClosedProfileDef profile)
+        internal static ICurve ToCurve(this IfcArbitraryClosedProfileDef profile)
         {
             return profile.OuterCurve.ToCurve(true);
         }
 
-        private static ICurve ToCurve(this IfcCurve curve, bool closed)
+        internal static ICurve ToCurve(this IfcCurve curve, bool closed)
         {
             if (curve is IfcBoundedCurve)
             {
@@ -567,12 +566,12 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static Vector3 ToVector3(this IfcCartesianPoint cartesianPoint)
+        internal static Vector3 ToVector3(this IfcCartesianPoint cartesianPoint)
         {
             return cartesianPoint.Coordinates.ToVector3();
         }
 
-        private static Vector3 ToVector3(this List<IfcLengthMeasure> measures)
+        internal static Vector3 ToVector3(this List<IfcLengthMeasure> measures)
         {
             if (measures.Count == 2)
             {
@@ -588,7 +587,7 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static Polygon ToPolygon(this IfcPolyline polyline, bool dropLastPoint = false)
+        internal static Polygon ToPolygon(this IfcPolyline polyline, bool dropLastPoint = false)
         {
             var count = dropLastPoint ? polyline.Points.Count - 1 : polyline.Points.Count;
             var verts = new Vector3[count];
@@ -600,20 +599,20 @@ namespace Elements.Serialization.IFC
             return new Polygon(verts);
         }
 
-        private static Polyline ToPolyline(this IfcPolyline polyline)
+        internal static Polyline ToPolyline(this IfcPolyline polyline)
         {
             var verts = polyline.Points.Select(p => p.ToVector3()).ToArray();
             return new Polyline(verts);
         }
 
-        private static bool IsClosed(this IfcPolyline pline)
+        internal static bool IsClosed(this IfcPolyline pline)
         {
             var start = pline.Points[0];
             var end = pline.Points[pline.Points.Count - 1];
             return start.Equals(end);
         }
 
-        private static bool Equals(this IfcCartesianPoint point, IfcCartesianPoint other)
+        internal static bool Equals(this IfcCartesianPoint point, IfcCartesianPoint other)
         {
             for (var i = 0; i < point.Coordinates.Count; i++)
             {
@@ -624,7 +623,7 @@ namespace Elements.Serialization.IFC
             }
             return true;
         }
-        private static Transform ToTransform(this IfcAxis2Placement3D cs)
+        internal static Transform ToTransform(this IfcAxis2Placement3D cs)
         {
             var x = cs.RefDirection != null ? cs.RefDirection.ToVector3() : Vector3.XAxis;
             var z = cs.Axis != null ? cs.Axis.ToVector3() : Vector3.ZAxis;
@@ -634,7 +633,7 @@ namespace Elements.Serialization.IFC
             return t;
         }
 
-        private static Transform ToTransform(this IfcAxis2Placement2D cs)
+        internal static Transform ToTransform(this IfcAxis2Placement2D cs)
         {
             var d = cs.RefDirection.ToVector3();
             var z = Vector3.ZAxis;
@@ -642,13 +641,13 @@ namespace Elements.Serialization.IFC
             return new Transform(o, d, z);
         }
 
-        private static Vector3 ToVector3(this IfcDirection direction)
+        internal static Vector3 ToVector3(this IfcDirection direction)
         {
             var ratios = direction.DirectionRatios;
             return new Vector3(ratios[0], ratios[1], ratios[2]);
         }
 
-        private static Transform ToTransform(this IfcAxis2Placement placement)
+        internal static Transform ToTransform(this IfcAxis2Placement placement)
         {
             // SELECT IfcAxis2Placement3d, IfcAxis2Placement2d
             if (placement.Choice.GetType() == typeof(IfcAxis2Placement2D))
@@ -668,7 +667,7 @@ namespace Elements.Serialization.IFC
             }
         }
 
-        private static Transform ToTransform(this IfcLocalPlacement placement)
+        internal static Transform ToTransform(this IfcLocalPlacement placement)
         {
             var t = placement.RelativePlacement.ToTransform();
             if (placement.PlacementRelTo != null)
@@ -679,7 +678,7 @@ namespace Elements.Serialization.IFC
             return t;
         }
 
-        private static Transform ToTransform(this IfcObjectPlacement placement)
+        internal static Transform ToTransform(this IfcObjectPlacement placement)
         {
             if (placement.GetType() == typeof(IfcLocalPlacement))
             {
@@ -694,7 +693,7 @@ namespace Elements.Serialization.IFC
             return null;
         }
 
-        private static Polygon ToPolygon(this List<IfcCartesianPoint> loop)
+        internal static Polygon ToPolygon(this List<IfcCartesianPoint> loop)
         {
             var verts = new Vector3[loop.Count];
             for (var i = 0; i < loop.Count; i++)
@@ -704,7 +703,7 @@ namespace Elements.Serialization.IFC
             return new Polygon(verts);
         }
 
-        private static Loop ToLoop(this List<IfcCartesianPoint> loop, Solid solid)
+        internal static Loop ToLoop(this List<IfcCartesianPoint> loop, Solid solid)
         {
             var hes = new HalfEdge[loop.Count];
             for (var i = 0; i < loop.Count; i++)
@@ -716,7 +715,7 @@ namespace Elements.Serialization.IFC
             return newLoop;
         }
 
-        private static Polygon ToPolygon(this IfcPolyLoop loop)
+        internal static Polygon ToPolygon(this IfcPolyLoop loop)
         {
             return loop.Polygon.ToPolygon();
         }
