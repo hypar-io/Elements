@@ -27,6 +27,13 @@ namespace Hypar.Tests
             Assert.Contains(new Vector3(1.5, 4.769696, 0), results);
             Assert.Contains(new Vector3(1.5, -4.769696, 0), results);
 
+            // Planar intersecting circles with opposite normals
+            c1 = new Circle(new Transform(new Vector3(8, 0, 0), Vector3.ZAxis.Negate()), 5);
+            Assert.True(c0.Intersects(c1, out results));
+            Assert.Equal(2, results.Count());
+            Assert.Contains(new Vector3(4, 3, 0), results);
+            Assert.Contains(new Vector3(4, -3, 0), results);
+
             // Planar touching circles
             c1 = new Circle(new Vector3(8, 0, 0), 3);
             Assert.True(c0.Intersects(c1, out results));

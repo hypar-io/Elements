@@ -316,7 +316,7 @@ namespace Elements.Geometry
             Plane planeB = new Plane(circle.Center, circle.Normal);
 
             // Check if circle and ellipse are on the same plane. 
-            if (Normal.IsAlmostEqualTo(circle.Normal) &&
+            if (Normal.IsParallelTo(circle.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 circle.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {
                 // Circle and Ellipse are the same.
@@ -381,7 +381,7 @@ namespace Elements.Geometry
             Plane planeB = new Plane(other.Center, other.Normal);
 
             // Check if circle and ellipse are on the same plane. 
-            if (Normal.IsAlmostEqualTo(other.Normal) &&
+            if (Normal.IsParallelTo(other.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {
                 // Ellipses are the same.

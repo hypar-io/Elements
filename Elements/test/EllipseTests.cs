@@ -60,9 +60,9 @@ namespace Hypar.Tests
             Assert.True(ellipse.Intersects(circle, out var results));
             Assert.Equal(4, results.Count());
 
-            // Planar intersection 3 intersections.
+            // Planar intersection 3 intersections and negative normals.
             ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
-            circle = new Circle(new Vector3(-2, 1, 0), 5);
+            circle = new Circle(new Transform(new Vector3(-2, 1, 0), Vector3.ZAxis.Negate()), 5);
             Assert.True(ellipse.Intersects(circle, out results));
             Assert.Equal(3, results.Count());
 
@@ -130,9 +130,9 @@ namespace Hypar.Tests
             Assert.True(ellipse.Intersects(other, out var results));
             Assert.Equal(4, results.Count());
 
-            // Planar intersection 3 intersections.
+            // Planar intersection 3 intersections and negative normals.
             ellipse = new Ellipse(new Vector3(1, 1), 2, 6);
-            other = new Ellipse(new Vector3(-2, 1, 0), 5, 2);
+            other = new Ellipse(new Transform(new Vector3(-2, 1, 0), Vector3.ZAxis.Negate()), 5, 2);
             Assert.True(ellipse.Intersects(other, out results));
             Assert.Equal(3, results.Count());
 

@@ -220,7 +220,7 @@ namespace Elements.Geometry
             Plane planeB = new Plane(other.Center, other.Normal);
 
             // Check if two circles are on the same plane. 
-            if (Normal.IsAlmostEqualTo(other.Normal) &&
+            if (Normal.IsParallelTo(other.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {
                 var delta = other.Center - Center;
