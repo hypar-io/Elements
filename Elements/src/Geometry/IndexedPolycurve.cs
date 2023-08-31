@@ -1,8 +1,10 @@
+using Elements.Geometry.Interfaces;
 using Elements.Validators;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -524,6 +526,27 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <inheritdoc/>
+        public override bool Intersects(ICurve curve, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            foreach (var segment in _curves)
+            {
+                if (segment.Intersects(curve, out var intersections))
+                {
+                    foreach (var item in intersections)
+                    {
+                        if (!results.Any() || 
+                            !results.First().IsAlmostEqualTo(item) && !results.Last().IsAlmostEqualTo(item))
+                        {
+                            results.Add(item);
+                        }
+                    }
+                }
+            }
+            return results.Any();
         }
 
         /// <summary>

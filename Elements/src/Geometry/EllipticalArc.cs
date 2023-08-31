@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
@@ -188,6 +189,22 @@ namespace Elements.Geometry
 
             this.BasisCurve.ArcLengthUntil(start, this.Domain.Max, distance, out var end);
             return end;
+        }
+
+        /// <inheritdoc/>
+        public override bool PointOnDomain(Vector3 point)
+        {
+            if (!BasisCurve.ParameterAt(point, out var parameter))
+            {
+                return false;
+            }
+
+            (double min, double max) = Domain.Max < Domain.Min ?
+                (Domain.Max, Domain.Min) : (Domain.Min, Domain.Max);
+
+            parameter = Units.AdjustRadian(parameter, min);
+            return parameter - min > -Vector3.EPSILON * Vector3.EPSILON &&
+                   parameter - max < Vector3.EPSILON * Vector3.EPSILON;
         }
     }
 }
