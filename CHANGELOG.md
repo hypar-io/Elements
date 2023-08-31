@@ -39,10 +39,12 @@
 `Bezier.Intersects(Circle circle, out List<Vector3> results)`
 `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
 `Bezier.Intersects(Bezier other, out List<Vector3> results)`
+- `Elements.Geometry.ThickenedPolyline`
 
 ### Fixed
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+- Code generation supports `Vector3?` and `Color?` types.
 
 ## 2.0.0
 

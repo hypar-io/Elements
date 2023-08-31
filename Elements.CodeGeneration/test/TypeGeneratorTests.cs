@@ -175,7 +175,21 @@ namespace Elements.Tests
             await TypeGenerator.GenerateUserElementTypesFromUrisAsync(new[] { relEmbeddedSchemaTestPath, relEmbeddedSchemaTestPath2, "https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadePanel.json" }, tmpPath);
             // Ensure that there is only one beam.g.cs in the output.
             Assert.Equal(3, Directory.GetFiles(tmpPath, "*.g.cs").Length);
+        }
 
+        [Fact]
+        public async Task CodeGenerationOfNullableVectorAndColorProperties()
+        {
+            var schemaPath = "../../TestData/NullableAndNonNullableTypesSchema.json";
+
+            var tmpPath = Path.GetTempPath();            
+            var relPath = Path.GetRelativePath(Assembly.GetExecutingAssembly().Location, schemaPath);
+            await TypeGenerator.GenerateUserElementTypeFromUriAsync(relPath, tmpPath);
+            var code = File.ReadAllText(Path.Combine(tmpPath, "NullableAndNonNullableTypes.g.cs"));
+            Assert.Contains("public Vector3 NonNullableVector", code);
+            Assert.Contains("public Vector3? NullableVector", code);
+            Assert.Contains("public Color NonNullableColor", code);
+            Assert.Contains("public Color? NullableColor", code);
         }
 
         [Fact]
