@@ -652,6 +652,8 @@ namespace Elements.Geometry.Tests
             );
             lines = p1.IntersectionLines(p2);
             Assert.Empty(lines);
+            lines = p1.IntersectionLines(p2, true);
+            Assert.Empty(lines);
 
             // Touching polygons non parallel planes
             p2 = new Polygon
