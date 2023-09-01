@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
+using System.Linq;
 
 namespace Elements.IFC.Tests
 {
@@ -27,16 +28,44 @@ namespace Elements.IFC.Tests
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc")]
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc")]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 2114, 120, 450, 270, 170, 140, 10)]
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 994, 5, 364, 111, 77, 82, 0)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
-        public void IFC4(string name, string ifcPath)
+        public void FromIFC4(string name,
+                         string ifcPath,
+                         int expectedElementsCount,
+                         int expectedCountOfFloors,
+                         int expectedCountOfOpenings,
+                         int expectedCountOfWalls,
+                         int expectedCountOfDoors,
+                         int expectedCountOfSpaces,
+                         int expectedCountOfBeams)
         {
             var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors);
+            
+            int countOfFloors = model.AllElementsOfType<Floor>().Count();
+            int countOfOpenings = model.AllElementsOfType<Opening>().Count();
+            int countOfWalls = model.AllElementsOfType<Wall>().Count();
+            int countOfDoors = model.AllElementsOfType<Door>().Count();
+            int countOfSpaces = model.AllElementsOfType<Space>().Count();
+            int countOfBeams = model.AllElementsOfType<Beam>().Count();
+
+            Assert.Equal(expectedElementsCount, model.Elements.Count);
+
+            Assert.Equal(countOfFloors, expectedCountOfFloors);
+            Assert.Equal(countOfOpenings, expectedCountOfOpenings);
+            Assert.Equal(countOfWalls, expectedCountOfWalls);
+            Assert.Equal(countOfDoors, expectedCountOfDoors);
+            Assert.Equal(countOfSpaces, expectedCountOfSpaces);
+            Assert.Equal(countOfBeams, expectedCountOfBeams);
+
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
             }
+
+            Assert.Empty(ctorErrors);
+
             model.ToGlTF(ConstructGlbPath(name));
         }
 
