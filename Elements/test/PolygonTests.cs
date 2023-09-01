@@ -541,6 +541,137 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void IntersectionLines()
+        {
+            // Two complex shapes
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, -1),
+                    new Vector3(2, -1),
+                    new Vector3(2, 1),
+                    new Vector3(5, 1),
+                    new Vector3(5, -1),
+                    new Vector3(8, -1),
+                    new Vector3(8, 1),
+                    new Vector3(12, 1),
+                    new Vector3(12, -1),
+                    new Vector3(17, -1),
+                    new Vector3(17, 1),
+                    new Vector3(19, 1),
+                    new Vector3(19, -1),
+                    new Vector3(24, -1),
+                    new Vector3(24, 3),
+                    new Vector3(0, 3)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 0, -1),
+                    new Vector3(6, 0, -1),
+                    new Vector3(6, 0, 1),
+                    new Vector3(9, 0, 1),
+                    new Vector3(9, 0, -1),
+                    new Vector3(11, 0, -1),
+                    new Vector3(11, 0, 1),
+                    new Vector3(13, 0, 1),
+                    new Vector3(13, 0, -1),
+                    new Vector3(16, 0, -1),
+                    new Vector3(16, 0, 1),
+                    new Vector3(18, 0, 1),
+                    new Vector3(18, 0, -1),
+                    new Vector3(21, 0, -1),
+                    new Vector3(21, 0, 1),
+                    new Vector3(22, 0, 1),
+                    new Vector3(22, 0, -1),
+                    new Vector3(26, 0, -1),
+                    new Vector3(26, 0, 3),
+                    new Vector3(1, 0, 3)
+                }
+            );
+
+            var lines = p1.IntersectionLines(p2);
+            Assert.Equal(5, lines.Count());
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((1, 0), (2, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((5, 0), (6, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((13, 0), (16, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((19, 0), (21, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((22, 0), (24, 0)), false));
+
+            // Overlapping polygons on the same plane
+            p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(2, 0),
+                    new Vector3(2, 2),
+                    new Vector3(0, 2)
+                }
+            );
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 1),
+                    new Vector3(3, 1),
+                    new Vector3(3, 3),
+                    new Vector3(1, 3)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+
+            // Polygons on parallel planes
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(2, 0, 2),
+                    new Vector3(2, 2, 2),
+                    new Vector3(4, 2, 2),
+                    new Vector3(4, 0, 2)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+
+            // Touching polygons on the same plane
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(2, 0),
+                    new Vector3(2, 2),
+                    new Vector3(4, 2),
+                    new Vector3(4, 0)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+
+            // Touching polygons non parallel planes
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(2, 0),
+                    new Vector3(2, 2),
+                    new Vector3(2, 2, 2),
+                    new Vector3(2, 0, 2)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+            lines = p1.IntersectionLines(p2, true);
+            Assert.Single(lines);
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((2, 0), (2, 2)), false));
+        }
+
+        [Fact]
         public void Offset()
         {
             var a = new Vector3();

@@ -1723,6 +1723,74 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find all intersection lines between two polygons that are not on the same plane.
+        /// </summary>
+        /// <param name="polygon">The intersecting polygon.</param>
+        /// <param name="includeIntersectionAtEdge">Include intersection at edge of one or both polygons.</param>
+        /// <returns>A list of the segment(s) what are inside both polygons.</returns>
+        public List<Line> IntersectionLines(Polygon polygon, bool includeIntersectionAtEdge = false)
+        {
+            var lines = new List<Line>();
+            if (!Plane().Intersects(polygon.Plane(), out InfiniteLine intersectionLine))
+            {
+                return lines;
+            }
+
+            var tempLine = new Line(intersectionLine.Origin, intersectionLine.Origin + intersectionLine.Direction);
+            var insideSegmentsLeft = tempLine.Trim(this, out _, includeIntersectionAtEdge, true);
+            if (!insideSegmentsLeft.Any())
+            {
+                return lines;
+            }
+
+            var insideSegmentsRight = tempLine.Trim(polygon, out _, includeIntersectionAtEdge, true);
+            if (!insideSegmentsRight.Any())
+            {
+                return lines;
+            }
+
+            int left = 0;
+            int right = 0;
+            // Trim produced ordered lines. Both lists have segments on the same infinite line.
+            // Iterate though both lists and find overlapping line segments that belong to both Polygons.
+            while (left < insideSegmentsLeft.Count && right < insideSegmentsRight.Count)
+            {
+                intersectionLine.ParameterAt(insideSegmentsLeft[left].Start, out var p0min);
+                intersectionLine.ParameterAt(insideSegmentsRight[right].End, out var p1max);
+                if (p1max < p0min)
+                {
+                    right++;
+                    continue;
+                }
+
+                intersectionLine.ParameterAt(insideSegmentsLeft[left].End, out var p0max);
+                intersectionLine.ParameterAt(insideSegmentsRight[right].Start, out var p1min);
+                if (p0max < p1min)
+                {
+                    left++;
+                    continue;
+                }
+
+                bool leftStart = p0min > p1min;
+                bool leftEnd = p1max > p0max;
+                var start = leftStart ? insideSegmentsLeft[left].Start : insideSegmentsRight[right].Start;
+                var end = leftEnd ? insideSegmentsLeft[left].End : insideSegmentsRight[right].End;
+                lines.Add(new Line(start, end));
+
+                if (leftEnd)
+                {
+                    left++;
+                }
+                else
+                {
+                    right++;
+                }
+            }
+
+            return lines;
+        }
+
+        /// <summary>
         /// Offset this polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
