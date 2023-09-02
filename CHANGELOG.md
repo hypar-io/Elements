@@ -22,6 +22,7 @@
 - `Topography.Trimmed`
 - `new Topography(Topography other)`
 - `Topography.TopMesh()`
+- `UpdateElementRepresentations` flag to all serialization methods
 
 ### Changed
 
