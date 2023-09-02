@@ -896,9 +896,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGlb(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGlb(Model model, string path, bool updateElementsRepresentations, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out errors, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, updateElementsRepresentations, out var buffers, out errors, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return false;
@@ -912,9 +912,9 @@ namespace Elements.Serialization.glTF
         }
 
         /// <returns>Whether a Glb was successfully saved. False indicates that there was no geometry to save.</returns>
-        private static bool SaveGltf(Model model, string path, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
+        private static bool SaveGltf(Model model, string path, bool updateElementsRepresentations, out List<BaseError> errors, bool drawEdges = false, bool mergeVertices = false)
         {
-            var gltf = InitializeGlTF(model, out List<byte[]> buffers, out errors, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, updateElementsRepresentations, out List<byte[]> buffers, out errors, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return false;
@@ -933,6 +933,7 @@ namespace Elements.Serialization.glTF
         public static bool UseReferencedContentExtension { get; set; } = false;
 
         internal static Gltf InitializeGlTF(Model model,
+                                            bool updateElementsRepresentations,
                                             out List<byte[]> allBuffers,
                                             out List<BaseError> errors,
                                             bool drawEdges = false,
@@ -1077,6 +1078,7 @@ namespace Elements.Serialization.glTF
                                             meshTransformMap,
                                             currLines,
                                             drawEdges,
+                                            updateElementsRepresentations,
                                             mergeVertices);
                 }
                 catch (Exception ex)
@@ -1182,6 +1184,7 @@ namespace Elements.Serialization.glTF
                                                     Dictionary<Guid, Transform> meshTransformMap,
                                                     List<Vector3> lines,
                                                     bool drawEdges,
+                                                    bool updateElementRepresentations,
                                                     bool mergeVertices = false)
         {
             var materialId = BuiltInMaterials.Default.Id.ToString();
@@ -1253,6 +1256,7 @@ namespace Elements.Serialization.glTF
                                                                 materialId,
                                                                 ref meshId,
                                                                 content,
+                                                                updateElementRepresentations,
                                                                 out int _);
                         if (!meshElementMap.ContainsKey(e.Id))
                         {
@@ -1275,6 +1279,7 @@ namespace Elements.Serialization.glTF
                                                             materialId,
                                                             ref meshId,
                                                             geometricElement,
+                                                            updateElementRepresentations,
                                                             out int nodeId);
                     if (meshId > -1 && !meshElementMap.ContainsKey(e.Id))
                     {
@@ -1519,9 +1524,14 @@ namespace Elements.Serialization.glTF
                                                            string materialId,
                                                            ref int meshId,
                                                            GeometricElement geometricElement,
+                                                           bool updateRepresentations,
                                                            out int nodeId)
         {
-            geometricElement.UpdateRepresentations();
+            if (updateRepresentations)
+            {
+                geometricElement.UpdateRepresentations();
+            }
+
             geometricElement.UpdateBoundsAndComputeSolid();
             nodeId = -1;
             // TODO: Remove this when we get rid of UpdateRepresentation.

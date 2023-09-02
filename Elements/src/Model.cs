@@ -94,7 +94,8 @@ namespace Elements
         /// <param name="element">The element to add to the model.</param>
         /// <param name="gatherSubElements">Should sub-elements in properties be
         /// added to the model's elements collection?</param>
-        public void AddElement(Element element, bool gatherSubElements = true)
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for the element.</param>
+        public void AddElement(Element element, bool gatherSubElements = true, bool updateElementRepresentations = true)
         {
             if (element == null || this.Elements.ContainsKey(element.Id))
             {
@@ -109,7 +110,7 @@ namespace Elements
             // when all internal types have been updated to not create elements
             // during UpdateRepresentation. This is now possible because
             // geometry operations are reactive to changes in their properties.
-            if (element is GeometricElement geo)
+            if (updateElementRepresentations && element is GeometricElement geo)
             {
                 geo.UpdateRepresentations();
             }
@@ -221,9 +222,10 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        public string ToJson(bool indent = false, bool gatherSubElements = true)
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public string ToJson(bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
         {
-            var exportModel = CreateExportModel(gatherSubElements);
+            var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
             return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
         }
@@ -251,9 +253,10 @@ namespace Elements
         /// </summary>
         /// <param name="path">The path of the file on disk.</param>
         /// <param name="gatherSubElements"></param>
-        public void ToJson(string path, bool gatherSubElements = true)
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public void ToJson(string path, bool gatherSubElements = true, bool updateElementsRepresentations = true)
         {
-            var exportModel = CreateExportModel(gatherSubElements);
+            var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
             // Json.net recommends writing to a stream for anything over 85k to avoid a string on the large object heap.
             // https://www.newtonsoft.com/json/help/html/Performance.htm
@@ -365,7 +368,7 @@ namespace Elements
             }
         }
 
-        internal Model CreateExportModel(bool gatherSubElements)
+        internal Model CreateExportModel(bool gatherSubElements, bool updateElementsRepresentations)
         {
             // Recursively add elements and sub elements in the correct
             // order for serialization. We do this here because element properties
@@ -374,7 +377,7 @@ namespace Elements
             var exportModel = new Model();
             foreach (var kvp in this.Elements)
             {
-                exportModel.AddElement(kvp.Value, gatherSubElements);
+                exportModel.AddElement(kvp.Value, gatherSubElements, updateElementsRepresentations);
             }
             exportModel.Transform = this.Transform;
             return exportModel;
