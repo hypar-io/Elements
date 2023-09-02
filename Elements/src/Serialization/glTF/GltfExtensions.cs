@@ -79,14 +79,15 @@ namespace Elements.Serialization.glTF
         /// <param name="errors">A collection of serialization errors</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, out List<BaseError> errors, bool useBinarySerialization = true, bool drawEdges = false)
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public static void ToGlTF(this Model model, string path, out List<BaseError> errors, bool useBinarySerialization = true, bool drawEdges = false, bool updateElementsRepresentations = true)
         {
             errors = new List<BaseError>();
             if (model.Elements.Count > 0)
             {
                 if (useBinarySerialization)
                 {
-                    if (SaveGlb(model, path, out errors, drawEdges))
+                    if (SaveGlb(model, path, updateElementsRepresentations, out errors, drawEdges))
                     {
                         return;
                     }
@@ -94,7 +95,7 @@ namespace Elements.Serialization.glTF
                 }
                 else
                 {
-                    if (SaveGltf(model, path, out errors, drawEdges))
+                    if (SaveGltf(model, path, updateElementsRepresentations, out errors, drawEdges))
                     {
                         return;
                     }
@@ -114,9 +115,10 @@ namespace Elements.Serialization.glTF
         /// <param name="path">The output path.</param>
         /// <param name="useBinarySerialization">Should binary serialization be used?</param>
         /// <param name="drawEdges">Should the solid edges be written to the gltf?</param>
-        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = false)
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public static void ToGlTF(this Model model, string path, bool useBinarySerialization = true, bool drawEdges = false, bool updateElementsRepresentations = true)
         {
-            ToGlTF(model, path, out _, useBinarySerialization, drawEdges);
+            ToGlTF(model, path, out _, useBinarySerialization, drawEdges, updateElementsRepresentations);
         }
 
         /// <summary>
@@ -125,10 +127,11 @@ namespace Elements.Serialization.glTF
         /// <param name="model">The model to serialize.</param>
         /// <param name="drawEdges">Should edges of the model be drawn?</param>
         /// <param name="mergeVertices">Should vertices be merged in the resulting output?</param>
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
         /// <returns>A byte array representing the model.</returns>
-        public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false)
+        public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false, bool updateElementsRepresentations = true)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, updateElementsRepresentations, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return null;
@@ -151,10 +154,11 @@ namespace Elements.Serialization.glTF
         /// <summary>
         /// Serialize the model to a base64 encoded string.
         /// </summary>
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
         /// <returns>A Base64 string representing the model.</returns>
-        public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false)
+        public static string ToBase64String(this Model model, bool drawEdges = false, bool mergeVertices = false, bool updateElementsRepresentations = true)
         {
-            var gltf = InitializeGlTF(model, out var buffers, out _, drawEdges, mergeVertices);
+            var gltf = InitializeGlTF(model, updateElementsRepresentations, out var buffers, out _, drawEdges, mergeVertices);
             if (gltf == null)
             {
                 return "";
@@ -1524,10 +1528,10 @@ namespace Elements.Serialization.glTF
                                                            string materialId,
                                                            ref int meshId,
                                                            GeometricElement geometricElement,
-                                                           bool updateRepresentations,
+                                                           bool updateElementRepresentations,
                                                            out int nodeId)
         {
-            if (updateRepresentations)
+            if (updateElementRepresentations)
             {
                 geometricElement.UpdateRepresentations();
             }
