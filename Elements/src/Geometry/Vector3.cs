@@ -851,6 +851,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get the closest point on the infinite line from this point.
+        /// </summary>
+        /// <param name="line">The infinite line on which to find the closest point.</param>
+        /// <returns>The closest point on the infinite line from this point.</returns>
+        public Vector3 ClosestPointOn(InfiniteLine line)
+        {
+            var v = this - line.Origin;
+            var d = v.Dot(line.Direction);
+            return line.Origin + line.Direction * d;
+        }
+
+
+        /// <summary>
         /// Get the closest point on the line from this point.
         /// </summary>
         /// <param name="line">The line on which to find the closest point.</param>

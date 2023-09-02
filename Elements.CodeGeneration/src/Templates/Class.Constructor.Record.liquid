@@ -8,7 +8,7 @@
 
 {% assign sortedProperties = AllProperties | sort: "Name" -%}
 {% assign sortedParentProperties = parentProperties | sort: "Name" -%}
-
+{% if AllProperties[0] %}
 [JsonConstructor]
 {% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}({% for property in AllProperties -%}{% if skipComma -%}{% assign skipComma = false %}{% else %}, {% endif -%} {{ property.Type }} @{{ property.Name | safeidentifierlower | defaultforelementargument: baseClassName }}{% endfor -%})
 {% assign skipComma = true -%}
@@ -20,6 +20,7 @@
 this.{{property.PropertyName}} = @{{property.Name | safeidentifierlower}};
     {% endfor -%}
 }
+{% endif %}
 
 // Empty constructor
 {% if IsAbstract %}protected{% else %}public{% endif %} {{ClassName}}()

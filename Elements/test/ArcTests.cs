@@ -477,6 +477,124 @@ namespace Hypar.Tests
             TestTransformAtNormalized(polygon);
         }
 
+        [Fact]
+        public void IntersectsInfiniteLine()
+        {
+            var line = new InfiniteLine(Vector3.Origin, Vector3.YAxis);
+
+            // Arc intersects at two points. [0; 360] domain.
+            var arc = new Arc(Vector3.Origin, 2.0, 60, 300);
+            Assert.True(arc.Intersects(line, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 2), intersections);
+            Assert.Contains(new Vector3(0, -2), intersections);
+
+            // Arc touches at one point and intersects at other. [-360; 0] domain.
+            arc = new Arc(Vector3.Origin, 3.0, -90, -300);
+            Assert.True(arc.Intersects(line, out intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 3), intersections);
+            Assert.Contains(new Vector3(0, -3), intersections);
+
+            // Arc intersects at one point. [360; 720] domain.
+            arc = new Arc(Vector3.Origin, 4, 500, 700);
+            Assert.True(arc.Intersects(line, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, -4), intersections);
+
+            // Arc domain doesn't intersect
+            arc = new Arc(Vector3.Origin, 5, -45, 45);
+            Assert.False(arc.Intersects(line, out intersections));
+            arc = new Arc(Vector3.Origin, 5, 100, 260);
+            Assert.False(arc.Intersects(line, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsLine()
+        {
+            var arc = new Arc(Vector3.Origin, 2.0, 300, 60);
+
+            // Arc intersects at two points.
+            var line = new Line(new Vector3(0, -2), new Vector3(0, 5));
+            Assert.True(arc.Intersects(line, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 2), intersections);
+            Assert.Contains(new Vector3(0, -2), intersections);
+
+            // Arc intersects at one point.
+            line = new Line(new Vector3(0, 1), new Vector3(0, 3));
+            Assert.True(arc.Intersects(line, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 2), intersections);
+
+            // Arc intersects at one point.
+            line = new Line(new Vector3(0, 5), new Vector3(0, 3));
+            Assert.False(arc.Intersects(line, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsCircle()
+        {
+            Transform t = new Transform(new Vector3(0, 0, 1), Vector3.XAxis);
+            Circle c = new Circle(t, 5);
+
+            // Arc intersects at two points.
+            var arc = new Arc(new Vector3(1, 0, 0), 5, 90, 270);
+            Assert.True(arc.Intersects(c, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 4.8989795), intersections);
+            Assert.Contains(new Vector3(0, -4.8989795), intersections);
+
+            // Arc intersects at one point.
+            arc = new Arc(new Vector3(1, 0, 0), 5, 0, 180);
+            Assert.True(arc.Intersects(c, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 4.8989795), intersections);
+
+            // Arc doesn't intersect
+            arc = new Arc(new Vector3(1, 0, 0), 5, -80, 80);
+            Assert.False(arc.Intersects(c, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsArc()
+        {
+            Transform t = new Transform(new Vector3(0, 0, 1), Vector3.ZAxis.Negate(), Vector3.XAxis);
+            Arc a0 = new Arc(t, 5, Math.PI / 4, Math.PI * 2 - Math.PI / 4);
+
+            // Arc intersects at two points..
+            var a1 = new Arc(new Vector3(1, 0, 0), 5, 90, 270);
+            Assert.True(a0.Intersects(a1, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 4.8989795), intersections);
+            Assert.Contains(new Vector3(0, -4.8989795), intersections);
+
+            // Arc intersects at one point.
+            a1 = new Arc(new Vector3(1, 0, 0), 5, 120, 270);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, -4.8989795), intersections);
+
+            // Arc doesn't intersect
+            a0 = new Arc(t, 5, Math.PI / 4, Math.PI);
+            Assert.False(a0.Intersects(a1, out intersections));
+
+            // Overlapping arcs
+            a1 = new Arc(t, 5, 0, Math.PI);
+            Assert.False(a0.Intersects(a1, out intersections));
+
+            // Touching overlapping arcs
+            a1 = new Arc(t, 5, Math.PI, Math.PI * 2);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 0, 6), intersections);
+            a1 = new Arc(t, 5, Math.PI, Math.PI * 2 + Math.PI / 4);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 0, 6), intersections);
+            Assert.Contains(new Vector3(0, 3.5355339, -2.5355339), intersections);
+        }
+
         private void TestTransformAtNormalized(BoundedCurve curve)
         {
             Assert.Equal(curve.TransformAt(curve.Domain.Mid()), curve.TransformAtNormalized(0.5));

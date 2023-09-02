@@ -2,6 +2,7 @@ using Elements.Validators;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -524,6 +525,19 @@ namespace Elements.Geometry
             }
 
             return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start);
+        }
+
+        /// <inheritdoc/>
+        public override bool PointOnDomain(Vector3 point)
+        {
+            if (!BasisCurve.ParameterAt(point, out var parameter))
+            {
+                return false;
+            }
+
+            parameter = Units.AdjustRadian(parameter, Domain.Min);
+            return parameter - Domain.Min > -Vector3.EPSILON * Vector3.EPSILON &&
+                   parameter - Domain.Max < Vector3.EPSILON * Vector3.EPSILON;
         }
     }
 }
