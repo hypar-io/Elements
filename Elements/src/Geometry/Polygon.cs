@@ -760,6 +760,7 @@ namespace Elements.Geometry
                 Contains3D(v, out var foundContainment);
                 if (foundContainment == Containment.Outside)
                 {
+                    containment = foundContainment;
                     return false;
                 }
                 if (foundContainment > containment)

@@ -38,5 +38,25 @@ namespace Elements.Tests
             var intersects = a.Intersects(b, c, out Vector3 result);
             Assert.False(intersects);
         }
+
+        [Fact]
+        public void TwoPlanesIntersect()
+        {
+            var a = new Plane(new Vector3(2, 2, 2), Vector3.XAxis);
+            var b = new Plane(new Vector3(0, 0, 0), Vector3.ZAxis);
+            var intersects = a.Intersects(b, out InfiniteLine result);
+            Assert.True(intersects);
+            Assert.True(result.Direction.IsParallelTo(Vector3.YAxis));
+            Assert.True(result.ParameterAt(new Vector3(2, 0, 0), out _));
+        }
+
+        [Fact]
+        public void TwoPlanesDoNotIntersect()
+        {
+            var a = new Plane(new Vector3(2, 2, 2), Vector3.XAxis);
+            var b = new Plane(new Vector3(0, 0, 0), Vector3.XAxis);
+            var intersects = a.Intersects(b, out InfiniteLine result);
+            Assert.False(intersects);
+        }
     }
 }

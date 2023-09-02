@@ -462,6 +462,18 @@ namespace Elements.Geometry
             return results.Any();
         }
 
+        /// <inheritdoc/>
+        public override bool PointOnDomain(Vector3 point)
+        {
+            if (!BasisCurve.ParameterAt(point, out var parameter))
+            {
+                return false;
+            }
+
+            return parameter - Domain.Min > -Vector3.EPSILON * Vector3.EPSILON &&
+                   parameter - Domain.Max < Vector3.EPSILON * Vector3.EPSILON;
+        }
+
         private static bool IsAlmostZero(double a)
         {
             return Math.Abs(a) < Vector3.EPSILON;
