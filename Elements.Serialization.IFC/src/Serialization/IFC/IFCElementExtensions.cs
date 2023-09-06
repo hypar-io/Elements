@@ -227,7 +227,7 @@ namespace Elements.Serialization.IFC
 
             var extrudeDepth = extrude.Height;
             var extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-            var extrudeDirection = Vector3.ZAxis.ToIfcDirection(); ;
+            var extrudeDirection = extrude.Direction.ToIfcDirection(); ;
 
             var solid = new IfcExtrudedAreaSolid(extrudeProfile, position,
                 extrudeDirection, new IfcPositiveLengthMeasure(extrude.Height));
