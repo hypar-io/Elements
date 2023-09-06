@@ -11,9 +11,6 @@
         <PackageProjectUrl>https://github.com/hypar-io/Elements</PackageProjectUrl>
         <RepositoryUrl>https://github.com/hypar-io/Elements</RepositoryUrl>
         <Version>$(Version)</Version>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>$(Version)</Version>
-        <PackageOutputPath>../nupkg</PackageOutputPath>
         <LangVersion>9.0</LangVersion>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
