@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <AssemblyName>Elements.MEP</AssemblyName>
+        <PackageTitle>Elements.MEP</PackageTitle>
+        <Title>Elements MEP</Title>
+        <PackageId>Elements.MEP</PackageId>
+        <PackageDescription>MEP system design using Elements.</PackageDescription>
+        <Summary>A suite of tools for generative design of MEP systems built on Hypar.Elements.</Summary>
+        <PackageProjectUrl>https://github.com/hypar-io/Elements</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/hypar-io/Elements</RepositoryUrl>
+        <Version>$(Version)</Version>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>$(Version)</Version>
+        <PackageOutputPath>../nupkg</PackageOutputPath>
+        <LangVersion>9.0</LangVersion>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
+    </ItemGroup>
+
+</Project>
