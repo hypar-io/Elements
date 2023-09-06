@@ -452,7 +452,7 @@
       }
     },
     {
-      "name": "2ef7eb48-f7b3-4244-b8b9-a210dab1e445",
+      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -492,7 +492,7 @@
           "material": 0
         }
       ],
-      "name": "2f7575e8-9881-4fdd-836e-02d2f9ee4cad_mesh"
+      "name": "fbb942d1-3011-4391-b5fa-51cf9dd09eda_mesh"
     },
     {
       "primitives": [
@@ -506,7 +506,7 @@
           "material": 1
         }
       ],
-      "name": "0b1dd916-da63-48d7-8929-d80794d7b258_mesh"
+      "name": "96dbaa15-92e0-4d3d-a712-484858fb8abd_mesh"
     },
     {
       "primitives": [
@@ -520,7 +520,7 @@
           "material": 2
         }
       ],
-      "name": "3c7395e1-8f7c-41bd-ba62-c70cc2aff7f8_mesh"
+      "name": "90872980-fb31-4792-8f51-54e93d765908_mesh"
     },
     {
       "primitives": [
@@ -534,7 +534,7 @@
           "material": 1
         }
       ],
-      "name": "ac335b45-c893-450e-84dc-9524125c1ddb_mesh"
+      "name": "c1ecfef7-f371-4fd7-9574-43a5686112c4_mesh"
     },
     {
       "primitives": [
@@ -548,7 +548,7 @@
           "material": 0
         }
       ],
-      "name": "7a344fb2-06bf-4598-996a-bba3b6df366a_mesh"
+      "name": "e99b7760-339e-4d5a-8958-191362ecf6fc_mesh"
     }
   ],
   "nodes": [
@@ -585,7 +585,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "2f7575e8-9881-4fdd-836e-02d2f9ee4cad"
+          "id": "fbb942d1-3011-4391-b5fa-51cf9dd09eda"
         }
       }
     },
@@ -616,7 +616,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "0b1dd916-da63-48d7-8929-d80794d7b258"
+          "id": "96dbaa15-92e0-4d3d-a712-484858fb8abd"
         }
       }
     },
@@ -629,7 +629,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "3c7395e1-8f7c-41bd-ba62-c70cc2aff7f8"
+          "id": "90872980-fb31-4792-8f51-54e93d765908"
         }
       }
     },
@@ -660,7 +660,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "ac335b45-c893-450e-84dc-9524125c1ddb"
+          "id": "c1ecfef7-f371-4fd7-9574-43a5686112c4"
         }
       }
     },
@@ -691,7 +691,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "7a344fb2-06bf-4598-996a-bba3b6df366a"
+          "id": "e99b7760-339e-4d5a-8958-191362ecf6fc"
         }
       }
     },

@@ -608,7 +608,7 @@
       }
     },
     {
-      "name": "2ef7eb48-f7b3-4244-b8b9-a210dab1e445",
+      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -648,7 +648,7 @@
           "material": 0
         }
       ],
-      "name": "6d36a978-5d33-4405-97a6-00d4d19cd56b_mesh"
+      "name": "8707e89f-7368-4c24-8e83-2ad144ca3ce6_mesh"
     },
     {
       "primitives": [
@@ -662,7 +662,7 @@
           "material": 1
         }
       ],
-      "name": "4b4348ee-890d-4158-895b-8e2642564d73_mesh"
+      "name": "83ed6bee-d660-4c4d-ba98-c1953fa2c1aa_mesh"
     },
     {
       "primitives": [
@@ -676,7 +676,7 @@
           "material": 2
         }
       ],
-      "name": "b464d642-7765-420b-978d-afe986d9f081_mesh"
+      "name": "2e8f7e4f-4213-4fc9-b64d-0bca85d64e65_mesh"
     },
     {
       "primitives": [
@@ -690,7 +690,7 @@
           "material": 1
         }
       ],
-      "name": "e1a8a822-5ddf-41e4-9a6a-ef37e59c0d3f_mesh"
+      "name": "a0b532c1-99f5-4a6b-9d53-08541ae2beae_mesh"
     },
     {
       "primitives": [
@@ -704,7 +704,7 @@
           "material": 2
         }
       ],
-      "name": "1939be38-10e8-48b5-ac75-13da0fe1c0aa_mesh"
+      "name": "46edfba1-8669-4ad8-ba84-43fdf10cb19b_mesh"
     },
     {
       "primitives": [
@@ -718,7 +718,7 @@
           "material": 0
         }
       ],
-      "name": "51d5d067-6572-46f5-a183-b85f5d762528_mesh"
+      "name": "d9458393-e91d-4dbe-8f54-326051301e02_mesh"
     },
     {
       "primitives": [
@@ -732,7 +732,7 @@
           "material": 0
         }
       ],
-      "name": "f1bd5a10-c952-4e41-89f9-53c4973aadda_mesh"
+      "name": "eebe13d9-5db6-48b9-b567-8beaba722855_mesh"
     }
   ],
   "nodes": [
@@ -771,7 +771,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "6d36a978-5d33-4405-97a6-00d4d19cd56b"
+          "id": "8707e89f-7368-4c24-8e83-2ad144ca3ce6"
         }
       }
     },
@@ -802,7 +802,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "4b4348ee-890d-4158-895b-8e2642564d73"
+          "id": "83ed6bee-d660-4c4d-ba98-c1953fa2c1aa"
         }
       }
     },
@@ -815,7 +815,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "b464d642-7765-420b-978d-afe986d9f081"
+          "id": "2e8f7e4f-4213-4fc9-b64d-0bca85d64e65"
         }
       }
     },
@@ -846,7 +846,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "e1a8a822-5ddf-41e4-9a6a-ef37e59c0d3f"
+          "id": "a0b532c1-99f5-4a6b-9d53-08541ae2beae"
         }
       }
     },
@@ -859,7 +859,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "1939be38-10e8-48b5-ac75-13da0fe1c0aa"
+          "id": "46edfba1-8669-4ad8-ba84-43fdf10cb19b"
         }
       }
     },
@@ -890,7 +890,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "51d5d067-6572-46f5-a183-b85f5d762528"
+          "id": "d9458393-e91d-4dbe-8f54-326051301e02"
         }
       }
     },
@@ -921,7 +921,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "f1bd5a10-c952-4e41-89f9-53c4973aadda"
+          "id": "eebe13d9-5db6-48b9-b567-8beaba722855"
         }
       }
     },

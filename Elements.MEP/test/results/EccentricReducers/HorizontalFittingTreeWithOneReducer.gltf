@@ -349,7 +349,7 @@
       "alphaMode": "BLEND"
     },
     {
-      "name": "2ef7eb48-f7b3-4244-b8b9-a210dab1e445",
+      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -414,7 +414,7 @@
           "material": 0
         }
       ],
-      "name": "b8959315-6cde-4f6d-80f2-2bab74ec8a22_mesh"
+      "name": "afc8bfb0-96b3-4e73-887d-155b586caf01_mesh"
     },
     {
       "primitives": [
@@ -428,7 +428,7 @@
           "material": 1
         }
       ],
-      "name": "e753afbf-1695-482a-8f34-0938bf9efacc_mesh"
+      "name": "987c6f6c-5748-4285-977a-acd4d5b71aeb_mesh"
     },
     {
       "primitives": [
@@ -442,7 +442,7 @@
           "material": 2
         }
       ],
-      "name": "a644be1e-de24-4914-93db-e3edc2eba6e3_mesh"
+      "name": "4bca90d2-93f5-4c10-ac70-13605f46407f_mesh"
     },
     {
       "primitives": [
@@ -456,7 +456,7 @@
           "material": 0
         }
       ],
-      "name": "93e8472e-6075-45aa-9b1e-a54939e950cf_mesh"
+      "name": "b3a2a292-b6fe-44ed-a7ec-8cc680e30324_mesh"
     }
   ],
   "nodes": [
@@ -492,7 +492,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "b8959315-6cde-4f6d-80f2-2bab74ec8a22"
+          "id": "afc8bfb0-96b3-4e73-887d-155b586caf01"
         }
       }
     },
@@ -505,7 +505,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "e753afbf-1695-482a-8f34-0938bf9efacc"
+          "id": "987c6f6c-5748-4285-977a-acd4d5b71aeb"
         }
       }
     },
@@ -536,7 +536,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "a644be1e-de24-4914-93db-e3edc2eba6e3"
+          "id": "4bca90d2-93f5-4c10-ac70-13605f46407f"
         }
       }
     },
@@ -567,7 +567,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "93e8472e-6075-45aa-9b1e-a54939e950cf"
+          "id": "b3a2a292-b6fe-44ed-a7ec-8cc680e30324"
         }
       }
     },
