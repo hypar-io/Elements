@@ -2,10 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <AssemblyName>Elements.MEP</AssemblyName>
+        <AssemblyName>Hypar.Elements.MEP</AssemblyName>
         <PackageTitle>Elements.MEP</PackageTitle>
         <Title>Elements MEP</Title>
-        <PackageId>Elements.MEP</PackageId>
+        <PackageId>Hypar.Elements.MEP</PackageId>
         <PackageDescription>MEP system design using Elements.</PackageDescription>
         <Summary>A suite of tools for generative design of MEP systems built on Hypar.Elements.</Summary>
         <PackageProjectUrl>https://github.com/hypar-io/Elements</PackageProjectUrl>
