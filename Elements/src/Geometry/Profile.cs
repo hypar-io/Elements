@@ -234,18 +234,18 @@ namespace Elements.Geometry
         /// <summary>
         /// Set a uniform edge thickness for this profile.
         /// </summary>
-        /// <param name="inner">The inner thickness.</param>
-        /// <param name="outer">The outer thickness.</param> 
-        public void SetEdgeThickness(double inner, double outer = 0)
+        /// <param name="innerWidth">The inner thickness.</param>
+        /// <param name="outerWidth">The outer thickness.</param> 
+        public void SetEdgeThickness(double innerWidth, double outerWidth = 0)
         {
             var newThickness = new List<double[]>();
-            if (inner < 0 || outer < 0)
+            if (innerWidth < 0 || outerWidth < 0)
             {
                 throw new ArgumentException("Thicknesses must be positive.");
             }
             foreach (var _ in this.Perimeter.Vertices)
             {
-                newThickness.Add(new double[] { inner, outer });
+                newThickness.Add(new double[] { innerWidth, outerWidth });
             };
             this._edgeThickness = newThickness;
         }
