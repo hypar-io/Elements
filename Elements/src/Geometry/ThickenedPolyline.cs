@@ -354,8 +354,9 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="vertices">An ordered list of vertices representing a closed polygon</param>
         /// <param name="edgeThickness">An ordered list of leftWidth/rightWidth pairs, representing the thickness of the edge beginning at each vertex.</param>
+        /// <param name="left">Which side of the loop boundary to compute. Left by default.</param>
         /// <param name="normal">The normal defining the plane in which to calculate the boundary.</param>
-        public static Polygon GetLoopBoundary(IList<Vector3> vertices, IList<double[]> edgeThickness, Vector3? normal = null)
+        public static Polygon GetLoopBoundary(IList<Vector3> vertices, IList<double[]> edgeThickness, bool left = true, Vector3? normal = null)
         {
             var normalDir = normal ?? Vector3.ZAxis;
             if (vertices.Count != edgeThickness.Count)
@@ -385,7 +386,8 @@ namespace Elements.Geometry
                 var index2 = nodeIndicesPerVertex[(i + 1) % vertices.Count];
                 var node1 = graph.Nodes[index1.Value];
                 var offsetVertices = node1.offsetVertexMap[index2.Value];
-                offsetPoints.Add(offsetVertices[0]);
+                var offsetIndex = left ? 0 : 2;
+                offsetPoints.Add(offsetVertices[offsetIndex]);
             }
             return new Polygon(offsetPoints);
         }

@@ -26,8 +26,7 @@ namespace Elements.Geometry
         /// first double is the inner thickness, and the second double is the outer thickness.
         /// This is not guaranteed to have a value, and the thickness values may be 0.
         /// </summary>
-        /// <value></value>
-        [JsonProperty("EdgeThickness", Required = Required.AllowNull)]
+        [JsonProperty("EdgeThickness", Required = Required.Default)]
         private List<double[]> _edgeThickness { get; set; }
 
         /// <summary>
@@ -189,9 +188,9 @@ namespace Elements.Geometry
         /// <summary>
         /// Return a new profile that is this profile scaled about the origin by the desired amount.
         /// </summary>
-        public Elements.Geometry.Profile Scale(double amount)
+        public Profile Scale(double amount)
         {
-            var transform = new Elements.Geometry.Transform();
+            var transform = new Transform();
             transform.Scale(amount);
 
             return transform.OfProfile(this);
@@ -230,6 +229,52 @@ namespace Elements.Geometry
             var solution = new List<List<ClipperLib.IntPoint>>();
             clipper.Execute(ClipType.ctUnion, solution);
             return new Profile(solution.Select(s => s.ToPolygon(tolerance)).ToList());
+        }
+
+        /// <summary>
+        /// Set a uniform edge thickness for this profile.
+        /// </summary>
+        /// <param name="inner">The inner thickness.</param>
+        /// <param name="outer">The outer thickness.</param> 
+        public void SetEdgeThickness(double inner, double outer = 0)
+        {
+            var newThickness = new List<double[]>();
+            if (inner < 0 || outer < 0)
+            {
+                throw new ArgumentException("Thicknesses must be positive.");
+            }
+            foreach (var _ in this.Perimeter.Vertices)
+            {
+                newThickness.Add(new double[] { inner, outer });
+            };
+            this._edgeThickness = newThickness;
+        }
+
+        /// <summary>
+        /// Set the edge thickness for this profile, one pair of values per segment.
+        /// </summary>
+        /// <param name="thicknesses">A collection of thicknesses for each perimeter edge.</param>
+        public void SetEdgeThickness(IEnumerable<(double innerWidth, double outerWidth)> thicknesses)
+        {
+            if (this.Perimeter.Vertices.Count != thicknesses.Count())
+            {
+                throw new ArgumentException("The number of thicknesses must match the number of segments/vertices in the profile's perimeter.");
+            }
+            if (thicknesses.Any(t => t.innerWidth < 0 || t.outerWidth < 0))
+            {
+                throw new ArgumentException("Thicknesses must be positive.");
+            }
+            var newThickness = new List<double[]>(thicknesses.Select(t => new double[] { t.innerWidth, t.outerWidth }));
+            this._edgeThickness = newThickness;
+        }
+
+        /// <summary>
+        /// Set the edge thickness for this profile, one pair of values per segment.
+        /// </summary>
+        /// <param name="thicknesses">A collection of thicknesses for each perimeter edge.</param>
+        public void SetEdgeThickness(params (double innerWidth, double outerWidth)[] thicknesses)
+        {
+            SetEdgeThickness(thicknesses.AsEnumerable());
         }
 
         /// <summary>
@@ -647,20 +692,39 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// If this Profile has edge thickness information,
+        /// If this Profile has edge thickness information, compute the inner boundary
         /// </summary>
         /// <returns>A new profile with the edge thickness subtracted from the perimeter.</returns>
         public Profile ThickenedInteriorProfile()
         {
-            try
-            {
-                var polygon = ThickenedPolyline.GetLoopBoundary(this.Perimeter.Vertices, this._edgeThickness);
-                return new Profile(polygon, this.Voids);
-            }
-            catch
+            if (this._edgeThickness == null)
             {
                 return new Profile(this.Perimeter, this.Voids);
             }
+            if (this._edgeThickness.Count != this.Perimeter.Vertices.Count)
+            {
+                throw new ArgumentException("The number of thicknesses must match the number of segments/vertices in the profile's perimeter.");
+            }
+            var polygon = ThickenedPolyline.GetLoopBoundary(this.Perimeter.Vertices, this._edgeThickness, true);
+            return new Profile(polygon, this.Voids);
+        }
+
+        /// <summary>
+        /// If this Profile has edge thickness information,
+        /// </summary>
+        /// <returns>A new profile with the edge thickness subtracted from the perimeter.</returns>
+        public Profile ThickenedExteriorProfile()
+        {
+            if (this._edgeThickness == null)
+            {
+                return new Profile(this.Perimeter, this.Voids);
+            }
+            if (this._edgeThickness.Count != this.Perimeter.Vertices.Count)
+            {
+                throw new ArgumentException("The number of thicknesses must match the number of segments/vertices in the profile's perimeter.");
+            }
+            var polygon = ThickenedPolyline.GetLoopBoundary(this.Perimeter.Vertices, this._edgeThickness, false);
+            return new Profile(polygon, this.Voids);
         }
     }
 
