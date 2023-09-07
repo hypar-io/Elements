@@ -17,9 +17,8 @@ namespace Elements.Utilities
         /// <param name="solidOperation">The solid operation.</param>
         /// <param name="element">The element that contains this solid operation.</param>
         /// <param name="addTransform">The additional transform to apply.</param>
-        /// <param name="transformed">Indicates if the element transformation must be applied to the solid.</param>
         public static Csg.Solid TransformedSolidOperation(SolidOperation solidOperation, GeometricElement element,
-            Transform addTransform = null, bool transformed = false)
+            Transform addTransform = null)
         {
             // TODO: call this code from ElementRepresentation? or Element itself
             if (element.Transform == null)
@@ -27,13 +26,11 @@ namespace Elements.Utilities
                 return solidOperation._solid.ToCsg();
             }
 
-            var transform = transformed ? element.Transform : new Transform();
-
             // Transform the solid operatioon by the the local transform AND the
             // element's transform, or just by the element's transform.
             var transformedOp = solidOperation.LocalTransform != null
-                        ? solidOperation._solid.ToCsg().Transform(transform.Concatenated(solidOperation.LocalTransform).ToMatrix4x4())
-                        : solidOperation._solid.ToCsg().Transform(transform.ToMatrix4x4());
+                        ? solidOperation._solid.ToCsg().Transform(element.Transform.Concatenated(solidOperation.LocalTransform).ToMatrix4x4())
+                        : solidOperation._solid.ToCsg().Transform(element.Transform.ToMatrix4x4());
             if (addTransform == null)
             {
                 return transformedOp;
@@ -115,13 +112,16 @@ namespace Elements.Utilities
                 csg = csg.Subtract(voidItems);
             }
 
-            if (element.Transform == null || !transformed)
+            if (element.Transform == null || transformed)
             {
                 return csg;
             }
             else
             {
-                csg = csg.Transform(element.Transform.ToMatrix4x4());
+                var inverse = new Transform(element.Transform);
+                inverse.Invert();
+
+                csg = csg.Transform(inverse.ToMatrix4x4());
                 return csg;
             }
         }
