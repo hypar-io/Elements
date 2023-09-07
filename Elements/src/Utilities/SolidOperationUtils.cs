@@ -26,7 +26,7 @@ namespace Elements.Utilities
                 return solidOperation._solid.ToCsg();
             }
 
-            // Transform the solid operatioon by the the local transform AND the
+            // Transform the solid operation  by the the local transform AND the
             // element's transform, or just by the element's transform.
             var transformedOp = solidOperation.LocalTransform != null
                         ? solidOperation._solid.ToCsg().Transform(element.Transform.Concatenated(solidOperation.LocalTransform).ToMatrix4x4())
@@ -36,7 +36,7 @@ namespace Elements.Utilities
                 return transformedOp;
             }
 
-            // If an addition transform was proovided, don't forget
+            // If an additional transform was provided, don't forget
             // to apply that as well.
             return transformedOp.Transform(addTransform.ToMatrix4x4());
         }
