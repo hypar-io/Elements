@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Interfaces;
 
 namespace Elements.Utilities
 {
@@ -14,23 +15,25 @@ namespace Elements.Utilities
         /// Get the computed csg solid.
         /// </summary>
         /// <param name="solidOperation">The solid operation.</param>
-        /// <param name="elementTransform">The element transform.</param>
+        /// <param name="element">The element that contains this solid operation.</param>
         /// <param name="addTransform">The additional transform to apply.</param>
-        /// <returns></returns>
-        public static Csg.Solid TransformedSolidOperation(SolidOperation solidOperation, Transform elementTransform = null,
-            Transform addTransform = null)
+        /// <param name="transformed">Indicates if the element transformation must be applied to the solid.</param>
+        public static Csg.Solid TransformedSolidOperation(SolidOperation solidOperation, GeometricElement element,
+            Transform addTransform = null, bool transformed = false)
         {
             // TODO: call this code from ElementRepresentation? or Element itself
-            if (elementTransform == null)
+            if (element.Transform == null)
             {
                 return solidOperation._solid.ToCsg();
             }
 
+            var transform = transformed ? element.Transform : new Transform();
+
             // Transform the solid operatioon by the the local transform AND the
             // element's transform, or just by the element's transform.
             var transformedOp = solidOperation.LocalTransform != null
-                        ? solidOperation._solid.ToCsg().Transform(elementTransform.Concatenated(solidOperation.LocalTransform).ToMatrix4x4())
-                        : solidOperation._solid.ToCsg().Transform(elementTransform.ToMatrix4x4());
+                        ? solidOperation._solid.ToCsg().Transform(transform.Concatenated(solidOperation.LocalTransform).ToMatrix4x4())
+                        : solidOperation._solid.ToCsg().Transform(transform.ToMatrix4x4());
             if (addTransform == null)
             {
                 return transformedOp;
@@ -46,10 +49,10 @@ namespace Elements.Utilities
         /// The csg is centered on the origin by default.
         /// </summary>
         /// <param name="solidOperations">The list of solid operations.</param>
-        /// <param name="openings">The list of openings. This parameter can be null.</param>
-        /// <param name="transform">The element transformation. This parameter can be null.</param>
-        public static Csg.Solid GetFinalCsgFromSolids(IList<SolidOperation> solidOperations, IList<Opening> openings,
-            Transform transform = null)
+        /// <param name="element">The element that contains this solid operation.</param>
+        /// <param name="transformed">Indicates if the element transformation must be applied to the solid.</param>
+        public static Csg.Solid GetFinalCsgFromSolids(IList<SolidOperation> solidOperations,
+            GeometricElement element, bool transformed = false)
         {
             if (solidOperations.Count == 0)
             {
@@ -71,23 +74,23 @@ namespace Elements.Utilities
             {
                 if (op.IsVoid)
                 {
-                    voids.Add(TransformedSolidOperation(op));
+                    voids.Add(TransformedSolidOperation(op, element));
                 }
                 else
                 {
-                    solids.Add(TransformedSolidOperation(op));
+                    solids.Add(TransformedSolidOperation(op, element));
                 }
             }
 
-            if (openings != null)
+            if (element is IHasOpenings openingContainer)
             {
-                foreach (var opening in openings)
+                foreach (var opening in openingContainer.Openings)
                 {
                     foreach (var op in opening.Representation.SolidOperations)
                     {
                         if (op.IsVoid)
                         {
-                            voids.Add(TransformedSolidOperation(op, null, opening.Transform));
+                            voids.Add(TransformedSolidOperation(op, element, opening.Transform));
                         }
                     }
                 }
@@ -112,13 +115,13 @@ namespace Elements.Utilities
                 csg = csg.Subtract(voidItems);
             }
 
-            if (transform == null)
+            if (element.Transform == null || !transformed)
             {
                 return csg;
             }
             else
             {
-                csg = csg.Transform(transform.ToMatrix4x4());
+                csg = csg.Transform(element.Transform.ToMatrix4x4());
                 return csg;
             }
         }

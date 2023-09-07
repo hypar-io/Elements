@@ -321,20 +321,13 @@ namespace Elements
                 return null;
             }
 
-            if (this is IHasOpenings openingContainer)
-            {
-                return SolidOperationUtils.GetFinalCsgFromSolids(Representation.SolidOperations, openingContainer.Openings, transformed ? Transform : null);
-            }
-            else
-            {
-                return SolidOperationUtils.GetFinalCsgFromSolids(Representation.SolidOperations, null, transformed ? Transform : null);
-            }
+            return SolidOperationUtils.GetFinalCsgFromSolids(Representation.SolidOperations, this, transformed);
         }
 
         internal Csg.Solid[] GetCsgSolids(bool transformed = false)
         {
             var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                       .Select(op => SolidOperationUtils.TransformedSolidOperation(op, Transform))
+                                                       .Select(op => SolidOperationUtils.TransformedSolidOperation(op, this))
                                                        .ToArray();
             if (Transform == null || transformed)
             {
