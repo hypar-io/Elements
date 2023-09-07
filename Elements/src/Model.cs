@@ -32,6 +32,10 @@ namespace Elements
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>
+        [JsonProperty("SharedObjects", Required = Required.Default)]
+        public System.Collections.Generic.IDictionary<Guid, SharedObject> SharedObjects { get; set; } = new System.Collections.Generic.Dictionary<Guid, SharedObject>();
+
+        /// <summary>A collection of Elements keyed by their identifiers.</summary>
         [JsonProperty("Elements", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
@@ -43,7 +47,7 @@ namespace Elements
         /// <param name="transform">The transform of the model.</param>
         /// <param name="elements">A collection of elements.</param>
         [JsonConstructor]
-        public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements)
+        public Model(Position @origin, Transform @transform, System.Collections.Generic.IDictionary<Guid, Element> @elements, System.Collections.Generic.Dictionary<Guid, SharedObject> @sharedObjects)
         {
 
 #pragma warning disable CS0618
@@ -51,6 +55,7 @@ namespace Elements
 #pragma warning restore CS0618
             this.Transform = @transform;
             this.Elements = @elements;
+            this.SharedObjects = @sharedObjects;
         }
 
         /// <summary>
@@ -122,12 +127,19 @@ namespace Elements
                 // to the elements dictionary first. This will ensure that
                 // those elements will be read out and be available before
                 // an attempt is made to deserialize the element itself.
-                var subElements = RecursiveGatherSubElements(element);
+                var subElements = RecursiveGatherSubElements(element, out var sharedObjects);
                 foreach (var e in subElements)
                 {
                     if (!this.Elements.ContainsKey(e.Id))
                     {
                         this.Elements.Add(e.Id, e);
+                    }
+                }
+                foreach (var e in sharedObjects)
+                {
+                    if (!SharedObjects.ContainsKey(e.Id))
+                    {
+                        SharedObjects.Add(e.Id, e);
                     }
                 }
             }
@@ -288,10 +300,10 @@ namespace Elements
             UpdateBoundsAndComputedSolids();
 
             var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
-            var intersectingElements = geos.Where(geo => geo._bounds.Intersects(plane, out _)).ToList();
+            var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
 
             var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>();
-            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition._bounds.Intersects(plane, out _, geo.Transform)).ToList();
+            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition.Bounds.Intersects(plane, out _, geo.Transform)).ToList();
 
             var allIntersectingElements = new List<Element>();
             allIntersectingElements.AddRange(intersectingInstances);
@@ -410,7 +422,7 @@ namespace Elements
                 }
             });
             errors = deserializationErrors;
-            JsonInheritanceConverter.Elements.Clear();
+            JsonInheritanceConverter.Clear();
             return model;
         }
 
@@ -419,18 +431,19 @@ namespace Elements
             return FromJson(json, out _, forceTypeReload);
         }
 
-        private List<Element> RecursiveGatherSubElements(object obj)
+        private List<Element> RecursiveGatherSubElements(object obj, out List<SharedObject> sharedObjects)
         {
             // A dictionary created for the purpose of caching properties
             // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
 
-            return RecursiveGatherSubElementsInternal(obj, props);
+            return RecursiveGatherSubElementsInternal(obj, props, out sharedObjects);
         }
 
-        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties)
+        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties, out List<SharedObject> sharedObjects)
         {
             var elements = new List<Element>();
+            sharedObjects = new List<SharedObject>();
 
             if (obj == null)
             {
@@ -493,7 +506,8 @@ namespace Elements
                     {
                         foreach (var item in elems)
                         {
-                            elements.AddRange(RecursiveGatherSubElementsInternal(item, properties));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(item, properties, out var sharedObjectsFromList));
+                            sharedObjects.AddRange(sharedObjectsFromList);
                         }
                         continue;
                     }
@@ -503,12 +517,14 @@ namespace Elements
                     {
                         foreach (var value in dict.Values)
                         {
-                            elements.AddRange(RecursiveGatherSubElementsInternal(value, properties));
+                            elements.AddRange(RecursiveGatherSubElementsInternal(value, properties, out var sharedObjectsFromDictionary));
+                            sharedObjects.AddRange(sharedObjectsFromDictionary);
                         }
                         continue;
                     }
 
-                    elements.AddRange(RecursiveGatherSubElementsInternal(pValue, properties));
+                    elements.AddRange(RecursiveGatherSubElementsInternal(pValue, properties, out var sharedObjectsFromValue));
+                    sharedObjects.AddRange(sharedObjectsFromValue);
                 }
                 catch (Exception ex)
                 {
@@ -519,6 +535,11 @@ namespace Elements
             if (e != null)
             {
                 elements.Add(e);
+            }
+
+            if (obj is SharedObject sharedObject && !SharedObjects.ContainsKey(sharedObject.Id))
+            {
+                sharedObjects.Add(sharedObject);
             }
 
             return elements;
@@ -569,13 +590,15 @@ namespace Elements
 
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(Representation).IsAssignableFrom(t)
-                   || typeof(SolidOperation).IsAssignableFrom(t);
+                   || typeof(SolidOperation).IsAssignableFrom(t)
+                   || typeof(SharedObject).IsAssignableFrom(t);
         }
 
         private static bool IsValidListType(Type t)
         {
             return typeof(Element).IsAssignableFrom(t)
-                   || typeof(SolidOperation).IsAssignableFrom(t);
+                   || typeof(SolidOperation).IsAssignableFrom(t)
+                   || typeof(SharedObject).IsAssignableFrom(t);
         }
     }
 

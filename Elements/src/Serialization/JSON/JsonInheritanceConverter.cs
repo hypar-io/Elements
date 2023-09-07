@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using Elements.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -11,6 +13,28 @@ namespace Elements.Serialization.JSON
 {
     public class JsonInheritanceConverter : JsonConverter
     {
+        /// <summary>
+        /// Information about object that is processed currently
+        /// </summary>
+        private class DeserializableObject
+        {
+            /// <summary>
+            /// Referense to the deserialized object.
+            /// </summary>
+            public object Object { get; set; }
+            /// <summary>
+            /// The set of the properties that were not deserialized successfully.
+            /// 
+            /// This are properties that are kept as guids and must be replaced with actual values durind deserialization.
+            /// Shared objects can be deserialized before elements. And shared objects have references to the material elements or profiles.
+            /// So we are keeping the list of guids that have to be replaced with objects once these objects are deserialized.
+            /// 
+            /// key - path to the property (e.g. RepresentationInstances[0].Materil)
+            /// value - object id
+            /// </summary>
+            public Dictionary<string, Guid> Properties { get; private set; } = new Dictionary<string, Guid>();
+        }
+
         internal static readonly string DefaultDiscriminatorName = "discriminator";
 
         private readonly string _discriminator;
@@ -23,6 +47,10 @@ namespace Elements.Serialization.JSON
 
         [System.ThreadStatic]
         private static Dictionary<string, Type> _typeCache;
+
+        [System.ThreadStatic]
+        private static List<DeserializableObject> _waitList = new List<DeserializableObject>();
+
         private static Dictionary<string, Type> TypeCache
         {
             get
@@ -38,6 +66,9 @@ namespace Elements.Serialization.JSON
         [System.ThreadStatic]
         private static Dictionary<Guid, Element> _elements;
 
+        [System.ThreadStatic]
+        private static Dictionary<Guid, SharedObject> _sharedObjects;
+
         public static Dictionary<Guid, Element> Elements
         {
             get
@@ -47,6 +78,38 @@ namespace Elements.Serialization.JSON
                     _elements = new Dictionary<Guid, Element>();
                 }
                 return _elements;
+            }
+        }
+
+        public static Dictionary<Guid, SharedObject> SharedObjects
+        {
+            get
+            {
+                if (_sharedObjects == null)
+                {
+                    _sharedObjects = new Dictionary<Guid, SharedObject>();
+                }
+                return _sharedObjects;
+            }
+        }
+
+        /// <summary>
+        /// The list of objects that are waiting for other elements to be deserialized.
+        /// 
+        /// We need this property and we cannot use _waitList instead, because _waitList is marked as "ThreadStatic".
+        /// It means that in the second thread CLI will create a new instance of this list and it will be null.
+        /// </summary>
+        private static List<DeserializableObject> WaitList
+        {
+            get
+            {
+                if (_waitList == null)
+                {
+                    _waitList = new List<DeserializableObject>();
+
+                }
+
+                return _waitList;
             }
         }
 
@@ -61,6 +124,16 @@ namespace Elements.Serialization.JSON
         }
 
         private static readonly List<string> TypePrefixesExcludedFromTypeCache = new List<string> { "System", "SixLabors", "Newtonsoft" };
+
+        /// <summary>
+        /// Clears all static lists
+        /// </summary>
+        public static void Clear()
+        {
+            Elements.Clear();
+            SharedObjects.Clear();
+            WaitList.Clear();
+        }
 
         /// <summary>
         /// When we build up the element type cache, we iterate over all types in the app domain.
@@ -160,6 +233,10 @@ namespace Elements.Serialization.JSON
                     var ident = element;
                     writer.WriteValue(ident.Id);
                 }
+                else if (value is SharedObject sharedObject && !WritingTopLevelSharedObject(writer.Path) && !ElementwiseSerialization)
+                {
+                    writer.WriteValue(sharedObject.Id);
+                }
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
@@ -184,6 +261,16 @@ namespace Elements.Serialization.JSON
         {
             var parts = path.Split('.');
             if (parts.Length == 2 && parts[0] == "Elements" && Guid.TryParse(parts[1], out var _))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private static bool WritingTopLevelSharedObject(string path)
+        {
+            var parts = path.Split('.');
+            if (parts.Length == 2 && parts[0] == nameof(Model.SharedObjects) && Guid.TryParse(parts[1], out var _))
             {
                 return true;
             }
@@ -241,7 +328,26 @@ namespace Elements.Serialization.JSON
             if (typeof(Element).IsAssignableFrom(objectType) && !WritingTopLevelElement(reader.Path) && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
-                return Elements[id];
+                if (Elements.ContainsKey(id))
+                {
+                    return Elements[id];
+                }
+
+                // The element has not been deserialized yet. Lets wait for it.
+                var lastWaitObj = WaitList.LastOrDefault();
+                lastWaitObj?.Properties.Add(reader.Path, id);
+                return null;
+            }
+            else if (typeof(SharedObject).IsAssignableFrom(objectType) && !WritingTopLevelSharedObject(reader.Path) && reader.Value != null)
+            {
+                var id = Guid.Parse(reader.Value.ToString());
+                if (SharedObjects.ContainsKey(id))
+                    return SharedObjects[id];
+
+                // The shared object has not been deserialized yet. Lets wait for it.
+                var lastWaitObj = WaitList.LastOrDefault();
+                lastWaitObj?.Properties.Add(reader.Path, id);
+                return null;
             }
 
             var jObject = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);
@@ -273,8 +379,21 @@ namespace Elements.Serialization.JSON
             try
             {
                 _isReading = true;
+                // Lets create deserializable object ant keep all properties that were not replaced with objects
+                var waitObj = new DeserializableObject();
+                WaitList.Add(waitObj);
                 var obj = serializer.Deserialize(jObject.CreateReader(), subtype);
-
+                // Object was deserialized, no pending propertis. We can delete it from the list.
+                if (!waitObj.Properties.Any())
+                {
+                    WaitList.Remove(waitObj);
+                }
+                // otherwise, lets save deserialized object so we have reference to it and can set it's proprties when 
+                // elements that we are waiting for will be deserialized
+                else
+                {
+                    waitObj.Object = obj;
+                }
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
                 if (typeof(Element).IsAssignableFrom(objectType) && WritingTopLevelElement(reader.Path))
@@ -283,6 +402,16 @@ namespace Elements.Serialization.JSON
                     if (!Elements.ContainsKey(ident.Id))
                     {
                         Elements.Add(ident.Id, ident);
+                        CheckWaitList(ident.Id, ident);
+                    }
+                }
+                else if (typeof(SharedObject).IsAssignableFrom(objectType) && WritingTopLevelSharedObject(reader.Path))
+                {
+                    var ident = (SharedObject)obj;
+                    if (!SharedObjects.ContainsKey(ident.Id))
+                    {
+                        SharedObjects.Add(ident.Id, ident);
+                        CheckWaitList(ident.Id, ident);
                     }
                 }
 
@@ -305,6 +434,30 @@ namespace Elements.Serialization.JSON
             finally
             {
                 _isReading = false;
+            }
+        }
+
+        private static void CheckWaitList(Guid elementId, object value)
+        {
+            for (int j = 0; j < WaitList.Count; j++)
+            {
+                var deleteKeys = new List<string>();
+                foreach (var property in WaitList[j].Properties)
+                {
+                    if (property.Value == elementId && ReflectionUtils.TryFindPropertyByPath(WaitList[j].Object, property.Key, out var objectInstanceWithProperty, out var propertyInfo))
+                    {
+                        propertyInfo.SetValue(objectInstanceWithProperty, value);
+                        deleteKeys.Add(property.Key);
+                    }
+                }
+
+                deleteKeys.ForEach(k => WaitList[j].Properties.Remove(k));
+
+                if (WaitList[j].Properties.Count < 1)
+                {
+                    WaitList.RemoveAt(j);
+                    j--;
+                }
             }
         }
 
