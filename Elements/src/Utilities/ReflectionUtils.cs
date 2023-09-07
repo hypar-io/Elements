@@ -73,8 +73,7 @@ namespace Elements.Utilities
                         }
                     }
 
-                    currentType = propertyValue?.GetType(); //property.PropertyType;
-
+                    currentType = propertyValue?.GetType();
                 }
                 else
                 {
