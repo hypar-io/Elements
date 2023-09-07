@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -30,6 +31,16 @@ namespace Elements.Geometry
         /// The coordinate system of the plane containing the circle.
         /// </summary>
         public Transform Transform { get; protected set; }
+
+        /// <summary>The normal direction of the circle.</summary>
+        [JsonIgnore]
+        public Vector3 Normal
+        {
+            get
+            {
+                return this.Transform.ZAxis;
+            }
+        }
 
         /// <summary>
         /// Construct a circle.
@@ -112,6 +123,33 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Check if certain point is on the circle.
+        /// </summary>
+        /// <param name="pt">Point to check.</param>
+        /// <param name="t">Calculated parameter of point on circle.</param>
+        /// <returns>True if point lays on the circle.</returns>
+        public bool ParameterAt(Vector3 pt, out double t)
+        {
+            var local = Transform.Inverted().OfPoint(pt);
+            if (local.Z.ApproximatelyEquals(0) &&
+                local.LengthSquared().ApproximatelyEquals(
+                    Radius * Radius, Vector3.EPSILON * Vector3.EPSILON))
+            {
+                t = ParameterAtUntransformed(local);
+                return true;
+            }
+
+            t = 0;
+            return false;
+        }
+
+        private double ParameterAtUntransformed(Vector3 pt)
+        {
+            var v = pt / Radius;
+            return Math.Atan2(v.Y, v.X);
+        }
+
+        /// <summary>
         /// Return transform on the arc at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the arc.</param>
@@ -147,6 +185,158 @@ namespace Elements.Geometry
             var theta = distance / this.Radius;
 
             return start + theta;
+        }
+
+        /// <inheritdoc/>
+        public override bool Intersects(ICurve curve, out List<Vector3> results)
+        {
+            switch (curve)
+            {
+                case BoundedCurve boundedCurve:
+                    return boundedCurve.Intersects(this, out results);
+                case InfiniteLine line :
+                    return Intersects(line, out results);
+                case Circle circle:
+                    return Intersects(circle, out results);
+                case Ellipse elliplse:
+                    return Intersects(elliplse, out results);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Does this circle intersects with other circle?
+        /// Circles with the same positions and radii are not considered as intersecting.
+        /// </summary>
+        /// <param name="other">Other circle to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(Circle other, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane planeA = new Plane(Center, Normal);
+            Plane planeB = new Plane(other.Center, other.Normal);
+
+            // Check if two circles are on the same plane. 
+            if (Normal.IsParallelTo(other.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
+                other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
+            {
+                var delta = other.Center - Center;
+                var dist = delta.Length();
+                // Check if circles are on correct distance for intersection to happen.
+                if (dist.ApproximatelyEquals(0) ||
+                    dist > Radius + other.Radius || dist < Math.Abs(Radius - other.Radius))
+                {
+                    return false;
+                }
+
+                // Build triangle with center of one circle and two intersection points.
+                var r1squre = Radius * Radius;
+                var r2squre = other.Radius * other.Radius;
+                var lineDist = (r1squre - r2squre + dist * dist) / (2 * dist);
+                var linePoint = Center + lineDist * delta.Unitized();
+                double perpDistance = Math.Sqrt(r1squre - lineDist * lineDist);
+                // If triangle side is 0 - circles touches. Only one intersection recorded.
+                if (perpDistance.ApproximatelyEquals(0))
+                {
+                    results.Add(linePoint);
+                }
+                else
+                {
+                    Vector3 perpDirection = delta.Cross(Normal).Unitized();
+                    results.Add(linePoint + perpDirection * perpDistance);
+                    results.Add(linePoint - perpDirection * perpDistance);
+                }
+            }
+            // Ignore circles on parallel planes.
+            // Find intersection line between two planes.
+            else if (planeA.Intersects(planeB, out var line) &&
+                     Intersects(line, out var candidates))
+            {
+                foreach (var item in candidates)
+                {
+                    // Check each point that lays on intersection line and one of the circles.
+                    // They are on both if they have correct distance to circle centers.
+                    if (item.DistanceTo(other.Center).ApproximatelyEquals(other.Radius))
+                    {
+                        results.Add(item);
+                    }
+                }
+            }
+
+            return results.Any();
+        }
+
+        /// <summary>
+        /// Does this circle intersects with an infinite line?
+        /// </summary>
+        /// <param name="line">Infinite line to intersect.</param>
+        /// <param name="results">List containing up to two intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(InfiniteLine line, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+
+            Plane circlePlane = new Plane(Center, Normal);
+            Vector3 closestPoint;
+            bool lineOnPlane = line.Origin.DistanceTo(circlePlane).ApproximatelyEquals(0) &&
+                line.Direction.Dot(Normal).ApproximatelyEquals(0);
+
+            // If line share a plane with circle - find closest point on it to circle center.
+            // If not - check if there an intersection between line and circle plane.
+            if (lineOnPlane)
+            {
+                closestPoint = Center.ClosestPointOn(line);
+            }
+            else if (!line.Intersects(circlePlane, out closestPoint))
+            {
+                return false;
+            }
+
+            var delta = closestPoint - Center;
+            var lengthSquared = delta.LengthSquared();
+            var radiusSquared = Radius * Radius;
+            var toleranceSquared = Vector3.EPSILON * Vector3.EPSILON;
+            // if line not on circle plane - only one intersection is possible if it's radius away.
+            // this will also happen if line is on plane but only touches the circle.
+            if (lengthSquared.ApproximatelyEquals(radiusSquared, toleranceSquared))
+            {
+                results.Add(closestPoint);
+            }
+            else if (lineOnPlane && lengthSquared < radiusSquared)
+            {
+                var distance = Math.Sqrt(radiusSquared - lengthSquared);
+                results.Add(closestPoint + line.Direction * distance);
+                results.Add(closestPoint - line.Direction * distance);
+            }
+
+            return results.Any();
+        }
+
+        /// <summary>
+        /// Does this circle intersects with an ellipse?
+        /// Circle and ellipse that are coincides are not considered as intersecting.
+        /// <see cref="Ellipse.Intersects(Circle, out List{Vector3})"/>
+        /// </summary>
+        /// <param name="ellipse">Ellipse to intersect.</param>
+        /// <param name="results">List containing up to four intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(Ellipse ellipse, out List<Vector3> results)
+        {
+            return ellipse.Intersects(this, out results);
+        }
+
+        /// <summary>
+        /// Does this circle intersects with a bounded curve?
+        /// </summary>
+        /// <param name="curve">Curve to intersect.</param>
+        /// <param name="results">List containing intersection points.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        public bool Intersects(BoundedCurve curve, out List<Vector3> results)
+        {
+            return curve.Intersects(this, out results);
         }
     }
 }
