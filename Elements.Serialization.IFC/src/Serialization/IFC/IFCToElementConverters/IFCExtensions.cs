@@ -13,6 +13,168 @@ namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
     /// </summary>
     internal static class IFCExtensions
     {
+        internal static Representation GetRepresentationFromProduct(this IfcProduct product,
+                                                                   List<string> constructionErrors,
+                                                                   Dictionary<Guid, Material> repMaterialMap,
+                                                                   out Transform mapTransform,
+                                                                   out Guid mapId,
+                                                                   out Material materialHint)
+        {
+            if (product.Representation == null)
+            {
+                mapTransform = null;
+                materialHint = null;
+                return null;
+            }
+            var repItems = product.Representation.Representations.SelectMany(r => r.Items);
+            var repMap = new Dictionary<Guid, List<SolidOperation>>();
+            var ops = ParseRepresentationItems(repItems,
+                                               constructionErrors,
+                                               repMap,
+                                               repMaterialMap,
+                                               out mapTransform,
+                                               out mapId,
+                                               out materialHint);
+            return new Representation(ops);
+        }
+
+        private static List<SolidOperation> ParseRepresentationItems(IEnumerable<IfcRepresentationItem> repItems,
+                                                                     List<string> constructionErrors,
+                                                                     Dictionary<Guid, List<SolidOperation>> repMap,
+                                                                     Dictionary<Guid, Material> repMaterialMap,
+                                                                     out Transform mapTransform,
+                                                                     out Guid mapId,
+                                                                     out Material materialHint)
+        {
+            var solidOps = new List<SolidOperation>();
+            mapTransform = null;
+            materialHint = null;
+
+            foreach (var item in repItems)
+            {
+                if (repMaterialMap.ContainsKey(item.Id))
+                {
+                    materialHint = repMaterialMap[item.Id];
+                }
+
+                var notImplementedException = $"{item.GetType().Name} is not yet supported.";
+
+                if (item is IfcConnectedFaceSet)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcEdge)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcFace)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcFaceBound)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcPath)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcVertex)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcLoop)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcFacetedBrep)
+                {
+                    var ifcSolid = (IfcFacetedBrep)item;
+                    var shell = ifcSolid.Outer;
+                    var newSolid = new Solid();
+                    for (var i = 0; i < shell.CfsFaces.Count; i++)
+                    {
+                        var f = shell.CfsFaces[i];
+                        foreach (var b in f.Bounds)
+                        {
+                            var loop = (IfcPolyLoop)b.Bound;
+                            var poly = loop.Polygon.ToPolygon();
+                            newSolid.AddFace(poly);
+                        }
+                    }
+                    solidOps.Add(new ImportSolid(newSolid));
+                }
+                else if (item is IfcFacetedBrepWithVoids)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcExtrudedAreaSolid)
+                {
+                    var ifcSolid = (IfcExtrudedAreaSolid)item;
+                    var profile = ifcSolid.SweptArea.ToProfile();
+                    var solidTransform = ifcSolid.Position.ToTransform();
+                    var direction = ifcSolid.ExtrudedDirection.ToVector3();
+
+                    if (profile == null)
+                    {
+                        throw new NotImplementedException($"{profile.GetType().Name} is not supported for IfcExtrudedAreaSolid.");
+                    }
+                    var extrude = new Extrude(solidTransform.OfProfile(profile),
+                                                (IfcLengthMeasure)ifcSolid.Depth,
+                                                solidTransform.OfVector(direction).Unitized(),
+                                                false);
+                    solidOps.Add(extrude);
+                }
+                else if (item is IfcRevolvedAreaSolid)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcSurfaceCurveSweptAreaSolid)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcCsgSolid)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcSweptDiskSolid)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+                else if (item is IfcMappedItem)
+                {
+                    var mappedItem = (IfcMappedItem)item;
+
+                    if (repMap.ContainsKey(mappedItem.MappingSource.MappedRepresentation.Id))
+                    {
+                        var ops = repMap[mappedItem.MappingSource.MappedRepresentation.Id];
+                        solidOps.AddRange(ops);
+                    }
+                    else
+                    {
+                        var ops = ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items,
+                                                       constructionErrors,
+                                                       repMap,
+                                                       repMaterialMap,
+                                                       out mapTransform,
+                                                       out mapId,
+                                                       out materialHint);
+                        repMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, ops);
+                        solidOps.AddRange(ops);
+                    }
+
+                    mapId = mappedItem.MappingSource.MappedRepresentation.Id;
+                    mapTransform = mappedItem.MappingTarget.ToTransform();
+                }
+                else if (item is IfcStyledItem)
+                {
+                    constructionErrors.Add(notImplementedException);
+                }
+            }
+
+            return solidOps;
+        }
+
         internal static Beam ToBeam(this IfcBeam beam)
         {
             var elementTransform = beam.ObjectPlacement.ToTransform();
@@ -566,6 +728,61 @@ namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
             return null;
         }
 
+        private static Profile ToProfile(this IfcProfileDef profile)
+        {
+            Polygon outer = null;
+            List<Polygon> inner = new List<Polygon>();
+
+            if (profile is IfcRectangleProfileDef rect)
+            {
+                var p = Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
+                var t = new Transform(rect.Position.Location.ToVector3());
+                outer = (Polygon)p.Transformed(t);
+            }
+            else if (profile is IfcCircleProfileDef circle)
+            {
+                outer = new Circle((IfcLengthMeasure)circle.Radius).ToPolygon();
+            }
+            else if (profile is IfcArbitraryClosedProfileDef closedProfile)
+            {
+                var outerCurve = closedProfile.OuterCurve.ToCurve(true);
+                if (outerCurve is Polygon pc)
+                {
+                    outer = pc;
+                }
+                else if (outerCurve is IndexedPolycurve ipc)
+                {
+                    outer = ipc.ToPolygon();
+                }
+
+                if (profile is IfcArbitraryProfileDefWithVoids)
+                {
+                    var voidProfile = (IfcArbitraryProfileDefWithVoids)profile;
+                    inner.AddRange(voidProfile.InnerCurves.Select(c =>
+                    {
+                        var elCurve = c.ToCurve(true);
+                        if (elCurve is Polygon voidP)
+                        {
+                            return voidP;
+                        }
+                        else if (elCurve is IndexedPolycurve voidPc)
+                        {
+                            return voidPc.ToPolygon();
+                        }
+                        return null;
+                    }));
+                }
+            }
+            else
+            {
+                throw new Exception($"The profile type, {profile.GetType().Name}, is not supported.");
+            }
+
+            // var name = profile.ProfileName == null ? null : profile.ProfileName;
+            var newProfile = new Profile(outer, inner, profile.Id, string.Empty);
+            return newProfile;
+        }
+
         internal static Vector3 ToVector3(this IfcCartesianPoint cartesianPoint)
         {
             return cartesianPoint.Coordinates.ToVector3();
@@ -691,6 +908,39 @@ namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
                 throw new Exception("IfcGridPlacement conversion to Transform not supported.");
             }
             return null;
+        }
+
+        private static Transform ToTransform(this IfcCartesianTransformationOperator op)
+        {
+            if (op is IfcCartesianTransformationOperator2D)
+            {
+                var op2D = (IfcCartesianTransformationOperator2D)op;
+                return op2D.ToTransform();
+            }
+            else if (op is IfcCartesianTransformationOperator3D)
+            {
+                var op3D = (IfcCartesianTransformationOperator3D)op;
+                return op3D.ToTransform();
+            }
+            return null;
+        }
+
+        private static Transform ToTransform(this IfcCartesianTransformationOperator2D op)
+        {
+            var o = op.LocalOrigin.ToVector3();
+            var x = op.Axis1 == null ? Vector3.XAxis : op.Axis1.ToVector3().Unitized();
+            var y = op.Axis2 == null ? Vector3.YAxis : op.Axis2.ToVector3().Unitized();
+            var z = x.Cross(y);
+            return new Transform(o, x, y, z);
+        }
+
+        private static Transform ToTransform(this IfcCartesianTransformationOperator3D op)
+        {
+            var o = op.LocalOrigin.ToVector3();
+            var x = op.Axis1 == null ? Vector3.XAxis : op.Axis1.ToVector3().Unitized();
+            var y = op.Axis2 == null ? Vector3.YAxis : op.Axis2.ToVector3().Unitized();
+            var z = op.Axis3 == null ? Vector3.ZAxis : op.Axis3.ToVector3().Unitized();
+            return new Transform(o, x, y, z);
         }
 
         internal static Polygon ToPolygon(this List<IfcCartesianPoint> loop)
