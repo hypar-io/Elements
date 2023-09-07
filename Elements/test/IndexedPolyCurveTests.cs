@@ -167,5 +167,24 @@ namespace Elements.Tests
             Assert.Equal(pc.Vertices, pc2.Vertices);
             Assert.Equal(pc._bounds, pc2._bounds);
         }
+
+        [Fact]
+        public void Intersects()
+        {
+            var pc = CreateTestPolycurve();
+            var polygon = new Polygon(new Vector3[]
+            {
+                (0, 5),
+                (4, 9),
+                (8, 5),
+                (4, 1)
+            });
+
+            Assert.True(pc.Intersects(polygon, out var results));
+            Assert.Equal(3, results.Count);
+            Assert.Contains(new Vector3(0, 5), results);
+            Assert.Contains(new Vector3(5, 2), results);
+            Assert.Contains(new Vector3(2.5, 7.5), results);
+        }
     }
 }

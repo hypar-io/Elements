@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Elements.Geometry.Interfaces
 {
     /// <summary>
@@ -25,5 +27,13 @@ namespace Elements.Geometry.Interfaces
         /// <param name="distance">The distance from the start parameter.</param>
         /// <param name="parameter">The parameter from which to measure the distance.</param>
         double ParameterAtDistanceFromParameter(double distance, double parameter);
+
+        /// <summary>
+        /// Does this curve intersect the provided curve?
+        /// </summary>
+        /// <param name="curve">Curve to intersect.</param>
+        /// <param name="results">List of intersection points, empty if there is no intersection.</param>
+        /// <returns>True if any intersections exist, otherwise false.</returns>
+        bool Intersects(ICurve curve, out List<Vector3> results);
     }
 }
