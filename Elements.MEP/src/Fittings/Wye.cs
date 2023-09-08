@@ -30,14 +30,14 @@ namespace Elements.Fittings
             this.AngleTolerance = 0.1;
             this.PortsDistanceTolerance = 0.001;
         }
-        public WyeSettings(double trunkDiameter, 
-            double mainDiameter, 
-            double branchDiameter, 
-            double trunkDistance, 
-            double mainDistance, 
-            double branchDistance, 
-            double[] allowedAngles = null, 
-            double angleTolerance = 0.1, 
+        public WyeSettings(double trunkDiameter,
+            double mainDiameter,
+            double branchDiameter,
+            double trunkDistance,
+            double mainDistance,
+            double branchDistance,
+            double[] allowedAngles = null,
+            double angleTolerance = 0.1,
             double portsDistanceTolerance = 0.001)
         {
             this.Diameter = trunkDiameter;
@@ -60,10 +60,10 @@ namespace Elements.Fittings
     public partial class Wye
     {
         [JsonProperty]
-        public double AngleTolerance { get; private set; }
-        
+        public double AngleTolerance { get; set; }
+
         [JsonProperty]
-        public double PositionTolerance { get; private set; }
+        public double PositionTolerance { get; set; }
 
         public Wye(Vector3 position, Vector3 mainDirection, Vector3 branchDirection, WyeSettings wyeSettings, Material material) : this(position,
                                                                                                                                  mainDirection.Negate(),

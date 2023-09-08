@@ -41,10 +41,10 @@ namespace Elements.Fittings
     public partial class Cross
     {
         [JsonProperty]
-        public double AngleTolerance { get; private set; }
-        
+        public double AngleTolerance { get; set; }
+
         [JsonProperty]
-        public double PositionTolerance { get; private set; }
+        public double PositionTolerance { get; set; }
 
         public Cross(Vector3 position, Vector3 trunkDirection, Vector3 directionA, Vector3 directionB, Vector3 directionC, CrossSettings crossSettings, Material material = null) :
                                                                                          base(false,
@@ -62,7 +62,7 @@ namespace Elements.Fittings
             this.BranchA = new Port(position + directionA.Unitized() * crossSettings.Distance_A, directionA.Unitized(), crossSettings.Diameter_A);
             this.BranchB = new Port(position + directionB.Unitized() * crossSettings.Distance_B, directionB.Unitized(), crossSettings.Diameter_B);
             this.BranchC = new Port(position + directionC.Unitized() * crossSettings.Distance_C, directionC.Unitized(), crossSettings.Diameter_C);
-            
+
             AngleTolerance = crossSettings.AngleTolerance;
             PositionTolerance = crossSettings.PortsDistanceTolerance;
 

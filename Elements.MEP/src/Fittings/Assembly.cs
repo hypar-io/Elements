@@ -17,7 +17,7 @@ namespace Elements.Fittings
         public double PositionTolerance
         {
             get => _positionTolerance;
-            private set
+            set
             {
                 _positionTolerance = value;
                 _positionComparer = new PositionComparer(_positionTolerance);
