@@ -36,6 +36,20 @@ namespace Elements.Geometry
         internal Profile() { }
 
         /// <summary>
+        /// Private constructor for creating a new profile which is a copy of another one.
+        /// </summary>
+        /// <param name="perimeter"></param>
+        /// <param name="voids"></param>
+        /// <param name="edgeThickness"></param>
+        /// <param name="name"></param>
+        private Profile(Polygon perimeter, IList<Polygon> voids, List<double[]> edgeThickness, string name = null)
+        {
+            this.Perimeter = perimeter;
+            this.Voids = voids;
+            this._edgeThickness = edgeThickness;
+        }
+
+        /// <summary>
         /// Create a profile.
         /// </summary>
         /// <param name="perimeter">The perimeter of the profile.</param>
@@ -129,7 +143,7 @@ namespace Elements.Geometry
         /// <param name="transform">The transform.</param>
         public Profile Transformed(Transform transform)
         {
-            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>(), Guid.NewGuid(), this.Name);
+            return new Profile(this.Perimeter.TransformedPolygon(transform), this.Voids?.Select(v => v.TransformedPolygon(transform)).ToList() ?? new List<Polygon>(), this._edgeThickness, this.Name);
         }
 
         /// <summary>
@@ -156,7 +170,14 @@ namespace Elements.Geometry
                     voids[i] = this.Voids[i].Reversed();
                 }
             }
-            return new Profile(this.Perimeter.Reversed(), voids, Guid.NewGuid(), null);
+            // reverse the edge thicknesses as well.
+            List<double[]> edgeThickness = null;
+            if (this._edgeThickness != null)
+            {
+                edgeThickness = new List<double[]>(this._edgeThickness.Select((t) => new double[] { t[1], t[0] }));
+                edgeThickness.Reverse();
+            }
+            return new Profile(this.Perimeter.Reversed(), voids, edgeThickness, null);
         }
 
         /// <summary>
@@ -204,7 +225,7 @@ namespace Elements.Geometry
         {
             var projectedPerimeter = this.Perimeter.Project(plane);
             var projectedVoids = this.Voids.Select(v => v.Project(plane));
-            return new Profile(projectedPerimeter, projectedVoids.ToList());
+            return new Profile(projectedPerimeter, projectedVoids.ToList(), this._edgeThickness);
         }
 
         /// <summary>
