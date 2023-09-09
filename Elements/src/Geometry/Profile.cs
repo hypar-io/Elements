@@ -299,6 +299,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get the edge thicknesses for this profile.
+        /// </summary>
+        /// <returns>A collection of thicknesses for each perimeter edge, or null if no thickness is set.</returns>
+        public List<(double innerWidth, double outerWidth)> GetEdgeThickness()
+        {
+            if (this._edgeThickness == null)
+            {
+                return null;
+            }
+            return this._edgeThickness.Select(t => (t[0], t[1])).ToList();
+        }
+
+        /// <summary>
         /// Default constructor for profile.
         /// </summary>
         protected Profile(string name) : base(Guid.NewGuid(), name) { }
