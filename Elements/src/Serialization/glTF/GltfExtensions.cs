@@ -159,7 +159,7 @@ namespace Elements.Serialization.glTF
         /// <param name="drawEdges">Should edges of the model be drawn?</param>
         /// <param name="mergeVertices">Should vertices be merged in the resulting output?</param>
         /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
-        public static void ToGltf(this Model model,
+        public static void ToGlTF(this Model model,
                                   MemoryStream stream,
                                   bool drawEdges = false,
                                   bool mergeVertices = false,

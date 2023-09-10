@@ -297,9 +297,8 @@ namespace Elements.Serialization.IFC
         /// <param name="path">The path to the generated IFC STEP file.</param>
         /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
 
-        public static void ToIfc(this Model model,
+        public static void ToIFC(this Model model,
                                  MemoryStream stream,
-                                 string path,
                                  bool updateElementsRepresentation = true)
         {
             var ifc = CreateIfcDocument(model, path, updateElementsRepresentation);
