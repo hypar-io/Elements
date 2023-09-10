@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.1
+## 2.1
 
 ### Added
 
@@ -40,6 +40,9 @@
 - `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
 - `Bezier.Intersects(Bezier other, out List<Vector3> results)`
 - `Elements.Geometry.ThickenedPolyline`
+- `Model.ToGlTF(MemoryStream stream...)`
+- `Model.ToIFC(MemoryStream stream ...)`
+- `Model.ToJson(MemoryStream stream ...)`
 
 ### Fixed
 

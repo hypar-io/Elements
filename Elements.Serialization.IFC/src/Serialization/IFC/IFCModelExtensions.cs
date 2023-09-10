@@ -144,7 +144,7 @@ namespace Elements.Serialization.IFC
             return model;
         }
 
-        private static Document CreateIfcDocument(this Model model, string path, bool updateElementsRepresentation = true)
+        private static Document CreateIfcDocument(this Model model, bool updateElementsRepresentation = true)
         {
             var ifc = new Document("Elements", "Elements", Environment.UserName,
                                     null, null, null, "Elements", null, null,
@@ -281,7 +281,7 @@ namespace Elements.Serialization.IFC
                                  string path,
                                  bool updateElementsRepresentation = true)
         {
-            var ifc = CreateIfcDocument(model, path, updateElementsRepresentation);
+            var ifc = CreateIfcDocument(model, updateElementsRepresentation);
             if (File.Exists(path))
             {
                 File.Delete(path);
@@ -301,7 +301,7 @@ namespace Elements.Serialization.IFC
                                  MemoryStream stream,
                                  bool updateElementsRepresentation = true)
         {
-            var ifc = CreateIfcDocument(model, path, updateElementsRepresentation);
+            var ifc = CreateIfcDocument(model, updateElementsRepresentation);
             using (var writer = new StreamWriter(stream, Encoding.UTF8))
             {
                 writer.Write(ifc);
