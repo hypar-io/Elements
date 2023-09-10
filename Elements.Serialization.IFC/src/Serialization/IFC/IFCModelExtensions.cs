@@ -302,7 +302,7 @@ namespace Elements.Serialization.IFC
                                  bool updateElementsRepresentation = true)
         {
             var ifc = CreateIfcDocument(model, updateElementsRepresentation);
-            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            using (var writer = new StreamWriter(stream))
             {
                 writer.Write(ifc);
             }

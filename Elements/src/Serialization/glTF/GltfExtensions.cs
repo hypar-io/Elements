@@ -171,6 +171,7 @@ namespace Elements.Serialization.glTF
                 return;
             }
             var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
+
             using (var writer = new BinaryWriter(stream))
             {
                 gltf.SaveBinaryModel(mergedBuffer, stream);

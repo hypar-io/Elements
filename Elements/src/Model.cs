@@ -243,7 +243,7 @@ namespace Elements
             var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
             var json = JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
-            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            using (var writer = new StreamWriter(stream))
             {
                 writer.Write(json);
             }
