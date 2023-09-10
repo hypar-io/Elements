@@ -12,8 +12,7 @@ using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.GeoJSON;
 using System.IO;
-using Elements.Search;
-using Elements.Spatial;
+using System.Text;
 
 namespace Elements
 {
@@ -222,12 +221,32 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
+        /// <param name="indent"></param>
+        /// <param name="gatherSubElements"></param>
         /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
         public string ToJson(bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
         {
             var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
             return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+        }
+
+        /// <summary>
+        /// Serialize the model to JSON and write to a memory stream.
+        /// </summary>
+        /// <param name="stream">The stream into which the JSON will be written.</param>
+        /// <param name="indent">Should the JSON be indented?</param>
+        /// <param name="gatherSubElements">Should sub-elements of elements be processed?</param>
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public void ToJson(MemoryStream stream, bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
+        {
+            var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
+
+            var json = JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+            using (var writer = new StreamWriter(stream, Encoding.UTF8))
+            {
+                writer.Write(json);
+            }
         }
 
         /// <summary>
