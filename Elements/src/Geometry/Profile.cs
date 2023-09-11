@@ -47,6 +47,7 @@ namespace Elements.Geometry
             this.Perimeter = perimeter;
             this.Voids = voids;
             this._edgeThickness = edgeThickness;
+            this.Name = name;
         }
 
         /// <summary>

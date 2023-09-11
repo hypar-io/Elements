@@ -352,7 +352,7 @@ namespace Elements.Geometry
         /// corresponding list of thicknesses for each edge, construct the
         /// polygonal boundary taking into account those thickness offsets.
         /// </summary>
-        /// <param name="vertices">An ordered list of vertices representing a closed polygon</param>
+        /// <param name="vertices">An ordered list of vertices representing a closed polygon.</param>
         /// <param name="edgeThickness">An ordered list of leftWidth/rightWidth pairs, representing the thickness of the edge beginning at each vertex.</param>
         /// <param name="left">Which side of the loop boundary to compute. Left by default.</param>
         /// <param name="normal">The normal defining the plane in which to calculate the boundary.</param>
