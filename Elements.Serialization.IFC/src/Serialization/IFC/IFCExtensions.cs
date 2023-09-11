@@ -186,7 +186,7 @@ namespace Elements.Serialization.IFC
 
             var wall = GetWallFromDoor(ifcDoor, allWalls);
 
-            var result = new Door(wall, transform, (IfcLengthMeasure)ifcDoor.OverallWidth - Door.DOOR_FRAME_WIDTH, (IfcLengthMeasure)ifcDoor.OverallHeight - Door.DOOR_FRAME_WIDTH, openingSide, openingType);
+            var result = new Door(wall, transform, (IfcLengthMeasure)ifcDoor.OverallWidth, (IfcLengthMeasure)ifcDoor.OverallHeight, openingSide, openingType);
             return result;
         }
 

@@ -218,8 +218,8 @@ namespace Elements.Serialization.IFC
                 localPlacement,
                 shape,
                 null,
-                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.ClearHeight + Door.DOOR_FRAME_WIDTH)),
-                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.ClearWidth + Door.DOOR_FRAME_WIDTH)),
+                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.ClearHeight)),
+                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.ClearWidth)),
                 IfcDoorTypeEnum.DOOR,
                 door.GetIfcDoorTypeOperation(),
                 null

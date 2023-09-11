@@ -64,8 +64,8 @@ namespace Elements.IFC.Tests
             // Add 2 walls.
             var wallLine1 = new Line(Vector3.Origin, new Vector3(10, 10, 0));
             var wallLine2 = new Line(new Vector3(10, 10, 0), new Vector3(10, 15, 0));
-            var wall1 = new StandardWall(wallLine1, 0.2, 3);
-            var wall2 = new StandardWall(wallLine2, 0.2, 2);
+            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "wall1");
+            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "wall2");
 
             model.AddElement(wall1);
             model.AddElement(wall2);
