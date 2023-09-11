@@ -34,7 +34,7 @@ namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
             // TODO: Implement during the connections establishment.
             //var wall = GetWallFromDoor(ifcDoor, allWalls);
 
-            var result = new Door(null, transform, (IfcLengthMeasure)ifcDoor.OverallWidth - Door.DOOR_FRAME_WIDTH, (IfcLengthMeasure)ifcDoor.OverallHeight - Door.DOOR_FRAME_WIDTH, openingSide, openingType);
+            var result = new Door(null, transform, (IfcLengthMeasure)ifcDoor.OverallWidth, (IfcLengthMeasure)ifcDoor.OverallHeight, openingSide, openingType);
             return result;
         }
 
