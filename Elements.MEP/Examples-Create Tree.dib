@@ -1,0 +1,218 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":".NET"},{"aliases":["C#","c#"],"languageName":"C#","name":"csharp"},{"aliases":["frontend"],"name":"vscode"}]}}
+
+#!csharp
+
+#r "nuget: Elements.MEP"
+
+#!markdown
+
+The routing basis for MEP systems is Elements.Flow.Tree.  The tree is a geometric graph, with Flow.Nodes that are connected by Flow.Connections.  The tree is simply meant to represent where the system paths are, where the paths merge/branch and what amount of flow is in each connection.  You can optionally provide a diameter for the connections, to get a system that has realistic sizes.
+
+The leaves of the system are called Inlets (purely for historical reasons) and the trunk node is called the Outlet (again, for historical reasons). There is only one Outlet, but there can be many Inlets.
+
+The simplest tree is flat and just has some inlets and some outlets, lets make that now.
+
+#!csharp
+
+using Elements.Flow;
+
+var tree= new Tree(new[] {"Room-101"});
+
+tree.SetOutletPosition((0,-1,0));
+
+tree.AddInlet((-1,1,0 ));
+tree.AddInlet((1,5,0));
+
+return tree;
+
+#!markdown
+
+Note that both inlets are connected directly to the outlet, which is not a very interesting system.  Let's change this to make it so that the inlets join together before going to the outlet.  We'll see some of our first ways in modifying and interacting with the `Tree`.
+
+### TODO Add a description of there being Nodes/Edges in the Tree
+
+#!csharp
+
+using Elements.Flow;
+
+var tree= new Tree(new[] {"Room-101"});
+
+tree.SetOutletPosition((0,-1,0));
+
+var inlet1 = tree.AddInlet((-1,1,0 ));
+var connection = tree.GetOutgoingConnection((inlet1));
+var node = tree.SplitConnectionThroughPoint(connection, (0,1,0), out _);
+
+// when we add an inlet we can specify a node to connect via
+var inlet2 = tree.AddInlet((1,5,0), connectVia: node);
+
+return tree;
+
+#!markdown
+
+Note the small cube that has appeared.  These cubes appear at every node where there is more than one incoming connection.  They are places where the Tree branches.
+
+The Tree class is designed to let you modify the connections of the system while always maintaining internal connectivity.  Let's clean up the connection from our second inlet so that it isn't at an angle.  
+
+#!csharp
+
+var inlet2 = tree.Inlets[1];
+var connection = tree.GetOutgoingConnection(inlet2);
+tree.NormalizeConnectionPath(connection, Vector3.ZAxis, Vector3.XAxis, 90, Tree.NormalizationType.End);
+
+return tree;
+
+#!markdown
+
+Here are some other common Tree manipulation methods:
+
+```csharp
+tree.ChamferAtNode(tree.InternalNodes.First(), 0.5, out _, out _);
+tree.ConnectVertically(tree.Connections.First(), 0.5);
+tree.MergeConnectionsAtPoint(tree.Connections.ToList(), (0,1,0));
+tree.ShiftConnectionToNode(tree.Connections.First(), tree.Outlet);
+```
+
+#!markdown
+
+Let's build a slightly more complex tree and give it some flow values.
+
+#!csharp
+
+using Elements.Flow;
+
+var tree= new Tree(new[] {"Room-101"});
+tree.SetOutletPosition((0,-1,0));
+
+var inlet1 = tree.AddInlet((-1,1,0), 1);
+var inlet2 = tree.AddInlet((-1,5,0), 2);
+var inlet3 = tree.AddInlet((1,2,0), 3);
+
+var connection1 = tree.GetOutgoingConnection(inlet1);
+var connection2 = tree.GetOutgoingConnection(inlet2);
+var node= tree.MergeConnectionsAtPoint(new List<Connection> {connection1, connection2}, (0,1,0));
+
+// connection1 is a new connection after the previous change
+connection2 = tree.GetOutgoingConnection(inlet2);
+var connection3 = tree.GetOutgoingConnection(inlet3);
+tree.ShiftConnectionToNode(connection3, node);
+tree.MergeConnectionsAtPoint(new List<Connection> {connection2, connection3}, (0,2,0));
+
+connection2 = tree.GetOutgoingConnection(inlet2);
+tree.NormalizeConnectionPath(connection2, Vector3.ZAxis, Vector3.XAxis, 90, Tree.NormalizationType.End);
+
+return tree;
+
+#!markdown
+
+Now, you have a tree with some flow values and some branching connections.  Let's find the flow at the connections.
+
+#!csharp
+
+tree.UpdateSections();
+
+var connection3 = tree.GetOutgoingConnection(inlet3);
+Console.WriteLine($"Flow from inlet1: {tree.GetFlowOfConnection(connection3)}");
+
+var trunk = tree.GetIncomingConnections(tree.Outlet).First();
+Console.WriteLine($"Flow from outlet: {tree.GetFlowOfConnection(trunk)}");
+
+#!markdown
+
+The `UpdateSections()` method is used to update the flow values in the connections.  It also updates the "Sections" property of the tree, where each section is a list of connections that are connected to each other but without any branching.  Let's take a look at what the sections look like.
+
+#!csharp
+
+var sections = tree.GetSections();
+Console.WriteLine($"Number of connections: {tree.Connections.Count()}");
+Console.WriteLine($"Number of sections: {sections.Count()}");
+
+return sections;
+
+#!markdown
+
+Now lets create fittings for this tree.  For that we'll use the `Elements.Fittings` namespace, and we can create fittings with just one one line.
+
+#!csharp
+
+using Elements.Fittings;
+
+var fittings =  new FittingTreeRouting(tree).BuildFittingTree(out var errors);
+
+return fittings;
+
+#!markdown
+
+These fitting were created using the default FittingTreeRouting, which you can modify to get different results if we want.
+
+#!csharp
+
+var routing = new FittingTreeRouting(tree);
+routing.PipeMaterial = new Material("Pipe", Colors.Aqua, 0.1, 0.1);
+var fittings = routing.BuildFittingTree(out var error);// FittingTree.FromFlowNetwork(tree, out var errors, routing);
+
+return fittings;
+
+#!markdown
+
+Besides just color, you can make a custom FittingTreeRouting that implements your own logic for creating fittings. For example, imagine you only have one size of "Terminal" and "Elbow" fittings, and you want to create your Fitting tree using only that one size. You do this by inheriting from the FittingTreeRouting class and overriding the `BranchPipe` and `TerminatePipe` methods.
+
+#!csharp
+
+public class OneSizeToRuleThemAll: FittingTreeRouting
+{
+    public OneSizeToRuleThemAll(Tree tree) : base(tree)
+    {
+    }
+    
+    public override Fitting ChangeDirection(Connection incoming, Connection outgoing)
+    {
+        var diameter = 0.1;
+        var elbow =  CreateElbow(diameter, incoming.End.Position, incoming.Direction().Negate(), outgoing.Direction());
+        return elbow;
+    }
+
+    public override Fitting TerminatePipe(Connection incoming, Connection outgoing, out Node[]  absorbed) {
+            var diameter = 0.1; 
+            absorbed = new Node[0];
+            if (outgoing != null)
+            {
+                var terminal = new Terminal(outgoing.Start.Position, outgoing.Direction(), 0.03, diameter, DefaultFittingMaterial);
+                return terminal;
+            }
+            else if (incoming != null)
+            {
+                var terminal = new Terminal(incoming.End.Position, incoming.Direction().Negate(), 0.03, diameter, DefaultFittingMaterial);
+                return terminal;
+            }
+            else
+            {
+                throw new ArgumentNullException("Both connections to terminate were null");
+            }
+    }
+
+public override IReducer ReduceOrJoin(StraightSegment pipe, bool invert, double newDiameter, double additionalDistance = 0){
+    var reducer = base.ReduceOrJoin(pipe, invert, newDiameter, additionalDistance);
+    (reducer as Reducer).Material = new Material("Reducer", Colors.Coral, newDiameter, newDiameter);
+    return reducer;
+}
+}
+
+var routing = new OneSizeToRuleThemAll(tree);
+routing.PipeMaterial = new Material("Pipe", Colors.Aqua, 0.1, 0.1);
+var fittings = routing.BuildFittingTree(out var errors);// FittingTree.FromFlowNetwork(tree, out var errors, routing);
+Console.WriteLine($"Total number of reducers: {fittings.FittingsOfType<Reducer>().Count()}");
+
+return fittings;
+
+#!markdown
+
+Cool!  Now you have 100mm elbows and terminals. Notice that reducers were automatically added wherever necessary. The other methods you might be interested in modifying are:
+
+```csharp
+Fitting BranchPipe(Connection incoming1, Connection incoming2, Connection outgoing) // for single branch nodes.
+Fitting ManifoldPipe(IEnumerable<Connection> incoming, Connection outgoing) // for multi-branch nodes.
+Fitting ChangePipe(Connection incoming, Connection outgoing) // for nodes with a single incoming and outgoing connection that are aligned.
+```

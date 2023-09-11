@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.1
+## 2.1.0
 
 ### Added
 
@@ -40,6 +40,7 @@
 - `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
 - `Bezier.Intersects(Bezier other, out List<Vector3> results)`
 - `Elements.Geometry.ThickenedPolyline`
+- `Elements.MEP`
 
 ### Fixed
 
