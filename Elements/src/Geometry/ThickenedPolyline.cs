@@ -299,14 +299,18 @@ namespace Elements.Geometry
             // Populate the offset vertex map for each node in the graph. These points can be used to construct the thickened geometry.
             PopulateOffsetVertexMap(graph, normalDir);
 
-            var polygons = new List<Polygon>();
-            var lines = new List<Line>();
             // For each edge in the graph, construct a new polygon from the points in the offset vertex map.
             foreach (var (a, b, origPlIndex) in graph.Edges)
             {
 
                 var abc = graph.Nodes[a].offsetVertexMap[b];
                 var def = graph.Nodes[b].offsetVertexMap[a];
+                // if the edge has a thickness of 0, we may get either collinear vertices or fully collapsed vertices. In either case, we can just return a line segment.
+                if (abc.Union(def).ToList().AreCollinearByDistance() || Vector3.AreApproximatelyEqual(abc) || Vector3.AreApproximatelyEqual(def))
+                {
+                    resultList[origPlIndex] = (offsetPolygon: null, offsetLine: new Line(abc[1], def[1]));
+                    continue;
+                }
                 try
                 {
                     var pgonOutput = new Polygon(abc.Concat(def).ToArray());
@@ -323,11 +327,14 @@ namespace Elements.Geometry
                         // get largest offset
                         var largestOffset = offsets.OrderByDescending((pgon) => Math.Abs(pgon.Area())).First();
                         resultList[origPlIndex] = (offsetPolygon: largestOffset.Perimeter, offsetLine: null);
-                        Elements.Validators.Validator.DisableValidationOnConstruction = false;
                     }
                     catch
                     {
                         resultList[origPlIndex] = (offsetPolygon: null, offsetLine: new Line(abc[1], def[1]));
+                    }
+                    finally
+                    {
+                        Elements.Validators.Validator.DisableValidationOnConstruction = false;
                     }
                 }
 
@@ -381,7 +388,8 @@ namespace Elements.Geometry
             // constructed the graph from these vertices, we can assume that the
             // nodes are there.
             var nodeIndicesPerVertex = vertices.Select((v) => graph.PointToNodeIndexMap.GetNearby(v, Vector3.EPSILON).FirstOrDefault()).ToList();
-            for (int i = 0; i < vertices.Count; i++) {
+            for (int i = 0; i < vertices.Count; i++)
+            {
                 var index1 = nodeIndicesPerVertex[i];
                 var index2 = nodeIndicesPerVertex[(i + 1) % vertices.Count];
                 var node1 = graph.Nodes[index1.Value];
