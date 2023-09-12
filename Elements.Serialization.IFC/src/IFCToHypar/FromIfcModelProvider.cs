@@ -1,4 +1,5 @@
 ﻿using Elements.Interfaces;
+using Elements.Serialization.IFC.IFCToHypar.Converters;
 using IFC;
 using STEP;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
+namespace Elements.Serialization.IFC.IFCToHypar
 {
     internal class FromIfcModelProvider
     {
@@ -20,7 +21,7 @@ namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
         private readonly Dictionary<Element, IfcProduct> _elementToIfcProduct;
         private readonly List<string> _constructionErrors;
 
-        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IIfcProductToElementConverter fromIfcConverter = null) 
+        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IIfcProductToElementConverter fromIfcConverter = null)
         {
             _constructionErrors = new List<string>();
             ExtractIfcProducts(path, idsToConvert);

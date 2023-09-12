@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
+namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class IfcSpaceToSpaceConverter : IIfcProductToElementConverter
     {

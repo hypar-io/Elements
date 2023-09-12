@@ -1,7 +1,7 @@
 using Elements.Analysis;
 using Elements.Geometry;
 using Elements.Interfaces;
-using Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters;
+using Elements.Serialization.IFC.IFCToHypar;
 using IFC;
 using STEP;
 using System;

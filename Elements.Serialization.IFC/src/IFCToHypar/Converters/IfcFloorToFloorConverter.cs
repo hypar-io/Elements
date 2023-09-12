@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
+namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class IfcFloorToFloorConverter : IIfcProductToElementConverter
     {

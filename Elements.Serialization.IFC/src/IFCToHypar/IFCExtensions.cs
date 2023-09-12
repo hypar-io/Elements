@@ -6,7 +6,7 @@ using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using IFC;
 
-namespace Elements.Serialization.IFC.Serialization.IFC.IFCToElementConverters
+namespace Elements.Serialization.IFC.IFCToHypar
 {
     /// <summary>
     /// Extension methods for converting IFC entities to elements.
