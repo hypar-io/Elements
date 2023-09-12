@@ -40,6 +40,9 @@
 - `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
 - `Bezier.Intersects(Bezier other, out List<Vector3> results)`
 - `Elements.Geometry.ThickenedPolyline`
+- `Profile.ThickenedInteriorProfile`
+- `Profile.ThickenedExteriorProfile`
+- `Profile.ThickenedEdgePolygons`
 - `Elements.MEP`
 
 ### Fixed
