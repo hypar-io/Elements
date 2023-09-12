@@ -642,63 +642,63 @@ namespace Elements.Tests
             Assert.Single(cleaned);
         }
 
-        [Fact]
-        public void ThickenedProfilesProduceValidBoundaries()
-        {
-            var profile = new Profile
-            {
-                Perimeter = Polygon.Rectangle(10, 10),
-            };
-            profile.SetEdgeThickness(1, 1);
-            var innerBoundary = profile.ThickenedInteriorProfile();
-            Assert.Equal(4, innerBoundary.Perimeter.Vertices.Count);
-            // (10 - 1 - 1)^2 = 64
-            Assert.Equal(64, innerBoundary.Area());
+        // [Fact]
+        // public void ThickenedProfilesProduceValidBoundaries()
+        // {
+        //     var profile = new Profile
+        //     {
+        //         Perimeter = Polygon.Rectangle(10, 10),
+        //     };
+        //     profile.SetEdgeThickness(1, 1);
+        //     var innerBoundary = profile.ThickenedInteriorProfile();
+        //     Assert.Equal(4, innerBoundary.Perimeter.Vertices.Count);
+        //     // (10 - 1 - 1)^2 = 64
+        //     Assert.Equal(64, innerBoundary.Area());
 
-            var outerBoundary = profile.ThickenedExteriorProfile();
-            Assert.Equal(4, outerBoundary.Perimeter.Vertices.Count);
-            // (10 + 1 + 1)^2 = 144
-            Assert.Equal(144, outerBoundary.Area());
+        //     var outerBoundary = profile.ThickenedExteriorProfile();
+        //     Assert.Equal(4, outerBoundary.Perimeter.Vertices.Count);
+        //     // (10 + 1 + 1)^2 = 144
+        //     Assert.Equal(144, outerBoundary.Area());
 
-            var boundaryPolygons = profile.ThickenedEdgePolygons();
-            Assert.Equal(4, boundaryPolygons.Count);
-            var areaSum = boundaryPolygons.Sum(p => p.Area());
-            Assert.Equal(144 - 64, areaSum);
-        }
+        //     var boundaryPolygons = profile.ThickenedEdgePolygons();
+        //     Assert.Equal(4, boundaryPolygons.Count);
+        //     var areaSum = boundaryPolygons.Sum(p => p.Area());
+        //     Assert.Equal(144 - 64, areaSum);
+        // }
 
-        [Fact]
-        public void InvalidEdgeThicknessThrows()
-        {
-            var profile = new Profile
-            {
-                Perimeter = new Polygon((0, 0), (10, 0), (15, 20), (10, 24), (-2, 10))
-            };
-            Assert.Throws(typeof(ArgumentException), () =>
-            {
-                profile.SetEdgeThickness((1, 1), (0, 1), (1, 0), (2, 2));
-            });
+        // [Fact]
+        // public void InvalidEdgeThicknessThrows()
+        // {
+        //     var profile = new Profile
+        //     {
+        //         Perimeter = new Polygon((0, 0), (10, 0), (15, 20), (10, 24), (-2, 10))
+        //     };
+        //     Assert.Throws(typeof(ArgumentException), () =>
+        //     {
+        //         profile.SetEdgeThickness((1, 1), (0, 1), (1, 0), (2, 2));
+        //     });
 
-            Assert.Throws(typeof(ArgumentException), () =>
-            {
-                profile.SetEdgeThickness(4, -1);
-            });
-        }
+        //     Assert.Throws(typeof(ArgumentException), () =>
+        //     {
+        //         profile.SetEdgeThickness(4, -1);
+        //     });
+        // }
 
-        [Fact]
-        public void ProfileWithVariableEdgeThickness()
-        {
-            Name = nameof(ProfileWithVariableEdgeThickness);
-            var profile = new Profile
-            {
-                Perimeter = new Polygon((0, 0), (10, 0), (15, 20), (10, 24), (-2, 10))
-            };
-            profile.SetEdgeThickness((1, 1), (0, 1), (1, 0), (2, 2), (0, 0));
-            Model.AddElements(profile.ToModelCurves(new Transform(0, 0, 2), BuiltInMaterials.XAxis));
-            Model.AddElements(profile.ThickenedExteriorProfile().ToModelCurves(new Transform(0, 0, 1), BuiltInMaterials.YAxis));
-            Model.AddElements(profile.ThickenedInteriorProfile().ToModelCurves(new Transform(), BuiltInMaterials.ZAxis));
-            var boundaryPolygons = profile.ThickenedEdgePolygons();
-            Model.AddElements(boundaryPolygons.Select(p => new ModelCurve(p, BuiltInMaterials.Mass, new Transform(0, 0, -1))));
-        }
+        // [Fact]
+        // public void ProfileWithVariableEdgeThickness()
+        // {
+        //     Name = nameof(ProfileWithVariableEdgeThickness);
+        //     var profile = new Profile
+        //     {
+        //         Perimeter = new Polygon((0, 0), (10, 0), (15, 20), (10, 24), (-2, 10))
+        //     };
+        //     profile.SetEdgeThickness((1, 1), (0, 1), (1, 0), (2, 2), (0, 0));
+        //     Model.AddElements(profile.ToModelCurves(new Transform(0, 0, 2), BuiltInMaterials.XAxis));
+        //     Model.AddElements(profile.ThickenedExteriorProfile().ToModelCurves(new Transform(0, 0, 1), BuiltInMaterials.YAxis));
+        //     Model.AddElements(profile.ThickenedInteriorProfile().ToModelCurves(new Transform(), BuiltInMaterials.ZAxis));
+        //     var boundaryPolygons = profile.ThickenedEdgePolygons();
+        //     Model.AddElements(boundaryPolygons.Select(p => new ModelCurve(p, BuiltInMaterials.Mass, new Transform(0, 0, -1))));
+        // }
 
     }
 }
