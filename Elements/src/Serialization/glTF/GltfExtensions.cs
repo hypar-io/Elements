@@ -969,6 +969,7 @@ namespace Elements.Serialization.glTF
             var bufferViews = new List<BufferView>();
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
+            materialsToAdd.AddRange(model.SubElementsFromSharedObjects.Values.OfType<Material>());
             if (drawEdges)
             {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
