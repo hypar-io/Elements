@@ -17,8 +17,6 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Reflection;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Formats;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -578,127 +576,39 @@ namespace Elements.Serialization.glTF
                                             GraphicsBuffers gBuffers,
                                             List<glTFLoader.Schema.Mesh> meshes)
         {
-            var m = new glTFLoader.Schema.Mesh
-            {
-                Name = name
-            };
-
-            var vBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Vertices.Count, null, null);
-            buffer.AddRange(gBuffers.Vertices);
-
-            var nBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Normals.Count, null, null);
-            buffer.AddRange(gBuffers.Normals);
-
-            var iBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Indices.Count, null, null);
-            buffer.AddRange(gBuffers.Indices);
-
-            while (buffer.Count % 4 != 0)
-            {
-                buffer.Add(0);
-            }
-
-            var vAccess = AddAccessor(accessors,
-                                      vBuff,
-                                      0,
-                                      Accessor.ComponentTypeEnum.FLOAT,
-                                      gBuffers.Vertices.Count / sizeof(float) / 3,
-                                      new[] { (float)gBuffers.VMin[0], (float)gBuffers.VMin[1], (float)gBuffers.VMin[2] },
-                                      new[] { (float)gBuffers.VMax[0], (float)gBuffers.VMax[1], (float)gBuffers.VMax[2] },
-                                      Accessor.TypeEnum.VEC3);
-            var nAccess = AddAccessor(accessors,
-                                      nBuff,
-                                      0,
-                                      Accessor.ComponentTypeEnum.FLOAT,
-                                      gBuffers.Normals.Count / sizeof(float) / 3,
-                                      new[] { (float)gBuffers.NMin[0], (float)gBuffers.NMin[1], (float)gBuffers.NMin[2] },
-                                      new[] { (float)gBuffers.NMax[0], (float)gBuffers.NMax[1], (float)gBuffers.NMax[2] },
-                                      Accessor.TypeEnum.VEC3);
-            var iAccess = AddAccessor(accessors,
-                                      iBuff,
-                                      0,
-                                      Accessor.ComponentTypeEnum.UNSIGNED_SHORT,
-                                      gBuffers.Indices.Count / sizeof(ushort),
-                                      new[] { (float)gBuffers.IMin },
-                                      new[] { (float)gBuffers.IMax },
-                                      Accessor.TypeEnum.SCALAR);
-
-            var prim = new MeshPrimitive
-            {
-                Indices = iAccess,
-                Material = materialId,
-                Mode = MeshPrimitive.ModeEnum.TRIANGLES,
-                Attributes = new Dictionary<string, int>{
-                {"NORMAL",nAccess},
-                {"POSITION",vAccess}
-            }
-            };
-
-            if (gBuffers.UVs.Count > 0)
-            {
-                var uvBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.UVs.Count, null, null);
-                buffer.AddRange(gBuffers.UVs);
-                var uvAccess = AddAccessor(accessors,
-                                           uvBuff,
-                                           0,
-                                           Accessor.ComponentTypeEnum.FLOAT,
-                                           gBuffers.UVs.Count / sizeof(float) / 2,
-                                           new[] { (float)gBuffers.UVMin[0], (float)gBuffers.UVMin[1] },
-                                           new[] { (float)gBuffers.UVMax[0], (float)gBuffers.UVMax[1] },
-                                           Accessor.TypeEnum.VEC2);
-                prim.Attributes.Add("TEXCOORD_0", uvAccess);
-            }
-
-            // TODO: Add to the buffer above instead of inside this block.
-            // There's a chance the padding operation will put padding before
-            // the color information.
-            if (gBuffers.Colors.Count > 0)
-            {
-                var cBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Colors.Count, null, null);
-                buffer.AddRange(gBuffers.Colors);
-                var cAccess = AddAccessor(accessors,
-                                          cBuff,
-                                          0,
-                                          Accessor.ComponentTypeEnum.FLOAT,
-                                          gBuffers.Colors.Count / sizeof(float) / 3,
-                                          new[] { (float)gBuffers.CMin[0], (float)gBuffers.CMin[1], (float)gBuffers.CMin[2] },
-                                          new[] { (float)gBuffers.CMax[0], (float)gBuffers.CMax[1], (float)gBuffers.CMax[2] },
-                                          Accessor.TypeEnum.VEC3);
-                prim.Attributes.Add("COLOR_0", cAccess);
-            }
-
-            m.Primitives = new[] { prim };
-
-            // Add mesh to gltf
-            meshes.Add(m);
-
-            return meshes.Count - 1;
+            return AddMesh(name, buffer, bufferViews, accessors, materialId, new List<GraphicsBuffers>() { gBuffers }, MeshPrimitive.ModeEnum.TRIANGLES, meshes);
         }
 
-        internal static int AddPointsOrLines(string name,
-                                        List<byte> buffer,
-                                        List<BufferView> bufferViews,
-                                        List<Accessor> accessors,
-                                        int materialId,
-                                        List<GraphicsBuffers> gBuffersList,
-                                        MeshPrimitive.ModeEnum mode,
-                                        List<glTFLoader.Schema.Mesh> meshes,
-                                        List<Node> nodes,
-                                        Guid? elementId = null,
-                                        Transform transform = null,
-                                        bool? selectable = null)
+        internal static int AddMesh(string name,
+                                            List<byte> buffer,
+                                            List<BufferView> bufferViews,
+                                            List<Accessor> accessors,
+                                            int materialId,
+                                            List<GraphicsBuffers> gBuffersList,
+                                            MeshPrimitive.ModeEnum mode,
+                                            List<glTFLoader.Schema.Mesh> meshes,
+                                            bool ignoreNormal = false)
         {
             var m = new glTFLoader.Schema.Mesh
             {
                 Name = name,
                 Primitives = new MeshPrimitive[gBuffersList.Count()]
             };
+
             for (var idx = 0; idx < gBuffersList.Count(); idx++)
             {
                 var gBuffers = gBuffersList[idx];
                 var vBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Vertices.Count, null, null);
-                var iBuff = AddBufferView(bufferViews, 0, buffer.Count + gBuffers.Vertices.Count, gBuffers.Indices.Count, null, null);
-
                 buffer.AddRange(gBuffers.Vertices);
+
+                var nBuff = -1;
+                if (!ignoreNormal && gBuffers.Normals.Any())
+                {
+                    nBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Normals.Count, null, null);
+                    buffer.AddRange(gBuffers.Normals);
+                }
+
+                var iBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Indices.Count, null, null);
                 buffer.AddRange(gBuffers.Indices);
 
                 while (buffer.Count % 4 != 0)
@@ -714,6 +624,14 @@ namespace Elements.Serialization.glTF
                                           new[] { (float)gBuffers.VMin[0], (float)gBuffers.VMin[1], (float)gBuffers.VMin[2] },
                                           new[] { (float)gBuffers.VMax[0], (float)gBuffers.VMax[1], (float)gBuffers.VMax[2] },
                                           Accessor.TypeEnum.VEC3);
+                var nAccess = nBuff == -1 ? -1 : AddAccessor(accessors,
+                                          nBuff,
+                                          0,
+                                          Accessor.ComponentTypeEnum.FLOAT,
+                                          gBuffers.Normals.Count / sizeof(float) / 3,
+                                          new[] { (float)gBuffers.NMin[0], (float)gBuffers.NMin[1], (float)gBuffers.NMin[2] },
+                                          new[] { (float)gBuffers.NMax[0], (float)gBuffers.NMax[1], (float)gBuffers.NMax[2] },
+                                          Accessor.TypeEnum.VEC3);
                 var iAccess = AddAccessor(accessors,
                                           iBuff,
                                           0,
@@ -728,11 +646,35 @@ namespace Elements.Serialization.glTF
                     Indices = iAccess,
                     Material = materialId,
                     Mode = mode,
-                    Attributes = new Dictionary<string, int>{
+                    Attributes = new Dictionary<string, int>
+                    {
                         {"POSITION",vAccess}
                     }
                 };
 
+                if (nAccess != -1)
+                {
+                    prim.Attributes.Add("NORMAL", nAccess);
+                }
+
+                if (gBuffers.UVs.Count > 0)
+                {
+                    var uvBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.UVs.Count, null, null);
+                    buffer.AddRange(gBuffers.UVs);
+                    var uvAccess = AddAccessor(accessors,
+                                               uvBuff,
+                                               0,
+                                               Accessor.ComponentTypeEnum.FLOAT,
+                                               gBuffers.UVs.Count / sizeof(float) / 2,
+                                               new[] { (float)gBuffers.UVMin[0], (float)gBuffers.UVMin[1] },
+                                               new[] { (float)gBuffers.UVMax[0], (float)gBuffers.UVMax[1] },
+                                               Accessor.TypeEnum.VEC2);
+                    prim.Attributes.Add("TEXCOORD_0", uvAccess);
+                }
+
+                // TODO: Add to the buffer above instead of inside this block.
+                // There's a chance the padding operation will put padding before
+                // the color information.
                 if (gBuffers.Colors.Count > 0)
                 {
                     var cBuff = AddBufferView(bufferViews, 0, buffer.Count, gBuffers.Colors.Count, null, null);
@@ -753,6 +695,23 @@ namespace Elements.Serialization.glTF
 
             // Add mesh to gltf
             meshes.Add(m);
+            return meshes.Count - 1;
+        }
+
+        internal static int AddPointsOrLines(string name,
+                                        List<byte> buffer,
+                                        List<BufferView> bufferViews,
+                                        List<Accessor> accessors,
+                                        int materialId,
+                                        List<GraphicsBuffers> gBuffersList,
+                                        MeshPrimitive.ModeEnum mode,
+                                        List<glTFLoader.Schema.Mesh> meshes,
+                                        List<Node> nodes,
+                                        Guid? elementId = null,
+                                        Transform transform = null,
+                                        bool? selectable = null)
+        {
+            var meshId = AddMesh(name, buffer, bufferViews, accessors, materialId, gBuffersList, mode, meshes, true);
 
             var parentId = 0;
 
@@ -764,15 +723,15 @@ namespace Elements.Serialization.glTF
             // Add mesh node to gltf
             var node = new Node
             {
-                Mesh = meshes.Count - 1
+                Mesh = meshId
             };
             if (elementId.HasValue)
             {
                 node.SetElementInfo(elementId.Value, selectable);
             }
-            NodeUtilities.AddNode(nodes, node, parentId);
 
-            return meshes.Count - 1;
+            NodeUtilities.AddNode(nodes, node, parentId);
+            return meshId;
         }
 
         internal static void ToGlb(this Solid solid, string path)
