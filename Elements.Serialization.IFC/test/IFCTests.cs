@@ -57,6 +57,29 @@ namespace Elements.IFC.Tests
         }
 
         [Fact]
+        public void Doors()
+        {
+            var model = new Model();
+
+            // Add 2 walls.
+            var wallLine1 = new Line(Vector3.Origin, new Vector3(10, 10, 0));
+            var wallLine2 = new Line(new Vector3(10, 10, 0), new Vector3(10, 15, 0));
+            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "wall1");
+            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "wall2");
+
+            model.AddElement(wall1);
+            model.AddElement(wall2);
+
+            var door1 = new Door(wall1, wallLine1, 0.5, 1.5, 2.0, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door2 = new Door(wall2, wallLine2, 0.5, 1.5, 1.8, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+
+            model.AddElement(door1);
+            model.AddElement(door2);
+
+            model.ToIFC(ConstructIfcPath("IfcDoor"));
+        }
+
+        [Fact]
         public void Wall()
         {
             var line = new Line(Vector3.Origin, new Vector3(10, 10, 0));
