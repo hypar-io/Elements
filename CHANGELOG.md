@@ -44,6 +44,7 @@
 - `Profile.ThickenedExteriorProfile`
 - `Profile.ThickenedEdgePolygons`
 - `Elements.MEP`
+- `GeometricElement.RepresentationInstances`
 
 ### Fixed
 
