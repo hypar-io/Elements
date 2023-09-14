@@ -50,6 +50,13 @@ namespace Elements
         [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
 
+        /// <summary>
+        ///  The list of element representations. 
+        /// </summary>
+        [JsonIgnore]
+        // [JsonProperty("RepresentationTMP", Required = Required.Default)]
+        public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
+
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
         [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
