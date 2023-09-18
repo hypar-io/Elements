@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Elements
 {
     /// <summary>
-    /// An object which is identified with a unique identifier.
+    /// An object with a unique identifier which is shared by one or more elements, and excluded from element serialization.
     /// </summary>
     [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class SharedObject

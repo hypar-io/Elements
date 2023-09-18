@@ -37,9 +37,12 @@ namespace Elements
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
         /// <summary>
-        /// Collection of subelements frpm shared objects.
+        /// Collection of subelements from shared objects or RepresentationInstances (e.g. SolidRepresentation.Profile or RepresentationInstance.Material).
         /// 
-        /// We do not serialize shared objects to json, but we do serialize them to other formats 
+        /// We do not serialize shared objects to json, but we do include them in other formats like gltf.
+        /// This sollection contains all Materials collected from the RepresentatioInstances, 
+        /// Profiles from the SolidRepresentations. 
+        /// All elements that SharedObjects are point to and that we potentially need to create a gltf.
         /// </summary>
         [JsonIgnore]
         public System.Collections.Generic.IDictionary<Guid, Element> SubElementsFromSharedObjects { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();

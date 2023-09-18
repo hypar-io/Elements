@@ -58,13 +58,13 @@ namespace Elements
         public List<string> RepresentationTypes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Indicates if this element representation isntance is displayed by default. 
-        /// Element can have several default represemtations.
+        /// Indicates if this element representation instance is displayed by default. 
+        /// Element can have several default representations.
         /// </summary>
         public bool IsDefault { get; set; } = true;
 
         /// <summary>
-        /// Calculates representation istance hash code including material and element opening information.
+        /// Calculates representation instance hash code including material and element opening information.
         /// This hash code can be used to compare two representation types by Representation Id, Material Id and element openings.
         /// </summary>
         /// <param name="element">The element that owns this representation instance.</param>
