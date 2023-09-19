@@ -150,6 +150,33 @@ namespace Elements.Serialization.glTF
         }
 
         /// <summary>
+        /// Serialize the model to a stream.
+        /// </summary>
+        /// <param name="model">The model to serialize.</param>
+        /// <param name="stream">The stream into which the model should be written.</param>
+        /// <param name="drawEdges">Should edges of the model be drawn?</param>
+        /// <param name="mergeVertices">Should vertices be merged in the resulting output?</param>
+        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public static void ToGlTF(this Model model,
+                                  MemoryStream stream,
+                                  bool drawEdges = false,
+                                  bool mergeVertices = false,
+                                  bool updateElementsRepresentations = true)
+        {
+            var gltf = InitializeGlTF(model, updateElementsRepresentations, out var buffers, out _, drawEdges, mergeVertices);
+            if (gltf == null)
+            {
+                return;
+            }
+            var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
+
+            using (var writer = new BinaryWriter(stream))
+            {
+                gltf.SaveBinaryModel(mergedBuffer, stream);
+            }
+        }
+
+        /// <summary>
         /// Serialize the model to a base64 encoded string.
         /// </summary>
         /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
