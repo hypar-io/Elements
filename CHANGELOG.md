@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1
+## 2.1.0
 
 ### Added
 
@@ -43,6 +43,11 @@
 - `Model.ToGlTF(MemoryStream stream...)`
 - `Model.ToIFC(MemoryStream stream ...)`
 - `Model.ToJson(MemoryStream stream ...)`
+- `Profile.ThickenedInteriorProfile`
+- `Profile.ThickenedExteriorProfile`
+- `Profile.ThickenedEdgePolygons`
+- `Elements.MEP`
+- `GeometricElement.RepresentationInstances`
 
 ### Fixed
 

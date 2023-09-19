@@ -36,6 +36,16 @@ namespace Elements
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
         /// <summary>
+        /// Collection of subelements from shared objects or RepresentationInstances (e.g. SolidRepresentation.Profile or RepresentationInstance.Material).
+        /// 
+        /// We do not serialize shared objects to json, but we do include them in other formats like gltf.
+        /// This collection contains all elements referenced directly by RepresentationInstances, such as Materials and Profiles. 
+        /// These objects affect representation appearance and may be used at glTF creation time.
+        /// </summary>
+        [JsonIgnore]
+        public System.Collections.Generic.IDictionary<Guid, Element> SubElementsFromSharedObjects { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
+
+        /// <summary>
         /// Construct a model.
         /// </summary>
         /// <param name="origin">The origin of the model.</param>
@@ -121,12 +131,20 @@ namespace Elements
                 // to the elements dictionary first. This will ensure that
                 // those elements will be read out and be available before
                 // an attempt is made to deserialize the element itself.
-                var subElements = RecursiveGatherSubElements(element);
+                var subElements = RecursiveGatherSubElements(element, out var elementsToIgnore);
                 foreach (var e in subElements)
                 {
                     if (!this.Elements.ContainsKey(e.Id))
                     {
                         this.Elements.Add(e.Id, e);
+                    }
+                }
+
+                foreach (var e in elementsToIgnore)
+                {
+                    if (!SubElementsFromSharedObjects.ContainsKey(e.Id))
+                    {
+                        SubElementsFromSharedObjects.Add(e.Id, e);
                     }
                 }
             }
@@ -307,10 +325,10 @@ namespace Elements
             UpdateBoundsAndComputedSolids();
 
             var geos = Elements.Values.Where(e => e is GeometricElement geo && geo.IsElementDefinition == false).Cast<GeometricElement>();
-            var intersectingElements = geos.Where(geo => geo._bounds.Intersects(plane, out _)).ToList();
+            var intersectingElements = geos.Where(geo => geo.Bounds.Intersects(plane, out _)).ToList();
 
             var geoInstances = Elements.Values.Where(e => e is ElementInstance instance).Cast<ElementInstance>();
-            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition._bounds.Intersects(plane, out _, geo.Transform)).ToList();
+            var intersectingInstances = geoInstances.Where(geo => geo.BaseDefinition.Bounds.Intersects(plane, out _, geo.Transform)).ToList();
 
             var allIntersectingElements = new List<Element>();
             allIntersectingElements.AddRange(intersectingInstances);
@@ -438,18 +456,19 @@ namespace Elements
             return FromJson(json, out _, forceTypeReload);
         }
 
-        private List<Element> RecursiveGatherSubElements(object obj)
+        private List<Element> RecursiveGatherSubElements(object obj, out List<Element> elementsToIgnore)
         {
             // A dictionary created for the purpose of caching properties
             // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
 
-            return RecursiveGatherSubElementsInternal(obj, props);
+            return RecursiveGatherSubElementsInternal(obj, props, out elementsToIgnore);
         }
 
-        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties)
+        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties, out List<Element> elementsToIgnore)
         {
             var elements = new List<Element>();
+            elementsToIgnore = new List<Element>();
 
             if (obj == null)
             {
@@ -494,10 +513,12 @@ namespace Elements
             {
                 // This query had a nice little speed boost when we filtered for
                 // valid types first then filtered for custom attributes.
-                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) && p.GetCustomAttribute<JsonIgnoreAttribute>() == null).ToList();
+                constrainedProps = t.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => IsValidForRecursiveAddition(p.PropertyType) &&
+                    (p.GetCustomAttribute<JsonIgnoreAttribute>() == null || IsPropertyTypeRelatedToSharedObjects(p.PropertyType))).ToList();
                 properties.Add(t, constrainedProps);
             }
 
+            var elementsFromProperties = new List<Element>();
             foreach (var p in constrainedProps)
             {
                 try
@@ -512,7 +533,8 @@ namespace Elements
                     {
                         foreach (var item in elems)
                         {
-                            elements.AddRange(RecursiveGatherSubElementsInternal(item, properties));
+                            elementsFromProperties.AddRange(RecursiveGatherSubElementsInternal(item, properties, out var elementsFromItemToIgnore));
+                            elementsToIgnore.AddRange(elementsFromItemToIgnore);
                         }
                         continue;
                     }
@@ -522,17 +544,27 @@ namespace Elements
                     {
                         foreach (var value in dict.Values)
                         {
-                            elements.AddRange(RecursiveGatherSubElementsInternal(value, properties));
+                            elementsFromProperties.AddRange(RecursiveGatherSubElementsInternal(value, properties, out var elementsFromValueToIgnore));
+                            elementsToIgnore.AddRange(elementsFromValueToIgnore);
                         }
                         continue;
                     }
 
-                    elements.AddRange(RecursiveGatherSubElementsInternal(pValue, properties));
+                    elementsFromProperties.AddRange(RecursiveGatherSubElementsInternal(pValue, properties, out var elementsFromPropertyToIgnore));
+                    elementsToIgnore.AddRange(elementsFromPropertyToIgnore);
                 }
                 catch (Exception ex)
                 {
                     throw new Exception($"The {p.Name} property or one of its children was not valid for introspection. Check the inner exception for details.", ex);
                 }
+            }
+            if (IsTypeRelatedToSharedObjects(t))
+            {
+                elementsToIgnore.AddRange(elementsFromProperties);
+            }
+            else
+            {
+                elements.AddRange(elementsFromProperties);
             }
 
             if (e != null)
@@ -588,13 +620,62 @@ namespace Elements
 
             return typeof(Element).IsAssignableFrom(t)
                    || typeof(Representation).IsAssignableFrom(t)
-                   || typeof(SolidOperation).IsAssignableFrom(t);
+                   || typeof(SolidOperation).IsAssignableFrom(t)
+                   || typeof(SharedObject).IsAssignableFrom(t)
+               || typeof(RepresentationInstance).IsAssignableFrom(t);
+        }
+
+        private static bool IsTypeRelatedToSharedObjects(Type t)
+        {
+
+            return typeof(SharedObject).IsAssignableFrom(t)
+                || typeof(RepresentationInstance).IsAssignableFrom(t);
+        }
+
+        private static bool IsPropertyTypeRelatedToSharedObjects(Type t)
+        {
+            if (t.IsGenericType)
+            {
+                var genT = t.GetGenericArguments();
+                if (genT.Length == 1)
+                {
+                    if (typeof(IList<>).MakeGenericType(genT[0]).IsAssignableFrom(t))
+                    {
+                        if (!IsTypeRelatedToSharedObjects(genT[0]))
+                        {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                }
+                else if (genT.Length == 2)
+                {
+                    if (typeof(IDictionary<,>).MakeGenericType(genT).IsAssignableFrom(t))
+                    {
+                        if (IsTypeRelatedToSharedObjects(genT[1]))
+                        {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+            }
+
+            if (t.IsArray)
+            {
+                return IsTypeRelatedToSharedObjects(t.GetElementType());
+            }
+
+            return IsTypeRelatedToSharedObjects(t);
         }
 
         private static bool IsValidListType(Type t)
         {
             return typeof(Element).IsAssignableFrom(t)
-                   || typeof(SolidOperation).IsAssignableFrom(t);
+                   || typeof(SolidOperation).IsAssignableFrom(t)
+                   || typeof(SharedObject).IsAssignableFrom(t)
+               || typeof(RepresentationInstance).IsAssignableFrom(t);
         }
     }
 

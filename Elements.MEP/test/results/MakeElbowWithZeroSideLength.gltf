@@ -1,0 +1,206 @@
+{
+  "extensionsUsed": [
+    "KHR_materials_specular",
+    "KHR_materials_ior",
+    "KHR_materials_unlit",
+    "HYPAR_info"
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 1399,
+      "type": "VEC3",
+      "max": [
+        0.51,
+        0.51,
+        0.05
+      ],
+      "min": [
+        -0.049845867,
+        -0.049845867,
+        -0.05
+      ]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 1399,
+      "type": "VEC3",
+      "max": [
+        1.0,
+        1.0,
+        0.98768836
+      ],
+      "min": [
+        -1.0,
+        -1.0,
+        -0.98768836
+      ]
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5123,
+      "count": 2460,
+      "type": "SCALAR",
+      "max": [
+        1398.0
+      ],
+      "min": [
+        0.0
+      ]
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 1399,
+      "type": "VEC2",
+      "max": [
+        0.51,
+        0.17096283
+      ],
+      "min": [
+        -0.51,
+        -0.17096283
+      ]
+    }
+  ],
+  "asset": {
+    "generator": "hypar-gltf",
+    "version": "2.0"
+  },
+  "buffers": [
+    {
+      "uri": "MakeElbowWithZeroSideLength_0.bin",
+      "byteLength": 49688
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 16788
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 16788,
+      "byteLength": 16788
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 33576,
+      "byteLength": 4920
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 38496,
+      "byteLength": 11192
+    }
+  ],
+  "materials": [
+    {
+      "name": "7298d643-9049-4a2b-960d-ae775b50fd80",
+      "extensions": {
+        "KHR_materials_specular": {
+          "specularFactor": 0.0,
+          "specularColorFactor": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "KHR_materials_ior": {
+          "ior": 1000
+        }
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ],
+        "metallicFactor": 0.0
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 3
+          },
+          "indices": 2,
+          "material": 0
+        }
+      ],
+      "name": "2c5a8076-e921-429c-8640-a3a9324a4ffe_mesh"
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        6.123234E-17,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        6.123234E-17,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "extensions": {
+        "HYPAR_info": {
+          "id": "2c5a8076-e921-429c-8640-a3a9324a4ffe"
+        }
+      }
+    },
+    {
+      "mesh": 0
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ]
+}

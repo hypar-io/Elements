@@ -39,6 +39,7 @@ namespace Elements.Serialization.IFC
             IEnumerable<IfcColumn> ifcColumns = null;
             IEnumerable<IfcRelVoidsElement> ifcVoids = null;
             IEnumerable<IfcRelAssociatesMaterial> ifcMaterials = null;
+            IEnumerable<IfcDoor> ifcDoors = null;
 
             if (idsToConvert != null && idsToConvert.Count > 0)
             {
@@ -49,6 +50,7 @@ namespace Elements.Serialization.IFC
                 ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i => idsToConvert.Contains(i.GlobalId));
                 ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i => idsToConvert.Contains(i.GlobalId));
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcDoors = ifcModel.AllInstancesOfType<IfcDoor>().Where(i => idsToConvert.Contains(i.GlobalId));
             }
             else
             {
@@ -59,6 +61,7 @@ namespace Elements.Serialization.IFC
                 ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
                 ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
+                ifcDoors = ifcModel.AllInstancesOfType<IfcDoor>();
             }
 
             constructionErrors = new List<string>();
@@ -134,12 +137,27 @@ namespace Elements.Serialization.IFC
                 }
             }
 
+            var doors = new List<Door>();
+            foreach (var d in ifcDoors)
+            {
+                try
+                {
+                    doors.Add(d.ToDoor(walls));
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+            }
+
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
+            model.AddElements(doors);
 
             return model;
         }
