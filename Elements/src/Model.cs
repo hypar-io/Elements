@@ -40,9 +40,8 @@ namespace Elements
         /// Collection of subelements from shared objects or RepresentationInstances (e.g. SolidRepresentation.Profile or RepresentationInstance.Material).
         /// 
         /// We do not serialize shared objects to json, but we do include them in other formats like gltf.
-        /// This sollection contains all Materials collected from the RepresentatioInstances, 
-        /// Profiles from the SolidRepresentations. 
-        /// All elements that SharedObjects are point to and that we potentially need to create a gltf.
+        /// This collection contains all elements referenced directly by RepresentationInstances, such as Materials and Profiles. 
+        /// These objects affect representation appearance and may be used at glTF creation time.
         /// </summary>
         [JsonIgnore]
         public System.Collections.Generic.IDictionary<Guid, Element> SubElementsFromSharedObjects { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
