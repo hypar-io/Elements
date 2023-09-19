@@ -203,5 +203,21 @@ namespace Elements.Serialization.glTF
             }
             node.Extensions["HYPAR_info"] = extensionDict;
         }
+
+        public static void SetRepresentationInfo(this Node node, RepresentationInstance representationInstance)
+        {
+            if (node.Extensions == null)
+            {
+                node.Extensions = new Dictionary<string, object>();
+            }
+
+            var extensionDict = new Dictionary<string, object>
+                {
+                    {"isDefault", representationInstance.IsDefault},
+                    {"representationType", representationInstance.RepresentationTypes}
+                };
+
+            node.Extensions["HYPAR_representation_info"] = extensionDict;
+        }
     }
 }

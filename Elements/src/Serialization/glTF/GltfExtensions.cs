@@ -954,7 +954,8 @@ namespace Elements.Serialization.glTF
                 "KHR_materials_specular",
                 "KHR_materials_ior",
                 "KHR_materials_unlit",
-                "HYPAR_info"
+                "HYPAR_info",
+                "HYPAR_representation_info"
             };
 
             var lights = model.AllElementsOfType<Light>().ToList();
@@ -968,6 +969,7 @@ namespace Elements.Serialization.glTF
             var bufferViews = new List<BufferView>();
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
+            materialsToAdd.AddRange(model.SubElementsFromSharedObjects.Values.OfType<Material>());
             if (drawEdges)
             {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
@@ -1008,6 +1010,7 @@ namespace Elements.Serialization.glTF
             var meshElementMap = new Dictionary<Guid, List<int>>();
             var nodeElementMap = new Dictionary<Guid, ProtoNode>();
             var meshTransformMap = new Dictionary<Guid, Transform>();
+            var representationsMap = new Dictionary<int, List<int>>();
             foreach (var e in elements)
             {
                 // Check if we'll overrun the index size
@@ -1039,6 +1042,7 @@ namespace Elements.Serialization.glTF
                                             meshElementMap,
                                             nodeElementMap,
                                             meshTransformMap,
+                                            representationsMap,
                                             currLines,
                                             drawEdges,
                                             updateElementsRepresentations,
@@ -1145,6 +1149,7 @@ namespace Elements.Serialization.glTF
                                                     Dictionary<Guid, List<int>> meshElementMap,
                                                     Dictionary<Guid, ProtoNode> nodeElementMap,
                                                     Dictionary<Guid, Transform> meshTransformMap,
+                                                    Dictionary<int, List<int>> representationsMap,
                                                     List<Vector3> lines,
                                                     bool drawEdges,
                                                     bool updateElementRepresentations,
@@ -1253,6 +1258,49 @@ namespace Elements.Serialization.glTF
                         AddExtension(gltf, nodes[nodeId], "HYPAR_referenced_content", new Dictionary<string, object> {
                             {"contentUrl", contentElement.GltfLocation}
                         });
+                    }
+
+                    if (element.RepresentationInstances != null && element.RepresentationInstances.Any())
+                    {
+                        foreach (var representation in element.RepresentationInstances)
+                        {
+                            // get the unique id that contains representation Id and opening Ids 
+                            int combinedId = representation.GetHashCode(element);
+
+                            if (representationsMap.TryGetValue(combinedId, out var mesh))
+                            {
+                                var addedNodes = NodeUtilities.AddInstanceNode(nodes, mesh, element.Transform, e.Id);
+                                foreach (var index in addedNodes)
+                                {
+                                    NodeUtilities.SetRepresentationInfo(nodes[index], representation);
+                                }
+                            }
+                            else if (representation.Representation.TryToGraphicsBuffers(geometricElement, out var graphicsBuffers,
+                                out var bufferId, out var mode))
+                            {
+                                meshId = AddMesh(bufferId,
+                                            buffer,
+                                            bufferViews,
+                                            accessors,
+                                            materialIndexMap[representation.Material.Id.ToString()],
+                                            graphicsBuffers,
+                                            (MeshPrimitive.ModeEnum)mode,
+                                            meshes);
+
+                                // If the id == -1, the mesh is malformed.
+                                // It may have no geometry.
+                                if (meshId != -1)
+                                {
+                                    var meshIdList = new List<int> { meshId };
+                                    representationsMap.Add(combinedId, meshIdList);
+                                    var addedNodes = NodeUtilities.AddInstanceNode(nodes, meshIdList, element.Transform, e.Id);
+                                    foreach (var index in addedNodes)
+                                    {
+                                        NodeUtilities.SetRepresentationInfo(nodes[index], representation);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
