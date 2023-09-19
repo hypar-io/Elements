@@ -239,8 +239,8 @@ namespace Elements
         /// <summary>
         /// Serialize the model to JSON.
         /// </summary>
-        /// <param name="indent"></param>
-        /// <param name="gatherSubElements"></param>
+        /// <param name="indent">Should the JSON be indented?</param>
+        /// <param name="gatherSubElements">Should sub-elements of elements be processed?</param>
         /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
         public string ToJson(bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
         {
@@ -250,7 +250,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Serialize the model to JSON and write to a memory stream.
+        /// Serialize the model to JSON and write to a stream.
         /// </summary>
         /// <param name="stream">The stream into which the JSON will be written.</param>
         /// <param name="indent">Should the JSON be indented?</param>
