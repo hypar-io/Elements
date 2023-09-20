@@ -720,5 +720,9 @@ namespace Elements.Serialization.IFC.IFCToHypar
         {
             return loop.Polygon.ToPolygon();
         }
+        internal static Color ToColor(this IfcColourRgb rgb, double transparency)
+        {
+            return new Color((IfcRatioMeasure)rgb.Red, (IfcRatioMeasure)rgb.Green, (IfcRatioMeasure)rgb.Blue, transparency);
+        }
     }
 }
