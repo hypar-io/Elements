@@ -479,7 +479,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return null;
         }
 
-        private static Profile ToProfile(this IfcProfileDef profile)
+        internal static Profile ToProfile(this IfcProfileDef profile)
         {
             Polygon outer = null;
             List<Polygon> inner = new List<Polygon>();
@@ -661,7 +661,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return null;
         }
 
-        private static Transform ToTransform(this IfcCartesianTransformationOperator op)
+        internal static Transform ToTransform(this IfcCartesianTransformationOperator op)
         {
             if (op is IfcCartesianTransformationOperator2D)
             {
@@ -676,7 +676,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return null;
         }
 
-        private static Transform ToTransform(this IfcCartesianTransformationOperator2D op)
+        internal static Transform ToTransform(this IfcCartesianTransformationOperator2D op)
         {
             var o = op.LocalOrigin.ToVector3();
             var x = op.Axis1 == null ? Vector3.XAxis : op.Axis1.ToVector3().Unitized();
@@ -685,7 +685,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return new Transform(o, x, y, z);
         }
 
-        private static Transform ToTransform(this IfcCartesianTransformationOperator3D op)
+        internal static Transform ToTransform(this IfcCartesianTransformationOperator3D op)
         {
             var o = op.LocalOrigin.ToVector3();
             var x = op.Axis1 == null ? Vector3.XAxis : op.Axis1.ToVector3().Unitized();
