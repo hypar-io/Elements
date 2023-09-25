@@ -11,6 +11,7 @@ using System.Linq;
 using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Elements.BuildingElements;
 
 namespace Elements.Tests
 {

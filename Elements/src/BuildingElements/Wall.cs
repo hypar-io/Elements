@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Elements
+namespace Elements.BuildingElements
 {
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.
@@ -47,12 +47,12 @@ namespace Elements
                       Transform transform = null,
                       Representation representation = null,
                       bool isElementDefinition = false,
-                      Guid id = default(Guid),
+                      Guid id = default,
                       string name = null) : base(transform != null ? transform : new Transform(),
                                                  material != null ? material : BuiltInMaterials.Concrete,
                                                  representation != null ? representation : new Representation(new List<SolidOperation>()),
                                                  isElementDefinition,
-                                                 id != default(Guid) ? id : Guid.NewGuid(),
+                                                 id != default ? id : Guid.NewGuid(),
                                                  name)
         {
             if (height <= 0.0)
@@ -60,8 +60,8 @@ namespace Elements
                 throw new ArgumentOutOfRangeException("The wall could not be created. The height of the wall must be greater than 0.0.");
             }
 #pragma warning disable 612, 618
-            this.Profile = profile;
-            this.Height = height;
+            Profile = profile;
+            Height = height;
 #pragma warning restore 612, 618
         }
 
@@ -70,9 +70,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
+            Representation.SolidOperations.Clear();
 #pragma warning disable 612, 618
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));
+            Representation.SolidOperations.Add(new Extrude(Profile, Height, Vector3.ZAxis, false));
 #pragma warning restore 612, 618
         }
 
@@ -89,12 +89,12 @@ namespace Elements
                        Material material,
                        Representation representation,
                        bool isElementDefinition = false,
-                       Guid id = default(Guid),
+                       Guid id = default,
                        string name = null) : base(transform,
                                            material,
                                            representation,
                                            isElementDefinition,
-                                           id == default(Guid) ? Guid.NewGuid() : id,
+                                           id == default ? Guid.NewGuid() : id,
                                            name)
         { }
 
@@ -120,9 +120,9 @@ namespace Elements
 
             if (transform != null)
             {
-                this.Transform = transform;
+                Transform = transform;
             }
-            this.Representation.SolidOperations.Add(new ConstructedSolid(geometry));
+            Representation.SolidOperations.Add(new ConstructedSolid(geometry));
         }
     }
 }

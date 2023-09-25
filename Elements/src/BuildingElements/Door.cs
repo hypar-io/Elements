@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Elements
+namespace Elements.BuildingElements
 {
     /// <summary>Definition of a door</summary>
     public class Door : GeometricElement
@@ -128,7 +128,7 @@ namespace Elements
                 buffer.AddIndex((ushort)i);
             }
 
-            id = $"{this.Id}_door";
+            id = $"{Id}_door";
             // Only one type is allowed, since line are not linked into one loop, LINES is used.
             // This mean that each line segment need both endpoints stored, often duplicated.
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;

@@ -5,6 +5,7 @@ using Xunit;
 using Elements.Geometry;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Elements.BuildingElements;
 
 namespace Elements.Tests
 {

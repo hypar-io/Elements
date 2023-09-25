@@ -1,4 +1,5 @@
-﻿using Elements.Geometry;
+﻿using Elements.BuildingElements;
+using Elements.Geometry;
 using IFC;
 using System;
 using System.Collections.Generic;

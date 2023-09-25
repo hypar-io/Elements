@@ -5,7 +5,7 @@ using Elements.Geometry.Solids;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Elements
+namespace Elements.BuildingElements
 {
     /// <summary>
     /// A floor is a horizontal element defined by a profile.
@@ -19,7 +19,7 @@ namespace Elements
         /// The elevation from which the floor is extruded.
         /// </summary>
         [JsonIgnore]
-        public double Elevation => this.Transform.Origin.Z;
+        public double Elevation => Transform.Origin.Z;
 
         /// <summary>
         /// The thickness of the floor.
@@ -69,7 +69,7 @@ namespace Elements
                                                 id != default ? id : Guid.NewGuid(),
                                                 name)
         {
-            this.Level = level;
+            Level = level;
             SetProperties(profile, thickness);
         }
 
@@ -117,8 +117,8 @@ namespace Elements
                 throw new ArgumentOutOfRangeException($"The floor could not be created. The provided thickness ({thickness}) was less than or equal to zero.");
             }
 
-            this.Profile = profile;
-            this.Thickness = thickness;
+            Profile = profile;
+            Thickness = thickness;
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Elements
         /// </summary>
         public Profile ProfileTransformed()
         {
-            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
+            return Transform != null ? Transform.OfProfile(Profile) : Profile;
         }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Area()
         {
-            return this.Profile.Area();
+            return Profile.Area();
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Volume()
         {
-            return this.Profile.Area() * this.Thickness;
+            return Profile.Area() * Thickness;
         }
 
         /// <summary>
@@ -152,8 +152,8 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+            Representation.SolidOperations.Clear();
+            Representation.SolidOperations.Add(new Extrude(Profile, Thickness, Vector3.ZAxis, false));
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace Elements
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
         {
             var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0));
-            this.Openings.Add(o);
+            Openings.Add(o);
             return o;
         }
 
@@ -183,7 +183,7 @@ namespace Elements
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
         {
             var o = new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0));
-            this.Openings.Add(o);
+            Openings.Add(o);
             return o;
         }
     }
