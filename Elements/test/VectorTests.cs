@@ -572,6 +572,30 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void UniqueAverageWithinTolerance()
+        {
+            var tolerance = 0.2;
+
+            var vectorsList = new List<Vector3>
+            {
+                new Vector3(0.05, 0, 0),
+                Vector3.Origin,
+                new Vector3(0, -0.05, 0),
+                new Vector3(-0.05, 0.05, 0),
+                new Vector3(5, 5, 0.05),
+                new Vector3(5, 5),
+                new Vector3(5, 5, -0.05),
+                new Vector3(5, 5)
+            };
+
+            var result = vectorsList.UniqueAverageWithinTolerance(tolerance);
+
+            Assert.Collection(result,
+                x => x.IsAlmostEqualTo(Vector3.Origin),
+                x => x.IsAlmostEqualTo(new Vector3(5, 5)));
+        }
+
+        [Fact]
         public void PointsAreCoplanarWithinTolerance()
         {
             // Test with three points that are collinear.

@@ -2,6 +2,7 @@ using Elements.Validators;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -851,6 +852,19 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get the closest point on the infinite line from this point.
+        /// </summary>
+        /// <param name="line">The infinite line on which to find the closest point.</param>
+        /// <returns>The closest point on the infinite line from this point.</returns>
+        public Vector3 ClosestPointOn(InfiniteLine line)
+        {
+            var v = this - line.Origin;
+            var d = v.Dot(line.Direction);
+            return line.Origin + line.Direction * d;
+        }
+
+
+        /// <summary>
         /// Get the closest point on the line from this point.
         /// </summary>
         /// <param name="line">The line on which to find the closest point.</param>
@@ -959,6 +973,26 @@ namespace Elements.Geometry
             var cd = d - a;
             var tp = ab.TripleProduct(ac, cd);
             return Math.Abs(tp) < EPSILON;
+        }
+
+        /// <summary>
+        /// Are the provided points within tolerance of each other?
+        /// </summary>
+        /// <param name="points">The points to compare.</param>
+        /// <param name="tolerance">The tolerance.</param>
+        /// <returns>True if all points are within tolerance of each other, otherwise false.</returns>
+        public static bool AreApproximatelyEqual(IEnumerable<Vector3> points, double tolerance = Vector3.EPSILON)
+        {
+            if (points.Count() < 2)
+            {
+                return true;
+            }
+            var average = points.Average();
+            // we halve the tolerance to guarantee that all points in the set are
+            // within tolerance of each other. If all points are within
+            // tolerance/2 of some point, then they must all be within tolerance
+            // of each other.
+            return points.All(p => p.IsAlmostEqualTo(average, tolerance / 2.0)); 
         }
 
         /// <summary>

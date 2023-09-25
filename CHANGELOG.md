@@ -1,10 +1,58 @@
 # Changelog
 
-## 2.0.1
+## 2.1.0
+
+### Added
+
+- `Units.AdjustRadian(double parameter, double reference)`
+- `Equations`
+- `Vector3Extensions.UniqueAverageWithinTolerance(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)`
+- `Vector3.ClosestPointOn(InfiniteLine line)`
+- `Plane.Intersects(Plane other, out InfiniteLine result)`
+- `ICurve.Intersects(ICurve curve, out List<Vector3> results)`
+- `InfiniteLine.ParameterAt(Vector3 pt, out double t)`
+- `InfiniteLine.Intersects(Plane plane, out Vector3 result)`
+- `InfiniteLine.Intersects(InfiniteLine other, out List<Vector3> results)`
+- `InfiniteLine.Intersects(Circle circle, out List<Vector3> results)`
+- `InfiniteLine.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `InfiniteLine.Intersects(BoundedCurve curve, out List<Vector3> results)`
+- `Circle.Normal`
+- `Circle.ParameterAt(Vector3 pt, out double t)`
+- `Circle.Intersects(Circle other, out List<Vector3> results)`
+- `Circle.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `Circle.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `Circle.Intersects(BoundedCurve curve, out List<Vector3> results)`
+- `Ellipse.Normal`
+- `Ellipse.Circumference()`
+- `Ellipse.ParameterAt(Vector3 pt, out double t)`
+- `Ellipse.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `Ellipse.Intersects(Circle circle, out List<Vector3> results)`
+- `Ellipse.Intersects(Ellipse other, out List<Vector3> results)`
+- `Ellipse.Intersects(BoundedCurve curve, out List<Vector3> results)`
+- `TrimmedCurve.PointOnDomain(Vector3 point)`
+- `TrimmedCurve.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `TrimmedCurve.Intersects(Circle circle, out List<Vector3> results)`
+- `TrimmedCurve.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `TrimmedCurve.Intersects<T>(TrimmedCurve<T> curve, out List<Vector3> results) where T : ICurve`
+- `TrimmedCurve.Intersects(Bezier bezier, out List<Vector3> results)`
+- `Bezier.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `Bezier.Intersects(Circle circle, out List<Vector3> results)`
+- `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `Bezier.Intersects(Bezier other, out List<Vector3> results)`
+- `Elements.Geometry.ThickenedPolyline`
+- `Model.ToGlTF(MemoryStream stream...)`
+- `Model.ToIFC(MemoryStream stream ...)`
+- `Model.ToJson(MemoryStream stream ...)`
+- `Profile.ThickenedInteriorProfile`
+- `Profile.ThickenedExteriorProfile`
+- `Profile.ThickenedEdgePolygons`
+- `Elements.MEP`
+- `GeometricElement.RepresentationInstances`
 
 ### Fixed
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+- Code generation supports `Vector3?` and `Color?` types.
 
 ## 2.0.0
 
@@ -28,6 +76,7 @@
 - `Topography.Trimmed`
 - `new Topography(Topography other)`
 - `Topography.TopMesh()`
+- `UpdateElementRepresentations` flag to all serialization methods
 
 ### Changed
 
