@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -513,7 +514,7 @@
       }
     },
     {
-      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
+      "name": "e7aa235b-49e9-42d0-b5fb-884a54e90d07",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -545,85 +546,85 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "35a1a5c7-d6b9-4ae1-a9b1-69d1c42348c9_mesh"
+      "name": "717ba780-9008-48fb-a9cf-00c4ecd86d99_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 5,
             "POSITION": 4,
+            "NORMAL": 5,
             "TEXCOORD_0": 7
           },
           "indices": 6,
           "material": 1
         }
       ],
-      "name": "11f40d7b-e2ac-4152-adad-80c156b54caa_mesh"
+      "name": "335626f8-fe38-49ec-80ff-3b942137cfb9_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 9,
             "POSITION": 8,
+            "NORMAL": 9,
             "TEXCOORD_0": 11
           },
           "indices": 10,
           "material": 0
         }
       ],
-      "name": "10d1320c-000f-4243-96e2-c14a854d8fe3_mesh"
+      "name": "561e5d7d-d585-497f-8371-5491c32202db_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 13,
             "POSITION": 12,
+            "NORMAL": 13,
             "TEXCOORD_0": 15
           },
           "indices": 14,
           "material": 1
         }
       ],
-      "name": "ad7e55af-0075-4ca3-a749-9a1155abd4e0_mesh"
+      "name": "08b38e05-bc18-4a6d-b474-548ac1d230b4_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 17,
             "POSITION": 16,
+            "NORMAL": 17,
             "TEXCOORD_0": 19
           },
           "indices": 18,
           "material": 0
         }
       ],
-      "name": "9d3bdbd4-4694-4aaa-b69b-e4e6fa958325_mesh"
+      "name": "1f7906a5-e3b7-4abd-a82e-9885c477bdac_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 21,
             "POSITION": 20,
+            "NORMAL": 21,
             "TEXCOORD_0": 23
           },
           "indices": 22,
           "material": 0
         }
       ],
-      "name": "b0fe4830-6e56-4cf3-985f-a51fb4fa77b5_mesh"
+      "name": "6d957816-aec7-418b-ba62-d88d767f2439_mesh"
     }
   ],
   "nodes": [
@@ -661,7 +662,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "35a1a5c7-d6b9-4ae1-a9b1-69d1c42348c9"
+          "id": "717ba780-9008-48fb-a9cf-00c4ecd86d99"
         }
       }
     },
@@ -674,7 +675,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "11f40d7b-e2ac-4152-adad-80c156b54caa"
+          "id": "335626f8-fe38-49ec-80ff-3b942137cfb9"
         }
       }
     },
@@ -705,7 +706,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "10d1320c-000f-4243-96e2-c14a854d8fe3"
+          "id": "561e5d7d-d585-497f-8371-5491c32202db"
         }
       }
     },
@@ -718,7 +719,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "ad7e55af-0075-4ca3-a749-9a1155abd4e0"
+          "id": "08b38e05-bc18-4a6d-b474-548ac1d230b4"
         }
       }
     },
@@ -749,7 +750,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "9d3bdbd4-4694-4aaa-b69b-e4e6fa958325"
+          "id": "1f7906a5-e3b7-4abd-a82e-9885c477bdac"
         }
       }
     },
@@ -780,7 +781,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "b0fe4830-6e56-4cf3-985f-a51fb4fa77b5"
+          "id": "6d957816-aec7-418b-ba62-d88d767f2439"
         }
       }
     },
