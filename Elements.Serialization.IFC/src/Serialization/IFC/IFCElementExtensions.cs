@@ -77,7 +77,13 @@ namespace Elements.Serialization.IFC
                         var ifcRepresentations = AddSolidOperationToDocument(doc, op);
                         foreach (var geom in ifcRepresentations)
                         {
-                            var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Id], null);
+                            List<IfcStyleAssignmentSelect> styles = null;
+                            if (geoElement.Material != null)
+                            {
+                                styleAssignments.TryGetValue(geoElement.Material.Id, out styles);
+                            }
+
+                            var styledItem = new IfcStyledItem(geom, styles, null);
                             doc.AddEntity(styledItem);
                         }
                         geoms.AddRange(ifcRepresentations);
@@ -89,12 +95,17 @@ namespace Elements.Serialization.IFC
                     {
                         if (representationInstance.IsDefault && representationInstance.Representation is SolidRepresentation solidRepresentation)
                         {
+                            List<IfcStyleAssignmentSelect> styles = null;
+                            if (representationInstance.Material != null)
+                            {
+                                styleAssignments.TryGetValue(representationInstance.Material.Id, out styles);
+                            }
                             foreach (var op in solidRepresentation.SolidOperations)
                             {
                                 var ifcRepresentations = AddSolidOperationToDocument(doc, op);
                                 foreach (var geom in ifcRepresentations)
                                 {
-                                    var styledItem = new IfcStyledItem(geom, styleAssignments[representationInstance.Material.Id], null);
+                                    var styledItem = new IfcStyledItem(geom, styles, null);
                                     doc.AddEntity(styledItem);
                                 }
                                 geoms.AddRange(ifcRepresentations);
