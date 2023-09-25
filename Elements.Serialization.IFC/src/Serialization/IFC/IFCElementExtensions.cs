@@ -41,10 +41,10 @@ namespace Elements.Serialization.IFC
                 {
                     for (int i = 0; i < geoElementWithOpenings.Openings.Count; i++)
                     {
-                        Opening o = geoElementWithOpenings.Openings[i];
-                        var transform = o.Transform.Concatenated(trans);
-                        var newOpening = new Opening(o.Perimeter, o.DepthFront, o.DepthBack, transform,
-                            o.Representation, o.IsElementDefinition, default, o.Name);
+                        Opening opening = geoElementWithOpenings.Openings[i];
+                        var transform = opening.Transform.Concatenated(trans);
+                        var newOpening = new Opening(opening.Perimeter, opening.DepthFront, opening.DepthBack, transform,
+                            opening.Representation, opening.IsElementDefinition, default, opening.Name);
 
                         ToIfcProducts(newOpening, context, doc, styleAssignments, updateElementRepresentation);
 
