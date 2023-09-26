@@ -18,4 +18,8 @@
     <ProjectReference Include="..\src\Elements.Serialization.IFC.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="models\Hypar\" />
+  </ItemGroup>
+
 </Project>

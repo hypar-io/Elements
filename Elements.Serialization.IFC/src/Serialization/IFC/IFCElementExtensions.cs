@@ -30,12 +30,27 @@ namespace Elements.Serialization.IFC
             if (e is ElementInstance)
             {
                 // If we're using an element instance, get the transform
-                // and the id and use those to uniquely position and 
+                // and the id and use those to uniquely position and
                 // identify the element.
                 var instance = (ElementInstance)e;
                 geoElement = instance.BaseDefinition;
                 id = instance.Id;
                 trans = instance.Transform;
+
+                if (geoElement is IHasOpenings geoElementWithOpenings)
+                {
+                    for (int i = 0; i < geoElementWithOpenings.Openings.Count; i++)
+                    {
+                        Opening opening = geoElementWithOpenings.Openings[i];
+                        var transform = opening.Transform.Concatenated(trans);
+                        var newOpening = new Opening(opening.Perimeter, opening.DepthFront, opening.DepthBack, transform,
+                            opening.Representation, opening.IsElementDefinition, default, opening.Name);
+
+                        ToIfcProducts(newOpening, context, doc, styleAssignments, updateElementRepresentation);
+
+                        geoElementWithOpenings.Openings[i] = newOpening;
+                    }
+                }
             }
             else if (e is GeometricElement)
             {
@@ -153,7 +168,7 @@ namespace Elements.Serialization.IFC
 
             // If the element has openings, make opening relationships in
             // the IfcElement.
-            if (e is IHasOpenings openings)
+            if (geoElement is IHasOpenings openings)
             {
                 if (openings.Openings.Count > 0)
                 {
@@ -314,7 +329,9 @@ namespace Elements.Serialization.IFC
 
         internal static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this Extrude extrude, Document doc)
         {
-            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            // Add local transform to the IFC placement
+            var transform = extrude.LocalTransform ?? new Transform();
+            var position = transform.ToIfcAxis2Placement3D(doc);
 
             var extrudeDepth = extrude.Height;
             var extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
@@ -341,7 +358,7 @@ namespace Elements.Serialization.IFC
             {
                 return arc.ToIfcTrimmedCurve(doc);
             }
-            // Test Polygon before Polyline to avoid 
+            // Test Polygon before Polyline to avoid
             // Polygons being treated as Polylines.
             else if (curve is Polygon polygon)
             {
@@ -567,7 +584,7 @@ namespace Elements.Serialization.IFC
         }
 
         // TODO: There is a lot of duplicate code used to create products.
-        // Can we make a generic method like ToIfc<TProduct>()? There are 
+        // Can we make a generic method like ToIfc<TProduct>()? There are
         // exceptions for which this won't work like IfcSpace.
 
         private static IfcSpace ToIfc(this Space space, Guid id,
