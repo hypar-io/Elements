@@ -5,7 +5,7 @@ using Elements.Geometry.Solids;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Elements.BuildingElements
+namespace Elements
 {
     /// <summary>
     /// A floor is a horizontal element defined by a profile.

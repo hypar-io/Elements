@@ -8,7 +8,6 @@ using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
 using System.Linq;
-using Elements.BuildingElements;
 
 namespace Elements.IFC.Tests
 {

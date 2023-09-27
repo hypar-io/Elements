@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using Elements.Spatial;
 using System.IO;
 using Newtonsoft.Json;
-using Elements.BuildingElements;
 
 namespace Elements.Tests
 {

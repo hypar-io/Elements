@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Elements.BuildingElements
+namespace Elements
 {
     /// <summary>Definition of a door</summary>
     public class Door : GeometricElement

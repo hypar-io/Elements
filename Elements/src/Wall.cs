@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace Elements.BuildingElements
+namespace Elements
 {
     /// <summary>
     /// A wall defined by a planar profile extruded to a height.

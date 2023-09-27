@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Elements.BuildingElements;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
