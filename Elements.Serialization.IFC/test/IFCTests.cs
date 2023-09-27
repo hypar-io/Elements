@@ -53,12 +53,12 @@ namespace Elements.IFC.Tests
 
             Assert.Equal(expectedElementsCount, model.Elements.Count);
 
-            Assert.Equal(countOfFloors, expectedCountOfFloors);
-            Assert.Equal(countOfOpenings, expectedCountOfOpenings);
-            Assert.Equal(countOfWalls, expectedCountOfWalls);
-            Assert.Equal(countOfDoors, expectedCountOfDoors);
-            Assert.Equal(countOfSpaces, expectedCountOfSpaces);
-            Assert.Equal(countOfBeams, expectedCountOfBeams);
+            Assert.Equal(expectedCountOfFloors, countOfFloors);
+            Assert.Equal(expectedCountOfOpenings, countOfOpenings);
+            Assert.Equal(expectedCountOfWalls, countOfWalls);
+            Assert.Equal(expectedCountOfDoors, countOfDoors);
+            Assert.Equal(expectedCountOfSpaces, countOfSpaces);
+            Assert.Equal(expectedCountOfBeams, countOfBeams);
 
             foreach (var e in ctorErrors)
             {
