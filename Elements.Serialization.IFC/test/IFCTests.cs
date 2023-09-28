@@ -88,6 +88,26 @@ namespace Elements.IFC.Tests
         }
 
         [Fact]
+        public void InstanceOpenings()
+        {
+            var model = System.IO.File.ReadAllText("../../../models/Hypar/instance-openings-test-model.json");
+            var hyparModel = Model.FromJson(model);
+            var walls = hyparModel.AllElementsOfType<StandardWall>();
+            var path = ConstructIfcPath("instance-openings-test");
+            hyparModel.ToIFC(path);
+
+            var file = System.IO.File.ReadAllLines(path);
+
+            var wallCount = file.Count(x => x.Contains("IFCWALLSTANDARDCASE"));
+            var openingCount = file.Count(x => x.Contains("IFCRELVOIDSELEMENT"));
+            var floorCount = file.Count(x => x.Contains("IFCSLAB"));
+
+            Assert.Equal(wallCount, 4);
+            Assert.Equal(openingCount, 5);
+            Assert.Equal(floorCount, 1);
+        }
+
+        [Fact]
         public void Doors()
         {
             var model = new Model();

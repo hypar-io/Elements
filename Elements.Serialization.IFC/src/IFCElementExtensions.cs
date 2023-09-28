@@ -30,12 +30,27 @@ namespace Elements.Serialization.IFC
             if (e is ElementInstance)
             {
                 // If we're using an element instance, get the transform
-                // and the id and use those to uniquely position and 
+                // and the id and use those to uniquely position and
                 // identify the element.
                 var instance = (ElementInstance)e;
                 geoElement = instance.BaseDefinition;
                 id = instance.Id;
                 trans = instance.Transform;
+
+                if (geoElement is IHasOpenings geoElementWithOpenings)
+                {
+                    for (int i = 0; i < geoElementWithOpenings.Openings.Count; i++)
+                    {
+                        Opening opening = geoElementWithOpenings.Openings[i];
+                        var transform = opening.Transform.Concatenated(trans);
+                        var newOpening = new Opening(opening.Perimeter, opening.DepthFront, opening.DepthBack, transform,
+                            opening.Representation, opening.IsElementDefinition, default, opening.Name);
+
+                        ToIfcProducts(newOpening, context, doc, styleAssignments, updateElementRepresentation);
+
+                        geoElementWithOpenings.Openings[i] = newOpening;
+                    }
+                }
             }
             else if (e is GeometricElement)
             {
@@ -70,68 +85,52 @@ namespace Elements.Serialization.IFC
             }
             else
             {
-                foreach (var op in geoElement.Representation.SolidOperations)
+                if (geoElement.Representation != null)
                 {
-                    if (op is Sweep sweep)
+                    foreach (var op in geoElement.Representation?.SolidOperations)
                     {
-
-                        // Neither of these entities, which are part of the 
-                        // IFC4 specification, and which would allow a sweep 
-                        // along a curve, are supported by many applications 
-                        // which are supposedly IFC4 compliant (Revit). For
-                        // Those applications where these entities appear,
-                        // the rotation of the profile is often wrong or 
-                        // inconsistent.
-                        // geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
-                        // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(geoElement.Transform, doc);
-
-                        // Instead, we'll divide the curve and create a set of 
-                        // linear extrusions instead.
-                        Polyline pline;
-                        if (sweep.Curve is Line)
+                        var ifcRepresentations = AddSolidOperationToDocument(doc, op);
+                        foreach (var geom in ifcRepresentations)
                         {
-                            pline = sweep.Curve.ToPolyline(1);
-                        }
-                        else
-                        {
-                            pline = sweep.Curve.ToPolyline();
-                        }
-                        foreach (var segment in pline.Segments())
-                        {
-                            var position = segment.TransformAt(0.0).ToIfcAxis2Placement3D(doc);
-                            var extrudeDepth = segment.Length();
-                            var extrudeProfile = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
-                            var extrudeDirection = Vector3.ZAxis.Negate().ToIfcDirection();
-                            var geom = new IfcExtrudedAreaSolid(extrudeProfile, position,
-                                extrudeDirection, new IfcPositiveLengthMeasure(extrudeDepth));
+                            List<IfcStyleAssignmentSelect> styles = null;
+                            if (geoElement.Material != null)
+                            {
+                                styleAssignments.TryGetValue(geoElement.Material.Id, out styles);
+                            }
 
-                            doc.AddEntity(extrudeProfile);
-                            doc.AddEntity(extrudeDirection);
-                            doc.AddEntity(position);
-                            doc.AddEntity(geom);
-                            geoms.Add(geom);
+                            var styledItem = new IfcStyledItem(geom, styles, null);
+                            doc.AddEntity(styledItem);
                         }
+                        geoms.AddRange(ifcRepresentations);
                     }
-                    else if (op is Extrude extrude)
+                }
+                if (geoElement.RepresentationInstances != null)
+                {
+                    foreach (var representationInstance in geoElement.RepresentationInstances)
                     {
-                        var geom = extrude.ToIfcExtrudedAreaSolid(doc);
-                        doc.AddEntity(geom);
-                        geoms.Add(geom);
-                    }
-                    else if (op is Lamina lamina)
-                    {
-                        var geom = lamina.ToIfcShellBasedSurfaceModel(doc);
-                        doc.AddEntity(geom);
-                        geoms.Add(geom);
-                    }
-                    else
-                    {
-                        throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
+                        if (representationInstance.IsDefault && representationInstance.Representation is SolidRepresentation solidRepresentation)
+                        {
+                            List<IfcStyleAssignmentSelect> styles = null;
+                            if (representationInstance.Material != null)
+                            {
+                                styleAssignments.TryGetValue(representationInstance.Material.Id, out styles);
+                            }
+                            foreach (var op in solidRepresentation.SolidOperations)
+                            {
+                                var ifcRepresentations = AddSolidOperationToDocument(doc, op);
+                                foreach (var geom in ifcRepresentations)
+                                {
+                                    var styledItem = new IfcStyledItem(geom, styles, null);
+                                    doc.AddEntity(styledItem);
+                                }
+                                geoms.AddRange(ifcRepresentations);
+                            }
+                        }
                     }
                 }
                 shape = ToIfcProductDefinitionShape(geoms, "SolidModel", context, doc);
+                doc.AddEntity(shape);
             }
-            doc.AddEntity(shape);
 
 
             // Can we use IfcMappedItem?
@@ -169,7 +168,7 @@ namespace Elements.Serialization.IFC
 
             // If the element has openings, make opening relationships in
             // the IfcElement.
-            if (e is IHasOpenings openings)
+            if (geoElement is IHasOpenings openings)
             {
                 if (openings.Openings.Count > 0)
                 {
@@ -185,13 +184,69 @@ namespace Elements.Serialization.IFC
                 }
             }
 
-            foreach (var geom in geoms)
+            return products;
+        }
+
+        private static List<IfcRepresentationItem> AddSolidOperationToDocument(Document doc, SolidOperation op)
+        {
+            var ifcRepresentations = new List<IfcRepresentationItem>();
+            if (op is Sweep sweep)
             {
-                var styledItem = new IfcStyledItem(geom, styleAssignments[geoElement.Material.Id], null);
-                doc.AddEntity(styledItem);
+                // Neither of these entities, which are part of the 
+                // IFC4 specification, and which would allow a sweep 
+                // along a curve, are supported by many applications 
+                // which are supposedly IFC4 compliant (Revit). For
+                // Those applications where these entities appear,
+                // the rotation of the profile is often wrong or 
+                // inconsistent.
+                // geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
+                // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(geoElement.Transform, doc);
+
+                // Instead, we'll divide the curve and create a set of 
+                // linear extrusions instead.
+                Polyline pline;
+                if (sweep.Curve is Line)
+                {
+                    pline = sweep.Curve.ToPolyline(1);
+                }
+                else
+                {
+                    pline = sweep.Curve.ToPolyline();
+                }
+                foreach (var segment in pline.Segments())
+                {
+                    var position = segment.TransformAt(0.0).ToIfcAxis2Placement3D(doc);
+                    var extrudeDepth = segment.Length();
+                    var extrudeProfile = sweep.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
+                    var extrudeDirection = Vector3.ZAxis.Negate().ToIfcDirection();
+                    var geom = new IfcExtrudedAreaSolid(extrudeProfile, position,
+                        extrudeDirection, new IfcPositiveLengthMeasure(extrudeDepth));
+
+                    doc.AddEntity(extrudeProfile);
+                    doc.AddEntity(extrudeDirection);
+                    doc.AddEntity(position);
+                    doc.AddEntity(geom);
+                    ifcRepresentations.Add(geom);
+                }
+            }
+            else if (op is Extrude extrude)
+            {
+                var geom = extrude.ToIfcExtrudedAreaSolid(doc);
+                doc.AddEntity(geom);
+                ifcRepresentations.Add(geom);
+            }
+            else if (op is Lamina lamina)
+            {
+                var geom = lamina.ToIfcShellBasedSurfaceModel(doc);
+                doc.AddEntity(geom);
+                ifcRepresentations.Add(geom);
+            }
+            else
+            {
+                throw new Exception("Only IExtrude, ISweepAlongCurve, and ILamina representations are currently supported.");
             }
 
-            return products;
+            return ifcRepresentations;
         }
 
         private static IfcOpeningElement ToIfc(this Opening opening, Guid id, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
@@ -232,7 +287,7 @@ namespace Elements.Serialization.IFC
         {
             if (door.OpeningType == DoorOpeningType.SingleSwing)
             {
-                switch(door.OpeningSide)
+                switch (door.OpeningSide)
                 {
                     case DoorOpeningSide.LeftHand:
                         return IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT;
@@ -241,7 +296,7 @@ namespace Elements.Serialization.IFC
                     case DoorOpeningSide.DoubleDoor:
                         return IfcDoorTypeOperationEnum.DOUBLE_DOOR_SINGLE_SWING;
                 }
-            } 
+            }
             else if (door.OpeningType == DoorOpeningType.DoubleSwing)
             {
                 switch (door.OpeningSide)
@@ -274,7 +329,9 @@ namespace Elements.Serialization.IFC
 
         internal static IfcExtrudedAreaSolid ToIfcExtrudedAreaSolid(this Extrude extrude, Document doc)
         {
-            var position = new Transform().ToIfcAxis2Placement3D(doc);
+            // Add local transform to the IFC placement
+            var transform = extrude.LocalTransform ?? new Transform();
+            var position = transform.ToIfcAxis2Placement3D(doc);
 
             var extrudeDepth = extrude.Height;
             var extrudeProfile = extrude.Profile.Perimeter.ToIfcArbitraryClosedProfileDef(doc);
@@ -301,7 +358,7 @@ namespace Elements.Serialization.IFC
             {
                 return arc.ToIfcTrimmedCurve(doc);
             }
-            // Test Polygon before Polyline to avoid 
+            // Test Polygon before Polyline to avoid
             // Polygons being treated as Polylines.
             else if (curve is Polygon polygon)
             {
@@ -527,7 +584,7 @@ namespace Elements.Serialization.IFC
         }
 
         // TODO: There is a lot of duplicate code used to create products.
-        // Can we make a generic method like ToIfc<TProduct>()? There are 
+        // Can we make a generic method like ToIfc<TProduct>()? There are
         // exceptions for which this won't work like IfcSpace.
 
         private static IfcSpace ToIfc(this Space space, Guid id,

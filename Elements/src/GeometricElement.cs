@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Search;
 using Elements.Spatial;
+using Elements.Utilities;
 using Newtonsoft.Json;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
@@ -49,6 +49,12 @@ namespace Elements
         /// <summary>The element's representation.</summary>
         [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
+
+        /// <summary>
+        ///  The list of element representations. 
+        /// </summary>
+        [JsonIgnore]
+        public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
         [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -321,91 +327,13 @@ namespace Elements
                 return null;
             }
 
-            // To properly compute csgs, all solid operation csgs need
-            // to be transformed into their final position. Then the csgs
-            // can be computed and by default the final csg will have the inverse of the
-            // geometric element's transform applied to "reset" it.
-            // The transforms applied to each node in the glTF will then
-            // ensure that the elements are correctly transformed.
-            Csg.Solid csg = new Csg.Solid();
-
-            var solids = new List<Csg.Solid>();
-            var voids = new List<Csg.Solid>();
-
-            foreach (var op in Representation.SolidOperations)
-            {
-                if (op.IsVoid)
-                {
-                    voids.Add(TransformedSolidOperation(op));
-                }
-                else
-                {
-                    solids.Add(TransformedSolidOperation(op));
-                }
-            }
-
-            if (this is IHasOpenings openingContainer)
-            {
-                foreach (var opening in openingContainer.Openings)
-                {
-                    foreach (var op in opening.Representation.SolidOperations)
-                    {
-                        if (op.IsVoid)
-                        {
-                            voids.Add(TransformedSolidOperation(op, opening.Transform));
-                        }
-                    }
-                }
-            }
-
-            var solidItems = solids.ToArray();
-            var voidItems = voids.ToArray();
-
-            if (voids.Count == 1 && solids.Count == 0)
-            {
-                csg = voids.First();
-            }
-            else
-            {
-                // Don't try CSG booleans if we only have one one solid.
-                if (solids.Count() == 1)
-                {
-                    csg = solids.First();
-                }
-                else if (solids.Count() > 0)
-                {
-                    csg = csg.Union(solidItems);
-                }
-
-                if (voids.Count() > 0)
-                {
-                    csg = csg.Subtract(voidItems);
-                }
-            }
-
-            if (voids.Count() > 0)
-            {
-                csg = csg.Subtract(voidItems);
-            }
-
-            if (Transform == null || transformed)
-            {
-                return csg;
-            }
-            else
-            {
-                var inverse = new Transform(Transform);
-                inverse.Invert();
-
-                csg = csg.Transform(inverse.ToMatrix4x4());
-                return csg;
-            }
+            return SolidOperationUtils.GetFinalCsgFromSolids(Representation.SolidOperations, this, transformed);
         }
 
         internal Csg.Solid[] GetCsgSolids(bool transformed = false)
         {
             var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                       .Select(op => TransformedSolidOperation(op))
+                                                       .Select(op => SolidOperationUtils.TransformedSolidOperation(op, this))
                                                        .ToArray();
             if (Transform == null || transformed)
             {
@@ -417,28 +345,6 @@ namespace Elements
                 inverse.Invert();
                 return solids.Select(s => s.Transform(inverse.ToMatrix4x4())).ToArray();
             }
-        }
-
-        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op, Transform addTransform = null)
-        {
-            if (Transform == null)
-            {
-                return op._solid.ToCsg();
-            }
-
-            // Transform the solid operation by the the local transform AND the
-            // element's transform, or just by the element's transform.
-            var transformedOp = op.LocalTransform != null
-                        ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
-                        : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
-            if (addTransform == null)
-            {
-                return transformedOp;
-            }
-
-            // If an addition transform was provided, don't forget
-            // to apply that as well.
-            return transformedOp.Transform(addTransform.ToMatrix4x4());
         }
 
         /// <summary>

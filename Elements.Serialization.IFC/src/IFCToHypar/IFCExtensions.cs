@@ -52,28 +52,16 @@ namespace Elements.Serialization.IFC.IFCToHypar
             var s = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
             if (s != null)
             {
+                var solidTransform = s.Position.ToTransform();
+                solidTransform.Concatenate(openingTransform);
                 var profile = (Polygon)s.SweptArea.ToCurve();
-                var solidTransform = s.Position.ToTransform().Concatenated(openingTransform);
 
-                if (opening.PredefinedType == IfcOpeningElementTypeEnum.OPENING)
-                {
-                    // TODO: See if this works universally. We don't support extrusions
-                    // in both directions, so we double the extrusion depth and set
-                    // it back by half the depth. 
-                    var setback = new Vector3(0, 0, -(IfcLengthMeasure)s.Depth);
-                    solidTransform.Move(solidTransform.OfVector(setback));
-                }
-
-                var extrude = new Extrude(profile, (IfcLengthMeasure)s.Depth, profile.Normal(), true, true);
-                // Openings should be extruded according to their provided direction,
-                // but we've found that the direction can be wrong, depending on how
-                // the authoring application handles extrusions.
                 var newOpening = new Opening(profile,
-                                             profile.Normal(), //s.ExtrudedDirection.ToVector3(),
+                                             default,
                                              (IfcLengthMeasure)s.Depth,
                                              (IfcLengthMeasure)s.Depth,
                                              solidTransform,
-                                             new Representation(new List<SolidOperation>() { extrude } ),
+                                             null,
                                              false,
                                              IfcGuid.FromIfcGUID(opening.GlobalId));
                 return newOpening;
