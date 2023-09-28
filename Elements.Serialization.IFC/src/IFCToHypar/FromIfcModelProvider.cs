@@ -126,7 +126,8 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 new IfcWallToWallConverter(),
                 new IfcDoorToDoorConverter(),
                 new IfcBeamToBeamConverter(),
-                new IfcColumnToColumnConverter()
+                new IfcColumnToColumnConverter(),
+                new FromIfcSiteConverter()
             };
 
             var standardConverter = new IfcBuildingElementToElementConverter();
