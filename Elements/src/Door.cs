@@ -9,6 +9,8 @@ namespace Elements
     /// <summary>Definition of a door</summary>
     public class Door : GeometricElement
     {
+        private readonly Material DEFAULT_MATERIAL = new Material("Door material", Colors.White);
+
         public const double DOOR_THICKNESS = 0.125;
         public const double DOOR_FRAME_THICKNESS = 0.15;
         public const double DOOR_FRAME_WIDTH = 2 * 0.0254; //2 inches
@@ -36,6 +38,8 @@ namespace Elements
                     double height,
                     DoorOpeningSide openingSide,
                     DoorOpeningType openingType,
+                    Material material = null,
+                    Representation representation = null,
                     double depthFront = 1,
                     double depthBack = 1,
                     bool flip = false)
@@ -46,9 +50,9 @@ namespace Elements
             OriginalPosition = originalPosition;
             ClearWidth = WidthWithoutFrame(width, openingSide);
             ClearHeight = height;
-            Material = new Material("Door material", Colors.White);
+            Material = material ?? DEFAULT_MATERIAL;
             Transform = GetDoorTransform(currentPosition, wallLine, flip);
-            Representation = new Representation(new List<SolidOperation>() { });
+            Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
         }
 
@@ -58,6 +62,8 @@ namespace Elements
                 double height,
                 DoorOpeningSide openingSide,
                 DoorOpeningType openingType,
+                Material material = null,
+                Representation representation = null,
                 double depthFront = 1,
                 double depthBack = 1)
         {
@@ -67,8 +73,8 @@ namespace Elements
             OpeningType = openingType;
             ClearHeight = height;
             ClearWidth = WidthWithoutFrame(width, openingSide);
-            Material = new Material("Door material", Colors.White);
-            Representation = new Representation(new List<SolidOperation>() { });
+            Material = material ?? DEFAULT_MATERIAL;
+            Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
             OriginalPosition = Transform.Origin;
         }
@@ -80,6 +86,8 @@ namespace Elements
                     double height,
                     DoorOpeningSide openingSide,
                     DoorOpeningType openingType,
+                    Material material = null,
+                    Representation representation = null,
                     double depthFront = 1,
                     double depthBack = 1,
                     bool flip = false)
@@ -91,6 +99,8 @@ namespace Elements
                    height,
                    openingSide,
                    openingType,
+                   material,
+                   representation,
                    depthFront,
                    depthBack,
                    flip)
@@ -245,6 +255,9 @@ namespace Elements
             return points;
         }
 
+        /// <summary>
+        /// Update the representations.
+        /// </summary>
         public override void UpdateRepresentations()
         {
             Vector3 left = Vector3.XAxis * ClearWidth / 2;
@@ -289,6 +302,7 @@ namespace Elements
                 right + Vector3.ZAxis * ClearHeight - frameOffset });
             var doorFrameExtrude = new Extrude(new Profile(doorFramePolygon), DOOR_FRAME_THICKNESS * 2, Vector3.YAxis);
 
+            Representation.SolidOperations.Clear();
             Representation.SolidOperations.Add(doorFrameExtrude);
             foreach (var extrusion in doorExtrusions)
             {
