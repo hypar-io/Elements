@@ -1,5 +1,5 @@
-﻿using Elements.BuildingElements;
-using Elements.Geometry;
+﻿using Elements.Geometry;
+using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
 using IFC;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class IfcDoorToDoorConverter : IIfcProductToElementConverter
     {
-        public Element ConvertToElement(IfcProduct ifcProduct, List<string> constructionErrors)
+        public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(ifcProduct is IfcDoor ifcDoor))
             {
@@ -30,12 +30,18 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 throw new Exception("This DoorOperationType is not supported yet.");
             }
 
-            var transform = GetTransformFromIfcElement(ifcDoor);
-
             // TODO: Implement during the connections establishment.
             //var wall = GetWallFromDoor(ifcDoor, allWalls);
 
-            var result = new Door(null, transform, (IfcLengthMeasure)ifcDoor.OverallWidth, (IfcLengthMeasure)ifcDoor.OverallHeight, openingSide, openingType);
+            var result = new Door(null,
+                                  repData.Transform,
+                                  (IfcLengthMeasure)ifcDoor.OverallWidth,
+                                  (IfcLengthMeasure)ifcDoor.OverallHeight,
+                                  openingSide,
+                                  openingType,
+                                  repData.Material,
+                                  new Representation(repData.SolidOperations)
+                                  );
             return result;
         }
 

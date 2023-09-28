@@ -1,5 +1,6 @@
 ﻿using Elements;
 using Elements.Geometry;
+using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
 using IFC;
 using System;
 using System.Collections.Generic;
@@ -10,41 +11,25 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class IfcFloorToFloorConverter : IIfcProductToElementConverter
     {
-        public Element ConvertToElement(IfcProduct ifcProduct, List<string> constructionErrors)
+        public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(ifcProduct is IfcSlab slab))
             {
                 return null;
             }
 
-            var transform = new Transform();
-            transform.Concatenate(slab.ObjectPlacement.ToTransform());
-            // Console.WriteLine($"IfcSlab transform:\n{transform}\n");
-
-            // Check if the slab is contained in a building storey
-            foreach (var cis in slab.ContainedInStructure)
-            {
-                transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
-            }
-
-            var repItems = slab.Representation.Representations.SelectMany(r => r.Items);
-            if (!repItems.Any())
-            {
-                throw new Exception("The provided IfcSlab does not have any representations.");
-            }
-
-            var solid = slab.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
-            if (solid == null)
+            if (repData.Extrude == null)
             {
                 return null;
             }
 
-            var outline = (Polygon)solid.SweptArea.ToCurve();
-            var solidTransform = solid.Position.ToTransform();
-
-            solidTransform.Concatenate(transform);
-            var floor = new Floor(new Profile(outline), (IfcLengthMeasure)solid.Depth,
-                solidTransform, BuiltInMaterials.Concrete, null, false, IfcGuid.FromIfcGUID(slab.GlobalId));
+            var floor = new Floor(repData.Extrude.Profile,
+                                  repData.Extrude.Height,
+                                  repData.Transform,
+                                  repData.Material,
+                                  new Representation(repData.SolidOperations),
+                                  false,
+                                  IfcGuid.FromIfcGUID(slab.GlobalId));
 
             return floor;
         }

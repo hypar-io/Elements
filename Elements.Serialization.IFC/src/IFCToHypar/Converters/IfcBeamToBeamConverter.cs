@@ -1,4 +1,6 @@
 ﻿using Elements.Geometry;
+using Elements.Geometry.Solids;
+using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
 using IFC;
 using System;
 using System.Collections.Generic;
@@ -9,46 +11,36 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class IfcBeamToBeamConverter : IIfcProductToElementConverter
     {
-        public Element ConvertToElement(IfcProduct ifcProduct, List<string> constructionErrors)
+        public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(ifcProduct is IfcBeam ifcBeam))
             {
                 return null;
             }
+            
+            var elementTransform = repData.Transform;
 
-            var elementTransform = ifcBeam.ObjectPlacement.ToTransform();
-
-            var solid = ifcBeam.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
-
-            // foreach (var cis in beam.ContainedInStructure)
-            // {
-            //     cis.RelatingStructure.ObjectPlacement.ToTransform().Concatenate(transform);
-            // }
-
-            if (solid != null)
+            if (repData.Extrude == null)
             {
-                var solidTransform = solid.Position.ToTransform();
-
-                var c = solid.SweptArea.ToCurve();
-                if (c is Polygon polygon)
-                {
-                    var cl = new Line(Vector3.Origin,
-                        solid.ExtrudedDirection.ToVector3(), (IfcLengthMeasure)solid.Depth);
-                    var result = new Beam(cl.TransformedLine(solidTransform),
-                                          new Profile(polygon),
-                                          0,
-                                          0,
-                                          0,
-                                          elementTransform,
-                                          BuiltInMaterials.Steel,
-                                          null,
-                                          false,
-                                          IfcGuid.FromIfcGUID(ifcBeam.GlobalId),
-                                          ifcBeam.Name);
-                    return result;
-                }
+                return null;
             }
-            return null;
+
+            var representation = new Representation(repData.SolidOperations);
+
+            var cl = new Line(Vector3.Origin, repData.Extrude.Direction, repData.Extrude.Height);
+            var result = new Beam(cl.TransformedLine(repData.ExtrudeTransform),
+                                    repData.Extrude.Profile,
+                                    0,
+                                    0,
+                                    0,
+                                    elementTransform,
+                                    repData.Material,
+                                    representation,
+                                    false,
+                                    IfcGuid.FromIfcGUID(ifcBeam.GlobalId),
+                                    ifcBeam.Name);
+
+            return result;
         }
 
         public bool Matches(IfcProduct ifcProduct)

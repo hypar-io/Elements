@@ -1,4 +1,5 @@
 ﻿using Elements.Geometry;
+using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
 using IFC;
 using System;
 using System.Collections.Generic;
@@ -9,73 +10,30 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     internal class IfcBuildingElementToElementConverter : IIfcProductToElementConverter
     {
         private readonly Dictionary<Guid, GeometricElement> _elementDefinitions;
-        private readonly Dictionary<Guid, Material> _repMaterialMap;
 
         public IfcBuildingElementToElementConverter()
         {
             _elementDefinitions = new Dictionary<Guid, GeometricElement>();
-            _repMaterialMap = new Dictionary<Guid, Material>();
         }
 
-        public Element ConvertToElement(IfcProduct ifcProduct, List<string> constructionErrors)
+        public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(ifcProduct is IfcBuildingElement buildingElement))
             {
                 return null;
             }
 
-            var transform = new Transform();
-            transform.Concatenate(buildingElement.ObjectPlacement.ToTransform());
-
-            // Check if the building element is contained in a building storey
-            foreach (var cis in buildingElement.ContainedInStructure)
-            {
-                transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
-            }
-
-            var rep = buildingElement.GetRepresentationFromProduct(constructionErrors,
-                                                                   _repMaterialMap,
-                                                                   out Transform mapTransform,
-                                                                   out Guid mapId,
-                                                                   out Material materialHint);
-
-            if (rep == null)
+            if (repData == null)
             {
                 constructionErrors.Add($"#{buildingElement.StepId}: There was no representation for an element of type {buildingElement.GetType()}.");
                 return null;
             }
 
-            if (mapTransform != null)
-            {
-                GeometricElement definition;
-                if (_elementDefinitions.ContainsKey(mapId))
-                {
-                    definition = _elementDefinitions[mapId];
-                }
-                else
-                {
-                    definition = new GeometricElement(transform,
-                                                materialHint ?? BuiltInMaterials.Default,
-                                                rep,
-                                                true,
-                                                IfcGuid.FromIfcGUID(buildingElement.GlobalId),
-                                                buildingElement.Name);
-                    _elementDefinitions.Add(mapId, definition);
+            var mappingInfo = repData.MappingInfo;
 
-                    //definition.SkipCSGUnion = true;
-                }
-
-                // The cartesian transform needs to be applied 
-                // before the element transformation because it
-                // may contain scale and rotation.
-                var instanceTransform = new Transform(mapTransform);
-                instanceTransform.Concatenate(transform);
-                var instance = definition.CreateInstance(instanceTransform, "test");
-                return instance;
-            }
-            else
+            if (mappingInfo == null)
             {
-                if (rep.SolidOperations.Count == 0)
+                if (repData.SolidOperations.Count == 0)
                 {
                     constructionErrors.Add($"#{buildingElement.StepId}: {buildingElement.GetType().Name} did not have any solid operations in its representation.");
                     return null;
@@ -84,9 +42,9 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 // TODO: Handle IfcMappedItem
                 // - Idea: Make Representations an Element, so that they can be shared.
                 // - Idea: Make PropertySet an Element. PropertySets can store type properties.
-                var geom = new GeometricElement(transform,
-                                                materialHint ?? BuiltInMaterials.Default,
-                                                rep,
+                var geom = new GeometricElement(repData.Transform,
+                                                repData.Material ?? BuiltInMaterials.Default,
+                                                new Representation(repData.SolidOperations),
                                                 false,
                                                 IfcGuid.FromIfcGUID(buildingElement.GlobalId),
                                                 buildingElement.Name);
@@ -94,6 +52,32 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 // geom.Representation.SkipCSGUnion = true;
                 return geom;
             }
+
+            GeometricElement definition;
+            if (_elementDefinitions.ContainsKey(mappingInfo.MappingId))
+            {
+                definition = _elementDefinitions[mappingInfo.MappingId];
+            }
+            else
+            {
+                definition = new GeometricElement(repData.Transform,
+                                            repData.Material ?? BuiltInMaterials.Default,
+                                            new Representation(repData.SolidOperations),
+                                            true,
+                                            IfcGuid.FromIfcGUID(buildingElement.GlobalId),
+                                            buildingElement.Name);
+                _elementDefinitions.Add(mappingInfo.MappingId, definition);
+
+                //definition.SkipCSGUnion = true;
+            }
+
+            // The cartesian transform needs to be applied 
+            // before the element transformation because it
+            // may contain scale and rotation.
+            var instanceTransform = new Transform(mappingInfo.MappingTransform);
+            instanceTransform.Concatenate(repData.Transform);
+            var instance = definition.CreateInstance(instanceTransform, ifcProduct.Name);
+            return instance;
         }
 
         public bool Matches(IfcProduct ifcProduct)

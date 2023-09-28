@@ -17,6 +17,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
         public Model Model { get; private set; }
 
         private readonly IIfcProductToElementConverter _fromIfcToElementsConverter;
+        private readonly IfcRepresentationDataExtractor _representationDataExtractor;
 
         private List<IfcProduct> _ifcProducts;
         private List<IfcRelationship> _ifcRelationships;
@@ -24,13 +25,16 @@ namespace Elements.Serialization.IFC.IFCToHypar
         private readonly Dictionary<Element, IfcProduct> _elementToIfcProduct;
         private readonly List<string> _constructionErrors;
 
-        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IIfcProductToElementConverter fromIfcConverter = null)
+        private MaterialExtractor _materialExtractor;
+
+        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IIfcProductToElementConverter fromIfcConverter = null, IfcRepresentationDataExtractor representationExtractor = null)
         {
             _constructionErrors = new List<string>();
             ExtractIfcProducts(path, idsToConvert);
             _elementToIfcProduct = new Dictionary<Element, IfcProduct>();
 
-            _fromIfcToElementsConverter = fromIfcConverter ?? GetStandardFromIfcConverter();
+            _representationDataExtractor = representationExtractor ?? GetStandardRepresentationDataExtractor(_materialExtractor);
+            _fromIfcToElementsConverter = fromIfcConverter ?? GetStandardFromIfcConverter(_materialExtractor);
 
             var elements = GetElementsFromIfcProducts();
             HandleRelationships(elements);
@@ -54,12 +58,22 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 // Refactor the code so the only one of these approaches is used.
                 try
                 {
-                    var element = _fromIfcToElementsConverter.ConvertToElement(product, _constructionErrors);
-                    if (element != null)
+                    var repData = _representationDataExtractor.ExtractRepresentationData(product);
+
+                    if (repData == null)
                     {
-                        elements.Add(element);
-                        _elementToIfcProduct.Add(element, product);
+                        continue;
                     }
+
+                    var element = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
+
+                    if (element == null)
+                    {
+                        continue;
+                    }
+
+                    elements.Add(element);
+                    _elementToIfcProduct.Add(element, product);
                 }
                 catch (Exception ex)
                 {
@@ -98,9 +112,12 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>().ToList();
                 _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>().ToList();
             }
+
+            var styledItems = ifcModel.AllInstancesOfType<IfcStyledItem>().ToList();
+            _materialExtractor = new MaterialExtractor(styledItems);
         }
 
-        private static IIfcProductToElementConverter GetStandardFromIfcConverter()
+        private static IIfcProductToElementConverter GetStandardFromIfcConverter(MaterialExtractor materialExtractor)
         {
             var converters = new List<IIfcProductToElementConverter>()
             {
