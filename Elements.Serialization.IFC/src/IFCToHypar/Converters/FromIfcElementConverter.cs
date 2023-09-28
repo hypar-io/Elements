@@ -7,25 +7,25 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class IfcBuildingElementToElementConverter : IIfcProductToElementConverter
+    internal class FromIfcElementConverter : IIfcProductToElementConverter
     {
         private readonly Dictionary<Guid, GeometricElement> _elementDefinitions;
 
-        public IfcBuildingElementToElementConverter()
+        public FromIfcElementConverter()
         {
             _elementDefinitions = new Dictionary<Guid, GeometricElement>();
         }
 
         public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcBuildingElement buildingElement))
+            if (!(ifcProduct is IfcElement ifcElement))
             {
                 return null;
             }
 
             if (repData == null)
             {
-                constructionErrors.Add($"#{buildingElement.StepId}: There was no representation for an element of type {buildingElement.GetType()}.");
+                constructionErrors.Add($"#{ifcElement.StepId}: There was no representation for an element of type {ifcElement.GetType()}.");
                 return null;
             }
 
@@ -35,7 +35,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             {
                 if (repData.SolidOperations.Count == 0)
                 {
-                    constructionErrors.Add($"#{buildingElement.StepId}: {buildingElement.GetType().Name} did not have any solid operations in its representation.");
+                    constructionErrors.Add($"#{ifcElement.StepId}: {ifcElement.GetType().Name} did not have any solid operations in its representation.");
                     return null;
                 }
 
@@ -46,8 +46,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                                 repData.Material ?? BuiltInMaterials.Default,
                                                 new Representation(repData.SolidOperations),
                                                 false,
-                                                IfcGuid.FromIfcGUID(buildingElement.GlobalId),
-                                                buildingElement.Name);
+                                                IfcGuid.FromIfcGUID(ifcElement.GlobalId),
+                                                ifcElement.Name);
 
                 // geom.Representation.SkipCSGUnion = true;
                 return geom;
@@ -64,8 +64,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                             repData.Material ?? BuiltInMaterials.Default,
                                             new Representation(repData.SolidOperations),
                                             true,
-                                            IfcGuid.FromIfcGUID(buildingElement.GlobalId),
-                                            buildingElement.Name);
+                                            IfcGuid.FromIfcGUID(ifcElement.GlobalId),
+                                            ifcElement.Name);
                 _elementDefinitions.Add(mappingInfo.MappingId, definition);
 
                 //definition.SkipCSGUnion = true;
@@ -76,13 +76,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             // may contain scale and rotation.
             var instanceTransform = new Transform(mappingInfo.MappingTransform);
             instanceTransform.Concatenate(repData.Transform);
-            var instance = definition.CreateInstance(instanceTransform, ifcProduct.Name);
+            var instance = definition.CreateInstance(instanceTransform, ifcProduct.Name ?? "");
             return instance;
         }
 
         public bool Matches(IfcProduct ifcProduct)
         {
-            return ifcProduct is IfcBuildingElement;
+            return ifcProduct is IfcElement;
         }
     }
 }

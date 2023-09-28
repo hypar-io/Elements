@@ -130,7 +130,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 new FromIfcSiteConverter()
             };
 
-            var standardConverter = new IfcBuildingElementToElementConverter();
+            var standardConverter = new FromIfcElementConverter();
 
             return new CompositeIfcToElementConverter(converters, standardConverter);
         }
