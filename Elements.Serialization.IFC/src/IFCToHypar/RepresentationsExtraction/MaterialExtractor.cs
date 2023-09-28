@@ -1,4 +1,5 @@
-﻿using glTFLoader.Schema;
+﻿using Elements.Geometry;
+using glTFLoader.Schema;
 using IFC;
 using System;
 using System.Collections.Generic;
@@ -91,6 +92,11 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
                     }
                 }
             }
+        }
+
+        public Material ExtractMaterial(IfcRepresentationItem repItem)
+        {
+            return MaterialByGuid.ContainsKey(repItem.Id) ? MaterialByGuid[repItem.Id] : null;
         }
     }
 }
