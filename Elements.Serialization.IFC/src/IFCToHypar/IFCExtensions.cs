@@ -463,6 +463,10 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 {
                     throw new Exception("IfcBSplineCurve is not supported yet.");
                 }
+                else if (curve is IfcIndexedPolyCurve ipc)
+                {
+                    return ipc.ToIndexedPolycurve();
+                }
             }
             else if (curve is IfcConic)
             {
@@ -532,6 +536,46 @@ namespace Elements.Serialization.IFC.IFCToHypar
             // var name = profile.ProfileName == null ? null : profile.ProfileName;
             var newProfile = new Profile(outer, inner, profile.Id, string.Empty);
             return newProfile;
+        }
+
+        internal static IndexedPolycurve ToIndexedPolycurve(this IfcIndexedPolyCurve polycurve)
+        {
+            var vertices = new List<Vector3>();
+            foreach (var point in ((IfcCartesianPointList2D)polycurve.Points).CoordList)
+            {
+                vertices.Add(point.ToVector3());
+            }
+
+            IndexedPolycurve pc;
+            var curveIndices = new List<IList<int>>();
+            if (polycurve.Segments != null)
+            {
+                foreach (var select in polycurve.Segments)
+                {
+                    var segmentIndices = new List<int>();
+                    if (select.Choice is IfcLineIndex li)
+                    {
+                        foreach (IfcInteger segmentIndex in (List<IfcPositiveInteger>)li)
+                        {
+                            segmentIndices.Add(segmentIndex - 1);
+                        }
+                    }
+                    else if (select.Choice is IfcArcIndex ai)
+                    {
+                        foreach (IfcInteger segmentIndex in (List<IfcPositiveInteger>)ai)
+                        {
+                            segmentIndices.Add(segmentIndex - 1);
+                        }
+                    }
+                    curveIndices.Add(segmentIndices);
+                }
+                pc = new IndexedPolycurve(vertices, curveIndices);
+            }
+            else
+            {
+                pc = new IndexedPolycurve(vertices);
+            }
+            return pc;
         }
 
         internal static Vector3 ToVector3(this IfcCartesianPoint cartesianPoint)
