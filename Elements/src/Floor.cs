@@ -167,7 +167,7 @@ namespace Elements
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
         {
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0));
+            var o = new Opening(Polygon.Rectangle(width, height), Vector3.ZAxis, depthFront, depthBack, new Transform(x, y, 0));
             Openings.Add(o);
             return o;
         }
@@ -182,7 +182,7 @@ namespace Elements
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
         {
-            var o = new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0));
+            var o = new Opening(perimeter, Vector3.ZAxis, depthFront, depthBack, new Transform(x, y, 0));
             Openings.Add(o);
             return o;
         }
