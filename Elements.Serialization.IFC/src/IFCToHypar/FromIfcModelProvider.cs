@@ -1,5 +1,8 @@
-﻿using Elements.Interfaces;
+﻿using Elements.Geometry;
+using Elements.Interfaces;
 using Elements.Serialization.IFC.IFCToHypar.Converters;
+using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
+using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers;
 using IFC;
 using STEP;
 using System;
@@ -112,6 +115,18 @@ namespace Elements.Serialization.IFC.IFCToHypar
             var standardConverter = new IfcBuildingElementToElementConverter();
 
             return new CompositeIfcToElementConverter(converters, standardConverter);
+        }
+
+        private static IfcRepresentationDataExtractor GetStandardRepresentationDataExtractor(MaterialExtractor materialExtractor)
+        {
+            IfcRepresentationDataExtractor extractor = new IfcRepresentationDataExtractor(materialExtractor);
+
+            extractor.AddRepresentationParser(new IfcFacetedBrepParser());
+            extractor.AddRepresentationParser(new IfcExtrudedAreaSolidParser());
+            extractor.AddRepresentationParser(new IfcMappedItemParser(extractor));
+            extractor.AddRepresentationParser(new IfcBooleanClippingResultParser());
+
+            return extractor;
         }
     }
 }
