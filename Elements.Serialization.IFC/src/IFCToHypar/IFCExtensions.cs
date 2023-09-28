@@ -265,6 +265,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
                     solidTransform.Move(solidTransform.OfVector(setback));
                 }
 
+                var extrude = new Extrude(profile, (IfcLengthMeasure)s.Depth, profile.Normal(), true, true);
                 // Openings should be extruded according to their provided direction,
                 // but we've found that the direction can be wrong, depending on how
                 // the authoring application handles extrusions.
