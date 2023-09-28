@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -530,7 +531,7 @@
       }
     },
     {
-      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
+      "name": "e7aa235b-49e9-42d0-b5fb-884a54e90d07",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -562,85 +563,85 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "6981c62e-7dae-48c1-b021-083bd1504a15_mesh"
+      "name": "1c63931a-d1bd-4502-86cf-2b8e518fb3cc_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 5,
             "POSITION": 4,
+            "NORMAL": 5,
             "TEXCOORD_0": 7
           },
           "indices": 6,
           "material": 1
         }
       ],
-      "name": "3c088663-4c0d-4ad8-98c7-ec5d12cdb6d7_mesh"
+      "name": "179a647b-b996-4f24-bb60-726e715b5e6a_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 9,
             "POSITION": 8,
+            "NORMAL": 9,
             "TEXCOORD_0": 11
           },
           "indices": 10,
           "material": 2
         }
       ],
-      "name": "a8cde9ec-929f-4f24-9c0f-427795aa9c8a_mesh"
+      "name": "18ac0589-e74a-4fe8-92ca-486103759130_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 13,
             "POSITION": 12,
+            "NORMAL": 13,
             "TEXCOORD_0": 15
           },
           "indices": 14,
           "material": 1
         }
       ],
-      "name": "6614787b-455f-4c83-8eb1-4302ff6dd695_mesh"
+      "name": "280c48a1-6bef-478c-afe2-ca0d48383dd6_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 17,
             "POSITION": 16,
+            "NORMAL": 17,
             "TEXCOORD_0": 19
           },
           "indices": 18,
           "material": 1
         }
       ],
-      "name": "35284c52-b443-40cc-ad24-8a5270046d61_mesh"
+      "name": "a1eda699-1f9e-43a9-ad01-274c0f603e58_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 21,
             "POSITION": 20,
+            "NORMAL": 21,
             "TEXCOORD_0": 23
           },
           "indices": 22,
           "material": 0
         }
       ],
-      "name": "8acb01c4-3cb8-49ea-bf5f-b704e994a24a_mesh"
+      "name": "5fe775ee-471c-419d-aeef-c66bc3344e4d_mesh"
     }
   ],
   "nodes": [
@@ -678,7 +679,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "6981c62e-7dae-48c1-b021-083bd1504a15"
+          "id": "1c63931a-d1bd-4502-86cf-2b8e518fb3cc"
         }
       }
     },
@@ -709,7 +710,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "3c088663-4c0d-4ad8-98c7-ec5d12cdb6d7"
+          "id": "179a647b-b996-4f24-bb60-726e715b5e6a"
         }
       }
     },
@@ -722,7 +723,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "a8cde9ec-929f-4f24-9c0f-427795aa9c8a"
+          "id": "18ac0589-e74a-4fe8-92ca-486103759130"
         }
       }
     },
@@ -753,7 +754,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "6614787b-455f-4c83-8eb1-4302ff6dd695"
+          "id": "280c48a1-6bef-478c-afe2-ca0d48383dd6"
         }
       }
     },
@@ -784,7 +785,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "35284c52-b443-40cc-ad24-8a5270046d61"
+          "id": "a1eda699-1f9e-43a9-ad01-274c0f603e58"
         }
       }
     },
@@ -815,7 +816,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "8acb01c4-3cb8-49ea-bf5f-b704e994a24a"
+          "id": "5fe775ee-471c-419d-aeef-c66bc3344e4d"
         }
       }
     },

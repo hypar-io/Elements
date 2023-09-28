@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -530,7 +531,7 @@
       }
     },
     {
-      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
+      "name": "e7aa235b-49e9-42d0-b5fb-884a54e90d07",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -562,85 +563,85 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "fdabee3f-b17c-4c52-8995-8c9307d1e57c_mesh"
+      "name": "487799f3-25aa-4ef3-a7ec-acc1a1adf903_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 5,
             "POSITION": 4,
+            "NORMAL": 5,
             "TEXCOORD_0": 7
           },
           "indices": 6,
           "material": 1
         }
       ],
-      "name": "53e86ef6-257d-483f-9eee-e906d64bb516_mesh"
+      "name": "1bf498da-8df8-4e2b-8a8a-14e9abc5017b_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 9,
             "POSITION": 8,
+            "NORMAL": 9,
             "TEXCOORD_0": 11
           },
           "indices": 10,
           "material": 2
         }
       ],
-      "name": "e34ea858-c984-492c-8fa1-37511aa31bb8_mesh"
+      "name": "4fd24e2c-14a3-4827-a9c9-c889207c0fbb_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 13,
             "POSITION": 12,
+            "NORMAL": 13,
             "TEXCOORD_0": 15
           },
           "indices": 14,
           "material": 1
         }
       ],
-      "name": "e4c71a28-4885-493a-beff-a5dc083f1966_mesh"
+      "name": "5b77ab9b-3815-4263-bbbe-e4890ad2e9b3_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 17,
             "POSITION": 16,
+            "NORMAL": 17,
             "TEXCOORD_0": 19
           },
           "indices": 18,
           "material": 2
         }
       ],
-      "name": "1ef9ee47-1a58-47e9-a895-86bad6742031_mesh"
+      "name": "4ac8f897-fa69-439f-8f69-97666e5df999_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 21,
             "POSITION": 20,
+            "NORMAL": 21,
             "TEXCOORD_0": 23
           },
           "indices": 22,
           "material": 0
         }
       ],
-      "name": "18541a9d-23dd-4374-908d-9c5b407b7faf_mesh"
+      "name": "73c02870-d279-40b5-8d92-f6300465e8ff_mesh"
     }
   ],
   "nodes": [
@@ -678,7 +679,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "fdabee3f-b17c-4c52-8995-8c9307d1e57c"
+          "id": "487799f3-25aa-4ef3-a7ec-acc1a1adf903"
         }
       }
     },
@@ -709,7 +710,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "53e86ef6-257d-483f-9eee-e906d64bb516"
+          "id": "1bf498da-8df8-4e2b-8a8a-14e9abc5017b"
         }
       }
     },
@@ -722,7 +723,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "e34ea858-c984-492c-8fa1-37511aa31bb8"
+          "id": "4fd24e2c-14a3-4827-a9c9-c889207c0fbb"
         }
       }
     },
@@ -753,7 +754,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "e4c71a28-4885-493a-beff-a5dc083f1966"
+          "id": "5b77ab9b-3815-4263-bbbe-e4890ad2e9b3"
         }
       }
     },
@@ -766,7 +767,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "1ef9ee47-1a58-47e9-a895-86bad6742031"
+          "id": "4ac8f897-fa69-439f-8f69-97666e5df999"
         }
       }
     },
@@ -797,7 +798,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "18541a9d-23dd-4374-908d-9c5b407b7faf"
+          "id": "73c02870-d279-40b5-8d92-f6300465e8ff"
         }
       }
     },

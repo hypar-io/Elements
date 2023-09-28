@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -669,7 +670,7 @@
       }
     },
     {
-      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
+      "name": "e7aa235b-49e9-42d0-b5fb-884a54e90d07",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -701,113 +702,113 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "12623515-cb7f-453f-a4f6-414e947f8a34_mesh"
+      "name": "712be31e-9b9a-45bb-8f64-1c6353dc36bf_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 5,
             "POSITION": 4,
+            "NORMAL": 5,
             "TEXCOORD_0": 7
           },
           "indices": 6,
           "material": 1
         }
       ],
-      "name": "498fbdc2-6730-41cc-9a3c-d4dedb089853_mesh"
+      "name": "2ad21632-7b74-4d82-8fb1-3728f2bf83c1_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 9,
             "POSITION": 8,
+            "NORMAL": 9,
             "TEXCOORD_0": 11
           },
           "indices": 10,
           "material": 0
         }
       ],
-      "name": "a980ba44-6a58-434a-82ef-2123910a7d33_mesh"
+      "name": "16c88e27-b93b-4c0f-97a0-9ecaa931d6ef_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 13,
             "POSITION": 12,
+            "NORMAL": 13,
             "TEXCOORD_0": 15
           },
           "indices": 14,
           "material": 1
         }
       ],
-      "name": "2048bc7f-cb97-43e5-96fe-71f2f17d04d0_mesh"
+      "name": "2e5faa0c-a2ab-4c41-8bfe-ed51fc786137_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 17,
             "POSITION": 16,
+            "NORMAL": 17,
             "TEXCOORD_0": 19
           },
           "indices": 18,
           "material": 0
         }
       ],
-      "name": "367a3371-acba-4743-97e5-de2f3f6e1edc_mesh"
+      "name": "69cea594-b1bf-409e-973e-6774991db666_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 21,
             "POSITION": 20,
+            "NORMAL": 21,
             "TEXCOORD_0": 23
           },
           "indices": 22,
           "material": 1
         }
       ],
-      "name": "ee8fcd8e-018f-4152-a28e-61d81cb211d3_mesh"
+      "name": "a9ce4389-04d0-4134-b95e-9420d7f5ccfb_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 25,
             "POSITION": 24,
+            "NORMAL": 25,
             "TEXCOORD_0": 27
           },
           "indices": 26,
           "material": 0
         }
       ],
-      "name": "33c7b017-f933-44af-be54-83e16872847e_mesh"
+      "name": "cb6fecd9-a1cd-4b2e-a222-e91bf0a6ff2a_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 29,
             "POSITION": 28,
+            "NORMAL": 29,
             "TEXCOORD_0": 31
           },
           "indices": 30,
           "material": 0
         }
       ],
-      "name": "6aeaa129-ff40-4896-b853-5e4e09e6cbcd_mesh"
+      "name": "d442dff1-964c-4956-b75d-7b9fe66ed716_mesh"
     }
   ],
   "nodes": [
@@ -865,7 +866,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "12623515-cb7f-453f-a4f6-414e947f8a34"
+          "id": "712be31e-9b9a-45bb-8f64-1c6353dc36bf"
         }
       }
     },
@@ -878,7 +879,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "498fbdc2-6730-41cc-9a3c-d4dedb089853"
+          "id": "2ad21632-7b74-4d82-8fb1-3728f2bf83c1"
         }
       }
     },
@@ -909,7 +910,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "a980ba44-6a58-434a-82ef-2123910a7d33"
+          "id": "16c88e27-b93b-4c0f-97a0-9ecaa931d6ef"
         }
       }
     },
@@ -922,7 +923,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "2048bc7f-cb97-43e5-96fe-71f2f17d04d0"
+          "id": "2e5faa0c-a2ab-4c41-8bfe-ed51fc786137"
         }
       }
     },
@@ -953,7 +954,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "367a3371-acba-4743-97e5-de2f3f6e1edc"
+          "id": "69cea594-b1bf-409e-973e-6774991db666"
         }
       }
     },
@@ -966,7 +967,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "ee8fcd8e-018f-4152-a28e-61d81cb211d3"
+          "id": "a9ce4389-04d0-4134-b95e-9420d7f5ccfb"
         }
       }
     },
@@ -997,7 +998,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "33c7b017-f933-44af-be54-83e16872847e"
+          "id": "cb6fecd9-a1cd-4b2e-a222-e91bf0a6ff2a"
         }
       }
     },
@@ -1028,7 +1029,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "6aeaa129-ff40-4896-b853-5e4e09e6cbcd"
+          "id": "d442dff1-964c-4956-b75d-7b9fe66ed716"
         }
       }
     },
