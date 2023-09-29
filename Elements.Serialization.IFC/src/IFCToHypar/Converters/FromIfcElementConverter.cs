@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class FromIfcElementConverter : IIfcProductToElementConverter
+    internal class FromIfcElementConverter : IFromIfcProductConverter
     {
         private readonly Dictionary<Guid, GeometricElement> _elementDefinitions;
 

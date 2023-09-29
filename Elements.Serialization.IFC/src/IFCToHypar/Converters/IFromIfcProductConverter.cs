@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal interface IIfcProductToElementConverter
+    internal interface IFromIfcProductConverter
     {
         Element ConvertToElement(IfcProduct product, RepresentationData representationData, List<string> constructionErrors);
         bool Matches(IfcProduct ifcProduct);

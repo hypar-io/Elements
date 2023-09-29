@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class IfcDoorToDoorConverter : IIfcProductToElementConverter
+    internal class FromIfcDoorConverter : IFromIfcProductConverter
     {
         public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {

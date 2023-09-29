@@ -9,7 +9,7 @@ using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class IfcSpaceToSpaceConverter : IIfcProductToElementConverter
+    internal class FromIfcSpaceConverter : IFromIfcProductConverter
     {
         private static readonly Material DEFAULT_MATERIAL = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
 

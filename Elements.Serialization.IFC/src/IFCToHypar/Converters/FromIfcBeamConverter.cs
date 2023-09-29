@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class IfcBeamToBeamConverter : IIfcProductToElementConverter
+    internal class FromIfcBeamConverter : IFromIfcProductConverter
     {
         public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {

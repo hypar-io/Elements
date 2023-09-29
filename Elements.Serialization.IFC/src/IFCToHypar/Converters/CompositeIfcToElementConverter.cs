@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class CompositeIfcToElementConverter : IIfcProductToElementConverter
+    internal class CompositeIfcToElementConverter : IFromIfcProductConverter
     {
-        private readonly List<IIfcProductToElementConverter> _converters;
-        private readonly IIfcProductToElementConverter _defaultConverter;
+        private readonly List<IFromIfcProductConverter> _converters;
+        private readonly IFromIfcProductConverter _defaultConverter;
 
-        public CompositeIfcToElementConverter(List<IIfcProductToElementConverter> converters, IIfcProductToElementConverter defaultConverter)
+        public CompositeIfcToElementConverter(List<IFromIfcProductConverter> converters, IFromIfcProductConverter defaultConverter)
         {
             _converters = converters;
             _defaultConverter = defaultConverter;

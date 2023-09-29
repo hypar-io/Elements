@@ -9,12 +9,11 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
-    internal class IfcWallToWallConverter : IIfcProductToElementConverter
+    internal class FromIfcFloorConverter : IFromIfcProductConverter
     {
-        
         public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcWall wall))
+            if (!(ifcProduct is IfcSlab slab))
             {
                 return null;
             }
@@ -24,20 +23,20 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var result = new Wall(repData.Extrude.Profile,
+            var floor = new Floor(repData.Extrude.Profile,
                                   repData.Extrude.Height,
-                                  repData.Material,
                                   repData.Transform,
+                                  repData.Material,
                                   new Representation(repData.SolidOperations),
                                   false,
-                                  IfcGuid.FromIfcGUID(wall.GlobalId),
-                                  wall.Name);
-            return result;
+                                  IfcGuid.FromIfcGUID(slab.GlobalId));
+
+            return floor;
         }
 
         public bool Matches(IfcProduct ifcProduct)
         {
-            return ifcProduct is IfcWall;
+            return ifcProduct is IfcSlab;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
     {
         public Model Model { get; private set; }
 
-        private readonly IIfcProductToElementConverter _fromIfcToElementsConverter;
+        private readonly IFromIfcProductConverter _fromIfcToElementsConverter;
         private readonly IfcRepresentationDataExtractor _representationDataExtractor;
 
         private List<IfcProduct> _ifcProducts;
@@ -27,7 +27,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
 
         private MaterialExtractor _materialExtractor;
 
-        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IIfcProductToElementConverter fromIfcConverter = null, IfcRepresentationDataExtractor representationExtractor = null)
+        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IFromIfcProductConverter fromIfcConverter = null, IfcRepresentationDataExtractor representationExtractor = null)
         {
             _constructionErrors = new List<string>();
             ExtractIfcProducts(path, idsToConvert);
@@ -117,16 +117,16 @@ namespace Elements.Serialization.IFC.IFCToHypar
             _materialExtractor = new MaterialExtractor(styledItems);
         }
 
-        private static IIfcProductToElementConverter GetStandardFromIfcConverter(MaterialExtractor materialExtractor)
+        private static IFromIfcProductConverter GetStandardFromIfcConverter(MaterialExtractor materialExtractor)
         {
-            var converters = new List<IIfcProductToElementConverter>()
+            var converters = new List<IFromIfcProductConverter>()
             {
-                new IfcFloorToFloorConverter(),
-                new IfcSpaceToSpaceConverter(),
-                new IfcWallToWallConverter(),
-                new IfcDoorToDoorConverter(),
-                new IfcBeamToBeamConverter(),
-                new IfcColumnToColumnConverter(),
+                new FromIfcFloorConverter(),
+                new FromIfcSpaceConverter(),
+                new FromIfcWallConverter(),
+                new FromIfcDoorConverter(),
+                new FromIfcBeamConverter(),
+                new FromIfcColumnConverter(),
                 new FromIfcSiteConverter()
             };
 
