@@ -132,7 +132,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
 
             var standardConverter = new FromIfcElementConverter();
 
-            return new CompositeIfcToElementConverter(converters, standardConverter);
+            return new CompositeFromIfcProductConverter(converters, standardConverter);
         }
 
         private static IfcRepresentationDataExtractor GetStandardRepresentationDataExtractor(MaterialExtractor materialExtractor)
