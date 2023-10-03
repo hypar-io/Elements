@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Elements.Serialization.IFC
 {
@@ -38,6 +39,7 @@ namespace Elements.Serialization.IFC
             IEnumerable<IfcColumn> ifcColumns = null;
             IEnumerable<IfcRelVoidsElement> ifcVoids = null;
             IEnumerable<IfcRelAssociatesMaterial> ifcMaterials = null;
+            IEnumerable<IfcDoor> ifcDoors = null;
 
             if (idsToConvert != null && idsToConvert.Count > 0)
             {
@@ -48,6 +50,7 @@ namespace Elements.Serialization.IFC
                 ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i => idsToConvert.Contains(i.GlobalId));
                 ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i => idsToConvert.Contains(i.GlobalId));
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i => idsToConvert.Contains(i.GlobalId));
+                ifcDoors = ifcModel.AllInstancesOfType<IfcDoor>().Where(i => idsToConvert.Contains(i.GlobalId));
             }
             else
             {
@@ -58,6 +61,7 @@ namespace Elements.Serialization.IFC
                 ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
                 ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
                 ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
+                ifcDoors = ifcModel.AllInstancesOfType<IfcDoor>();
             }
 
             constructionErrors = new List<string>();
@@ -133,23 +137,32 @@ namespace Elements.Serialization.IFC
                 }
             }
 
+            var doors = new List<Door>();
+            foreach (var d in ifcDoors)
+            {
+                try
+                {
+                    doors.Add(d.ToDoor(walls));
+                }
+                catch (Exception ex)
+                {
+                    constructionErrors.Add(ex.Message);
+                    continue;
+                }
+            }
+
             var model = new Model();
             model.AddElements(slabs);
             model.AddElements(spaces);
             model.AddElements(walls);
             model.AddElements(beams);
             model.AddElements(columns);
+            model.AddElements(doors);
 
             return model;
         }
 
-        /// <summary>
-        /// Write the model to IFC.
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="path">The path to the generated IFC STEP file.</param>
-        /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
-        public static void ToIFC(this Model model, string path, bool updateElementsRepresentation = true)
+        private static Document CreateIfcDocument(this Model model, bool updateElementsRepresentation = true)
         {
             var ifc = new Document("Elements", "Elements", Environment.UserName,
                                     null, null, null, "Elements", null, null,
@@ -273,11 +286,44 @@ namespace Elements.Serialization.IFC
             var spatialRel = new IfcRelContainedInSpatialStructure(IfcGuid.ToIfcGuid(Guid.NewGuid()), products, storey);
             ifc.AddEntity(spatialRel);
 
+            return ifc;
+        }
+
+        /// <summary>
+        /// Write an IFC document to a file.
+        /// </summary>
+        /// <param name="model">The model to convert to an IFC document.</param>
+        /// <param name="path">The path to the generated IFC STEP file.</param>
+        /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        public static void ToIFC(this Model model,
+                                 string path,
+                                 bool updateElementsRepresentation = true)
+        {
+            var ifc = CreateIfcDocument(model, updateElementsRepresentation);
             if (File.Exists(path))
             {
                 File.Delete(path);
             }
             File.WriteAllText(path, ifc.ToSTEP(path));
+        }
+
+        /// <summary>
+        /// Write an IFC document to a stream.
+        /// </summary>
+        /// <param name="model">The model to convert to an IFC document.</param>
+        /// <param name="stream">The stream in which to write the IFC document.</param>
+        /// <param name="path">The path to the generated IFC STEP file.</param>
+        /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
+
+        public static void ToIFC(this Model model,
+                                 MemoryStream stream,
+                                 bool updateElementsRepresentation = true)
+        {
+            var ifc = CreateIfcDocument(model, updateElementsRepresentation);
+            using (var writer = new StreamWriter(stream))
+            {
+                writer.Write(ifc);
+            }
         }
     }
 }

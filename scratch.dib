@@ -1,0 +1,313 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!csharp
+
+#r "/Users/iankeough/dev/Hypar/Elements/Elements/src/bin/Debug/netstandard2.0/Hypar.Elements.dll"
+#r "nuget:glTF2Loader, 1.1.3-alpha"
+#r "nuget:Unofficial.LibTessDotNet, 2.0.0"
+#r "nuget:SixLabors.Fonts, 1.0.0-beta19"
+#r "nuget:SixLabors.ImageSharp, 2.1.4"
+#r "nuget:SixLabors.ImageSharp.Drawing, 1.0.0-beta15"
+
+#!csharp
+
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using Microsoft.DotNet.Interactive;
+using Microsoft.DotNet.Interactive.Formatting;
+using Elements;
+using Elements.Geometry;
+using Elements.Serialization.glTF;
+using Newtonsoft.Json;
+using System;
+using System.IO;
+
+var viewerSrc = @"
+<div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
+</div>
+<script type=""module"">
+import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
+import { GLTFLoader } from 'https://unpkg.com/three@0.126.0/examples/jsm/loaders/GLTFLoader.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.126.0/examples/jsm/controls/OrbitControls.js';
+const loader = new GLTFLoader();
+const scene = new THREE.Scene();
+
+let loaderScene = new THREE.Scene();
+scene.add(loaderScene);
+
+const width = WIDTH_VAR;
+const height = HEIGHT_VAR;
+const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+// TODO: Configure this lighting to match what we do on Hypar's web UI.
+const light = new THREE.AmbientLight(0xaaaaaa);
+scene.add(light);
+
+const directionalLight = new THREE.DirectionalLight(0xaaaaaa, 0.5);
+scene.add(directionalLight);
+
+
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(width, height);
+document.getElementById('main_DIV_ID').appendChild(renderer.domElement);
+
+camera.position.z = 5;
+
+const controls = new OrbitControls(camera, renderer.domElement);
+
+function base64ToArrayBuffer (base64) {
+    var binary_string = window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array(len);
+    for (var i = 0; i < len; i++) {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+// adapted from looeee's solution https://discourse.threejs.org/t/camera-zoom-to-fit-object/936/3
+const fitCameraToObject = function (scene, offset = 1.25) {
+    offset = offset || 1.25;
+    let boundingBox = null;
+    scene.traverseVisible((child) => {
+        const objectBox = new THREE.Box3().setFromObject(child)
+        if (boundingBox === null) {
+            boundingBox = objectBox
+        } else {
+            boundingBox = boundingBox.union(objectBox)
+        }
+    })
+    const center = boundingBox.getCenter(new THREE.Vector3());
+    const size = boundingBox.getSize(new THREE.Vector3());
+
+    // get the max size of the bounding box (fits to width OR height as needed )
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = camera.fov * (Math.PI / 180);
+    let cameraZ = Math.abs(maxDim / 4 * Math.tan(fov * 2));
+    // if our model is nearly flat, view it from the top, otherwise view it from a corner.
+    if (size.y < 0.001) {
+        // position the camera looking straight down at the object.
+        camera.position.copy(center.clone().add(new THREE.Vector3(0, maxDim * offset, 0)))
+    } else {
+        camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
+    }
+
+    const minZ = boundingBox.min.z;
+    const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
+
+    camera.far = cameraToFarEdge * 10;
+    camera.updateProjectionMatrix();
+
+    if (controls) {
+        // set camera to rotate around center of loaded object
+        controls.target = center;
+        controls.saveState();
+
+    } else {
+        camera.lookAt(center)
+    }
+}
+
+function animate () {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+};
+
+const modelBytes = ""MODEL_BYTES_HERE"";
+
+const gltf = loader.parse(base64ToArrayBuffer(modelBytes), null, (glb) => {
+    loaderScene.add(glb.scene);
+    fitCameraToObject(scene);
+});
+
+
+animate();
+
+</script>
+";
+
+if (KernelInvocationContext.Current is { } currentContext)
+{
+    currentContext.DisplayAs("Add `return model;` at the end of a cell or call `DisplayModel(model, width, height);` to display an Elements model. You can also return individual elements, curves, profiles, or lists of elements, curves, or profiles to automatically populate a model.", "text/markdown");
+}
+
+double DEFAULT_MODEL_WIDTH = 600;
+double DEFAULT_MODEL_HEIGHT = 400;
+Material DEFAULT_CURVE_MATERIAL = BuiltInMaterials.XAxis;
+
+string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
+    var gltf = model.ToGlTF();
+    var gltfString = Convert.ToBase64String(gltf, 0, gltf.Length);
+    return viewerSrc
+    .Replace("MODEL_BYTES_HERE", gltfString)
+    .Replace("WIDTH_VAR", (width ?? DEFAULT_MODEL_WIDTH).ToString())
+    .Replace("HEIGHT_VAR", (height ?? DEFAULT_MODEL_HEIGHT).ToString())
+    .Replace("DIV_ID", Guid.NewGuid().ToString());
+}
+
+Formatter.Register<BoundedCurve>((crv, writer) => {
+    var model = new Model();
+    model.AddElement(new ModelCurve(crv, DEFAULT_CURVE_MATERIAL));
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+
+Formatter.Register<Profile>((p, writer) => {
+    var model = new Model();
+    model.AddElements(p.ToModelCurves(null, DEFAULT_CURVE_MATERIAL));
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<Element>((e, writer) => {
+    var model = new Model();
+    model.AddElement(e);
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Element>>((elements, writer) => {
+    var model = new Model();
+    model.AddElements(elements);
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<BoundedCurve>>((crvs, writer) => {
+    var model = new Model();
+    model.AddElements(crvs.Select(crv => new ModelCurve(crv, DEFAULT_CURVE_MATERIAL)));
+    var src = GetModelViewerSrc(model);
+   writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Profile>>((profiles, writer) => {
+    var model = new Model();
+    model.AddElements(profiles.SelectMany(p => p.ToModelCurves(null, DEFAULT_CURVE_MATERIAL)));
+    var src = GetModelViewerSrc(model);
+   writer.Write(src);
+}, "text/html");
+
+Formatter.Register<Model>((model, writer) => {
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+void DisplayModel(Model model, double? width=null, double? height=null) {
+    var src = GetModelViewerSrc(model, width ?? DEFAULT_MODEL_WIDTH, height ?? DEFAULT_MODEL_HEIGHT);
+    KernelInvocationContext.Current.DisplayAs(src, "text/html");
+}
+
+void SetDefaultDisplaySize(double width, double height) {
+    DEFAULT_MODEL_WIDTH = width;
+    DEFAULT_MODEL_HEIGHT = height;
+}
+
+void SetDefaultCurveMaterial(Material mat) {
+    DEFAULT_CURVE_MATERIAL = mat;
+}
+
+#!csharp
+
+using Elements.Geometry;
+
+private IndexedPolycurve CreateTestPolycurve()
+{
+    var arc = new Arc(new Vector3(0.5, 1), 0.5, 0, 180);
+    var a = new Vector3(1, 0, 0);
+    var b = new Vector3(1, 1, 0);
+    var c = arc.Mid();
+    var d = new Vector3(0, 1, 0);
+    var e = Vector3.Origin;
+    var vertices = new[] { a, b, c, d, e };
+    var indices = new[]{
+        new[]{0,1},
+        new[]{1,2,3},
+        new[]{3,4}
+    };
+
+    return new IndexedPolycurve(vertices, indices);
+}
+
+#!csharp
+
+using Elements.Geometry.Profiles;
+
+var model = new Model();
+var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+
+// Line
+var line = new Line(Vector3.Origin, new Vector3(1,1));
+var lineMc = new ModelCurve(line, BuiltInMaterials.XAxis);
+textData.Add((line.Start, Vector3.ZAxis, Vector3.XAxis, $"{line.Domain.Min:f2}", Colors.White));
+textData.Add((line.End, Vector3.ZAxis, Vector3.XAxis, $"{line.Domain.Max:f2}", Colors.White));
+model.AddElement(lineMc);
+
+// Polyline
+var pline = new Polyline(new Vector3(2,0), new Vector3(3,1), new Vector3(4, 0));
+var plineMc = new ModelCurve(pline, BuiltInMaterials.YAxis);
+foreach(var v in pline.Vertices)
+{
+    textData.Add((v, Vector3.ZAxis, Vector3.XAxis, $"{pline.GetParameterAt(v):f2}", Colors.White));
+}
+model.AddElement(plineMc);
+
+// Polygon
+var pgon = Polygon.Star(1,0.5,5).TransformedPolygon(new Transform(new Vector3(6,0,0)));
+var pgonMc = new ModelCurve(pgon, BuiltInMaterials.ZAxis);
+foreach(var v in pgon.Vertices)
+{
+    textData.Add((v, Vector3.ZAxis, Vector3.XAxis, $"{pgon.GetParameterAt(v):f1}", Colors.White));
+}
+model.AddElement(pgon);
+
+// Indexed polycurve
+var ipc = CreateTestPolycurve().TransformedPolycurve(new Transform(new Vector3(8,0,0)));
+var ipcMc = new ModelCurve(ipc, BuiltInMaterials.XAxis);
+textData.Add((ipc.PointAt(0), Vector3.ZAxis, Vector3.XAxis, "0", Colors.White));
+textData.Add((ipc.PointAt(1), Vector3.ZAxis, Vector3.XAxis, "1", Colors.White));
+textData.Add((ipc.PointAt(1.5), Vector3.ZAxis, Vector3.XAxis, "1.5", Colors.White));
+textData.Add((ipc.PointAt(2), Vector3.ZAxis, Vector3.XAxis, "2", Colors.White));
+textData.Add((ipc.PointAt(3), Vector3.ZAxis, Vector3.XAxis, "3", Colors.White));
+model.AddElement(ipcMc);
+
+// Arc
+var arc = new Arc(Vector3.Origin, 1, 15, 270).TransformedArc(new Transform(new Vector3(0,-2,0)));
+var arcMc = new ModelCurve(arc, BuiltInMaterials.XAxis);
+textData.Add((arc.Start, Vector3.ZAxis, Vector3.XAxis, $"{arc.Domain.Min:f2}", Colors.White));
+textData.Add((arc.End, Vector3.ZAxis, Vector3.XAxis, $"{arc.Domain.Max:f2}", Colors.White));
+model.AddElement(arcMc);
+
+// Ellipse
+var ellipse = (EllipticalArc)(new EllipticalArc(Vector3.Origin, 1, 0.5, 15, 270)).Transformed(new Transform(new Vector3(3,-2,0)));
+var ellipseMc = new ModelCurve(ellipse, BuiltInMaterials.XAxis);
+textData.Add((ellipse.Start, Vector3.ZAxis, Vector3.XAxis, $"{ellipse.Domain.Min:f2}", Colors.White));
+textData.Add((ellipse.End, Vector3.ZAxis, Vector3.XAxis, $"{ellipse.Domain.Max:f2}", Colors.White));
+model.AddElement(ellipseMc);
+
+// Fillets
+var l = Polygon.L(1,1,0.5).TransformedPolygon(new Transform(new Vector3(5,-2.5)));
+var fillet = l.Fillet(0.1);
+var filletMc = new ModelCurve(fillet, BuiltInMaterials.EdgesHighlighted);
+model.AddElement(filletMc);
+
+// Bezier
+var b = new Bezier(new List<Vector3>{
+    Vector3.Origin,
+    new Vector3(1,1,0),
+    new Vector3(2,-1,0),
+    new Vector3(3,1,0)
+});
+var t = new Transform(new Vector3(7, -2));
+
+for(var i=0.0; i<=1.0; i+=0.2)
+{
+    textData.Add((t.OfPoint(b.PointAt(i)), Vector3.ZAxis, Vector3.XAxis, $"{i:f1}", Colors.White));
+}
+var bmc = new ModelCurve(b.TransformedBezier(t), BuiltInMaterials.YAxis);
+model.AddElement(bmc);
+
+var modelText = new ModelText(textData, FontSize.PT36);
+model.AddElement(modelText);
+DisplayModel(model, 1600,800)

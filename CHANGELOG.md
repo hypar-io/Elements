@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.1
+## 2.1.0
 
 ### Added
 
@@ -41,11 +41,23 @@
 - `Bezier.Intersects(Bezier other, out List<Vector3> results)`
 - `Elements.Geometry.ThickenedPolyline`
 - `Polygon.IntersectionLines`
+- `Model.ToGlTF(MemoryStream stream...)`
+- `Model.ToIFC(MemoryStream stream ...)`
+- `Model.ToJson(MemoryStream stream ...)`
+- `Profile.ThickenedInteriorProfile`
+- `Profile.ThickenedExteriorProfile`
+- `Profile.ThickenedEdgePolygons`
+- `Elements.MEP`
+- `GeometricElement.RepresentationInstances`
 
 ### Fixed
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 - Code generation supports `Vector3?` and `Color?` types.
+
+
+### Changed
+- `GltfExtensions.UseReferencedContentExtension` is now true by default.
 
 ## 2.0.0
 
@@ -69,6 +81,7 @@
 - `Topography.Trimmed`
 - `new Topography(Topography other)`
 - `Topography.TopMesh()`
+- `UpdateElementRepresentations` flag to all serialization methods
 
 ### Changed
 
