@@ -412,14 +412,20 @@ namespace Elements.Serialization.SVG
                     if (element.Value is GeometricElement geo)
                     {
                         geo.UpdateRepresentations();
-                        if (geo.Representation == null || geo.Representation.SolidOperations.All(v => v.IsVoid))
+                        if ((geo.Representation == null || geo.Representation.SolidOperations.All(v => v.IsVoid)) &&
+                            (geo.RepresentationInstances == null || !geo.RepresentationInstances.Any()))
                         {
                             continue;
                         }
                         geo.UpdateBoundsAndComputeSolid();
 
-                        var bbMax = geo.Transform.OfPoint(geo._bounds.Max);
-                        var bbMin = geo.Transform.OfPoint(geo._bounds.Min);
+                        if (geo.Bounds.Volume.ApproximatelyEquals(0))
+                        {
+                            continue;
+                        }
+
+                        var bbMax = geo.Transform.OfPoint(geo.Bounds.Max);
+                        var bbMin = geo.Transform.OfPoint(geo.Bounds.Min);
                         bounds.Extend(new[] { bbMax, bbMin });
                     }
                 }

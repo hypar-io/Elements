@@ -381,10 +381,6 @@ namespace Elements
                     geo = instance.BaseDefinition;
                 }
 
-                if (geo._csg == null)
-                {
-                    continue;
-                }
 
                 if (geo.Intersects(plane, out var xsectP, out var beyondP, out var xsectL))
                 {
