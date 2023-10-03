@@ -96,9 +96,7 @@ namespace Elements.Geometry
                 throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var segmentIndex = 0;
-            var o = PointAtInternal(u, out segmentIndex);
-            Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
+            var o = PointAtInternal(u, out var segmentIndex);
 
             // Check if the provided parameter is equal
             // to one of the vertices.
@@ -119,7 +117,7 @@ namespace Elements.Geometry
             {
                 var idx = this.Vertices.IndexOf(a);
 
-                if (idx == 0 || idx == this.Vertices.Count - 1)
+                if (!(this is Polygon) && (idx == 0 || idx == this.Vertices.Count - 1))
                 {
                     return CreateOrthogonalTransform(idx, a, normals[idx]);
                 }
@@ -129,26 +127,14 @@ namespace Elements.Geometry
                 }
             }
 
-            var d = this.Length() * u;
-            var totalLength = 0.0;
-            var segments = Segments();
-            var normal = new Vector3();
-            for (var i = 0; i < segments.Length; i++)
-            {
-                var s = segments[i];
-                var currLength = s.Length();
-                if (totalLength <= d && totalLength + currLength >= d)
-                {
-                    var parameterOnSegment = d - totalLength;
-                    o = s.PointAt(parameterOnSegment);
-                    var previousNormal = normals[i];
-                    var nextNormal = normals[(i + 1) % this.Vertices.Count];
-                    normal = ((nextNormal - previousNormal) * parameterOnSegment + previousNormal).Unitized();
-                    x = s.Direction().Cross(normal);
-                    break;
-                }
-                totalLength += currLength;
-            }
+            var nextIndex = (segmentIndex + 1) % this.Vertices.Count;
+            var segment = new Line(Vertices[segmentIndex], Vertices[nextIndex]);
+            var parameterOnSegment = u - segmentIndex;
+            var previousNormal = normals[segmentIndex];
+            var nextNormal = normals[nextIndex];
+            var normal = ((nextNormal - previousNormal) * parameterOnSegment + previousNormal).Unitized();
+            var x = segment.Direction().Cross(normal);
+
             return new Transform(o, x, normal, x.Cross(normal));
         }
 
