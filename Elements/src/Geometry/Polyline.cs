@@ -303,23 +303,23 @@ namespace Elements.Geometry
 
             // Calculate number of frames. 2 frames corresponding to end parameters.
             // 1 if startIndex == endIndex.
-            var lenght =  endIndex - startIndex + 3;
+            var length =  endIndex - startIndex + 3;
 
             // startIndex is set to the first distinct vertex after startParam.
             if (startParam.ApproximatelyEquals(startIndex))
             {
                 startAtVertex = true;
-                lenght--;
+                length--;
             }
 
             // endIndex is set to the first distinct vertex before endParam.
             if (endParam.ApproximatelyEquals(endIndex))
             {
                 endsAtVertex = true;
-                lenght--;
+                length--;
             }
 
-            var result = new Transform[lenght];
+            var result = new Transform[length];
             var normals = this.NormalsAtVertices();
 
             int index = 0;
