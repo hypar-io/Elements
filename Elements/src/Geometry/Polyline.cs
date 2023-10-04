@@ -326,7 +326,7 @@ namespace Elements.Geometry
             // CreateOrthogonalTransform expects index of previous vertex, that's why index must be adjusted.
             if (!startAtVertex)
             {
-                var tangent = (Vertices[startIndex] - Vertices[startIndex - 1]).Unitized();
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
                 result[0] = new Transform(PointAt(startParam), normals[startIndex - 1].Cross(tangent), tangent);
                 index++;
             }
@@ -338,7 +338,7 @@ namespace Elements.Geometry
 
             if (!endsAtVertex)
             {
-                var tangent = (Vertices[endIndex + 1] - Vertices[endIndex]).Unitized();
+                var tangent = (Vertices[endIndex] - Vertices[endIndex + 1]).Unitized();
                 result[index] = new Transform(PointAt(endParam), normals[endIndex].Cross(tangent), tangent);
             }
 
@@ -416,7 +416,7 @@ namespace Elements.Geometry
                 if (tangent.IsZero())
                 {
                     tangent = v1;
-                } 
+                }
             }
             tangent = tangent.Negate();
             return new Transform(origin, up.Cross(tangent), tangent);

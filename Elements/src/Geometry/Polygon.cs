@@ -2113,7 +2113,7 @@ namespace Elements.Geometry
             int index = 0;
             if (!startAtVertex)
             {
-                var tangent = (Vertices[startIndex] - Vertices[startIndex - 1]).Unitized();
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
                 result[0] = new Transform(PointAt(startParam), up.Cross(tangent), tangent);
                 index++;
             }
@@ -2128,7 +2128,7 @@ namespace Elements.Geometry
             if (!endsAtVertex)
             {
                 var nextIndex = (endIndex + 1) % Vertices.Count;
-                var tangent = (Vertices[nextIndex] - Vertices[endIndex]).Unitized();
+                var tangent = (Vertices[endIndex] - Vertices[nextIndex]).Unitized();
                 result[index] = new Transform(PointAt(endParam), up.Cross(tangent), tangent);
             }
 
