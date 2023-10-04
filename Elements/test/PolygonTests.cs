@@ -2231,6 +2231,13 @@ namespace Elements.Geometry.Tests
             Assert.Equal(polygon.Vertices[0], frames[4].Origin);
             Assert.True((Vector3.YAxis - Vector3.XAxis).IsParallelTo(frames[4].ZAxis));
 
+            frames = polygon.Frames(1, 1);
+            Assert.Equal(5, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.IsParallelTo(frames[0].ZAxis));
+            Assert.Equal((0, 1), frames[4].Origin);
+            Assert.True(Vector3.YAxis.IsParallelTo(frames[4].ZAxis));
+
             frames = polygon.Frames(2, 2);
             Assert.Equal(3, frames.Count());
             Assert.Equal(polygon.Vertices[1], frames[0].Origin);

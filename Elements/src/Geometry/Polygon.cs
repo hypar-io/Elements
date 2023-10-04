@@ -2127,7 +2127,8 @@ namespace Elements.Geometry
 
             if (!endsAtVertex)
             {
-                var tangent = (Vertices[endIndex + 1] - Vertices[endIndex]).Unitized();
+                var nextIndex = (endIndex + 1) % Vertices.Count;
+                var tangent = (Vertices[nextIndex] - Vertices[endIndex]).Unitized();
                 result[index] = new Transform(PointAt(endParam), up.Cross(tangent), tangent);
             }
 
