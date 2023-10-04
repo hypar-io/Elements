@@ -88,7 +88,7 @@ namespace Elements.Geometry
         /// Get the transform at the specified parameter along the polyline.
         /// </summary>
         /// <param name="u">The parameter on the polygon between 0.0 and length.</param>
-        /// <returns>A transform with its Z axis aligned trangent to the polyline.</returns>
+        /// <returns>A transform with its Z axis aligned tangent to the polyline.</returns>
         public override Transform TransformAt(double u)
         {
             if (!Domain.Includes(u, true))
