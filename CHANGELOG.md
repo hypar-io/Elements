@@ -53,7 +53,8 @@
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 - Code generation supports `Vector3?` and `Color?` types.
-
+- `Polyline.TransformAt` returns correct transformations when parameter on domain is provided.
+- `IndexedPolycurve` constructor that takes list of `BoundedCurve` now produces `CurveIndices` that share vertices and are withing index range. This means `IndexedPolyline.TransformedPolyline` preserves `CurveIndicies` on new `IndexedPolyline`.
 
 ### Changed
 - `GltfExtensions.UseReferencedContentExtension` is now true by default.
