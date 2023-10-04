@@ -784,17 +784,17 @@ namespace Elements.Geometry.Tests
             Assert.Equal((0, 0), transform.Origin);
             Assert.Equal(Vector3.XAxis.Negate(), transform.ZAxis);
 
-            //transform = polyline.TransformAt(0.5);
-            //Assert.Equal((2.5, 0), transform.Origin);
-            //Assert.Equal(Vector3.XAxis.Negate(), transform.ZAxis);
+            transform = polyline.TransformAt(0.5);
+            Assert.Equal((2.5, 0), transform.Origin);
+            Assert.Equal(Vector3.XAxis.Negate(), transform.ZAxis);
 
             transform = polyline.TransformAt(1);
             Assert.Equal((5, 0), transform.Origin);
             Assert.Equal((Vector3.XAxis + Vector3.YAxis).Unitized().Negate(), transform.ZAxis);
 
-            //transform = polyline.TransformAt(1.25);
-            //Assert.Equal((5, 2.5), transform.Origin);
-            //Assert.Equal(Vector3.YAxis.Negate(), transform.ZAxis);
+            transform = polyline.TransformAt(1.25);
+            Assert.Equal((5, 2.5), transform.Origin);
+            Assert.Equal(Vector3.YAxis.Negate(), transform.ZAxis);
 
             transform = polyline.TransformAt(2);
             Assert.Equal((5, 10), transform.Origin);
