@@ -151,15 +151,21 @@ namespace Elements.Serialization.IFC.IFCToHypar
         private void ExtractIfcProducts(string path, IList<string> idsToConvert = null)
         {
             var ifcModel = new Document(path, out List<STEPError> errors);
+            // TODO: IfcOpeningElement is prohibited because openings are handled during
+            // relationships processing.
+            // It is possible that there are more IfcElement types that should be excluded.
+            var prohibitedElements = ifcModel.AllInstancesOfType<IfcOpeningElement>();
 
             if (idsToConvert != null && idsToConvert.Count > 0)
             {
-                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>().Where(i => idsToConvert.Contains(i.GlobalId)).ToList();
-                _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>().Where(i => idsToConvert.Contains(i.GlobalId)).ToList();
+                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>()
+                    .Where(i => idsToConvert.Contains(i.GlobalId)).Except(prohibitedElements).ToList();
+                _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>()
+                    .Where(i => idsToConvert.Contains(i.GlobalId)).ToList();
             }
             else
             {
-                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>().ToList();
+                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>().Except(prohibitedElements).ToList();
                 _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>().ToList();
             }
 

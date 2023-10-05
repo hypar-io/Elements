@@ -11,7 +11,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcBuildingElement ifcElement))
+            if (!(ifcProduct is IfcElement ifcElement))
             {
                 return null;
             }
@@ -41,7 +41,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
         public bool Matches(IfcProduct ifcProduct)
         {
-            return ifcProduct is IfcBuildingElement;
+            return ifcProduct is IfcElement;
         }
     }
 }
