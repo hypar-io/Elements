@@ -13,7 +13,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         private static readonly Material DEFAULT_MATERIAL = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
 
-        public Element ConvertToElement(IfcProduct product, RepresentationData repData, List<string> constructionErrors)
+        public GeometricElement ConvertToElement(IfcProduct product, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(product is IfcSpace ifcSpace))
             {

@@ -7,6 +7,7 @@ using IFC;
 using STEP;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -23,6 +24,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
         private List<IfcRelationship> _ifcRelationships;
 
         private readonly Dictionary<Element, IfcProduct> _elementToIfcProduct;
+        private readonly Dictionary<Guid, GeometricElement> _elementDefinitions;
         private readonly List<string> _constructionErrors;
 
         private MaterialExtractor _materialExtractor;
@@ -35,6 +37,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             _constructionErrors = new List<string>();
             ExtractIfcProducts(path, idsToConvert);
             _elementToIfcProduct = new Dictionary<Element, IfcProduct>();
+            _elementDefinitions = new Dictionary<Guid, GeometricElement>();
 
             _representationDataExtractor = representationExtractor ?? GetStandardRepresentationDataExtractor(_materialExtractor);
             _fromIfcToElementsConverter = fromIfcConverter ?? GetStandardFromIfcConverter();
@@ -61,14 +64,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 // Refactor the code so the only one of these approaches is used.
                 try
                 {
-                    var repData = _representationDataExtractor.ExtractRepresentationData(product);
-
-                    if (repData == null)
-                    {
-                        continue;
-                    }
-
-                    var element = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
+                    var element = ConvertIfcProductToElement(product);
 
                     if (element == null)
                     {
@@ -86,6 +82,53 @@ namespace Elements.Serialization.IFC.IFCToHypar
             }
 
             return elements;
+        }
+
+        private Element ConvertIfcProductToElement(IfcProduct product)
+        {
+            var repData = _representationDataExtractor.ExtractRepresentationData(product);
+
+            if (repData == null)
+            {
+                return null;
+            }
+
+            if (repData.MappingInfo != null)
+            {
+                // TODO: Handle IfcMappedItem
+                // - Idea: Make Representations an Element, so that they can be shared.
+                // - Idea: Make PropertySet an Element. PropertySets can store type properties.
+                GeometricElement definition;
+                if (_elementDefinitions.ContainsKey(repData.MappingInfo.MappingId))
+                {
+                    definition = _elementDefinitions[repData.MappingInfo.MappingId];
+                }
+                else
+                {
+                    definition = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
+
+                    if (definition == null)
+                    {
+                        //Debug.Assert(false, "Cannot convert definition to GeometricElement.");
+                        return null;
+                    }
+
+                    definition.IsElementDefinition = true;
+                    _elementDefinitions.Add(repData.MappingInfo.MappingId, definition);
+                    //definition.SkipCSGUnion = true;
+                }
+
+                // The cartesian transform needs to be applied 
+                // before the element transformation because it
+                // may contain scale and rotation.
+                var instanceTransform = new Transform(repData.MappingInfo.MappingTransform);
+                instanceTransform.Concatenate(repData.Transform);
+                var instance = definition.CreateInstance(instanceTransform, product.Name ?? "");
+                return instance;
+            }
+
+            var element = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
+            return element;
         }
 
         private void HandleRelationships(List<Element> elements)

@@ -18,9 +18,9 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             _defaultConverter = defaultConverter;
         }
 
-        public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData representationData, List<string> constructionErrors)
+        public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData representationData, List<string> constructionErrors)
         {
-            Element result;
+            GeometricElement result;
             
             foreach (var converter in _converters)
             {

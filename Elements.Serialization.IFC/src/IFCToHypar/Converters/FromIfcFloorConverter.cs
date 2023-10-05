@@ -11,7 +11,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class FromIfcFloorConverter : IFromIfcProductConverter
     {
-        public Element ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
+        public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(ifcProduct is IfcSlab slab))
             {

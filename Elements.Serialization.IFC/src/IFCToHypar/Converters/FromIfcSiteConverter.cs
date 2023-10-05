@@ -9,7 +9,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class FromIfcSiteConverter : IFromIfcProductConverter
     {
-        public Element ConvertToElement(IfcProduct product, RepresentationData repData, List<string> constructionErrors)
+        public GeometricElement ConvertToElement(IfcProduct product, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(product is IfcSite ifcSite))
             {

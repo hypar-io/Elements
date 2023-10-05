@@ -8,7 +8,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal interface IFromIfcProductConverter
     {
-        Element ConvertToElement(IfcProduct product, RepresentationData representationData, List<string> constructionErrors);
+        GeometricElement ConvertToElement(IfcProduct product, RepresentationData representationData, List<string> constructionErrors);
         bool Matches(IfcProduct ifcProduct);
     }
 }
