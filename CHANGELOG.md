@@ -54,6 +54,10 @@
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 - Code generation supports `Vector3?` and `Color?` types.
 
+### Changed
+
+- `GeometricElement.Intersects` method now supports multiple representations
+
 ## 2.0.0
 
 ### Added

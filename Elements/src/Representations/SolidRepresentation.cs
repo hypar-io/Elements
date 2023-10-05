@@ -147,14 +147,14 @@ namespace Elements
         /// <param name="plane">The intersecting plane.</param>
         /// <param name="beyondPolygons">The output collection of the polygons beyond the input plane.</param>
         /// <returns>Returns the collection of intersection points.</returns>
-        public List<Vector3> CalculateIntersactionPoints(GeometricElement element, Plane plane, out List<Polygon> beyondPolygons)
+        public List<Vector3> CalculateIntersectionPoints(GeometricElement element, Plane plane, out List<Polygon> beyondPolygons)
         {
             var intersectionPoints = new List<Vector3>();
             beyondPolygons = new List<Polygon>();
 
             var csg = SolidOperationUtils.GetFinalCsgFromSolids(SolidOperations, element, true);
 
-            var localCsg = csg.Transform(element.Transform.ToMatrix4x4()); ;
+            var localCsg = csg.Transform(element.Transform.ToMatrix4x4());
             foreach (var csgPoly in localCsg.Polygons)
             {
                 var csgNormal = csgPoly.Plane.Normal.ToVector3();

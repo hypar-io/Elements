@@ -267,7 +267,7 @@ namespace Elements
 
                     if (instance.Representation is SolidRepresentation solidRepresentation)
                     {
-                        intersectionPoints.AddRange(solidRepresentation.CalculateIntersactionPoints(this, plane,
+                        intersectionPoints.AddRange(solidRepresentation.CalculateIntersectionPoints(this, plane,
                             out var beyondPolygonsLocal));
                         beyondPolygonsList.AddRange(beyondPolygonsLocal);
                     }
