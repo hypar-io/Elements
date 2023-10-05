@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Hypar.Tests
+namespace Elements.Geometry.Tests
 {
     public class EllipseTests
     {
