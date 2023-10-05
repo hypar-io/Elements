@@ -61,6 +61,7 @@ namespace Elements.Tests
         [Fact]
         public void MergeExtensions()
         {
+            GltfExtensions.UseReferencedContentExtension = false;
             Name = nameof(MergeExtensions);
             // This piece of content uses the KHR_materials_pbrSpecularGlossiness extension which is no longer used in our models.
             const string contentLocation = "../../../models/MergeGlTF/LittleShapes.glb";
@@ -89,6 +90,7 @@ namespace Elements.Tests
             Assert.NotEmpty(gltfContent.ExtensionsUsed);
             Assert.NotEmpty(gltfContent.ExtensionsUsed.Except(initialExtensions));
             Assert.All(gltfContent.ExtensionsUsed, (ext) => Assert.Contains(ext, gltfModelMerged.ExtensionsUsed));
+            GltfExtensions.UseReferencedContentExtension = true;
         }
 
         // TODO: The test fails in 70 of 100 test runs. Uncomment when it is fixed.

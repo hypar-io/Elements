@@ -131,9 +131,9 @@ namespace Elements.Geometry.Solids
 
             if (curve is Polygon)
             {
-                for (var i = 0; i < transforms.Length; i++)
+                for (var i = 0; i < transforms.Length - 1; i++)
                 {
-                    var next = i == transforms.Length - 1 ? transforms[0] : transforms[i + 1];
+                    var next = transforms[i + 1];
                     solid.SweepPolygonBetweenPlanes(perimeter, transforms[i], next);
                 }
             }

@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -452,7 +453,7 @@
       }
     },
     {
-      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
+      "name": "e7aa235b-49e9-42d0-b5fb-884a54e90d07",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -484,71 +485,71 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "7d92eed3-5488-454e-b1df-3284d094b568_mesh"
+      "name": "6693bfec-9116-431d-9bce-90755d47bc6b_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 5,
             "POSITION": 4,
+            "NORMAL": 5,
             "TEXCOORD_0": 7
           },
           "indices": 6,
           "material": 1
         }
       ],
-      "name": "48c5e98d-66b2-4392-b8ab-0e6ae53853b5_mesh"
+      "name": "d047258b-4f0b-41ad-8323-efc7bcc3bf6d_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 9,
             "POSITION": 8,
+            "NORMAL": 9,
             "TEXCOORD_0": 11
           },
           "indices": 10,
           "material": 2
         }
       ],
-      "name": "a80b332f-63d8-4fa6-8a61-882b6a067ca5_mesh"
+      "name": "0d5b9d8b-2ce3-4547-98a6-512015940d2e_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 13,
             "POSITION": 12,
+            "NORMAL": 13,
             "TEXCOORD_0": 15
           },
           "indices": 14,
           "material": 1
         }
       ],
-      "name": "360a7994-fd11-463b-bf8b-8070c6719d3e_mesh"
+      "name": "42bcde25-7626-4e83-b39f-0e7cb85997cf_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 17,
             "POSITION": 16,
+            "NORMAL": 17,
             "TEXCOORD_0": 19
           },
           "indices": 18,
           "material": 0
         }
       ],
-      "name": "e15149c1-0c32-4b79-a16e-70be5b3026a8_mesh"
+      "name": "9dc26361-7d61-4b57-914e-a08d00c64921_mesh"
     }
   ],
   "nodes": [
@@ -585,7 +586,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "7d92eed3-5488-454e-b1df-3284d094b568"
+          "id": "6693bfec-9116-431d-9bce-90755d47bc6b"
         }
       }
     },
@@ -616,7 +617,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "48c5e98d-66b2-4392-b8ab-0e6ae53853b5"
+          "id": "d047258b-4f0b-41ad-8323-efc7bcc3bf6d"
         }
       }
     },
@@ -629,7 +630,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "a80b332f-63d8-4fa6-8a61-882b6a067ca5"
+          "id": "0d5b9d8b-2ce3-4547-98a6-512015940d2e"
         }
       }
     },
@@ -660,7 +661,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "360a7994-fd11-463b-bf8b-8070c6719d3e"
+          "id": "42bcde25-7626-4e83-b39f-0e7cb85997cf"
         }
       }
     },
@@ -691,7 +692,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "e15149c1-0c32-4b79-a16e-70be5b3026a8"
+          "id": "9dc26361-7d61-4b57-914e-a08d00c64921"
         }
       }
     },

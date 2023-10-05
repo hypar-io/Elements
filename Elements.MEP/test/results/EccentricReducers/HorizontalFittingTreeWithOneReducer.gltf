@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -349,7 +350,7 @@
       "alphaMode": "BLEND"
     },
     {
-      "name": "ac4653cf-2215-4377-887c-57383fd4bb4b",
+      "name": "e7aa235b-49e9-42d0-b5fb-884a54e90d07",
       "extensions": {
         "KHR_materials_specular": {
           "specularFactor": 1.0,
@@ -406,57 +407,57 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "afc8bfb0-96b3-4e73-887d-155b586caf01_mesh"
+      "name": "3153936f-5bed-447a-984f-1ffb5623848c_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 5,
             "POSITION": 4,
+            "NORMAL": 5,
             "TEXCOORD_0": 7
           },
           "indices": 6,
           "material": 1
         }
       ],
-      "name": "987c6f6c-5748-4285-977a-acd4d5b71aeb_mesh"
+      "name": "77fde7d7-f431-4b9b-9214-53cd03ad5a18_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 9,
             "POSITION": 8,
+            "NORMAL": 9,
             "TEXCOORD_0": 11
           },
           "indices": 10,
           "material": 2
         }
       ],
-      "name": "4bca90d2-93f5-4c10-ac70-13605f46407f_mesh"
+      "name": "052fcb53-1692-4a66-8c25-2f7396cbe7a5_mesh"
     },
     {
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 13,
             "POSITION": 12,
+            "NORMAL": 13,
             "TEXCOORD_0": 15
           },
           "indices": 14,
           "material": 0
         }
       ],
-      "name": "b3a2a292-b6fe-44ed-a7ec-8cc680e30324_mesh"
+      "name": "534f0cdf-d871-4912-a478-5a472a5f2af3_mesh"
     }
   ],
   "nodes": [
@@ -492,7 +493,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "afc8bfb0-96b3-4e73-887d-155b586caf01"
+          "id": "3153936f-5bed-447a-984f-1ffb5623848c"
         }
       }
     },
@@ -505,7 +506,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "987c6f6c-5748-4285-977a-acd4d5b71aeb"
+          "id": "77fde7d7-f431-4b9b-9214-53cd03ad5a18"
         }
       }
     },
@@ -536,7 +537,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "4bca90d2-93f5-4c10-ac70-13605f46407f"
+          "id": "052fcb53-1692-4a66-8c25-2f7396cbe7a5"
         }
       }
     },
@@ -567,7 +568,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "b3a2a292-b6fe-44ed-a7ec-8cc680e30324"
+          "id": "534f0cdf-d871-4912-a478-5a472a5f2af3"
         }
       }
     },
