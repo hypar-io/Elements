@@ -38,7 +38,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             else
             {
                 var parsedData = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
-                var repData = new RepresentationData(mappedItem.MappingSource.MappedRepresentation.Id, mappedItem.MappingTarget.ToTransform(), parsedData);
+                var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
+                var repData = new RepresentationData(mappedItem.MappingSource.MappedRepresentation.Id, mappingTransform, parsedData);
 
                 _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, repData);
                 return repData;
