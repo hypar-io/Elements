@@ -90,14 +90,18 @@ namespace Elements.Serialization.IFC.IFCToHypar
 
         private void HandleRelationships(List<Element> elements)
         {
-            var elementsWithOpenings = elements.Where(element => element is IHasOpenings);
-            var ifcOpenings = _ifcRelationships.OfType<IfcRelVoidsElement>();
+            var elementsWithOpenings = elements.Where(element => element is IHasOpenings).ToList();
+            var ifcOpenings = _ifcRelationships.OfType<IfcRelVoidsElement>().ToList();
 
             foreach (var elementWithOpenings in elementsWithOpenings)
             {
                 var ifcElement = _elementToIfcProduct[elementWithOpenings];
-                var openings = ifcOpenings.Where(v => v.RelatingBuildingElement == ifcElement).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>();
-                ((IHasOpenings)elementWithOpenings).Openings.AddRange(openings.Select(io => io.ToOpening()));
+                var ifcOpeningElements = ifcOpenings.Where(v => v.RelatingBuildingElement == ifcElement)
+                    .Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>().ToList();
+                var openings = ifcOpeningElements.SelectMany(io => io.ToOpening()).ToList();
+
+                var openingsOwner = (IHasOpenings) elementWithOpenings;
+                openingsOwner.Openings.AddRange(openings);
             }
         }
 

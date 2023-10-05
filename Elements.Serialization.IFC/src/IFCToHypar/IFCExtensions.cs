@@ -46,27 +46,35 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return DoorOpeningType.Undefined;
         }
 
-        internal static Opening ToOpening(this IfcOpeningElement opening)
+        internal static List<Opening> ToOpening(this IfcOpeningElement opening)
         {
-            var openingTransform = opening.ObjectPlacement.ToTransform();
-            var s = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().FirstOrDefault();
-            if (s != null)
-            {
-                var solidTransform = s.Position.ToTransform();
-                solidTransform.Concatenate(openingTransform);
-                var profile = (Polygon)s.SweptArea.ToCurve();
+            var relativePlacement = ((IfcLocalPlacement)opening.ObjectPlacement).RelativePlacement.ToTransform();
+            var resultOpenings = new List<Opening>();
 
-                var newOpening = new Opening(profile,
-                                             default,
-                                             (IfcLengthMeasure)s.Depth,
-                                             (IfcLengthMeasure)s.Depth,
-                                             solidTransform,
-                                             null,
-                                             false,
-                                             IfcGuid.FromIfcGUID(opening.GlobalId));
-                return newOpening;
+            var extrudes = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().ToList();
+
+            if (extrudes?.Count == 0)
+            {
+                return resultOpenings;
             }
-            return null;
+
+            foreach (var extrude in extrudes)
+            {
+                var extrudePosition = extrude.Position.ToTransform();
+                var openingTransform = extrudePosition.Concatenated(relativePlacement);
+
+                var profile = (Polygon)extrude.SweptArea.ToCurve();
+                var extrudeDir = extrude.ExtrudedDirection.ToVector3();
+
+                var profileTransformed = profile.TransformedPolygon(openingTransform);
+                var extrudeDirTransformed = openingTransform.OfVector(extrudeDir);
+
+                var extrudeDepth = (IfcLengthMeasure)extrude.Depth;
+                var newOpening = new Opening(profileTransformed, extrudeDirTransformed, extrudeDepth, 0.0);
+                resultOpenings.Add(newOpening);
+            }
+
+            return resultOpenings;
         }
 
         internal static IEnumerable<T> RepresentationsOfType<T>(this IfcProduct product) where T : IfcGeometricRepresentationItem
