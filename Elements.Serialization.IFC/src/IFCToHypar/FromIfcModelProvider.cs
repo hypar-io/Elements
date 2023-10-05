@@ -27,14 +27,17 @@ namespace Elements.Serialization.IFC.IFCToHypar
 
         private MaterialExtractor _materialExtractor;
 
-        public FromIfcModelProvider(string path, IList<string> idsToConvert = null, IFromIfcProductConverter fromIfcConverter = null, IfcRepresentationDataExtractor representationExtractor = null)
+        public FromIfcModelProvider(string path,
+                                    IList<string> idsToConvert = null,
+                                    IFromIfcProductConverter fromIfcConverter = null,
+                                    IfcRepresentationDataExtractor representationExtractor = null)
         {
             _constructionErrors = new List<string>();
             ExtractIfcProducts(path, idsToConvert);
             _elementToIfcProduct = new Dictionary<Element, IfcProduct>();
 
             _representationDataExtractor = representationExtractor ?? GetStandardRepresentationDataExtractor(_materialExtractor);
-            _fromIfcToElementsConverter = fromIfcConverter ?? GetStandardFromIfcConverter(_materialExtractor);
+            _fromIfcToElementsConverter = fromIfcConverter ?? GetStandardFromIfcConverter();
 
             var elements = GetElementsFromIfcProducts();
             HandleRelationships(elements);
@@ -117,7 +120,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             _materialExtractor = new MaterialExtractor(styledItems);
         }
 
-        private static IFromIfcProductConverter GetStandardFromIfcConverter(MaterialExtractor materialExtractor)
+        private static IFromIfcProductConverter GetStandardFromIfcConverter()
         {
             var converters = new List<IFromIfcProductConverter>()
             {
