@@ -11,8 +11,17 @@ namespace Elements
     {
         private readonly Material DEFAULT_MATERIAL = new Material("Door material", Colors.White);
 
+        /// <summary>
+        /// Default thickness of a door.
+        /// </summary>
         public const double DOOR_THICKNESS = 0.125;
+        /// <summary>
+        /// Default thickness of a door frame.
+        /// </summary>
         public const double DOOR_FRAME_THICKNESS = 0.15;
+        /// <summary>
+        /// Default width of a door frame.
+        /// </summary>
         public const double DOOR_FRAME_WIDTH = 2 * 0.0254; //2 inches
 
         /// <summary>Door width without a frame</summary>
@@ -30,6 +39,24 @@ namespace Elements
         /// <summary>Opening for a door.</summary>
         public Opening Opening { get; private set; }
 
+        /// <summary>
+        /// Create a door that attaches to the closest point on a certain wall.
+        /// </summary>
+        /// <param name="wall">The wall the door is attached to.</param>
+        /// <param name="wallLine">A center line of a wall that door is attached to.</param>
+        /// <param name="originalPosition">The position where the door was plased originally.</param>
+        /// <param name="currentPosition">The current door's position.</param>
+        /// <param name="width">The with of a single door.</param>
+        /// <param name="height">The door's height.</param>
+        /// <param name="openingSide">The side where the door opens.</param>
+        /// <param name="openingType">The way the door opens.</param>
+        /// <param name="material">The door's material.</param>
+        /// <param name="representation">The door's representation.</param>
+        /// <param name="id">The door's id.</param>
+        /// <param name="name">The door's name.</param>
+        /// <param name="depthFront">The door's opening depth front.</param>
+        /// <param name="depthBack">The door's opening depth back.</param>
+        /// <param name="flip">Is the door flipped?</param>
         public Door(Wall wall,
                     Line wallLine,
                     Vector3 originalPosition,
@@ -40,6 +67,8 @@ namespace Elements
                     DoorOpeningType openingType,
                     Material material = null,
                     Representation representation = null,
+                    Guid id = default,
+                    string name = "Door",
                     double depthFront = 1,
                     double depthBack = 1,
                     bool flip = false)
@@ -54,20 +83,38 @@ namespace Elements
             Transform = GetDoorTransform(currentPosition, wallLine, flip);
             Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
+            Id = id;
+            Name = name;
         }
 
-        public Door(Wall wall,
-                Transform transform,
-                double width,
+        /// <summary>
+        /// Create a door that is not attached to a wall.
+        /// </summary>
+        /// <param name="width">The with of a single door.</param>
+        /// <param name="height">The door's height.</param>
+        /// <param name="openingSide">The side where the door opens.</param>
+        /// <param name="openingType">The way the door opens.</param>
+        /// <param name="transform">The door's transform. X-direction is aligned with the door, Y-direction is the opening direction.</param>
+        /// <param name="material">The door's material.</param>
+        /// <param name="representation">The door's representation.</param>
+        /// <param name="id">The door's id.</param>
+        /// <param name="name">The door's name.</param>
+        /// <param name="depthFront">The door's opening depth front.</param>
+        /// <param name="depthBack">The door's opening depth back.</param>
+        public Door(double width,
                 double height,
                 DoorOpeningSide openingSide,
                 DoorOpeningType openingType,
+                Transform transform = null,
                 Material material = null,
                 Representation representation = null,
+                Guid id = default,
+                string name = "Door",
                 double depthFront = 1,
-                double depthBack = 1)
+                double depthBack = 1
+            )
         {
-            Wall = wall;
+            Wall = null;
             Transform = transform;
             OpeningSide = openingSide;
             OpeningType = openingType;
@@ -77,8 +124,27 @@ namespace Elements
             Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
             OriginalPosition = Transform.Origin;
+            Id = id;
+            Name = name;
         }
 
+        /// <summary>
+        /// Create a door at the certain point of a wall.
+        /// </summary>
+        /// <param name="wall">The wall the door is attached to.</param>
+        /// <param name="wallLine">A center line of a wall that door is attached to.</param>
+        /// <param name="tPos">Relative position on the wall where door is placed. Should be in [0; 1].</param>
+        /// <param name="width">The with of a single door.</param>
+        /// <param name="height">The door's height.</param>
+        /// <param name="openingSide">The side where the door opens.</param>
+        /// <param name="openingType">The way the door opens.</param>
+        /// <param name="material">The door's material.</param>
+        /// <param name="representation">The door's representation.</param>
+        /// <param name="id">The door's id.</param>
+        /// <param name="name">The door's name.</param>
+        /// <param name="depthFront">The door's opening depth front.</param>
+        /// <param name="depthBack">The door's opening depth back.</param>
+        /// <param name="flip">Is the door flipped?</param>
         public Door(Wall wall,
                     Line wallLine,
                     double tPos,
@@ -88,6 +154,8 @@ namespace Elements
                     DoorOpeningType openingType,
                     Material material = null,
                     Representation representation = null,
+                    Guid id = default,
+                    string name = "Door",
                     double depthFront = 1,
                     double depthBack = 1,
                     bool flip = false)
@@ -101,6 +169,8 @@ namespace Elements
                    openingType,
                    material,
                    representation,
+                   id,
+                   name,
                    depthFront,
                    depthBack,
                    flip)
@@ -114,19 +184,29 @@ namespace Elements
             return openingTransform;
         }
 
-        private Transform GetDoorTransform(Vector3 currentPosition, Line centerLine, bool flip)
+        private Transform GetDoorTransform(Vector3 currentPosition, Line wallLine, bool flip)
         {
-            var adjustedPosition = GetClosestValidDoorPos(centerLine, currentPosition);
-            var xDoorAxis = flip ? centerLine.Direction().Negate() : centerLine.Direction();
+            var adjustedPosition = GetClosestValidDoorPos(wallLine, currentPosition);
+            var xDoorAxis = flip ? wallLine.Direction().Negate() : wallLine.Direction();
             return new Transform(adjustedPosition, xDoorAxis, Vector3.ZAxis);
         }
 
+        /// <summary>
+        /// Checks if the door can fit into the wall with the center line @<paramref name="wallLine"/>.
+        /// </summary>
         public static bool CanFit(Line wallLine, DoorOpeningSide openingSide, double width)
         {
             var doorWidth = WidthWithoutFrame(width, openingSide) + DOOR_FRAME_WIDTH * 2;
             return wallLine.Length() - doorWidth > DOOR_FRAME_WIDTH * 2;
         }
 
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
         public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             var points = CollectPointsForSchematicVisualization();

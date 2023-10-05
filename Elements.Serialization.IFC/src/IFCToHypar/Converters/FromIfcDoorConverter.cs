@@ -32,56 +32,21 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             // TODO: Implement during the connections establishment.
             //var wall = GetWallFromDoor(ifcDoor, allWalls);
+            var doorWidth = (IfcLengthMeasure) ifcDoor.OverallWidth;
+            var doorHeight = (IfcLengthMeasure) ifcDoor.OverallHeight;
 
-            var result = new Door(null,
-                                  repData.Transform,
-                                  (IfcLengthMeasure)ifcDoor.OverallWidth,
-                                  (IfcLengthMeasure)ifcDoor.OverallHeight,
+            var result = new Door(doorWidth,
+                                  doorHeight,
                                   openingSide,
                                   openingType,
+                                  repData.Transform,
                                   repData.Material,
-                                  new Representation(repData.SolidOperations)
+                                  new Representation(repData.SolidOperations),
+                                  IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
+                                  ifcDoor.Name
                                   );
+
             return result;
-        }
-
-        private static Transform GetTransformFromIfcElement(IfcElement ifcElement)
-        {
-            // TODO: AC20-Institute-Var-2.ifc model contains doors with IfcFacetedBrep based representation.
-            var repItems = ifcElement.Representation.Representations.SelectMany(r => r.Items);
-            if (!repItems.Any())
-            {
-                throw new Exception("The provided IfcDoor does not have any representations.");
-            }
-
-            var containedInStructureTransform = new Transform();
-            containedInStructureTransform.Concatenate(ifcElement.ObjectPlacement.ToTransform());
-
-            // Check if the door is contained in a building storey
-            foreach (var cis in ifcElement.ContainedInStructure)
-            {
-                containedInStructureTransform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
-            }
-
-            var repMappedItems = repItems.OfType<IfcMappedItem>();
-
-            if (repMappedItems.Any())
-            {
-                var representation = repMappedItems.FirstOrDefault();
-                var localOrigin = representation.MappingTarget.LocalOrigin.ToVector3();
-                return new Transform(localOrigin).Concatenated(containedInStructureTransform);
-            }
-
-            var repSolidItems = repItems.OfType<IfcExtrudedAreaSolid>();
-
-            if (repSolidItems.Any())
-            {
-                var representation = repSolidItems.FirstOrDefault();
-                var solidTransform = representation.Position.ToTransform();
-                return solidTransform.Concatenated(containedInStructureTransform);
-            }
-
-            return containedInStructureTransform;
         }
 
         private static Wall GetWallFromDoor(IfcDoor door, List<Wall> allWalls)
