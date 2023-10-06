@@ -260,6 +260,7 @@ namespace Elements
             {
                 foreach (var instance in RepresentationInstances)
                 {
+                    // TODO: filter by view or representation types
                     if (!instance.IsDefault)
                     {
                         continue;

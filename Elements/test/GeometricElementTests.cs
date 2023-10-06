@@ -86,12 +86,12 @@ namespace Elements.Tests
                                              "");
             var width = 10;
             var height = 10;
-            var hhickness = 0.2;
+            var thickness = 0.2;
             var frameOuterPolygon = new Polygon(new Vector3(-width / 2.0, 0, -height / 2.0), new Vector3(-width / 2.0, 0, height / 2.0),
                 new Vector3(width / 2.0, 0, height / 2.0), new Vector3(width / 2.0, 0, -height / 2.0));
             var frameRepresentation = new SolidRepresentation();
             var profile = new Profile(frameOuterPolygon);
-            frameRepresentation.SolidOperations.Add(new Extrude(profile, hhickness, Vector3.YAxis));
+            frameRepresentation.SolidOperations.Add(new Extrude(profile, thickness, Vector3.YAxis));
             geometricElement.RepresentationInstances.Add(new RepresentationInstance(frameRepresentation, BuiltInMaterials.XAxis));
             var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
             var intersection = geometricElement.Intersects(plane, out var intersectionPolygons, out var beyondPolygons, out var lines);
