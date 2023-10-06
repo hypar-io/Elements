@@ -62,6 +62,10 @@
 ### Changed
 - `GltfExtensions.UseReferencedContentExtension` is now true by default.
 
+### Changed
+
+- `GeometricElement.Intersects` method now supports multiple representations
+
 ## 2.0.0
 
 ### Added
