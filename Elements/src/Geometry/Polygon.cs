@@ -1,4 +1,5 @@
 using ClipperLib;
+using Elements.Geometry.Profiles;
 using Elements.Search;
 using Elements.Spatial;
 using Newtonsoft.Json;
@@ -2071,26 +2072,74 @@ namespace Elements.Geometry
         }
 
         /// <inheritdoc/>
-        public override Transform[] Frames(double startSetback = 0.0,
-                                           double endSetback = 0.0,
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
                                            double additionalRotation = 0.0)
         {
-            // Create an array of transforms with the same
-            // number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
 
-            // Cache the normal so we don't have to recalculate
-            // using Newell for every frame.
-            var up = this.Normal();
-            for (var i = 0; i < result.Length; i++)
+            if (startParam >= endParam)
             {
-                var a = this.Vertices[i];
-                result[i] = CreateMiterTransform(i, a, up);
-                if (additionalRotation != 0.0)
+                return new Transform[0];
+            }
+
+            var startIndex = (int)Math.Ceiling(startParam);
+            var endIndex = (int)Math.Floor(endParam);
+            bool startAtVertex = false;
+            bool endsAtVertex = false;
+
+            // Calculate number of frames. 2 frames corresponding to end parameters.
+            // 1 if startIndex == endIndex.
+            var length = endIndex - startIndex + 3;
+
+            // startIndex is set to the first distinct vertex after startParam.
+            if (startParam.ApproximatelyEquals(startIndex))
+            {
+                startAtVertex = true;
+                length--;
+            }
+
+            // endIndex is set to the first distinct vertex before endParam.
+            if (endParam.ApproximatelyEquals(endIndex))
+            {
+                endsAtVertex = true;
+                length--;
+            }
+
+            var result = new Transform[length];
+            var up = this.Normal();
+
+            int index = 0;
+            if (!startAtVertex)
+            {
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
+                result[0] = new Transform(PointAt(startParam), up.Cross(tangent), tangent);
+                index++;
+            }
+
+            // CreateMiterTransform expects index of previous and next vertex, that's why index must be adjusted.
+            for (var i = startIndex; i <= endIndex; i++, index++)
+            {
+                var adjusted = i == Vertices.Count ? 0 : i;
+                result[index] = CreateMiterTransform(adjusted, Vertices[adjusted], up);
+            }
+
+            if (!endsAtVertex)
+            {
+                var nextIndex = (endIndex + 1) % Vertices.Count;
+                var tangent = (Vertices[endIndex] - Vertices[nextIndex]).Unitized();
+                result[index] = new Transform(PointAt(endParam), up.Cross(tangent), tangent);
+            }
+
+            if (additionalRotation != 0.0)
+            {
+                for (int i = 0; i < result.Length; i++)
                 {
                     result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
                 }
             }
+
             return result;
         }
 
