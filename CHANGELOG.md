@@ -40,6 +40,7 @@
 - `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
 - `Bezier.Intersects(Bezier other, out List<Vector3> results)`
 - `Elements.Geometry.ThickenedPolyline`
+- `Polygon.IntersectionLines`
 - `Model.ToGlTF(MemoryStream stream...)`
 - `Model.ToIFC(MemoryStream stream ...)`
 - `Model.ToJson(MemoryStream stream ...)`
