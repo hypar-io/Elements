@@ -54,6 +54,9 @@
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 - Code generation supports `Vector3?` and `Color?` types.
+- `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 
 
 ### Changed
