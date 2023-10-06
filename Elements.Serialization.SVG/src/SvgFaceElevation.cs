@@ -65,20 +65,12 @@ namespace Elements.Serialization.SVG
         /// <summary>
         /// The svg context which defines settings for element lines.
         /// </summary>
-        public SvgContext ElementLinesContext { get; set; } = new SvgContext()
-        {
-            Stroke = new SvgColourServer(Colors.Black),
-            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.01f)
-        };
+        public SvgContext ElementLinesContext { get; set; } = new SvgContext(Colors.Black, 0.01);
 
         /// <summary>
         /// The svg context which defines settings for leader lines .
         /// </summary>
-        public SvgContext DimensionLinesContext { get; set; } = new SvgContext()
-        {
-            Stroke = new SvgColourServer(System.Drawing.Color.DarkBlue),
-            StrokeWidth = new SvgUnit(SvgUnitType.User, 0.005f)
-        };
+        public SvgContext DimensionLinesContext { get; set; } = new SvgContext(System.Drawing.Color.DarkBlue, 0.005);
 
         /// <summary>
         /// An additional amount to rotate the drawing.
