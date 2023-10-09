@@ -39,6 +39,16 @@ namespace Elements.Serialization.glTF
             return newIds;
         }
 
+        internal static int[] AddNodes(List<Node> nodes, List<int> meshIds, int? parentId)
+        {
+            var newNodes = meshIds.Select(meshId =>
+                        {
+                            return new Node() { Mesh = meshId };
+                        });
+
+            return AddNodes(nodes, newNodes, parentId);
+        }
+
         internal static int AddNode(List<Node> nodes, Node newNode, int? parentId)
         {
             return NodeUtilities.AddNodes(nodes, new[] { newNode }, parentId).First();
@@ -136,6 +146,14 @@ namespace Elements.Serialization.glTF
             }
 
             return nodeIndex;
+        }
+
+        internal static int AddInstanceNode(List<glTFLoader.Schema.Node> nodes, Transform transform, Guid elementId)
+        {
+            float[] matrix = TransformToMatrix(transform);
+            var newNode = new Node() { Matrix = matrix, Name = elementId.ToString() };
+            newNode.SetElementInfo(elementId);
+            return AddNode(nodes, newNode, 0);
         }
 
         internal static int[] AddInstanceNode(

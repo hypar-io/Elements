@@ -1289,6 +1289,7 @@ namespace Elements.Serialization.glTF
 
                     if (element.RepresentationInstances != null && element.RepresentationInstances.Any())
                     {
+                        var elementNodeId = NodeUtilities.AddInstanceNode(nodes, element.Transform, element.Id);
                         foreach (var representation in element.RepresentationInstances)
                         {
                             // get the unique id that contains representation Id and opening Ids 
@@ -1296,10 +1297,11 @@ namespace Elements.Serialization.glTF
 
                             if (representationsMap.TryGetValue(combinedId, out var mesh))
                             {
-                                var addedNodes = NodeUtilities.AddInstanceNode(nodes, mesh, element.Transform, e.Id);
+                                var addedNodes = NodeUtilities.AddNodes(nodes, mesh, elementNodeId);
                                 foreach (var index in addedNodes)
                                 {
                                     NodeUtilities.SetRepresentationInfo(nodes[index], representation);
+                                    NodeUtilities.SetElementInfo(nodes[index], element.Id);
                                 }
                             }
                             else if (representation.Representation.TryToGraphicsBuffers(geometricElement, out var graphicsBuffers,
@@ -1320,10 +1322,11 @@ namespace Elements.Serialization.glTF
                                 {
                                     var meshIdList = new List<int> { meshId };
                                     representationsMap.Add(combinedId, meshIdList);
-                                    var addedNodes = NodeUtilities.AddInstanceNode(nodes, meshIdList, element.Transform, e.Id);
+                                    var addedNodes = NodeUtilities.AddNodes(nodes, meshIdList, elementNodeId);
                                     foreach (var index in addedNodes)
                                     {
                                         NodeUtilities.SetRepresentationInfo(nodes[index], representation);
+                                        NodeUtilities.SetElementInfo(nodes[index], element.Id);
                                     }
                                 }
                             }
