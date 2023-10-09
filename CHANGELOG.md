@@ -40,6 +40,7 @@
 - `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
 - `Bezier.Intersects(Bezier other, out List<Vector3> results)`
 - `Elements.Geometry.ThickenedPolyline`
+- `Polygon.IntersectionLines`
 - `Model.ToGlTF(MemoryStream stream...)`
 - `Model.ToIFC(MemoryStream stream ...)`
 - `Model.ToJson(MemoryStream stream ...)`
@@ -53,6 +54,13 @@
 
 - `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
 - Code generation supports `Vector3?` and `Color?` types.
+- `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+
+
+### Changed
+- `GltfExtensions.UseReferencedContentExtension` is now true by default.
 
 ### Changed
 

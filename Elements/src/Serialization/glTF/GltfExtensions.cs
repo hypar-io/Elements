@@ -918,9 +918,9 @@ namespace Elements.Serialization.glTF
 
         /// <summary>
         /// If true, the model will write content elements using an experimental
-        /// GLTF extension. This extension is not yet finalized and may change.
+        /// GLTF extension.
         /// </summary>
-        public static bool UseReferencedContentExtension { get; set; } = false;
+        public static bool UseReferencedContentExtension { get; set; } = true;
 
         internal static Gltf InitializeGlTF(Model model,
                                             bool updateElementsRepresentations,

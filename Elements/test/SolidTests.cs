@@ -506,6 +506,33 @@ namespace Elements.Tests
             this.Model.AddElement(solidElement);
         }
 
+        [Fact]
+        public void SweepWithSetbacksRegressionTest()
+        {
+            Name = nameof(SweepWithSetbacksRegressionTest);
+            Polygon crossSection = Polygon.Rectangle(0.25, 0.25);
+            
+            Polyline curve = new(new List<Vector3>
+            {
+                    new Vector3(x: 20.0, y: 15.0, z:0.0),
+                    new Vector3(x: 20.0, y: 15.0, z:1.0),
+                    new Vector3(x: 20.0, y: 14.5, z:1.5),
+                    new Vector3(x: 19.5, y: 14.5, z:1.5),
+            }
+            );
+            
+            var sweep = new Sweep(
+                new Profile(crossSection),
+                curve,
+                startSetback: 1,
+                endSetback: 1,
+                profileRotation: 0,
+                isVoid: false
+            );
+            var rep = new Representation(new List<SolidOperation>() { sweep });
+            Model.AddElement(new GeometricElement(representation: rep, material: BuiltInMaterials.Black));
+        }
+
         [Theory]
         [InlineData("SolidIntersectionTest1", "../../../models/Geometry/SolidPlaneIntersection/debug-case-1.json")]
         [InlineData("SolidIntersectionTest2", "../../../models/Geometry/SolidPlaneIntersection/debug-case-2.json")]
