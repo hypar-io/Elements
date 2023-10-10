@@ -68,6 +68,7 @@ namespace Elements.IFC.Tests
 
             Assert.Equal(expectedCountOfErrors, ctorErrors.Count);
 
+            model.ToJson(ConstructJsonPath(name));
             model.ToGlTF(ConstructGlbPath(name));
         }
 
@@ -260,6 +261,16 @@ namespace Elements.IFC.Tests
                 Directory.CreateDirectory(modelsDirectory);
             }
             return Path.GetFullPath(Path.Combine(modelsDirectory, $"{modelName}.glb"));
+        }
+
+        private string ConstructJsonPath(string modelName)
+        {
+            var modelsDirectory = Path.Combine(Environment.CurrentDirectory, basePath);
+            if (!Directory.Exists(modelsDirectory))
+            {
+                Directory.CreateDirectory(modelsDirectory);
+            }
+            return Path.GetFullPath(Path.Combine(modelsDirectory, $"{modelName}.json"));
         }
     }
 }
