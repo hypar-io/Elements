@@ -211,7 +211,7 @@ namespace Elements.MEP.Tests
             var pipeToResize = resizeNewPipe ? newEndPipe : pipe;
             fittings.ResizePipe(pipeToResize, 0.06);
             SaveToGltf("Operation resize after", fittings, "Resizing", true);
-            File.WriteAllText("../../../results/conns.dot", fittings.ToDotConnectors());
+            File.WriteAllText(TestUtils.GetTestPath() + "conns.dot", fittings.ToDotConnectors());
 
             fittings.CheckComponentLabeling();
 
