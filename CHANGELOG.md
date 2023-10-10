@@ -61,10 +61,8 @@
 
 ### Changed
 - `GltfExtensions.UseReferencedContentExtension` is now true by default.
-
-### Changed
-
-- `GeometricElement.Intersects` method now supports multiple representations
+- `GeometricElement.Intersects` method now supports multiple representations.
+- `GltfExtensions.ToGlTF` creates parent node for element and child nodes for representation instances.
 
 ## 2.0.0
 
