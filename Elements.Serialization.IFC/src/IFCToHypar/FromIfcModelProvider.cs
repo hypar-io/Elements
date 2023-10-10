@@ -186,9 +186,9 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 new FromIfcSiteConverter()
             };
 
-            var standardConverter = new FromIfcElementConverter();
+            var defaultConverter = new FromIfcElementConverter();
 
-            return new CompositeFromIfcProductConverter(converters, standardConverter);
+            return new CompositeFromIfcProductConverter(converters, defaultConverter);
         }
 
         private static IfcRepresentationDataExtractor GetStandardRepresentationDataExtractor(MaterialExtractor materialExtractor)

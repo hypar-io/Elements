@@ -11,20 +11,20 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcElement ifcElement))
+            if (!Matches(ifcProduct))
             {
                 return null;
             }
 
             if (repData == null)
             {
-                constructionErrors.Add($"#{ifcElement.StepId}: There was no representation for an element of type {ifcElement.GetType()}.");
+                constructionErrors.Add($"#{ifcProduct.StepId}: There was no representation for an element of type {ifcProduct.GetType()}.");
                 return null;
             }
 
             if (repData.SolidOperations.Count == 0)
             {
-                constructionErrors.Add($"#{ifcElement.StepId}: {ifcElement.GetType().Name} did not have any solid operations in its representation.");
+                constructionErrors.Add($"#{ifcProduct.StepId}: {ifcProduct.GetType().Name} did not have any solid operations in it's representation.");
                 return null;
             }
 
@@ -32,8 +32,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                             repData.Material ?? BuiltInMaterials.Default,
                                             new Representation(repData.SolidOperations),
                                             false,
-                                            IfcGuid.FromIfcGUID(ifcElement.GlobalId),
-                                            ifcElement.Name);
+                                            IfcGuid.FromIfcGUID(ifcProduct.GlobalId),
+                                            ifcProduct.Name);
 
             // geom.Representation.SkipCSGUnion = true;
             return geom;
@@ -41,7 +41,22 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
         public bool Matches(IfcProduct ifcProduct)
         {
-            return ifcProduct is IfcElement;
+            if (ifcProduct is IfcBuildingElement)
+            {
+                return true;
+            }
+
+            if (ifcProduct is IfcFurnishingElement)
+            {
+                return true;
+            }
+
+            if (ifcProduct is IfcSpace)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

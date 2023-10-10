@@ -50,7 +50,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
                 if (!matchingParsers.Any())
                 {
-                    // TODO: We don't parse some representation types. The list is below.
+                    // TODO: There are many representation types that aren't supported now.
                     continue;
                 }
 

@@ -21,6 +21,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (repData.Extrude == null)
             {
+                constructionErrors.Add($"#{ifcProduct.StepId}: Conversion of IfcWall without extrude or mapped item representation to Wall is not supported.");
                 return null;
             }
 

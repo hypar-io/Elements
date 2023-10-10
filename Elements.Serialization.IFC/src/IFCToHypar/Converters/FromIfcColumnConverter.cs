@@ -22,6 +22,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (repData.Extrude == null)
             {
+                constructionErrors.Add($"#{ifcProduct.StepId}: Conversion of IfcColumn without extrude or mapped item representation to Column is not supported.");
                 return null;
             }
 

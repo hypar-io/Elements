@@ -42,6 +42,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (solid == null)
             {
+                constructionErrors.Add($"#{product.StepId}: Conversion of IfcSpace without solid or mapped item representation to Space is not supported.");
                 return null;
             }
 

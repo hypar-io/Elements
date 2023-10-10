@@ -20,6 +20,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (repData.Extrude == null)
             {
+                constructionErrors.Add($"#{ifcProduct.StepId}: Conversion of IfcSlab without extrude or mapped item representation to Floor is not supported.");
                 return null;
             }
 

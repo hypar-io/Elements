@@ -22,13 +22,15 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (repData.Extrude == null)
             {
+                constructionErrors.Add($"#{ifcProduct.StepId}: Conversion of IfcBeam without extrude or mapped item representation to Beam is not supported.");
                 return null;
             }
 
             var representation = new Representation(repData.SolidOperations);
 
-            var cl = new Line(Vector3.Origin, repData.Extrude.Direction, repData.Extrude.Height);
-            var result = new Beam(cl.TransformedLine(repData.ExtrudeTransform),
+            var centerLine = new Line(Vector3.Origin, repData.Extrude.Direction, repData.Extrude.Height);
+            var transformedLine = centerLine.TransformedLine(repData.ExtrudeTransform);
+            var result = new Beam(transformedLine,
                                     repData.Extrude.Profile,
                                     0,
                                     0,

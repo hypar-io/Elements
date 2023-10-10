@@ -19,7 +19,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (ifcDoor.PredefinedType != IfcDoorTypeEnum.DOOR)
             {
-                throw new Exception("Door types except DOOR are not supported yet.");
+                constructionErrors.Add($"#{ifcProduct.StepId}: Doors of type {ifcDoor.PredefinedType} are not supported yet.");
+                return null;
             }
 
             var openingSide = ifcDoor.GetDoorOpeningSide();
@@ -27,7 +28,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             if (openingSide == DoorOpeningSide.Undefined || openingType == DoorOpeningType.Undefined)
             {
-                throw new Exception("This DoorOperationType is not supported yet.");
+                constructionErrors.Add($"#{ifcProduct.StepId}: Doors of operation type {ifcDoor.OperationType} are not supported yet.");
+                return null;
             }
 
             // TODO: Implement during the connections establishment.
