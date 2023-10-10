@@ -22,7 +22,7 @@ namespace Elements
     [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
-        internal BBox3 _bounds;
+        private BBox3 _bounds;
         internal Csg.Solid _csg;
 
         // Used to attach a "selectable: false" flag to the element in the
@@ -112,11 +112,38 @@ namespace Elements
                 }
             }
             _csg = GetFinalCsgFromSolids(transformed);
-            if (_csg == null)
+            if (_csg != null)
             {
-                return;
+                _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
             }
-            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
+
+            if (RepresentationInstances != null && RepresentationInstances.Any())
+            {
+                foreach (var instance in RepresentationInstances)
+                {
+                    // TODO: filter by view or representation types
+                    if (!instance.IsDefault)
+                    {
+                        continue;
+                    }
+
+                    if (instance.Representation is SolidRepresentation solidRepresentation)
+                    {
+                        var representationBounds = solidRepresentation.ComputeBounds(this);
+                        if (!representationBounds.Volume.ApproximatelyEquals(0))
+                        {
+                            if (_bounds.Volume.ApproximatelyEquals(0))
+                            {
+                                _bounds = representationBounds;
+                            }
+                            else
+                            {
+                                _bounds.Extend(new[] { representationBounds.Min, representationBounds.Max });
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -183,86 +210,108 @@ namespace Elements
             intersectionPolygons = new Dictionary<Guid, List<Polygon>>();
             lines = new Dictionary<Guid, List<Line>>();
 
-            if (Representation == null)
+            var graphVertices = new List<Vector3>();
+            var graphEdges = new List<List<(int from, int to, int? tag)>>();
+
+            var intersectionPoints = new List<Vector3>();
+            var beyondPolygonsList = new List<Polygon>();
+
+            if (Representation != null && _csg != null)
+            {
+                // TODO: Can we avoid this copy? It seems to be the most straightforward
+                // way to get the csg transformed for sectioning.
+                var localCsg = _csg.Transform(Transform.ToMatrix4x4());
+                foreach (var csgPoly in localCsg.Polygons)
+                {
+                    var csgNormal = csgPoly.Plane.Normal.ToVector3();
+
+                    if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
+                    {
+                        // TODO: We can cut out transformation if the element's transform is null.
+                        var backPoly = csgPoly.Project(plane);
+                        beyondPolygonsList.Add(backPoly);
+
+                        continue;
+                    }
+
+                    var edgeResults = new List<Vector3>();
+                    for (var i = 0; i < csgPoly.Vertices.Count; i++)
+                    {
+                        var a = csgPoly.Vertices[i].Pos.ToVector3();
+                        var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
+                        if (plane.Intersects((a, b), out var xsect))
+                        {
+                            edgeResults.Add(xsect);
+                        }
+                    }
+
+                    if (edgeResults.Count < 2)
+                    {
+                        continue;
+                    }
+
+                    var d = csgNormal.Cross(plane.Normal).Unitized();
+                    edgeResults.Sort(new DirectionComparer(d));
+                    intersectionPoints.AddRange(edgeResults);
+                }
+            }
+
+            if (RepresentationInstances != null)
+            {
+                foreach (var instance in RepresentationInstances)
+                {
+                    // TODO: filter by view or representation types
+                    if (!instance.IsDefault)
+                    {
+                        continue;
+                    }
+
+                    if (instance.Representation is SolidRepresentation solidRepresentation)
+                    {
+                        intersectionPoints.AddRange(solidRepresentation.CalculateIntersectionPoints(this, plane,
+                            out var beyondPolygonsLocal));
+                        beyondPolygonsList.AddRange(beyondPolygonsLocal);
+                    }
+                }
+            }
+
+            if (!intersectionPoints.Any())
             {
                 return false;
             }
 
-            var graphVertices = new List<Vector3>();
-            var graphEdges = new List<List<(int from, int to, int? tag)>>();
-
-            // TODO: Can we avoid this copy? It seems to be the most straightforward
-            // way to get the csg transformed for sectioning.
-            var localCsg = _csg.Transform(Transform.ToMatrix4x4());
-            foreach (var csgPoly in localCsg.Polygons)
+            // Draw segments through the results and add to the 
+            // half edge graph.
+            for (var j = 0; j < intersectionPoints.Count - 1; j += 2)
             {
-                var csgNormal = csgPoly.Plane.Normal.ToVector3();
-
-                if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
-                {
-                    // TODO: We can cut out transformation if the element's transform is null.
-                    var backPoly = csgPoly.Project(plane);
-                    if (!beyondPolygons.ContainsKey(Id))
-                    {
-                        beyondPolygons[Id] = new List<Polygon>() { backPoly };
-                    }
-                    else
-                    {
-                        beyondPolygons[Id].Add(backPoly);
-                    }
-
-                    continue;
-                }
-
-                var edgeResults = new List<Vector3>();
-                for (var i = 0; i < csgPoly.Vertices.Count; i++)
-                {
-                    var a = csgPoly.Vertices[i].Pos.ToVector3();
-                    var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
-                    if (plane.Intersects((a, b), out var xsect))
-                    {
-                        edgeResults.Add(xsect);
-                    }
-                }
-
-                if (edgeResults.Count < 2)
+                // Don't create zero-length edges.
+                if (intersectionPoints[j].IsAlmostEqualTo(intersectionPoints[j + 1]))
                 {
                     continue;
                 }
 
-                var d = csgNormal.Cross(plane.Normal).Unitized();
-                edgeResults.Sort(new DirectionComparer(d));
-
-                // Draw segments through the results and add to the 
-                // half edge graph.
-                for (var j = 0; j < edgeResults.Count - 1; j += 2)
+                var a = Solid.FindOrCreateGraphVertex(intersectionPoints[j], graphVertices, graphEdges);
+                var b = Solid.FindOrCreateGraphVertex(intersectionPoints[j + 1], graphVertices, graphEdges);
+                var e1 = (a, b, 0);
+                var e2 = (b, a, 0);
+                if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
                 {
-                    // Don't create zero-length edges.
-                    if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
-                    {
-                        continue;
-                    }
-
-                    var a = Solid.FindOrCreateGraphVertex(edgeResults[j], graphVertices, graphEdges);
-                    var b = Solid.FindOrCreateGraphVertex(edgeResults[j + 1], graphVertices, graphEdges);
-                    var e1 = (a, b, 0);
-                    var e2 = (b, a, 0);
-                    if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        graphEdges[a].Add(e1);
-                    }
+                    continue;
+                }
+                else
+                {
+                    graphEdges[a].Add(e1);
                 }
             }
+            // }
 
             var heg = new HalfEdgeGraph2d()
             {
                 Vertices = graphVertices,
                 EdgesPerVertex = graphEdges
             };
+
+            beyondPolygons[Id] = beyondPolygonsList;
 
             try
             {
