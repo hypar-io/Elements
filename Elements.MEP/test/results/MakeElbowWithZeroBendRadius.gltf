@@ -3,7 +3,8 @@
     "KHR_materials_specular",
     "KHR_materials_ior",
     "KHR_materials_unlit",
-    "HYPAR_info"
+    "HYPAR_info",
+    "HYPAR_representation_info"
   ],
   "accessors": [
     {
@@ -128,15 +129,15 @@
       "primitives": [
         {
           "attributes": {
-            "NORMAL": 1,
             "POSITION": 0,
+            "NORMAL": 1,
             "TEXCOORD_0": 3
           },
           "indices": 2,
           "material": 0
         }
       ],
-      "name": "45840c05-5db0-40bf-9cee-a4aa0df279f4_mesh"
+      "name": "2cafae0b-7d0a-4fa3-8570-1f6922180665_mesh"
     }
   ],
   "nodes": [
@@ -187,7 +188,7 @@
       ],
       "extensions": {
         "HYPAR_info": {
-          "id": "45840c05-5db0-40bf-9cee-a4aa0df279f4"
+          "id": "2cafae0b-7d0a-4fa3-8570-1f6922180665"
         }
       }
     },

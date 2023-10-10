@@ -2213,5 +2213,50 @@ namespace Elements.Geometry.Tests
             var r2 = Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(new Vector3(0.5, 0.5), Vector3.ZAxis));
             Assert.True(r1.Contains3D(r2));
         }
+
+        [Fact]
+        public void Frames()
+        {
+            var polygon = new Polygon((0, 0), (2, 0), (2, 2), (0, 2));
+            var frames = polygon.Frames();
+            Assert.Equal(5, frames.Count());
+            Assert.Equal(polygon.Vertices[0], frames[0].Origin);
+            Assert.True((Vector3.XAxis - Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polygon.Vertices[1], frames[1].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+            Assert.Equal(polygon.Vertices[2], frames[2].Origin);
+            Assert.True((Vector3.YAxis - Vector3.XAxis).Unitized().Negate().IsAlmostEqualTo(frames[2].ZAxis));
+            Assert.Equal(polygon.Vertices[3], frames[3].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().IsAlmostEqualTo(frames[3].ZAxis));
+            Assert.Equal(polygon.Vertices[0], frames[4].Origin);
+            Assert.True((Vector3.XAxis - Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[4].ZAxis));
+
+            frames = polygon.Frames(1, 1);
+            Assert.Equal(5, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal((0, 1), frames[4].Origin);
+            Assert.True(Vector3.YAxis.IsAlmostEqualTo(frames[4].ZAxis));
+
+            frames = polygon.Frames(2, 2);
+            Assert.Equal(3, frames.Count());
+            Assert.Equal(polygon.Vertices[1], frames[0].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polygon.Vertices[2], frames[1].Origin);
+            Assert.True((Vector3.YAxis - Vector3.XAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+            Assert.Equal(polygon.Vertices[3], frames[2].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().IsAlmostEqualTo(frames[2].ZAxis));
+
+            frames = polygon.Frames(1, 3);
+            Assert.Equal(4, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.IsParallelTo(frames[0].ZAxis));
+            Assert.Equal(polygon.Vertices[1], frames[1].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().IsParallelTo(frames[1].ZAxis));
+            Assert.Equal(polygon.Vertices[2], frames[2].Origin);
+            Assert.True((Vector3.XAxis - Vector3.YAxis).Unitized().IsParallelTo(frames[2].ZAxis));
+            Assert.Equal((1, 2), frames[3].Origin);
+            Assert.True(Vector3.XAxis.IsParallelTo(frames[3].ZAxis));
+        }
     }
 }
