@@ -8,13 +8,18 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 {
     internal class IfcBooleanClippingResultParser : IIfcRepresentationParser
     {
+        private readonly IfcRepresentationDataExtractor _representationDataExtractor;
+
+        public IfcBooleanClippingResultParser(IfcRepresentationDataExtractor refDataExtractor) 
+        {
+            _representationDataExtractor = refDataExtractor;
+        }
+
         public bool Matches(IfcRepresentationItem ifcRepresentationItem)
         {
             return ifcRepresentationItem is IfcBooleanClippingResult;
         }
 
-        // TODO: It is possible that an operand is also IfcBooleanClippingResult or some other representation
-        // item type.
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
         {
             if (!(ifcRepresentationItem is IfcBooleanClippingResult ifcBooleanClippingResult))
@@ -22,19 +27,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
                 return null;
             }
 
-            var solidRep = ifcBooleanClippingResult.FirstOperand.Choice as IfcExtrudedAreaSolid;
-            if (solidRep == null)
-            {
-                solidRep = ifcBooleanClippingResult.SecondOperand.Choice as IfcExtrudedAreaSolid;
-            }
-
-            if (solidRep == null)
+            // TODO: Apply clipping operation with second operand.
+            if (!(ifcBooleanClippingResult.FirstOperand.Choice is IfcRepresentationItem firstOperand))
             {
                 return null;
             }
 
-            var extrudeParser = new IfcExtrudedAreaSolidParser();
-            return extrudeParser.ParseRepresentationItem(solidRep);
+            return _representationDataExtractor.ParseRepresentationItem(firstOperand);
         }
     }
 }

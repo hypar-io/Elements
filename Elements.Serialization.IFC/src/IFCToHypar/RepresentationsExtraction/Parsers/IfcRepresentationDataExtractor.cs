@@ -39,30 +39,42 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             return representation;
         }
 
+        public RepresentationData ParseRepresentationItem(IfcRepresentationItem repItem)
+        {
+            var material = _materialExtractor.ExtractMaterial(repItem);
+            var matchingParsers = _ifcRepresentationParsers.Where(parser => parser.Matches(repItem));
+
+            if (!matchingParsers.Any())
+            {
+                // TODO: There are many representation types that aren't supported now.
+                return null;
+            }
+
+            var repParser = matchingParsers.First();
+            var parsedItem = repParser.ParseRepresentationItem(repItem);
+
+            if (parsedItem == null)
+            {
+                return null;
+            }
+
+            parsedItem.Material = material ?? parsedItem.Material;
+            return parsedItem;
+        }
+
         public RepresentationData ParseRepresentationItems(IEnumerable<IfcRepresentationItem> repItems)
         {
             var parsedItems = new List<RepresentationData>();
 
             foreach (var repItem in repItems)
             {
-                var material = _materialExtractor.ExtractMaterial(repItem);
-                var matchingParsers = _ifcRepresentationParsers.Where(parser => parser.Matches(repItem));
-
-                if (!matchingParsers.Any())
-                {
-                    // TODO: There are many representation types that aren't supported now.
-                    continue;
-                }
-
-                var repParser = matchingParsers.First();
-                var parsedItem = repParser.ParseRepresentationItem(repItem);
+                var parsedItem = ParseRepresentationItem(repItem);
 
                 if (parsedItem == null)
                 {
                     continue;
                 }
 
-                parsedItem.Material = material ?? parsedItem.Material;
                 parsedItems.Add(parsedItem);
             }
 

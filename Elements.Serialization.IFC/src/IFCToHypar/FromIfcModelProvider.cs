@@ -198,7 +198,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             extractor.AddRepresentationParser(new IfcFacetedBrepParser());
             extractor.AddRepresentationParser(new IfcExtrudedAreaSolidParser());
             extractor.AddRepresentationParser(new IfcMappedItemParser(extractor));
-            extractor.AddRepresentationParser(new IfcBooleanClippingResultParser());
+            extractor.AddRepresentationParser(new IfcBooleanClippingResultParser(extractor));
 
             return extractor;
         }
