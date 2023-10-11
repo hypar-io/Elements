@@ -6,7 +6,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Hypar.Tests
+namespace Elements.Geometry.Tests
 {
     public class ArcTests : ModelTest
     {
