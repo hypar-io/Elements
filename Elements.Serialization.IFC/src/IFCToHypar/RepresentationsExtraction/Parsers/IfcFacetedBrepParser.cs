@@ -35,7 +35,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
                 }
             }
 
-            var solidOperation = new ImportSolid(newSolid);
+            var solidOperation = new ConstructedSolid(newSolid);
             return new RepresentationData(new List<SolidOperation>() { solidOperation });
         }
     }
