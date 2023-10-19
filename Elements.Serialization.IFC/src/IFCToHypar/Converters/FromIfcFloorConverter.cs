@@ -35,7 +35,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             return floor;
         }
 
-        public bool Matches(IfcProduct ifcProduct)
+        public bool CanConvert(IfcProduct ifcProduct)
         {
             return ifcProduct is IfcSlab;
         }

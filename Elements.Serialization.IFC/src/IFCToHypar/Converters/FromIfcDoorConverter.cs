@@ -66,7 +66,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             return matchingWalls.Any() ? matchingWalls.First() : null;
         }
 
-        public bool Matches(IfcProduct ifcProduct)
+        public bool CanConvert(IfcProduct ifcProduct)
         {
             return ifcProduct is IfcDoor;
         }

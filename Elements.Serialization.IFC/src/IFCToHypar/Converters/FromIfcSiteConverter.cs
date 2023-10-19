@@ -25,7 +25,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             return geom;
         }
 
-        public bool Matches(IfcProduct ifcProduct)
+        public bool CanConvert(IfcProduct ifcProduct)
         {
             return ifcProduct is IfcSite;
         }

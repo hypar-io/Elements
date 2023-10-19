@@ -24,7 +24,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             
             foreach (var converter in _converters)
             {
-                if (!converter.Matches(ifcProduct))
+                if (!converter.CanConvert(ifcProduct))
                 {
                     continue;
                 }
@@ -40,9 +40,9 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             return _defaultConverter.ConvertToElement(ifcProduct, representationData, constructionErrors);
         }
 
-        public bool Matches(IfcProduct ifcProduct)
+        public bool CanConvert(IfcProduct ifcProduct)
         {
-            return _converters.Any(converter => converter.Matches(ifcProduct)) || _defaultConverter.Matches(ifcProduct);
+            return _converters.Any(converter => converter.CanConvert(ifcProduct)) || _defaultConverter.CanConvert(ifcProduct);
         }
     }
 }

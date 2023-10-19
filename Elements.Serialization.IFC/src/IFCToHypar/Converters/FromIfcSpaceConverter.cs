@@ -49,7 +49,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             return new Space(solid, repData.Transform, elementMaterial, false, Guid.NewGuid(), ifcSpace.Name);
         }
 
-        public bool Matches(IfcProduct ifcProduct)
+        public bool CanConvert(IfcProduct ifcProduct)
         {
             return ifcProduct is IfcSpace;
         }
