@@ -56,6 +56,11 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return true;
             }
 
+            if (ifcProduct is IfcSite)
+            {
+                return true;
+            }
+
             return false;
         }
     }
