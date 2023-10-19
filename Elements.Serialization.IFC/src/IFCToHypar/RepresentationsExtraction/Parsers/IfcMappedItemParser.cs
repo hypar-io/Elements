@@ -1,17 +1,21 @@
-﻿using Elements.Geometry;
-using Elements.Geometry.Solids;
-using IFC;
+﻿using IFC;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
+    /// <summary>Parser for IfcMappedItem representation.</summary>
     internal class IfcMappedItemParser : IIfcRepresentationParser
     {
         private readonly IfcRepresentationDataExtractor _representationDataExtractor;
         private readonly Dictionary<Guid, RepresentationData> _representationsMap;
 
+        /// <summary>
+        /// Create IfcMappedItem parser.
+        /// </summary>
+        /// <param name="ifcRepresentationDataExtractor">
+        /// General IfcRepresentationItem parser to extract RepresentationData of the definition.
+        /// </param>
         public IfcMappedItemParser(IfcRepresentationDataExtractor ifcRepresentationDataExtractor)
         {
             _representationDataExtractor = ifcRepresentationDataExtractor;
@@ -23,6 +27,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             return ifcRepresentationItem is IfcMappedItem;
         }
 
+        /// <summary>
+        /// Returns RepresentationData - the result of IfcMappedItem parsing. Saves RepresentationData
+        /// of the MappedSourse. If it's saved version already exists - uses the existing one.
+        /// </summary>
+        /// <param name="ifcRepresentationItem">
+        /// IfcRepresentationItem that will be parsed.
+        /// </param>
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
         {
             if (!(ifcRepresentationItem is IfcMappedItem mappedItem))
