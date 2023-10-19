@@ -46,7 +46,10 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return DoorOpeningType.Undefined;
         }
 
-        internal static List<Opening> ToOpening(this IfcOpeningElement opening)
+        // TODO: In IFC an IfcOpeningElement may have several extrudes.
+        // Now they are extracted as separate Openings. As the result
+        // initial Guid of IfcOpeningElement is not saved.
+        internal static List<Opening> ToOpenings(this IfcOpeningElement opening)
         {
             var relativePlacement = ((IfcLocalPlacement)opening.ObjectPlacement).RelativePlacement.ToTransform();
             var resultOpenings = new List<Opening>();

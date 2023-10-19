@@ -13,34 +13,67 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar
 {
+    /// <summary>Provides a Model, converted from IFC.</summary>
     internal class FromIfcModelProvider
     {
+        /// <summary>The Model, converted from IFC.</summary>
         public Model Model { get; private set; }
 
         private readonly IFromIfcProductConverter _fromIfcToElementsConverter;
         private readonly IfcRepresentationDataExtractor _representationDataExtractor;
 
-        private List<IfcProduct> _ifcProducts;
-        private List<IfcRelationship> _ifcRelationships;
+        private readonly List<IfcProduct> _ifcProducts;
+        private readonly List<IfcRelationship> _ifcRelationships;
 
         private readonly Dictionary<Element, IfcProduct> _elementToIfcProduct;
         private readonly Dictionary<Guid, GeometricElement> _elementDefinitions;
         private readonly List<string> _constructionErrors;
 
-        private MaterialExtractor _materialExtractor;
+        private readonly MaterialExtractor _materialExtractor;
 
+        /// <summary>
+        /// Create FromIfcModelProvider that provides a Model, build from data, extracted from IFC file.
+        /// </summary>
+        /// <param name="path">A path to IFC file.</param>
+        /// <param name="idsToConvert">Only IfcProducts with these ids will be converted.</param>
+        /// <param name="fromIfcConverter">An object that converts IfcProducts to GeometricElements. 
+        /// If null, a fallback default converter will be created.</param>
+        /// <param name="representationExtractor">An object that extracts RepresentationData from IfcRepresentations
+        /// of IfcProduct. If null, a fallback default extractor will be created.</param>
         public FromIfcModelProvider(string path,
                                     IList<string> idsToConvert = null,
                                     IFromIfcProductConverter fromIfcConverter = null,
                                     IfcRepresentationDataExtractor representationExtractor = null)
         {
             _constructionErrors = new List<string>();
-            ExtractIfcProducts(path, idsToConvert);
+
+            var ifcModel = new Document(path, out List<STEPError> errors);
+            // TODO: IfcOpeningElement is prohibited because openings are handled during
+            // relationships processing.
+            // It is possible that there are more IfcElement types that should be excluded.
+            var prohibitedElements = ifcModel.AllInstancesOfType<IfcOpeningElement>();
+
+            if (idsToConvert != null && idsToConvert.Count > 0)
+            {
+                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>()
+                    .Where(i => idsToConvert.Contains(i.GlobalId)).Except(prohibitedElements).ToList();
+                _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>()
+                    .Where(i => idsToConvert.Contains(i.GlobalId)).ToList();
+            }
+            else
+            {
+                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>().Except(prohibitedElements).ToList();
+                _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>().ToList();
+            }
+
+            var styledItems = ifcModel.AllInstancesOfType<IfcStyledItem>().ToList();
+            _materialExtractor = new MaterialExtractor(styledItems);
+
             _elementToIfcProduct = new Dictionary<Element, IfcProduct>();
             _elementDefinitions = new Dictionary<Guid, GeometricElement>();
 
-            _representationDataExtractor = representationExtractor ?? GetStandardRepresentationDataExtractor(_materialExtractor);
-            _fromIfcToElementsConverter = fromIfcConverter ?? GetStandardFromIfcConverter();
+            _representationDataExtractor = representationExtractor ?? GetDefaultRepresentationDataExtractor(_materialExtractor);
+            _fromIfcToElementsConverter = fromIfcConverter ?? GetDefaultFromIfcConverter();
 
             var elements = GetElementsFromIfcProducts();
             HandleRelationships(elements);
@@ -49,11 +82,17 @@ namespace Elements.Serialization.IFC.IFCToHypar
             Model.AddElements(elements);
         }
 
+        /// <summary>
+        /// Returns the list of construction errors that appeared during the conversion.
+        /// </summary>
         public List<string> GetConstructionErrors()
         {
             return _constructionErrors;
         }
 
+        /// <summary>
+        /// Converts the extracted IfcProducts into Elements.
+        /// </summary>
         private List<Element> GetElementsFromIfcProducts()
         {
             var elements = new List<Element>();
@@ -84,8 +123,13 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return elements;
         }
 
+        /// <summary>
+        /// Converts <paramref name="product"/> into Element.
+        /// </summary>
+        /// <param name="product">IfcProduct that will be converted into an Element.</param>
         private Element ConvertIfcProductToElement(IfcProduct product)
         {
+            // Extract RepresentationData from IfcRepresentations of IfcProduct.
             var repData = _representationDataExtractor.ExtractRepresentationData(product);
 
             if (repData == null)
@@ -93,6 +137,10 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 return null;
             }
 
+            // If the product has IfcMappedItem representation, it will be used
+            // to create an ElementInstance. If the definition isn't exist in
+            // _elementDefinitions, it will be extracted from IfcMappedItem
+            // and added to _elementDefinitions.
             if (repData.MappingInfo != null)
             {
                 // TODO: Handle IfcMappedItem
@@ -127,53 +175,39 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 return instance;
             }
 
+            // If the product doesn't have an IfcMappedItem representation, it will be converted to
+            // a GeometricElement.
             var element = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
             return element;
         }
 
+        /// <summary>
+        /// Apply the extracted relationships to the converted Elements.
+        /// </summary>
         private void HandleRelationships(List<Element> elements)
         {
             var elementsWithOpenings = elements.Where(element => element is IHasOpenings).ToList();
             var ifcOpenings = _ifcRelationships.OfType<IfcRelVoidsElement>().ToList();
 
+            // Convert IfcOpeningElements into Openings and attach them to the corresponding
+            // converted Elements.
             foreach (var elementWithOpenings in elementsWithOpenings)
             {
                 var ifcElement = _elementToIfcProduct[elementWithOpenings];
                 var ifcOpeningElements = ifcOpenings.Where(v => v.RelatingBuildingElement == ifcElement)
                     .Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>().ToList();
-                var openings = ifcOpeningElements.SelectMany(io => io.ToOpening()).ToList();
+                var openings = ifcOpeningElements.SelectMany(io => io.ToOpenings()).ToList();
 
                 var openingsOwner = (IHasOpenings) elementWithOpenings;
                 openingsOwner.Openings.AddRange(openings);
             }
         }
 
-        private void ExtractIfcProducts(string path, IList<string> idsToConvert = null)
-        {
-            var ifcModel = new Document(path, out List<STEPError> errors);
-            // TODO: IfcOpeningElement is prohibited because openings are handled during
-            // relationships processing.
-            // It is possible that there are more IfcElement types that should be excluded.
-            var prohibitedElements = ifcModel.AllInstancesOfType<IfcOpeningElement>();
-
-            if (idsToConvert != null && idsToConvert.Count > 0)
-            {
-                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>()
-                    .Where(i => idsToConvert.Contains(i.GlobalId)).Except(prohibitedElements).ToList();
-                _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>()
-                    .Where(i => idsToConvert.Contains(i.GlobalId)).ToList();
-            }
-            else
-            {
-                _ifcProducts = ifcModel.AllInstancesDerivedFromType<IfcProduct>().Except(prohibitedElements).ToList();
-                _ifcRelationships = ifcModel.AllInstancesDerivedFromType<IfcRelationship>().ToList();
-            }
-
-            var styledItems = ifcModel.AllInstancesOfType<IfcStyledItem>().ToList();
-            _materialExtractor = new MaterialExtractor(styledItems);
-        }
-
-        private static IFromIfcProductConverter GetStandardFromIfcConverter()
+        /// <summary>
+        /// Create the default IFromIfcProductConverter. It will be used, if 
+        /// IFromIfcProductConverter is not specified in the constructor.
+        /// </summary>
+        private static IFromIfcProductConverter GetDefaultFromIfcConverter()
         {
             var converters = new List<IFromIfcProductConverter>()
             {
@@ -190,7 +224,11 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return new CompositeFromIfcProductConverter(converters, defaultConverter);
         }
 
-        private static IfcRepresentationDataExtractor GetStandardRepresentationDataExtractor(MaterialExtractor materialExtractor)
+        /// <summary>
+        /// Create the default IfcRepresentationDataExtractor. It will be used, if 
+        /// IfcRepresentationDataExtractor is not specified in the constructor.
+        /// </summary>
+        private static IfcRepresentationDataExtractor GetDefaultRepresentationDataExtractor(MaterialExtractor materialExtractor)
         {
             IfcRepresentationDataExtractor extractor = new IfcRepresentationDataExtractor(materialExtractor);
 
