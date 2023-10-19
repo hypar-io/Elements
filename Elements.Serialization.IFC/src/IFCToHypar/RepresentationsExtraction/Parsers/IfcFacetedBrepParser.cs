@@ -10,7 +10,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 {
     internal class IfcFacetedBrepParser : IIfcRepresentationParser
     {
-        public bool Matches(IfcRepresentationItem ifcRepresentationItem)
+        public bool CanParse(IfcRepresentationItem ifcRepresentationItem)
         {
             return ifcRepresentationItem is IfcFacetedBrep;
         }

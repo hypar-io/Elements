@@ -15,7 +15,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             _representationDataExtractor = refDataExtractor;
         }
 
-        public bool Matches(IfcRepresentationItem ifcRepresentationItem)
+        public bool CanParse(IfcRepresentationItem ifcRepresentationItem)
         {
             return ifcRepresentationItem is IfcBooleanClippingResult;
         }

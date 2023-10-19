@@ -18,7 +18,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             _representationsMap = new Dictionary<Guid, RepresentationData>();
         }
 
-        public bool Matches(IfcRepresentationItem ifcRepresentationItem)
+        public bool CanParse(IfcRepresentationItem ifcRepresentationItem)
         {
             return ifcRepresentationItem is IfcMappedItem;
         }

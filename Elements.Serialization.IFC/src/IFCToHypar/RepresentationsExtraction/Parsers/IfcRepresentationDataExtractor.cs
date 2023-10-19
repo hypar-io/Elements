@@ -42,7 +42,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem repItem)
         {
             var material = _materialExtractor.ExtractMaterial(repItem);
-            var matchingParsers = _ifcRepresentationParsers.Where(parser => parser.Matches(repItem));
+            var matchingParsers = _ifcRepresentationParsers.Where(parser => parser.CanParse(repItem));
 
             if (!matchingParsers.Any())
             {
