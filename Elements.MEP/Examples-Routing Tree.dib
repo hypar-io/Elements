@@ -4,8 +4,7 @@
 
 #!csharp
 
-#r "nuget: Hypar.Elements,2.0.0-alpha.15"
-#r "nuget: Hypar.Elements.MEP,2.0.0-alpha.15"
+#r "nuget: Hypar.Elements.MEP,2.1.0-alpha.8"
 
 #!markdown
 
@@ -18,8 +17,8 @@ var startPoints = new Vector3[] {(-3,10), (-2,5) ,
                                     (4,6), (8,10)};
 var endPoint = new Vector3(-5,-3);
 
-var modelPoints = new ModelPoints(startPoints.Concat(new[] {endPoint}).ToList());
-return modelPoints;
+var circlesAtPoints = startPoints.Select(p => new ModelCurve(new Circle(p, 0.1), BuiltInMaterials.XAxis));
+return circlesAtPoints;
 
 #!markdown
 
