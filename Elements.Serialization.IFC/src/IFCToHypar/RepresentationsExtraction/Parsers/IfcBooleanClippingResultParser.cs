@@ -1,8 +1,4 @@
-﻿using Elements.Geometry.Solids;
-using IFC;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using IFC;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
@@ -10,6 +6,12 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
     {
         private readonly IfcRepresentationDataExtractor _representationDataExtractor;
 
+        /// <summary>
+        /// Create a parser of IfcBooleanClippingResult.
+        /// </summary>
+        /// <param name="refDataExtractor">
+        /// General representation data extractor for the extraction of the solids of the first operand.
+        /// </param>
         public IfcBooleanClippingResultParser(IfcRepresentationDataExtractor refDataExtractor) 
         {
             _representationDataExtractor = refDataExtractor;
