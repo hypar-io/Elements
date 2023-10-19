@@ -7,11 +7,18 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
 {
+    /// <summary>Extracts and keeps the material information from IfcRepresentationItems.</summary>
     internal class MaterialExtractor
     {
+        /// <summary>A mapping from the material name to the material itself.</summary>
         public Dictionary<string, Material> MaterialByName { get; private set; }
+        /// <summary>A mapping from the material Guid to the material itself.</summary>
         public Dictionary<Guid, Material> MaterialByGuid { get; private set; }
 
+        /// <summary>
+        /// Create a MeterialExtractor that keeps information about materials of <paramref name="styledItems"/>.
+        /// </summary>
+        /// <param name="styledItems">A collection of IfcStyledItems that contain material information.</param>
         public MaterialExtractor(IEnumerable<IfcStyledItem> styledItems)
         {
             MaterialByName = new Dictionary<string, Material>();
@@ -94,6 +101,10 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
             }
         }
 
+        /// <summary>
+        /// Extracts Material from <paramref name="repItem"/>.
+        /// </summary>
+        /// <param name="repItem">A representation item, from which the Material will be extracted.</param>
         public Material ExtractMaterial(IfcRepresentationItem repItem)
         {
             return MaterialByGuid.ContainsKey(repItem.Id) ? MaterialByGuid[repItem.Id] : null;
