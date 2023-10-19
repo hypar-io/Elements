@@ -1,18 +1,22 @@
-﻿using Antlr4.Runtime;
-using Elements.Geometry;
+﻿using Elements.Geometry;
 using IFC;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
+    /// <summary>Extracts all representation data from IfcProduct using list of IIfcRepresentationParsers.</summary>
     internal class IfcRepresentationDataExtractor
     {
         private readonly List<IIfcRepresentationParser> _ifcRepresentationParsers;
         private readonly MaterialExtractor _materialExtractor;
 
+        /// <summary>
+        /// Create an IfcRepresentationDataExtractor.
+        /// </summary>
+        /// <param name="materialExtractor">
+        /// Parses materials from IFC and contains information about them.
+        /// </param>
         public IfcRepresentationDataExtractor(MaterialExtractor materialExtractor)
         {
             _ifcRepresentationParsers = new List<IIfcRepresentationParser>();
@@ -24,6 +28,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             _ifcRepresentationParsers.Add(ifcRepresentationParser);
         }
 
+        /// <summary>
+        /// Parse IfcRepresentationItems of <paramref name="ifcProduct"/> and merge the results
+        /// into a single RepresentationData.
+        /// </summary>
+        /// <param name="ifcProduct">
+        /// IfcRepresentationItems of this IfcProduct will be parsed.
+        /// </param>
         public RepresentationData ExtractRepresentationData(IfcProduct ifcProduct)
         {
             var rep = ifcProduct.Representation;
@@ -39,6 +50,10 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             return representation;
         }
 
+        /// <summary>
+        /// Parse <paramref name="repItem"/> into RepresentationData. Returns null, if the item cannot be parsed.
+        /// </summary>
+        /// <param name="repItem">IfcRepresentationItem that will be parsed.</param>
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem repItem)
         {
             var material = _materialExtractor.ExtractMaterial(repItem);
@@ -62,6 +77,10 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             return parsedItem;
         }
 
+        /// <summary>
+        /// Parse <paramref name="repItems"/> and merge results into single RepresentationData.
+        /// </summary>
+        /// <param name="repItems">IfcRepresentationItems that will be parsed.</param>
         public RepresentationData ParseRepresentationItems(IEnumerable<IfcRepresentationItem> repItems)
         {
             var parsedItems = new List<RepresentationData>();
@@ -82,6 +101,9 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             return repData;
         }
 
+        /// <summary>
+        /// Parse Transform from <paramref name="ifcProduct"/>.
+        /// </summary>
         private static Transform GetTransformFromIfcProduct(IfcProduct ifcProduct)
         {
             var transform = new Transform();
