@@ -804,5 +804,44 @@ namespace Elements.Geometry.Tests
             Assert.Equal((-2.5, 10), transform.Origin);
             Assert.Equal(Vector3.XAxis, transform.ZAxis);
         }
+
+        [Fact]
+        public void Frames()
+        {
+            var polyline = new Polyline((0, 0), (2, 0), (2, 2), (0, 2));
+            var frames = polyline.Frames();
+            Assert.Equal(4, frames.Count());
+            Assert.Equal(polyline.Vertices[0], frames[0].Origin);
+            Assert.True(Vector3.XAxis.Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polyline.Vertices[1], frames[1].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+            Assert.Equal(polyline.Vertices[2], frames[2].Origin);
+            Assert.True((Vector3.YAxis - Vector3.XAxis).Unitized().Negate().IsAlmostEqualTo(frames[2].ZAxis));
+            Assert.Equal(polyline.Vertices[3], frames[3].Origin);
+            Assert.True(Vector3.XAxis.IsAlmostEqualTo(frames[3].ZAxis));
+
+            frames = polyline.Frames(1, 1);
+            Assert.Equal(4, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal((1, 2), frames[3].Origin);
+            Assert.True(Vector3.XAxis.IsAlmostEqualTo(frames[3].ZAxis));
+
+            frames = polyline.Frames(2, 2);
+            Assert.Equal(2, frames.Count());
+            Assert.Equal(polyline.Vertices[1], frames[0].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polyline.Vertices[2], frames[1].Origin);
+            Assert.True((Vector3.YAxis - Vector3.XAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+
+            frames = polyline.Frames(1, 3);
+            Assert.Equal(3, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polyline.Vertices[1], frames[1].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+            Assert.Equal((2, 1), frames[2].Origin);
+            Assert.True(Vector3.YAxis.Negate().IsAlmostEqualTo(frames[2].ZAxis));
+        }
     }
 }

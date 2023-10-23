@@ -4,8 +4,7 @@
 
 #!csharp
 
-#r "nuget: Hypar.Elements,2.0.0-alpha.15"
-#r "nuget: Hypar.Elements.MEP,2.0.0-alpha.15"
+#r "nuget: Hypar.Elements.MEP,2.1.0-alpha.8"
 
 #!markdown
 

@@ -121,5 +121,75 @@ namespace Elements
             graphicsBuffers.Add(buffers);
             return true;
         }
+
+        /// <summary>
+        /// The element's bounds.
+        /// The bounds are only available when the geometry has been
+        /// updated using UpdateBoundsAndComputeSolid(),
+        /// </summary>
+        public BBox3 ComputeBounds(GeometricElement element)
+        {
+            var csg = SolidOperationUtils.GetFinalCsgFromSolids(SolidOperations, element, true);
+
+            if (csg == null)
+            {
+                return default;
+            }
+
+            return new BBox3(csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
+        }
+
+
+        /// <summary>
+        /// Calcilate the intersection points with the plane.
+        /// </summary>
+        /// <param name="element">The geometric element.</param>
+        /// <param name="plane">The intersecting plane.</param>
+        /// <param name="beyondPolygons">The output collection of the polygons beyond the input plane.</param>
+        /// <returns>Returns the collection of intersection points.</returns>
+        public List<Vector3> CalculateIntersectionPoints(GeometricElement element, Plane plane, out List<Polygon> beyondPolygons)
+        {
+            var intersectionPoints = new List<Vector3>();
+            beyondPolygons = new List<Polygon>();
+
+            var csg = SolidOperationUtils.GetFinalCsgFromSolids(SolidOperations, element, true);
+
+            var localCsg = csg.Transform(element.Transform.ToMatrix4x4());
+            foreach (var csgPoly in localCsg.Polygons)
+            {
+                var csgNormal = csgPoly.Plane.Normal.ToVector3();
+
+                if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
+                {
+                    // TODO: We can cut out transformation if the element's transform is null.
+                    var backPoly = csgPoly.Project(plane);
+                    beyondPolygons.Add(backPoly);
+
+                    continue;
+                }
+
+                var edgeResults = new List<Vector3>();
+                for (var i = 0; i < csgPoly.Vertices.Count; i++)
+                {
+                    var a = csgPoly.Vertices[i].Pos.ToVector3();
+                    var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
+                    if (plane.Intersects((a, b), out var xsect))
+                    {
+                        edgeResults.Add(xsect);
+                    }
+                }
+
+                if (edgeResults.Count < 2)
+                {
+                    continue;
+                }
+
+                var d = csgNormal.Cross(plane.Normal).Unitized();
+                edgeResults.Sort(new DirectionComparer(d));
+                intersectionPoints.AddRange(edgeResults);
+            }
+
+            return intersectionPoints;
+        }
     }
 }

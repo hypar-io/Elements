@@ -274,32 +274,68 @@ namespace Elements.Geometry
                                            double endSetbackDistance = 0.0,
                                            double additionalRotation = 0.0)
         {
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
+
+            if (startParam >= endParam)
+            {
+                return new Transform[0];
+            }
+
+            var startIndex = (int)Math.Ceiling(startParam);
+            var endIndex = (int)Math.Floor(endParam);
+            bool startAtVertex = false;
+            bool endsAtVertex = false;
+
+            // Calculate number of frames. 2 frames corresponding to end parameters.
+            // 1 if startIndex == endIndex.
+            var length =  endIndex - startIndex + 3;
+
+            // startIndex is set to the first distinct vertex after startParam.
+            if (startParam.ApproximatelyEquals(startIndex))
+            {
+                startAtVertex = true;
+                length--;
+            }
+
+            // endIndex is set to the first distinct vertex before endParam.
+            if (endParam.ApproximatelyEquals(endIndex))
+            {
+                endsAtVertex = true;
+                length--;
+            }
+
+            var result = new Transform[length];
             var normals = this.NormalsAtVertices();
 
-            // Create an array of transforms with the same number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
-            var l = Length();
-            for (var i = 0; i < result.Length; i++)
+            int index = 0;
+            // CreateOrthogonalTransform expects index of previous vertex, that's why index must be adjusted.
+            if (!startAtVertex)
             {
-                Vector3 a;
-                if (i == 0)
-                {
-                    a = PointAt(ParameterAtDistanceFromParameter(startSetbackDistance, this.Domain.Min));
-                }
-                else if (i == Vertices.Count - 1)
-                {
-                    a = PointAt(ParameterAtDistanceFromParameter(l - endSetbackDistance, this.Domain.Min));
-                }
-                else
-                {
-                    a = this.Vertices[i];
-                }
-                result[i] = CreateOrthogonalTransform(i, a, normals[i]);
-                if (additionalRotation != 0.0)
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
+                result[0] = new Transform(PointAt(startParam), normals[startIndex - 1].Cross(tangent), tangent);
+                index++;
+            }
+            
+            for (var i = startIndex; i <= endIndex; i++, index++)
+            {
+                result[index] = CreateOrthogonalTransform(i, Vertices[i], normals[i]);
+            }
+
+            if (!endsAtVertex)
+            {
+                var tangent = (Vertices[endIndex] - Vertices[endIndex + 1]).Unitized();
+                result[index] = new Transform(PointAt(endParam), normals[endIndex].Cross(tangent), tangent);
+            }
+
+            if (additionalRotation != 0.0)
+            {
+                for (int i = 0; i < result.Length; i++)
                 {
                     result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
                 }
             }
+
             return result;
         }
 
@@ -337,7 +373,7 @@ namespace Elements.Geometry
             var x1 = l1.Cross(up);
             var x2 = l2.Cross(up);
             var x = x1.Average(x2);
-            return new Transform(this.Vertices[i], x, x.Cross(up));
+            return new Transform(a, x, x.Cross(up));
         }
 
         private Transform CreateOrthogonalTransform(int i, Vector3 origin, Vector3 up)

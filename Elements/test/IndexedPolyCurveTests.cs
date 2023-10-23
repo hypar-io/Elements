@@ -204,5 +204,46 @@ namespace Elements.Tests
                 }
             }
         }
+
+        [Fact]
+        public void GetSubdivisionParameters()
+        {
+            var pc = new IndexedPolycurve(new List<Vector3>()
+            {
+                (0, 0), (2, 0), (2, 2), (0, 2), (0, 3) 
+            });
+            var parameters = pc.GetSubdivisionParameters();
+            Assert.Equal(5, parameters.Count());
+            Assert.Equal(0.0, parameters[0]);
+            Assert.Equal(1.0, parameters[1]);
+            Assert.Equal(2.0, parameters[2]);
+            Assert.Equal(3.0, parameters[3]);
+            Assert.Equal(4.0, parameters[4]);
+
+            parameters = pc.GetSubdivisionParameters(1.5, 1.5);
+            Assert.Equal(4, parameters.Count());
+            Assert.Equal(0.75, parameters[0]);
+            Assert.Equal(1.0, parameters[1]);
+            Assert.Equal(2.0, parameters[2]);
+            Assert.Equal(2.75, parameters[3]);
+
+            parameters = pc.GetSubdivisionParameters(1, 1);
+            Assert.Equal(4, parameters.Count());
+            Assert.Equal(0.5, parameters[0]);
+            Assert.Equal(1.0, parameters[1]);
+            Assert.Equal(2.0, parameters[2]);
+            Assert.Equal(3.0, parameters[3]);
+
+            parameters = pc.GetSubdivisionParameters(2, 2);
+            Assert.Equal(3, parameters.Count());
+            Assert.Equal(1.0, parameters[0]);
+            Assert.Equal(2.0, parameters[1]);
+            Assert.Equal(2.5, parameters[2]);
+
+            parameters = pc.GetSubdivisionParameters(2.5, 3.5);
+            Assert.Equal(2, parameters.Count());
+            Assert.Equal(1.25, parameters[0]);
+            Assert.Equal(1.75, parameters[1]);
+        }
     }
 }

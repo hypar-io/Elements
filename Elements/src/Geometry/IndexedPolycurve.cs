@@ -277,14 +277,18 @@ namespace Elements.Geometry
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0,
                                                           double endSetbackDistance = 0)
         {
-            var parameters = new List<double>();
-            for (var i = 0; i < _curves.Count; i++)
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
+
+            var startCurveIndex = (int)Math.Floor(startParam);
+            var endCurveIndex = Math.Min(_curves.Count - 1, (int)Math.Floor(endParam));
+
+            var parameters = new List<double>() { startParam };
+            for (var i = startCurveIndex; i < endCurveIndex + 1; i++)
             {
-                var startParam = i;
-                var endParam = i + 1;
                 var curve = _curves[i];
                 var localParameters = curve.GetSubdivisionParameters();
-                var localDomain = new Domain1d(startParam, endParam);
+                var localDomain = new Domain1d(i, i + 1);
                 for (var j = 0; j < localParameters.Length; j++)
                 {
                     var localParameter = localParameters[j];
@@ -292,14 +296,21 @@ namespace Elements.Geometry
                     // into a domain that is a subsection of the larger domain.
                     var remapped = localParameter.MapBetweenDomains(curve.Domain, localDomain);
 
-                    // De-duplicate the end vertices.
-                    if (parameters.Count > 0 && parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
+                    // Filter parameters outside of setbacks and de-duplicate the end vertices.
+                    if (remapped < startParam || remapped > endParam ||
+                        parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
                     {
                         continue;
                     }
                     parameters.Add(remapped);
                 }
             }
+
+            if (!parameters[parameters.Count - 1].ApproximatelyEquals(endParam))
+            {
+                parameters.Add(endParam);
+            }
+
             return parameters.ToArray();
         }
 

@@ -7,7 +7,7 @@ namespace Elements.MEP.Tests
     {
         public static string GetTestPath(string directoryName = null)
         {
-            var path = "../../../results/";
+            var path = "../../../TestResults/";
             if (directoryName != null)
             {
                 path = Path.Combine(path, directoryName);
