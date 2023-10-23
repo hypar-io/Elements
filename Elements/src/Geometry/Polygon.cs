@@ -1,4 +1,5 @@
 using ClipperLib;
+using Elements.Geometry.Profiles;
 using Elements.Search;
 using Elements.Spatial;
 using Newtonsoft.Json;
@@ -760,6 +761,7 @@ namespace Elements.Geometry
                 Contains3D(v, out var foundContainment);
                 if (foundContainment == Containment.Outside)
                 {
+                    containment = foundContainment;
                     return false;
                 }
                 if (foundContainment > containment)
@@ -1722,6 +1724,74 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find all intersection lines between two polygons that are not on the same plane.
+        /// </summary>
+        /// <param name="polygon">The intersecting polygon.</param>
+        /// <param name="includeIntersectionAtEdge">Include intersection at edge of one or both polygons.</param>
+        /// <returns>A list of the segment(s) what are inside both polygons.</returns>
+        public List<Line> IntersectionLines(Polygon polygon, bool includeIntersectionAtEdge = false)
+        {
+            var lines = new List<Line>();
+            if (!Plane().Intersects(polygon.Plane(), out InfiniteLine intersectionLine))
+            {
+                return lines;
+            }
+
+            var tempLine = new Line(intersectionLine.Origin, intersectionLine.Origin + intersectionLine.Direction);
+            var insideSegmentsLeft = tempLine.Trim(this, out _, includeIntersectionAtEdge, true);
+            if (!insideSegmentsLeft.Any())
+            {
+                return lines;
+            }
+
+            var insideSegmentsRight = tempLine.Trim(polygon, out _, includeIntersectionAtEdge, true);
+            if (!insideSegmentsRight.Any())
+            {
+                return lines;
+            }
+
+            int left = 0;
+            int right = 0;
+            // Trim produced ordered lines. Both lists have segments on the same infinite line.
+            // Iterate though both lists and find overlapping line segments that belong to both Polygons.
+            while (left < insideSegmentsLeft.Count && right < insideSegmentsRight.Count)
+            {
+                intersectionLine.ParameterAt(insideSegmentsLeft[left].Start, out var p0min);
+                intersectionLine.ParameterAt(insideSegmentsRight[right].End, out var p1max);
+                if (p1max < p0min)
+                {
+                    right++;
+                    continue;
+                }
+
+                intersectionLine.ParameterAt(insideSegmentsLeft[left].End, out var p0max);
+                intersectionLine.ParameterAt(insideSegmentsRight[right].Start, out var p1min);
+                if (p0max < p1min)
+                {
+                    left++;
+                    continue;
+                }
+
+                bool leftStart = p0min > p1min;
+                bool leftEnd = p1max > p0max;
+                var start = leftStart ? insideSegmentsLeft[left].Start : insideSegmentsRight[right].Start;
+                var end = leftEnd ? insideSegmentsLeft[left].End : insideSegmentsRight[right].End;
+                lines.Add(new Line(start, end));
+
+                if (leftEnd)
+                {
+                    left++;
+                }
+                else
+                {
+                    right++;
+                }
+            }
+
+            return lines;
+        }
+
+        /// <summary>
         /// Offset this polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
@@ -2070,26 +2140,74 @@ namespace Elements.Geometry
         }
 
         /// <inheritdoc/>
-        public override Transform[] Frames(double startSetback = 0.0,
-                                           double endSetback = 0.0,
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
                                            double additionalRotation = 0.0)
         {
-            // Create an array of transforms with the same
-            // number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
 
-            // Cache the normal so we don't have to recalculate
-            // using Newell for every frame.
-            var up = this.Normal();
-            for (var i = 0; i < result.Length; i++)
+            if (startParam >= endParam)
             {
-                var a = this.Vertices[i];
-                result[i] = CreateMiterTransform(i, a, up);
-                if (additionalRotation != 0.0)
+                return new Transform[0];
+            }
+
+            var startIndex = (int)Math.Ceiling(startParam);
+            var endIndex = (int)Math.Floor(endParam);
+            bool startAtVertex = false;
+            bool endsAtVertex = false;
+
+            // Calculate number of frames. 2 frames corresponding to end parameters.
+            // 1 if startIndex == endIndex.
+            var length = endIndex - startIndex + 3;
+
+            // startIndex is set to the first distinct vertex after startParam.
+            if (startParam.ApproximatelyEquals(startIndex))
+            {
+                startAtVertex = true;
+                length--;
+            }
+
+            // endIndex is set to the first distinct vertex before endParam.
+            if (endParam.ApproximatelyEquals(endIndex))
+            {
+                endsAtVertex = true;
+                length--;
+            }
+
+            var result = new Transform[length];
+            var up = this.Normal();
+
+            int index = 0;
+            if (!startAtVertex)
+            {
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
+                result[0] = new Transform(PointAt(startParam), up.Cross(tangent), tangent);
+                index++;
+            }
+
+            // CreateMiterTransform expects index of previous and next vertex, that's why index must be adjusted.
+            for (var i = startIndex; i <= endIndex; i++, index++)
+            {
+                var adjusted = i == Vertices.Count ? 0 : i;
+                result[index] = CreateMiterTransform(adjusted, Vertices[adjusted], up);
+            }
+
+            if (!endsAtVertex)
+            {
+                var nextIndex = (endIndex + 1) % Vertices.Count;
+                var tangent = (Vertices[endIndex] - Vertices[nextIndex]).Unitized();
+                result[index] = new Transform(PointAt(endParam), up.Cross(tangent), tangent);
+            }
+
+            if (additionalRotation != 0.0)
+            {
+                for (int i = 0; i < result.Length; i++)
                 {
                     result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
                 }
             }
+
             return result;
         }
 

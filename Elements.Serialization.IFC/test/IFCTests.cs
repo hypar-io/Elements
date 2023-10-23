@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
+using System.Linq;
 
 namespace Elements.IFC.Tests
 {
@@ -54,6 +55,49 @@ namespace Elements.IFC.Tests
                 this.output.WriteLine(e);
             }
             model.ToGlTF(ConstructGlbPath(name));
+        }
+
+        [Fact]
+        public void InstanceOpenings()
+        {
+            var model = System.IO.File.ReadAllText("../../../models/Hypar/instance-openings-test-model.json");
+            var hyparModel = Model.FromJson(model);
+            var walls = hyparModel.AllElementsOfType<StandardWall>();
+            var path = ConstructIfcPath("instance-openings-test");
+            hyparModel.ToIFC(path);
+
+            var file = System.IO.File.ReadAllLines(path);
+
+            var wallCount = file.Count(x => x.Contains("IFCWALLSTANDARDCASE"));
+            var openingCount = file.Count(x => x.Contains("IFCRELVOIDSELEMENT"));
+            var floorCount = file.Count(x => x.Contains("IFCSLAB"));
+
+            Assert.Equal(wallCount, 4);
+            Assert.Equal(openingCount, 5);
+            Assert.Equal(floorCount, 1);
+        }
+
+        [Fact]
+        public void Doors()
+        {
+            var model = new Model();
+
+            // Add 2 walls.
+            var wallLine1 = new Line(Vector3.Origin, new Vector3(10, 10, 0));
+            var wallLine2 = new Line(new Vector3(10, 10, 0), new Vector3(10, 15, 0));
+            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "wall1");
+            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "wall2");
+
+            model.AddElement(wall1);
+            model.AddElement(wall2);
+
+            var door1 = new Door(wall1, wallLine1, 0.5, 1.5, 2.0, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door2 = new Door(wall2, wallLine2, 0.5, 1.5, 1.8, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+
+            model.AddElement(door1);
+            model.AddElement(door2);
+
+            model.ToIFC(ConstructIfcPath("IfcDoor"));
         }
 
         [Fact]

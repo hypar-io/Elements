@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Newtonsoft.Json;
@@ -60,6 +61,28 @@ namespace Elements.Tests
                     Model.AddElements(arc.BasisCurve.Transform.ToModelCurves());
                 }
             }
+        }
+
+        [Fact]
+        public void PolyCurveWithBackwardsArc()
+        {
+            Name = nameof(PolyCurveWithBackwardsArc);
+            var line1 = new Line((0, 0), (10, 0));
+            var line2 = new Line((10, 0), (10, 8));
+            var arc3 = new Arc((10, 10), 2, 270, 180);
+            var line4 = new Line((8, 10), (0, 10));
+            var line5 = new Line((0, 10), (0, 0));
+            var polycurve = new IndexedPolycurve(new List<BoundedCurve> { line1, line2, arc3, line4, line5 });
+            Model.AddElement(new ModelCurve(polycurve, BuiltInMaterials.XAxis));
+            var vectors = new List<(Vector3 location, Vector3 direction, double magnitude, Color? color)>();
+            for (int i = 0; i < 100; i++)
+            {
+                var transform = polycurve.TransformAtNormalized(i / 100.0);
+                var normal = transform.ZAxis.Negate();
+                vectors.Add((transform.Origin, normal, 0.1, Colors.Magenta));
+            }
+            var ma = new ModelArrows(vectors);
+            Model.AddElement(ma);
         }
 
         private IndexedPolycurve CreateTestPolycurve()
@@ -143,6 +166,66 @@ namespace Elements.Tests
             var mc2 = new ModelCurve(pc2, BuiltInMaterials.YAxis);
             Assert.Equal(pc.Vertices, pc2.Vertices);
             Assert.Equal(pc._bounds, pc2._bounds);
+        }
+
+        [Fact]
+        public void Intersects()
+        {
+            var pc = CreateTestPolycurve();
+            var polygon = new Polygon(new Vector3[]
+            {
+                (0, 5),
+                (4, 9),
+                (8, 5),
+                (4, 1)
+            });
+
+            Assert.True(pc.Intersects(polygon, out var results));
+            Assert.Equal(3, results.Count);
+            Assert.Contains(new Vector3(0, 5), results);
+            Assert.Contains(new Vector3(5, 2), results);
+            Assert.Contains(new Vector3(2.5, 7.5), results);
+        }
+
+        [Fact]
+        public void GetSubdivisionParameters()
+        {
+            var pc = new IndexedPolycurve(new List<Vector3>()
+            {
+                (0, 0), (2, 0), (2, 2), (0, 2), (0, 3) 
+            });
+            var parameters = pc.GetSubdivisionParameters();
+            Assert.Equal(5, parameters.Count());
+            Assert.Equal(0.0, parameters[0]);
+            Assert.Equal(1.0, parameters[1]);
+            Assert.Equal(2.0, parameters[2]);
+            Assert.Equal(3.0, parameters[3]);
+            Assert.Equal(4.0, parameters[4]);
+
+            parameters = pc.GetSubdivisionParameters(1.5, 1.5);
+            Assert.Equal(4, parameters.Count());
+            Assert.Equal(0.75, parameters[0]);
+            Assert.Equal(1.0, parameters[1]);
+            Assert.Equal(2.0, parameters[2]);
+            Assert.Equal(2.75, parameters[3]);
+
+            parameters = pc.GetSubdivisionParameters(1, 1);
+            Assert.Equal(4, parameters.Count());
+            Assert.Equal(0.5, parameters[0]);
+            Assert.Equal(1.0, parameters[1]);
+            Assert.Equal(2.0, parameters[2]);
+            Assert.Equal(3.0, parameters[3]);
+
+            parameters = pc.GetSubdivisionParameters(2, 2);
+            Assert.Equal(3, parameters.Count());
+            Assert.Equal(1.0, parameters[0]);
+            Assert.Equal(2.0, parameters[1]);
+            Assert.Equal(2.5, parameters[2]);
+
+            parameters = pc.GetSubdivisionParameters(2.5, 3.5);
+            Assert.Equal(2, parameters.Count());
+            Assert.Equal(1.25, parameters[0]);
+            Assert.Equal(1.75, parameters[1]);
         }
     }
 }

@@ -929,7 +929,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Curve GetCellGeometry()</code></pre>
+    <pre><code class="lang-csharp hljs">public BoundedCurve GetCellGeometry()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -941,7 +941,7 @@ public Grid2d this[int u, int v] { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td><p>A rectangle representing this cell in world coordinates.</p>
 </td>
       </tr>
@@ -1140,7 +1140,7 @@ If the cell falls completely outside of the boundary, an empty array will be ret
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Curve[] GetTrimmedCellGeometry()</code></pre>
+    <pre><code class="lang-csharp hljs">public BoundedCurve[] GetTrimmedCellGeometry()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1152,7 +1152,7 @@ If the cell falls completely outside of the boundary, an empty array will be ret
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a>[]</td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a>[]</td>
         <td><p>Curves representing this cell in world coordinates.</p>
 </td>
       </tr>

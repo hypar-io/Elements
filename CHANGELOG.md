@@ -1,5 +1,69 @@
 # Changelog
 
+## 2.1.0
+
+### Added
+
+- `Units.AdjustRadian(double parameter, double reference)`
+- `Equations`
+- `Vector3Extensions.UniqueAverageWithinTolerance(this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)`
+- `Vector3.ClosestPointOn(InfiniteLine line)`
+- `Plane.Intersects(Plane other, out InfiniteLine result)`
+- `ICurve.Intersects(ICurve curve, out List<Vector3> results)`
+- `InfiniteLine.ParameterAt(Vector3 pt, out double t)`
+- `InfiniteLine.Intersects(Plane plane, out Vector3 result)`
+- `InfiniteLine.Intersects(InfiniteLine other, out List<Vector3> results)`
+- `InfiniteLine.Intersects(Circle circle, out List<Vector3> results)`
+- `InfiniteLine.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `InfiniteLine.Intersects(BoundedCurve curve, out List<Vector3> results)`
+- `Circle.Normal`
+- `Circle.ParameterAt(Vector3 pt, out double t)`
+- `Circle.Intersects(Circle other, out List<Vector3> results)`
+- `Circle.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `Circle.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `Circle.Intersects(BoundedCurve curve, out List<Vector3> results)`
+- `Ellipse.Normal`
+- `Ellipse.Circumference()`
+- `Ellipse.ParameterAt(Vector3 pt, out double t)`
+- `Ellipse.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `Ellipse.Intersects(Circle circle, out List<Vector3> results)`
+- `Ellipse.Intersects(Ellipse other, out List<Vector3> results)`
+- `Ellipse.Intersects(BoundedCurve curve, out List<Vector3> results)`
+- `TrimmedCurve.PointOnDomain(Vector3 point)`
+- `TrimmedCurve.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `TrimmedCurve.Intersects(Circle circle, out List<Vector3> results)`
+- `TrimmedCurve.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `TrimmedCurve.Intersects<T>(TrimmedCurve<T> curve, out List<Vector3> results) where T : ICurve`
+- `TrimmedCurve.Intersects(Bezier bezier, out List<Vector3> results)`
+- `Bezier.Intersects(InfiniteLine line, out List<Vector3> results)`
+- `Bezier.Intersects(Circle circle, out List<Vector3> results)`
+- `Bezier.Intersects(Ellipse ellipse, out List<Vector3> results)`
+- `Bezier.Intersects(Bezier other, out List<Vector3> results)`
+- `Elements.Geometry.ThickenedPolyline`
+- `Polygon.IntersectionLines`
+- `Model.ToGlTF(MemoryStream stream...)`
+- `Model.ToIFC(MemoryStream stream ...)`
+- `Model.ToJson(MemoryStream stream ...)`
+- `Profile.ThickenedInteriorProfile`
+- `Profile.ThickenedExteriorProfile`
+- `Profile.ThickenedEdgePolygons`
+- `Elements.MEP`
+- `GeometricElement.RepresentationInstances`
+
+### Fixed
+
+- `Polygon.Contains3D` passed wrong `out Containment containment` parameter in some cases.
+- Code generation supports `Vector3?` and `Color?` types.
+- `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+
+
+### Changed
+- `GltfExtensions.UseReferencedContentExtension` is now true by default.
+- `GeometricElement.Intersects` method now supports multiple representations.
+- `GltfExtensions.ToGlTF` creates parent node for element and child nodes for representation instances.
+
 ## 2.0.0
 
 ### Added
@@ -22,6 +86,7 @@
 - `Topography.Trimmed`
 - `new Topography(Topography other)`
 - `Topography.TopMesh()`
+- `UpdateElementRepresentations` flag to all serialization methods
 
 ### Changed
 
@@ -29,6 +94,7 @@
 - `Polyline` is now parameterized 0->length.
 - `Arc` now inherits from `TrimmedCurve<Circle>`.
 - `Arc` is now parameterized 0->2Pi
+- `Arc` now automatically corrects decreasing angle domains to be increasing, while preserving direction.
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
 - `Bezier` now inherits from `BoundedCurve`.
@@ -76,6 +142,7 @@
 - `AdaptiveGrid.AggregateFactorMultiply(double a, double b)`
 
 ### Changed
+
 - Element deserialization no longer requires `Name` to be present — it can be omitted.
 - `AdaptiveGrid.AddPlanarWeightModifier` - added `group` parameter.
 - `WeightModifier` - added `group` parameter to constructor.

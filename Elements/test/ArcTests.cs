@@ -6,7 +6,7 @@ using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Hypar.Tests
+namespace Elements.Geometry.Tests
 {
     public class ArcTests : ModelTest
     {
@@ -281,6 +281,132 @@ namespace Hypar.Tests
         }
 
         [Fact]
+        private void ReversedArcs_CRAAConstructor()
+        {
+            Name = nameof(ReversedArcs_CRAAConstructor);
+            var line = new Line((0, 0, 0), (6, 0, 0));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var arc1 = new Arc((0, 0, 0), 1, 0, 90);
+            var arc2 = new Arc((0, 0, 0), 1, 90, 0);
+            var arc3 = new Arc((0, 0, 0), 1, -90, 0);
+            var arc4 = new Arc((0, 0, 0), 1, 0, -90);
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var transform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(transform.ToModelCurves(displayXform));
+                xPos += 2.0;
+            }
+        }
+
+        [Fact]
+        private void ReversedArcs_RAAConstructor()
+        {
+            Name = nameof(ReversedArcs_RAAConstructor);
+            var line = new Line((0, 0, 0), (6, 0, 0));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var arc1 = new Arc(1, 0, 90);
+            var arc2 = new Arc(1, 90, 0);
+            var arc3 = new Arc(1, -90, 0);
+            var arc4 = new Arc(1, 0, -90);
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var transform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(transform.ToModelCurves(displayXform));
+                xPos += 2.0;
+            }
+        }
+
+        [Fact]
+        private void ReversedArcs_CPPConstructor()
+        {
+            Name = nameof(ReversedArcs_CPPConstructor);
+            var line = new Line((4, 5, 6), (10, 5, 6));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var circle = new Circle(new Transform((4, 5, 6), new Vector3(1, 1, 1).Unitized()), 1.0);
+            var arc1 = new Arc(circle, 0, Math.PI / 2.0);
+            var arc2 = new Arc(circle, Math.PI / 2.0, 0);
+            var arc3 = new Arc(circle, -Math.PI / 2.0, 0);
+            var arc4 = new Arc(circle, 0, -Math.PI / 2.0);
+            var arcs = new[] { arc1, arc2, arc3, arc4 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var transform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(transform.ToModelCurves(displayXform));
+                xPos += 2.0;
+            }
+        }
+
+        [Fact]
+        private void ReversedArcs_TRPPConstructor()
+        {
+            Name = nameof(ReversedArcs_TRPPConstructor);
+            var line = new Line((4, 5, 6), (4 + 2 * 6, 5, 6));
+            Model.AddElement(new ModelCurve(line, BuiltInMaterials.Points));
+            var transform = new Transform((4, 5, 6), new Vector3((1, 1, 1)).Unitized());
+            var arc1 = new Arc(transform, 2, 0, Math.PI / 2.0);
+            var arc2 = new Arc(transform, 2, Math.PI / 2.0, 0);
+            var arc3 = new Arc(transform, 2, -Math.PI / 2.0, 0);
+            var arc4 = new Arc(transform, 2, 0, -Math.PI / 2.0);
+            var arc5 = new Arc(transform, 4, .234, 0.697);
+            var arc6 = new Arc(transform, 4, 0.697, .234);
+            var arcs = new[] { arc1, arc2, arc3, arc4, arc5, arc6 };
+            Assert.Equal(arc1.Start, arc2.End);
+            Assert.Equal(arc2.Start, arc1.End);
+            Assert.Equal(arc1.PointAtNormalized(0.2), arc2.PointAtNormalized(0.8));
+            Assert.True(arc1.TransformAtNormalized(0.2).ZAxis.Dot(arc2.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc3.Start, arc4.End);
+            Assert.Equal(arc4.Start, arc3.End);
+            Assert.Equal(arc3.PointAtNormalized(0.2), arc4.PointAtNormalized(0.8));
+            Assert.True(arc3.TransformAtNormalized(0.2).ZAxis.Dot(arc4.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            Assert.Equal(arc5.Start, arc6.End);
+            Assert.Equal(arc6.Start, arc5.End);
+            Assert.Equal(arc5.PointAtNormalized(0.2), arc6.PointAtNormalized(0.8));
+            Assert.True(arc5.TransformAtNormalized(0.2).ZAxis.Dot(arc6.TransformAtNormalized(0.8).ZAxis) < -0.9999);
+            var xPos = 0.0;
+            foreach (var arc in arcs)
+            {
+                var displayXform = new Transform((xPos, 0, 0));
+                Model.AddElement(new ModelCurve(arc, BuiltInMaterials.Steel, displayXform));
+                var ptTransform = arc.TransformAtNormalized(0.2);
+                Model.AddElements(ptTransform.ToModelCurves(displayXform));
+                xPos += 4.0;
+            }
+        }
+
+        [Fact]
         public void PointAtNormalizedReturnsSameValue()
         {
             var line = ModelTest.TestLine;
@@ -324,6 +450,15 @@ namespace Hypar.Tests
         }
 
         [Fact]
+        public void ReversedArcCreatesPolyline()
+        {
+            Name = nameof(ReversedArcCreatesPolyline);
+            var arc1 = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
+            var p = arc1.ToPolyline();
+            Model.AddElement(new ModelCurve(p, BuiltInMaterials.XAxis));
+        }
+
+        [Fact]
         public void TransformAtNormalizedReturnsSameValue()
         {
             var line = ModelTest.TestLine;
@@ -342,11 +477,130 @@ namespace Hypar.Tests
             TestTransformAtNormalized(polygon);
         }
 
+        [Fact]
+        public void IntersectsInfiniteLine()
+        {
+            var line = new InfiniteLine(Vector3.Origin, Vector3.YAxis);
+
+            // Arc intersects at two points. [0; 360] domain.
+            var arc = new Arc(Vector3.Origin, 2.0, 60, 300);
+            Assert.True(arc.Intersects(line, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 2), intersections);
+            Assert.Contains(new Vector3(0, -2), intersections);
+
+            // Arc touches at one point and intersects at other. [-360; 0] domain.
+            arc = new Arc(Vector3.Origin, 3.0, -90, -300);
+            Assert.True(arc.Intersects(line, out intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 3), intersections);
+            Assert.Contains(new Vector3(0, -3), intersections);
+
+            // Arc intersects at one point. [360; 720] domain.
+            arc = new Arc(Vector3.Origin, 4, 500, 700);
+            Assert.True(arc.Intersects(line, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, -4), intersections);
+
+            // Arc domain doesn't intersect
+            arc = new Arc(Vector3.Origin, 5, -45, 45);
+            Assert.False(arc.Intersects(line, out intersections));
+            arc = new Arc(Vector3.Origin, 5, 100, 260);
+            Assert.False(arc.Intersects(line, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsLine()
+        {
+            var arc = new Arc(Vector3.Origin, 2.0, 300, 60);
+
+            // Arc intersects at two points.
+            var line = new Line(new Vector3(0, -2), new Vector3(0, 5));
+            Assert.True(arc.Intersects(line, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 2), intersections);
+            Assert.Contains(new Vector3(0, -2), intersections);
+
+            // Arc intersects at one point.
+            line = new Line(new Vector3(0, 1), new Vector3(0, 3));
+            Assert.True(arc.Intersects(line, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 2), intersections);
+
+            // Arc intersects at one point.
+            line = new Line(new Vector3(0, 5), new Vector3(0, 3));
+            Assert.False(arc.Intersects(line, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsCircle()
+        {
+            Transform t = new Transform(new Vector3(0, 0, 1), Vector3.XAxis);
+            Circle c = new Circle(t, 5);
+
+            // Arc intersects at two points.
+            var arc = new Arc(new Vector3(1, 0, 0), 5, 90, 270);
+            Assert.True(arc.Intersects(c, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 4.8989795), intersections);
+            Assert.Contains(new Vector3(0, -4.8989795), intersections);
+
+            // Arc intersects at one point.
+            arc = new Arc(new Vector3(1, 0, 0), 5, 0, 180);
+            Assert.True(arc.Intersects(c, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 4.8989795), intersections);
+
+            // Arc doesn't intersect
+            arc = new Arc(new Vector3(1, 0, 0), 5, -80, 80);
+            Assert.False(arc.Intersects(c, out intersections));
+        }
+
+        [Fact]
+        public void IntersectsArc()
+        {
+            Transform t = new Transform(new Vector3(0, 0, 1), Vector3.ZAxis.Negate(), Vector3.XAxis);
+            Arc a0 = new Arc(t, 5, Math.PI / 4, Math.PI * 2 - Math.PI / 4);
+
+            // Arc intersects at two points..
+            var a1 = new Arc(new Vector3(1, 0, 0), 5, 90, 270);
+            Assert.True(a0.Intersects(a1, out var intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 4.8989795), intersections);
+            Assert.Contains(new Vector3(0, -4.8989795), intersections);
+
+            // Arc intersects at one point.
+            a1 = new Arc(new Vector3(1, 0, 0), 5, 120, 270);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, -4.8989795), intersections);
+
+            // Arc doesn't intersect
+            a0 = new Arc(t, 5, Math.PI / 4, Math.PI);
+            Assert.False(a0.Intersects(a1, out intersections));
+
+            // Overlapping arcs
+            a1 = new Arc(t, 5, 0, Math.PI);
+            Assert.False(a0.Intersects(a1, out intersections));
+
+            // Touching overlapping arcs
+            a1 = new Arc(t, 5, Math.PI, Math.PI * 2);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Single(intersections);
+            Assert.Contains(new Vector3(0, 0, 6), intersections);
+            a1 = new Arc(t, 5, Math.PI, Math.PI * 2 + Math.PI / 4);
+            Assert.True(a0.Intersects(a1, out intersections));
+            Assert.Equal(2, intersections.Count());
+            Assert.Contains(new Vector3(0, 0, 6), intersections);
+            Assert.Contains(new Vector3(0, 3.5355339, -2.5355339), intersections);
+        }
+
         private void TestTransformAtNormalized(BoundedCurve curve)
         {
             Assert.Equal(curve.TransformAt(curve.Domain.Mid()), curve.TransformAtNormalized(0.5));
             Assert.Equal(curve.TransformAt(curve.Domain.Min), curve.TransformAtNormalized(0.0));
             Assert.Equal(curve.TransformAt(curve.Domain.Max), curve.TransformAtNormalized(1.0));
         }
+
     }
 }

@@ -309,13 +309,13 @@ public class Grid1d</code></pre>
     </tbody>
   </table>
   <a id="Elements_Spatial_Grid1d__ctor_" data-uid="Elements.Spatial.Grid1d.#ctor*"></a>
-  <h4 id="Elements_Spatial_Grid1d__ctor_Elements_Geometry_Curve_" data-uid="Elements.Spatial.Grid1d.#ctor(Elements.Geometry.Curve)">Grid1d(Curve)</h4>
+  <h4 id="Elements_Spatial_Grid1d__ctor_Elements_Geometry_BoundedCurve_" data-uid="Elements.Spatial.Grid1d.#ctor(Elements.Geometry.BoundedCurve)">Grid1d(BoundedCurve)</h4>
   <div class="markdown level1 summary"><p>Construct a 1D grid from a curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Grid1d(Curve curve)</code></pre>
+    <pre><code class="lang-csharp hljs">public Grid1d(BoundedCurve curve)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -328,7 +328,7 @@ public class Grid1d</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td><span class="parametername">curve</span></td>
         <td><p>The curve from which to generate the grid.</p>
 </td>
@@ -423,7 +423,7 @@ public List&lt;Grid1d&gt; Cells { get; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[JsonIgnore]
-public Curve Curve { get; }</code></pre>
+public BoundedCurve Curve { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -435,7 +435,7 @@ public Curve Curve { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -889,6 +889,49 @@ and remainder handling will be governed by DivisionMode.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Spatial_Grid1d_GetCellDomains_" data-uid="Elements.Spatial.Grid1d.GetCellDomains*"></a>
+  <h4 id="Elements_Spatial_Grid1d_GetCellDomains_System_Boolean_" data-uid="Elements.Spatial.Grid1d.GetCellDomains(System.Boolean)">GetCellDomains(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Get domain parameters at the ends and in-between all cells.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;double&gt; GetCellDomains(bool recursive = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">recursive</span></td>
+        <td><p>If true, domains will be retrieved from child cells as well.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Double</span>&gt;</td>
+        <td><p>A list of double representing the domain across cells.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Spatial_Grid1d_GetCellGeometry_" data-uid="Elements.Spatial.Grid1d.GetCellGeometry*"></a>
   <h4 id="Elements_Spatial_Grid1d_GetCellGeometry" data-uid="Elements.Spatial.Grid1d.GetCellGeometry">GetCellGeometry()</h4>
   <div class="markdown level1 summary"><p>Retrieve geometric representation of a cell (currently just a line)</p>
@@ -896,7 +939,7 @@ and remainder handling will be governed by DivisionMode.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Curve GetCellGeometry()</code></pre>
+    <pre><code class="lang-csharp hljs">public BoundedCurve GetCellGeometry()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -908,7 +951,7 @@ and remainder handling will be governed by DivisionMode.</p>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td><p>A curve representing the extents of this grid / cell.</p>
 </td>
       </tr>

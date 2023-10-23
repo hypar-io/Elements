@@ -195,9 +195,33 @@ public Mesh(IList&lt;Vertex&gt; vertices, IList&lt;Triangle&gt; triangles)</code
   </table>
   <h3 id="properties">Properties
   </h3>
+  <a id="Elements_Geometry_Mesh_BoundingBox_" data-uid="Elements.Geometry.Mesh.BoundingBox*"></a>
+  <h4 id="Elements_Geometry_Mesh_BoundingBox" data-uid="Elements.Geometry.Mesh.BoundingBox">BoundingBox</h4>
+  <div class="markdown level1 summary"><p>The mesh's bounding box.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3 BoundingBox { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Mesh_Triangles_" data-uid="Elements.Geometry.Mesh.Triangles*"></a>
   <h4 id="Elements_Geometry_Mesh_Triangles" data-uid="Elements.Geometry.Mesh.Triangles">Triangles</h4>
-  <div class="markdown level1 summary"><p>The mesh' triangles.</p>
+  <div class="markdown level1 summary"><p>The mesh's triangles.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -222,7 +246,7 @@ public IList&lt;Triangle&gt; Triangles { get; set; }</code></pre>
   </table>
   <a id="Elements_Geometry_Mesh_Vertices_" data-uid="Elements.Geometry.Mesh.Vertices*"></a>
   <h4 id="Elements_Geometry_Mesh_Vertices" data-uid="Elements.Geometry.Mesh.Vertices">Vertices</h4>
-  <div class="markdown level1 summary"><p>The mesh' vertices.</p>
+  <div class="markdown level1 summary"><p>The mesh's vertices.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -587,6 +611,83 @@ the normals of the incident faces.</p>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;</td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_Intersects_" data-uid="Elements.Geometry.Mesh.Intersects*"></a>
+  <h4 id="Elements_Geometry_Mesh_Intersects_Elements_Geometry_Ray_Elements_Geometry_Vector3__" data-uid="Elements.Geometry.Mesh.Intersects(Elements.Geometry.Ray,Elements.Geometry.Vector3@)">Intersects(Ray, out Vector3)</h4>
+  <div class="markdown level1 summary"><p>Does the provided ray intersect this mesh mesh?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Ray ray, out Vector3 intersection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Ray.html">Ray</a></td>
+        <td><span class="parametername">ray</span></td>
+        <td><p>The Ray to intersect.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">intersection</span></td>
+        <td><p>The location of intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if an intersection result occurs.
+False if no intersection occurs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Mesh_RemoveTriangle_" data-uid="Elements.Geometry.Mesh.RemoveTriangle*"></a>
+  <h4 id="Elements_Geometry_Mesh_RemoveTriangle_Elements_Geometry_Triangle_" data-uid="Elements.Geometry.Mesh.RemoveTriangle(Elements.Geometry.Triangle)">RemoveTriangle(Triangle)</h4>
+  <div class="markdown level1 summary"><p>Removes the specified triangle from the mesh and updates the vertex-triangle relationships.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveTriangle(Triangle face)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></td>
+        <td><span class="parametername">face</span></td>
+        <td><p>The triangle to remove.</p>
+</td>
       </tr>
     </tbody>
   </table>

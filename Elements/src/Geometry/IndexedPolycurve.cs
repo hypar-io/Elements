@@ -1,8 +1,10 @@
+using Elements.Geometry.Interfaces;
 using Elements.Validators;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -275,14 +277,18 @@ namespace Elements.Geometry
         public override double[] GetSubdivisionParameters(double startSetbackDistance = 0,
                                                           double endSetbackDistance = 0)
         {
-            var parameters = new List<double>();
-            for (var i = 0; i < _curves.Count; i++)
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
+
+            var startCurveIndex = (int)Math.Floor(startParam);
+            var endCurveIndex = Math.Min(_curves.Count - 1, (int)Math.Floor(endParam));
+
+            var parameters = new List<double>() { startParam };
+            for (var i = startCurveIndex; i < endCurveIndex + 1; i++)
             {
-                var startParam = i;
-                var endParam = i + 1;
                 var curve = _curves[i];
                 var localParameters = curve.GetSubdivisionParameters();
-                var localDomain = new Domain1d(startParam, endParam);
+                var localDomain = new Domain1d(i, i + 1);
                 for (var j = 0; j < localParameters.Length; j++)
                 {
                     var localParameter = localParameters[j];
@@ -290,14 +296,21 @@ namespace Elements.Geometry
                     // into a domain that is a subsection of the larger domain.
                     var remapped = localParameter.MapBetweenDomains(curve.Domain, localDomain);
 
-                    // De-duplicate the end vertices.
-                    if (parameters.Count > 0 && parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
+                    // Filter parameters outside of setbacks and de-duplicate the end vertices.
+                    if (remapped < startParam || remapped > endParam ||
+                        parameters[parameters.Count - 1].ApproximatelyEquals(remapped))
                     {
                         continue;
                     }
                     parameters.Add(remapped);
                 }
             }
+
+            if (!parameters[parameters.Count - 1].ApproximatelyEquals(endParam))
+            {
+                parameters.Add(endParam);
+            }
+
             return parameters.ToArray();
         }
 
@@ -524,6 +537,27 @@ namespace Elements.Geometry
                 }
             }
             return true;
+        }
+
+        /// <inheritdoc/>
+        public override bool Intersects(ICurve curve, out List<Vector3> results)
+        {
+            results = new List<Vector3>();
+            foreach (var segment in _curves)
+            {
+                if (segment.Intersects(curve, out var intersections))
+                {
+                    foreach (var item in intersections)
+                    {
+                        if (!results.Any() || 
+                            !results.First().IsAlmostEqualTo(item) && !results.Last().IsAlmostEqualTo(item))
+                        {
+                            results.Add(item);
+                        }
+                    }
+                }
+            }
+            return results.Any();
         }
 
         /// <summary>

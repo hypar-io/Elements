@@ -258,8 +258,8 @@ namespace Elements.Serialization.SVG
                         }
                         geo.UpdateBoundsAndComputeSolid();
 
-                        var bbMax = geo.Transform.OfPoint(geo._bounds.Max);
-                        var bbMin = geo.Transform.OfPoint(geo._bounds.Min);
+                        var bbMax = geo.Transform.OfPoint(geo.Bounds.Max);
+                        var bbMin = geo.Transform.OfPoint(geo.Bounds.Min);
                         bounds.Extend(new[] { bbMax, bbMin });
                     }
                 }

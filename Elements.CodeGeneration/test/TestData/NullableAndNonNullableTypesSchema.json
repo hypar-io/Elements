@@ -1,0 +1,66 @@
+{
+    "x-namespace": "Elements",
+    "required": [],
+    "type": "object",
+    "title": "NullableAndNonNullableTypes",
+    "properties": {
+        "NonNullableVector": {
+            "$ref": "https://schemas.hypar.io/Vector3.json"
+        },
+        "NullableVector": {
+            "x-namespace": "Elements.Geometry",
+            "required": [],
+            "properties": {
+                "X": {
+                    "description": "The X component of the vector.",
+                    "type": "number"
+                },
+                "Y": {
+                    "description": "The Y component of the vector.",
+                    "type": "number"
+                },
+                "Z": {
+                    "description": "The Z component of the vector.",
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false,
+            "description": "A 3D vector.",
+            "$id": "Vector3",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "discriminator": "discriminator",
+            "type": [
+                "object",
+                "null"
+            ],
+            "title": "Vector3"
+        },
+        "NonNullableColor": {
+            "x-namespace": "Elements.Geometry",
+            "required": [],
+            "type": "object",
+            "properties": {
+                "Red": {
+                    "type": "number"
+                },
+                "Green": {
+                    "type": "number"
+                },
+                "Blue": {
+                    "type": "number"
+                },
+                "Alpha": {
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false,
+            "$id": "Color",
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "discriminator": "discriminator",
+            "title": "Color"
+        },
+        "NullableColor": {
+            "$ref": "https://schemas.hypar.io/Color.json"
+        }
+    }
+}

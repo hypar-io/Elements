@@ -39,6 +39,16 @@ namespace Elements.Serialization.glTF
             return newIds;
         }
 
+        internal static int[] AddNodes(List<Node> nodes, List<int> meshIds, int? parentId)
+        {
+            var newNodes = meshIds.Select(meshId =>
+                        {
+                            return new Node() { Mesh = meshId };
+                        });
+
+            return AddNodes(nodes, newNodes, parentId);
+        }
+
         internal static int AddNode(List<Node> nodes, Node newNode, int? parentId)
         {
             return NodeUtilities.AddNodes(nodes, new[] { newNode }, parentId).First();
@@ -138,6 +148,14 @@ namespace Elements.Serialization.glTF
             return nodeIndex;
         }
 
+        internal static int AddInstanceNode(List<glTFLoader.Schema.Node> nodes, Transform transform, Guid elementId)
+        {
+            float[] matrix = TransformToMatrix(transform);
+            var newNode = new Node() { Matrix = matrix, Name = elementId.ToString() };
+            newNode.SetElementInfo(elementId);
+            return AddNode(nodes, newNode, 0);
+        }
+
         internal static int[] AddInstanceNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             List<int> meshIds,
@@ -202,6 +220,22 @@ namespace Elements.Serialization.glTF
                 extensionDict["selectable"] = selectable.Value;
             }
             node.Extensions["HYPAR_info"] = extensionDict;
+        }
+
+        public static void SetRepresentationInfo(this Node node, RepresentationInstance representationInstance)
+        {
+            if (node.Extensions == null)
+            {
+                node.Extensions = new Dictionary<string, object>();
+            }
+
+            var extensionDict = new Dictionary<string, object>
+                {
+                    {"isDefault", representationInstance.IsDefault},
+                    {"representationType", representationInstance.RepresentationTypes}
+                };
+
+            node.Extensions["HYPAR_representation_info"] = extensionDict;
         }
     }
 }

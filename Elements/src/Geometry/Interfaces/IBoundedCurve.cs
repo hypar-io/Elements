@@ -17,7 +17,7 @@ namespace Elements.Geometry.Interfaces
         Vector3 End { get; }
 
         /// <summary>
-        /// The mid point of the curve.
+        /// The point at the middle of the curve's parameter space.
         /// </summary>
         Vector3 Mid();
 

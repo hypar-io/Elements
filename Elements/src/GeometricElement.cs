@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
 using Elements.Search;
 using Elements.Spatial;
+using Elements.Utilities;
 using Newtonsoft.Json;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
@@ -22,7 +22,7 @@ namespace Elements
     [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
-        internal BBox3 _bounds;
+        private BBox3 _bounds;
         internal Csg.Solid _csg;
 
         // Used to attach a "selectable: false" flag to the element in the
@@ -49,6 +49,12 @@ namespace Elements
         /// <summary>The element's representation.</summary>
         [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
+
+        /// <summary>
+        ///  The list of element representations.
+        /// </summary>
+        [JsonIgnore]
+        public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
         [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
@@ -106,11 +112,38 @@ namespace Elements
                 }
             }
             _csg = GetFinalCsgFromSolids(transformed);
-            if (_csg == null)
+            if (_csg != null)
             {
-                return;
+                _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
             }
-            _bounds = new BBox3(_csg.Polygons.SelectMany(p => p.Vertices.Select(v => v.Pos.ToVector3())));
+
+            if (RepresentationInstances != null && RepresentationInstances.Any())
+            {
+                foreach (var instance in RepresentationInstances)
+                {
+                    // TODO: filter by view or representation types
+                    if (!instance.IsDefault)
+                    {
+                        continue;
+                    }
+
+                    if (instance.Representation is SolidRepresentation solidRepresentation)
+                    {
+                        var representationBounds = solidRepresentation.ComputeBounds(this);
+                        if (!representationBounds.Volume.ApproximatelyEquals(0))
+                        {
+                            if (_bounds.Volume.ApproximatelyEquals(0))
+                            {
+                                _bounds = representationBounds;
+                            }
+                            else
+                            {
+                                _bounds.Extend(new[] { representationBounds.Min, representationBounds.Max });
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -163,7 +196,7 @@ namespace Elements
         /// <param name="plane">The plane of intersection.</param>
         /// <param name="intersectionPolygons">A collection of polygons representing
         /// the intersections of the plane and the element's solid geometry.</param>
-        /// <param name="beyondPolygons">A collection of polygons representing coplanar 
+        /// <param name="beyondPolygons">A collection of polygons representing coplanar
         /// faces beyond the plane of intersection.</param>
         /// <param name="lines">A collection of lines representing intersections
         /// of zero-thickness elements with the plane.</param>
@@ -177,78 +210,97 @@ namespace Elements
             intersectionPolygons = new Dictionary<Guid, List<Polygon>>();
             lines = new Dictionary<Guid, List<Line>>();
 
-            if (Representation == null)
+            var graphVertices = new List<Vector3>();
+            var graphEdges = new List<List<(int from, int to, int? tag)>>();
+
+            var intersectionPoints = new List<Vector3>();
+            var beyondPolygonsList = new List<Polygon>();
+
+            if (Representation != null && _csg != null)
+            {
+                // TODO: Can we avoid this copy? It seems to be the most straightforward
+                // way to get the csg transformed for sectioning.
+                var localCsg = _csg.Transform(Transform.ToMatrix4x4());
+                foreach (var csgPoly in localCsg.Polygons)
+                {
+                    var csgNormal = csgPoly.Plane.Normal.ToVector3();
+
+                    if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
+                    {
+                        // TODO: We can cut out transformation if the element's transform is null.
+                        var backPoly = csgPoly.Project(plane);
+                        beyondPolygonsList.Add(backPoly);
+
+                        continue;
+                    }
+
+                    var edgeResults = new List<Vector3>();
+                    for (var i = 0; i < csgPoly.Vertices.Count; i++)
+                    {
+                        var a = csgPoly.Vertices[i].Pos.ToVector3();
+                        var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
+                        if (plane.Intersects((a, b), out var xsect))
+                        {
+                            edgeResults.Add(xsect);
+                        }
+                    }
+
+                    if (edgeResults.Count < 2)
+                    {
+                        continue;
+                    }
+
+                    var d = csgNormal.Cross(plane.Normal).Unitized();
+                    edgeResults.Sort(new DirectionComparer(d));
+                    intersectionPoints.AddRange(edgeResults);
+                }
+            }
+
+            if (RepresentationInstances != null)
+            {
+                foreach (var instance in RepresentationInstances)
+                {
+                    // TODO: filter by view or representation types
+                    if (!instance.IsDefault)
+                    {
+                        continue;
+                    }
+
+                    if (instance.Representation is SolidRepresentation solidRepresentation)
+                    {
+                        intersectionPoints.AddRange(solidRepresentation.CalculateIntersectionPoints(this, plane,
+                            out var beyondPolygonsLocal));
+                        beyondPolygonsList.AddRange(beyondPolygonsLocal);
+                    }
+                }
+            }
+
+            if (!intersectionPoints.Any())
             {
                 return false;
             }
 
-            var graphVertices = new List<Vector3>();
-            var graphEdges = new List<List<(int from, int to, int? tag)>>();
-
-            // TODO: Can we avoid this copy? It seems to be the most straightforward
-            // way to get the csg transformed for sectioning.
-            var localCsg = _csg.Transform(Transform.ToMatrix4x4());
-            foreach (var csgPoly in localCsg.Polygons)
+            // Draw segments through the results and add to the
+            // half edge graph.
+            for (var j = 0; j < intersectionPoints.Count - 1; j += 2)
             {
-                var csgNormal = csgPoly.Plane.Normal.ToVector3();
-
-                if (csgNormal.IsAlmostEqualTo(plane.Normal) && csgPoly.Plane.IsBehind(plane))
-                {
-                    // TODO: We can cut out transformation if the element's transform is null.
-                    var backPoly = csgPoly.Project(plane);
-                    if (!beyondPolygons.ContainsKey(Id))
-                    {
-                        beyondPolygons[Id] = new List<Polygon>() { backPoly };
-                    }
-                    else
-                    {
-                        beyondPolygons[Id].Add(backPoly);
-                    }
-
-                    continue;
-                }
-
-                var edgeResults = new List<Vector3>();
-                for (var i = 0; i < csgPoly.Vertices.Count; i++)
-                {
-                    var a = csgPoly.Vertices[i].Pos.ToVector3();
-                    var b = i == csgPoly.Vertices.Count - 1 ? csgPoly.Vertices[0].Pos.ToVector3() : csgPoly.Vertices[i + 1].Pos.ToVector3();
-                    if (plane.Intersects((a, b), out var xsect))
-                    {
-                        edgeResults.Add(xsect);
-                    }
-                }
-
-                if (edgeResults.Count < 2)
+                // Don't create zero-length edges.
+                if (intersectionPoints[j].IsAlmostEqualTo(intersectionPoints[j + 1]))
                 {
                     continue;
                 }
 
-                var d = csgNormal.Cross(plane.Normal).Unitized();
-                edgeResults.Sort(new DirectionComparer(d));
-
-                // Draw segments through the results and add to the 
-                // half edge graph.
-                for (var j = 0; j < edgeResults.Count - 1; j += 2)
+                var a = Solid.FindOrCreateGraphVertex(intersectionPoints[j], graphVertices, graphEdges);
+                var b = Solid.FindOrCreateGraphVertex(intersectionPoints[j + 1], graphVertices, graphEdges);
+                var e1 = (a, b, 0);
+                var e2 = (b, a, 0);
+                if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
                 {
-                    // Don't create zero-length edges.
-                    if (edgeResults[j].IsAlmostEqualTo(edgeResults[j + 1]))
-                    {
-                        continue;
-                    }
-
-                    var a = Solid.FindOrCreateGraphVertex(edgeResults[j], graphVertices, graphEdges);
-                    var b = Solid.FindOrCreateGraphVertex(edgeResults[j + 1], graphVertices, graphEdges);
-                    var e1 = (a, b, 0);
-                    var e2 = (b, a, 0);
-                    if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        graphEdges[a].Add(e1);
-                    }
+                    continue;
+                }
+                else
+                {
+                    graphEdges[a].Add(e1);
                 }
             }
 
@@ -257,6 +309,8 @@ namespace Elements
                 Vertices = graphVertices,
                 EdgesPerVertex = graphEdges
             };
+
+            beyondPolygons[Id] = beyondPolygonsList;
 
             try
             {
@@ -321,80 +375,13 @@ namespace Elements
                 return null;
             }
 
-            // To properly compute csgs, all solid operation csgs need
-            // to be transformed into their final position. Then the csgs
-            // can be computed and by default the final csg will have the inverse of the
-            // geometric element's transform applied to "reset" it.
-            // The transforms applied to each node in the glTF will then
-            // ensure that the elements are correctly transformed.
-            Csg.Solid csg = new Csg.Solid();
-
-            var solids = new List<Csg.Solid>();
-            var voids = new List<Csg.Solid>();
-
-            foreach (var op in Representation.SolidOperations)
-            {
-                if (op.IsVoid)
-                {
-                    voids.Add(TransformedSolidOperation(op));
-                }
-                else
-                {
-                    solids.Add(TransformedSolidOperation(op));
-                }
-            }
-
-            if (this is IHasOpenings openingContainer)
-            {
-                foreach (var opening in openingContainer.Openings)
-                {
-                    foreach (var op in opening.Representation.SolidOperations)
-                    {
-                        if (op.IsVoid)
-                        {
-                            voids.Add(TransformedSolidOperation(op, opening.Transform));
-                        }
-                    }
-                }
-            }
-
-            var solidItems = solids.ToArray();
-            var voidItems = voids.ToArray();
-
-            // Don't try CSG booleans if we only have one one solid.
-            if (solids.Count() == 1)
-            {
-                csg = solids.First();
-            }
-            else if (solids.Count() > 0)
-            {
-                csg = csg.Union(solidItems);
-            }
-
-
-            if (voids.Count() > 0)
-            {
-                csg = csg.Subtract(voidItems);
-            }
-
-            if (Transform == null || transformed)
-            {
-                return csg;
-            }
-            else
-            {
-                var inverse = new Transform(Transform);
-                inverse.Invert();
-
-                csg = csg.Transform(inverse.ToMatrix4x4());
-                return csg;
-            }
+            return SolidOperationUtils.GetFinalCsgFromSolids(Representation.SolidOperations, this, transformed);
         }
 
         internal Csg.Solid[] GetCsgSolids(bool transformed = false)
         {
             var solids = Representation.SolidOperations.Where(op => op.IsVoid == false)
-                                                       .Select(op => TransformedSolidOperation(op))
+                                                       .Select(op => SolidOperationUtils.TransformedSolidOperation(op, this))
                                                        .ToArray();
             if (Transform == null || transformed)
             {
@@ -406,28 +393,6 @@ namespace Elements
                 inverse.Invert();
                 return solids.Select(s => s.Transform(inverse.ToMatrix4x4())).ToArray();
             }
-        }
-
-        private Csg.Solid TransformedSolidOperation(Geometry.Solids.SolidOperation op, Transform addTransform = null)
-        {
-            if (Transform == null)
-            {
-                return op._solid.ToCsg();
-            }
-
-            // Transform the solid operatioon by the the local transform AND the
-            // element's transform, or just by the element's transform.
-            var transformedOp = op.LocalTransform != null
-                        ? op._solid.ToCsg().Transform(Transform.Concatenated(op.LocalTransform).ToMatrix4x4())
-                        : op._solid.ToCsg().Transform(Transform.ToMatrix4x4());
-            if (addTransform == null)
-            {
-                return transformedOp;
-            }
-
-            // If an addition transform was proovided, don't forget
-            // to apply that as well.
-            return transformedOp.Transform(addTransform.ToMatrix4x4());
         }
 
         /// <summary>
