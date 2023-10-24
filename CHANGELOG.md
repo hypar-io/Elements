@@ -49,6 +49,7 @@
 - `Profile.ThickenedEdgePolygons`
 - `Elements.MEP`
 - `GeometricElement.RepresentationInstances`
+- `Elements.Door`
 
 ### Fixed
 
