@@ -123,15 +123,16 @@ namespace Elements.Serialization.IFC.IFCToHypar
 
         internal static ICurve ToCurve(this IfcParameterizedProfileDef profile)
         {
-            if (profile is IfcRectangleProfileDef rect)
+            var transform = new Transform(profile.Position.Location.ToVector3());
+            if (profile is IfcRectangleProfileDef ifcRectangle)
             {
-                var p = Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
-                var t = new Transform(rect.Position.Location.ToVector3());
-                return p.Transformed(t);
+                var rectangle = Polygon.Rectangle((IfcLengthMeasure)ifcRectangle.XDim, (IfcLengthMeasure)ifcRectangle.YDim);
+                return rectangle.Transformed(transform);
             }
-            else if (profile is IfcCircleProfileDef circle)
+            else if (profile is IfcCircleProfileDef ifcCircle)
             {
-                return new Circle((IfcLengthMeasure)circle.Radius);
+                var circle = new Circle((IfcLengthMeasure) ifcCircle.Radius);
+                return circle.Transformed(transform);
             }
             else
             {
@@ -196,22 +197,24 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return null;
         }
 
-        internal static Profile ToProfile(this IfcProfileDef profile)
+        internal static Profile ToProfile(this IfcProfileDef ifcProfile)
         {
             Polygon outer = null;
             List<Polygon> inner = new List<Polygon>();
 
-            if (profile is IfcRectangleProfileDef rect)
+            if (ifcProfile is IfcRectangleProfileDef ifcRectangle)
             {
-                var p = Polygon.Rectangle((IfcLengthMeasure)rect.XDim, (IfcLengthMeasure)rect.YDim);
-                var t = new Transform(rect.Position.Location.ToVector3());
-                outer = (Polygon)p.Transformed(t);
+                var rectangle = Polygon.Rectangle((IfcLengthMeasure)ifcRectangle.XDim, (IfcLengthMeasure)ifcRectangle.YDim);
+                var transform = new Transform(ifcRectangle.Position.Location.ToVector3());
+                outer = (Polygon)rectangle.Transformed(transform);
             }
-            else if (profile is IfcCircleProfileDef circle)
+            else if (ifcProfile is IfcCircleProfileDef ifcCircle)
             {
-                outer = new Circle((IfcLengthMeasure)circle.Radius).ToPolygon();
+                var circle = new Circle((IfcLengthMeasure)ifcCircle.Radius).ToPolygon();
+                var transform = new Transform(ifcCircle.Position.Location.ToVector3());
+                outer = (Polygon)circle.Transformed(transform);
             }
-            else if (profile is IfcArbitraryClosedProfileDef closedProfile)
+            else if (ifcProfile is IfcArbitraryClosedProfileDef closedProfile)
             {
                 var outerCurve = closedProfile.OuterCurve.ToCurve(true);
                 if (outerCurve is Polygon pc)
@@ -223,9 +226,9 @@ namespace Elements.Serialization.IFC.IFCToHypar
                     outer = ipc.ToPolygon();
                 }
 
-                if (profile is IfcArbitraryProfileDefWithVoids)
+                if (ifcProfile is IfcArbitraryProfileDefWithVoids)
                 {
-                    var voidProfile = (IfcArbitraryProfileDefWithVoids)profile;
+                    var voidProfile = (IfcArbitraryProfileDefWithVoids)ifcProfile;
                     inner.AddRange(voidProfile.InnerCurves.Select(c =>
                     {
                         var elCurve = c.ToCurve(true);
@@ -243,11 +246,11 @@ namespace Elements.Serialization.IFC.IFCToHypar
             }
             else
             {
-                throw new Exception($"The profile type, {profile.GetType().Name}, is not supported.");
+                throw new Exception($"The profile type, {ifcProfile.GetType().Name}, is not supported.");
             }
 
             // var name = profile.ProfileName == null ? null : profile.ProfileName;
-            var newProfile = new Profile(outer, inner, profile.Id, string.Empty);
+            var newProfile = new Profile(outer, inner, ifcProfile.Id, string.Empty);
             return newProfile;
         }
 
