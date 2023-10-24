@@ -95,27 +95,20 @@ namespace Elements.Utilities
 
             var solidItems = solids.ToArray();
             var voidItems = voids.ToArray();
-
-            if (voids.Count == 1 && solids.Count == 0)
+            
+            // Don't try CSG booleans if we only have one solid.
+            if (solids.Count() == 1)
             {
-                csg = voids.First();
+                csg = solids.First();
             }
-            else
+            else if (solids.Count() > 0)
             {
-                // Don't try CSG booleans if we only have one solid.
-                if (solids.Count() == 1)
-                {
-                    csg = solids.First();
-                }
-                else if (solids.Count() > 0)
-                {
-                    csg = csg.Union(solidItems);
-                }
+                csg = csg.Union(solidItems);
+            }
 
-                if (voids.Count() > 0)
-                {
-                    csg = csg.Subtract(voidItems);
-                }
+            if (voids.Count() > 0)
+            {
+                csg = csg.Subtract(voidItems);
             }
 
             if (element.Transform == null || transformed)
