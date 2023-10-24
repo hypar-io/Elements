@@ -116,7 +116,6 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 catch (Exception ex)
                 {
                     _constructionErrors.Add(ex.Message);
-                    continue;
                 }
             }
 
@@ -189,9 +188,9 @@ namespace Elements.Serialization.IFC.IFCToHypar
             foreach (var elementWithOpenings in elementsWithOpenings)
             {
                 var ifcElement = _elementToIfcProduct[elementWithOpenings];
-                var ifcOpeningElements = ifcOpenings.Where(v => v.RelatingBuildingElement == ifcElement)
-                    .Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>().ToList();
-                var openings = ifcOpeningElements.SelectMany(io => io.ToOpenings()).ToList();
+                var openings = ifcOpenings.Where(v => v.RelatingBuildingElement == ifcElement)
+                    .Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()
+                    .SelectMany(io => io.ToOpenings());
 
                 var openingsOwner = (IHasOpenings) elementWithOpenings;
                 openingsOwner.Openings.AddRange(openings);
