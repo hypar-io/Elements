@@ -54,9 +54,9 @@ namespace Elements.Serialization.IFC.IFCToHypar
             var relativePlacement = ((IfcLocalPlacement)opening.ObjectPlacement).RelativePlacement.ToTransform();
             var resultOpenings = new List<Opening>();
 
-            var extrudes = opening.RepresentationsOfType<IfcExtrudedAreaSolid>().ToList();
+            var extrudes = opening.RepresentationsOfType<IfcExtrudedAreaSolid>();
 
-            if (extrudes?.Count == 0)
+            if (extrudes is null)
             {
                 return resultOpenings;
             }
