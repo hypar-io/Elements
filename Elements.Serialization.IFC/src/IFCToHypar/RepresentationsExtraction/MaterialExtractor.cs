@@ -69,8 +69,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
                                 var color = rendering.SurfaceColour.ToColor(1.0 - transparency);
                                 var name = surfaceStyle.Name;
 
-                                Material material;
-                                if (!MaterialByName.ContainsKey(name))
+                                if (!MaterialByName.TryGetValue(name, out var material))
                                 {
                                     material = new Material(color,
                                                             0.4,
@@ -88,10 +87,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
                                                             surfaceStyle.Name);
                                     MaterialByName.Add(material.Name, material);
                                 }
-                                else
-                                {
-                                    material = MaterialByName[name];
-                                }
 
                                 MaterialByGuid.Add(item.Id, material);
                             }
@@ -107,7 +102,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         /// <param name="repItem">A representation item, from which the Material will be extracted.</param>
         public Material ExtractMaterial(IfcRepresentationItem repItem)
         {
-            return MaterialByGuid.ContainsKey(repItem.Id) ? MaterialByGuid[repItem.Id] : null;
+            MaterialByGuid.TryGetValue(repItem.Id, out var extractedMaterial);
+            return extractedMaterial;
         }
     }
 }

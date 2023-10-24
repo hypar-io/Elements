@@ -146,12 +146,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 // TODO: Handle IfcMappedItem
                 // - Idea: Make Representations an Element, so that they can be shared.
                 // - Idea: Make PropertySet an Element. PropertySets can store type properties.
-                GeometricElement definition;
-                if (_elementDefinitions.ContainsKey(repData.MappingInfo.MappingId))
-                {
-                    definition = _elementDefinitions[repData.MappingInfo.MappingId];
-                }
-                else
+                if (!_elementDefinitions.TryGetValue(repData.MappingInfo.MappingId, out var definition))
                 {
                     definition = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
 

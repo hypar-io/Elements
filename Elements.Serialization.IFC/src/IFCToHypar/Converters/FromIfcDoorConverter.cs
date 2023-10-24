@@ -63,7 +63,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             var ifcWall = walls.First();
             var matchingWalls = allWalls.Where(w => w.Id.Equals(IfcGuid.FromIfcGUID(ifcWall.GlobalId)));
 
-            return matchingWalls.Any() ? matchingWalls.First() : null;
+            return matchingWalls.FirstOrDefault();
         }
 
         public bool CanConvert(IfcProduct ifcProduct)

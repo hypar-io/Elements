@@ -38,7 +38,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return result;
             }
 
-            var solid = repData.SolidOperations.First()?.Solid;
+            var solid = repData.SolidOperations.FirstOrDefault()?.Solid;
 
             if (solid == null)
             {
