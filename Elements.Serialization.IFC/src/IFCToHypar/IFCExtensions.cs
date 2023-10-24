@@ -337,16 +337,22 @@ namespace Elements.Serialization.IFC.IFCToHypar
             return start.Equals(end);
         }
 
-        internal static bool Equals(this IfcCartesianPoint point, IfcCartesianPoint other)
+        internal static bool Equals(this IfcCartesianPoint point, IfcCartesianPoint other, double tolerance = Vector3.EPSILON)
         {
-            for (var i = 0; i < point.Coordinates.Count; i++)
+            if (point.Coordinates != other.Coordinates)
             {
-                if (point.Coordinates[i] != other.Coordinates[i])
-                {
-                    return false;
-                }
+                return false;
             }
-            return true;
+
+            double distanceSquared = 0.0;
+
+            for (int i = 0; i < point.Coordinates.Count; i++)
+            {
+                var dif = point.Coordinates[i] - other.Coordinates[i];
+                distanceSquared += dif * dif;
+            }
+
+            return distanceSquared < tolerance * tolerance;
         }
         internal static Transform ToTransform(this IfcAxis2Placement3D cs)
         {
