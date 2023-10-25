@@ -40,7 +40,9 @@ namespace Elements
             polygon = polygon.TransformedPolygon(new Transform().Rotated(Vector3.ZAxis, 25));
 
             var clipperPath = polygon.ToClipperPath(tolerance);
-            var changedPolygon = clipperPath.ToPolygon(tolerance);
+            var convertedPolygons = clipperPath.ToPolygon(tolerance);
+            Assert.Single(convertedPolygons);
+            var changedPolygon = convertedPolygons[0];
             Assert.Equal(polygon.Vertices.Count, changedPolygon.Vertices.Count);
 
             for (int i = 0; i < polygon.Vertices.Count; i++)

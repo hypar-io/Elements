@@ -1015,7 +1015,7 @@ namespace Elements.Geometry
         /// <param name="wrap">Whether or not to assume a closed shape like a polygon. If true, the last vertex will be compared to the first, and deleted if identical.</param>
         /// <param name="tolerance">An optional distance tolerance for the comparison.</param>
         /// <returns></returns>
-        internal static IList<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false, double tolerance = Vector3.EPSILON)
+        internal static List<Vector3> RemoveSequentialDuplicates(IList<Vector3> vertices, bool wrap = false, double tolerance = Vector3.EPSILON)
         {
             List<Vector3> newList = new List<Vector3> { vertices[0] };
             for (int i = 1; i < vertices.Count; i++)
@@ -1044,22 +1044,129 @@ namespace Elements.Geometry
         internal static List<Vector3> AttemptPostClipperCleanup(IList<Vector3> vertices)
         {
             var deduplicated = RemoveSequentialDuplicates(vertices, true, Vector3.EPSILON * 2);
-            List<Vector3> newList = new List<Vector3> { };
-            for (int i = 0; i < deduplicated.Count; i++)
-            {
-                var prevVertex = deduplicated[(i - 1 + deduplicated.Count) % deduplicated.Count];
-                var currVertex = deduplicated[i];
-                var nextVertex = deduplicated[(i + 1) % deduplicated.Count];
-                var prevToCurr = (currVertex - prevVertex).Unitized();
-                var currToNext = (nextVertex - currVertex).Unitized();
-                if (prevToCurr.Dot(currToNext) < -0.999)
-                {
-                    continue;
-                }
-                newList.Add(currVertex);
-            }
-            return newList;
+            DeleteVerticesForOverlappingEdges(deduplicated, 0.001);
+            return deduplicated;
+        }
 
+        /// <summary>
+        /// Deletes Vertices that are out on overlapping Edges
+        /// D__________C
+        ///  |         |
+        ///  |         |
+        /// E|_________|B_____A
+        /// Vertex A will be deleted
+        /// </summary>
+        internal static void DeleteVerticesForOverlappingEdges(IList<Vector3> vertices, double tolerance = Vector3.EPSILON)
+        {
+            if (vertices.Count < 4)
+            {
+                return;
+            }
+
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                var a = vertices[i];
+                var b = vertices[(i + 1) % vertices.Count];
+                var c = vertices[(i + 2) % vertices.Count];
+                bool invalid = (a - b).Unitized().Dot((b - c).Unitized()) < (tolerance - 1);
+                if (invalid)
+                {
+                    vertices.Remove(b);
+                    i--;
+
+                    if (a.IsAlmostEqualTo(c))
+                    {
+                        vertices.Remove(c);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// A Polygon can't have self intersections, but points can still lay on other lines.
+        /// This leads to hidden voids embedded in the perimeter.
+        /// This function checks if any points are on another line of the loop and splits into distinct loops if found.
+        /// </summary>
+        /// <returns>List of simple polygons</returns>
+        internal static List<List<Vector3>> SplitInternalLoops(IList<Vector3> vertices)
+        {
+            List<List<Vector3>> polygonPresets = new List<List<Vector3>>();
+
+            //Store accumulated vertices and lines between them.
+            List<Vector3> simpleLoop = new List<Vector3>();
+            List<Line> openLoop = new List<Line>();
+
+            //Check if a point lay on active open loop lines.
+            foreach (var v in vertices)
+            {
+                bool intersectionFound = false;
+                for (int i = 0; i < openLoop.Count; i++)
+                {
+                    if (openLoop[i].PointOnLine(v) && v.DistanceTo(openLoop[i]) < Vector3.EPSILON)
+                    {
+                        //Remove points and lines from intersection points to this.
+                        var loopVertices = simpleLoop.Skip(i + 1).ToList();
+                        simpleLoop.RemoveRange(i + 1, loopVertices.Count);
+                        openLoop.RemoveRange(i + 1, loopVertices.Count - 1);
+                        //Cut intersected line and add this point to open loop.
+                        simpleLoop.Add(v);
+                        openLoop[i] = new Line(openLoop[i].Start, v);
+
+                        //Loop can possibly be just two points connected forth and back.
+                        //Filter it early.
+                        loopVertices.Add(v);
+                        if (loopVertices.Count > 2)
+                        {
+                            polygonPresets.Add(loopVertices);
+                        }
+                        intersectionFound = true;
+                        break;
+                    }
+                }
+
+                //Then check if line (this plus last points) intersects with any accumulated points (going backward)
+                if (!intersectionFound)
+                {
+                    Line segment = simpleLoop.Any() ? new Line(simpleLoop.Last(), v) : null;
+                    for (int i = simpleLoop.Count - 1; i >= 0; i--)
+                    {
+                        //Last point is already part of the line.
+                        if (i == simpleLoop.Count)
+                        {
+                            continue;
+                        }
+
+                        if (segment.PointOnLine(simpleLoop[i]) && simpleLoop[i].DistanceTo(segment) < Vector3.EPSILON)
+                        {
+                            var loop = simpleLoop.Skip(i).ToList();
+                            segment = new Line(simpleLoop[i], segment.End);
+
+                            simpleLoop.RemoveRange(i + 1, loop.Count - 1);
+                            openLoop.RemoveRange(i, loop.Count - 1);
+
+                            if (loop.Count > 2)
+                            {
+                                polygonPresets.Add(loop);
+                            }
+                        }
+                    }
+
+                    //If no intersection found just add point and line to open loop.
+                    simpleLoop.Add(v);
+                    if (segment != null)
+                    {
+                        openLoop.Add(segment);
+                    }
+                }
+            }
+
+            //Leftover points form last loop if it has enough points.
+            if (simpleLoop.Count > 2)
+            {
+                polygonPresets.Add(simpleLoop);
+            }
+
+            return polygonPresets;
         }
 
         /// <summary>

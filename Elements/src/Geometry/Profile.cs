@@ -248,9 +248,14 @@ namespace Elements.Geometry
             {
                 clipper.AddPaths(profile.Voids.Select(v => v.ToClipperPath(tolerance)).ToList(), PolyType.ptClip, true);
             }
-            var solution = new List<List<ClipperLib.IntPoint>>();
+            PolyTree solution = new PolyTree();
             clipper.Execute(ClipType.ctUnion, solution);
-            return new Profile(solution.Select(s => s.ToPolygon(tolerance)).ToList());
+            var profiles = solution.ToProfiles(tolerance);
+            if (profiles.Count != 1)
+            {
+                return null;
+            }
+            return profiles.First();
         }
 
         /// <summary>
@@ -316,34 +321,6 @@ namespace Elements.Geometry
         /// Default constructor for profile.
         /// </summary>
         protected Profile(string name) : base(Guid.NewGuid(), name) { }
-
-        /// <summary>
-        ///  Conduct a clip operation on this profile.
-        /// </summary>
-        internal void Clip(IEnumerable<Profile> additionalHoles = null, double tolerance = Vector3.EPSILON)
-        {
-            var clipper = new ClipperLib.Clipper();
-            clipper.AddPath(this.Perimeter.ToClipperPath(tolerance), ClipperLib.PolyType.ptSubject, true);
-            if (this.Voids != null)
-            {
-                clipper.AddPaths(this.Voids.Select(p => p.ToClipperPath(tolerance)).ToList(), ClipperLib.PolyType.ptClip, true);
-            }
-            if (additionalHoles != null)
-            {
-                clipper.AddPaths(additionalHoles.Select(h => h.Perimeter.ToClipperPath(tolerance)).ToList(), ClipperLib.PolyType.ptClip, true);
-            }
-            var solution = new List<List<ClipperLib.IntPoint>>();
-            var result = clipper.Execute(ClipperLib.ClipType.ctDifference, solution, ClipperLib.PolyFillType.pftEvenOdd);
-
-            // Completely disjoint polygons like a circular pipe
-            // profile will result in an empty solution.
-            if (solution.Count > 0)
-            {
-                var polys = solution.Select(s => s.ToPolygon(tolerance)).ToArray();
-                this.Perimeter = polys[0];
-                this.Voids = polys.Skip(1).ToArray();
-            }
-        }
 
         /// <summary>
         /// Ensure that voids run in an opposite winding direction to the perimeter of the profile.
@@ -781,16 +758,13 @@ namespace Elements.Geometry
 
         internal static List<Profile> ToProfile(this PolyNode node, double tolerance = Vector3.EPSILON)
         {
-            var combinedPerimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
-            if (combinedPerimeter == null)
+            var splitPerimeter = PolygonExtensions.ToPolygon(node.Contour, tolerance);
+            if (!splitPerimeter.Any())
             {
                 return null;
             }
 
-            //Single perimeter can be split not only into one simple perimeter and several voids,
-            //but also as several independent simple perimeters.
             var simpleProfiles = new List<(Polygon Perimeter, List<Polygon> Voids)>();
-            var splitPerimeter = combinedPerimeter.SplitInternalLoops();
 
             if (splitPerimeter.Count > 1)
             {
@@ -831,10 +805,9 @@ namespace Elements.Geometry
                 {
                     //Voids produced by boolean can still be split but it can't form another perimeter,
                     //because this would lead to intersecting the perimeter.
-                    var voidCrv = PolygonExtensions.ToPolygon(child.Contour, tolerance);
-                    if (voidCrv != null)
+                    var simpleViods = PolygonExtensions.ToPolygon(child.Contour, tolerance);
+                    if (simpleViods.Any())
                     {
-                        var simpleViods = voidCrv.SplitInternalLoops();
                         if (simpleProfiles.Count == 1)
                         {
                             simpleProfiles[0].Voids.AddRange(simpleViods);
@@ -862,7 +835,7 @@ namespace Elements.Geometry
             {
                 foreach (var p in simpleProfiles)
                 {
-                    profiles.Add(new Profile(p.Perimeter, p.Voids, Guid.NewGuid(), null));
+                    profiles.Add(new Profile(p.Perimeter, p.Voids));
                 }
             }
             catch
