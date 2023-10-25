@@ -57,6 +57,7 @@
 - `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- Fix exception in `Polygon.Difference` and `Profile.Difference` when a inner loop shares edges with outer loop.
 
 
 ### Changed
