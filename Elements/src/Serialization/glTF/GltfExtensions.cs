@@ -1292,7 +1292,7 @@ namespace Elements.Serialization.glTF
                         var elementNodeId = NodeUtilities.AddInstanceNode(nodes, element.Transform, element.Id);
                         foreach (var representation in element.RepresentationInstances)
                         {
-                            // get the unique id that contains representation Id and opening Ids 
+                            // get the unique id that contains representation Id and opening Ids
                             int combinedId = representation.GetHashCode(element);
 
                             if (representationsMap.TryGetValue(combinedId, out var mesh))
@@ -1302,6 +1302,10 @@ namespace Elements.Serialization.glTF
                                 {
                                     NodeUtilities.SetRepresentationInfo(nodes[index], representation);
                                     NodeUtilities.SetElementInfo(nodes[index], element.Id);
+                                    foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element))
+                                    {
+                                        AddExtension(gltf, nodes[index], nodeExtension.Name, nodeExtension.Attributes);
+                                    }
                                 }
                             }
                             else if (representation.Representation.TryToGraphicsBuffers(geometricElement, out var graphicsBuffers,
@@ -1327,6 +1331,10 @@ namespace Elements.Serialization.glTF
                                     {
                                         NodeUtilities.SetRepresentationInfo(nodes[index], representation);
                                         NodeUtilities.SetElementInfo(nodes[index], element.Id);
+                                        foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element))
+                                        {
+                                            AddExtension(gltf, nodes[index], nodeExtension.Name, nodeExtension.Attributes);
+                                        }
                                     }
                                 }
                             }
