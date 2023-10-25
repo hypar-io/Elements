@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Elements.Spatial;
 using System.IO;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace Elements.Tests
 {
@@ -441,6 +442,25 @@ namespace Elements.Tests
             Model.AddElements(secondSet.SelectMany(p => p.ToModelCurves(material: BuiltInMaterials.YAxis)));
             Model.AddElements(diff.SelectMany(p => p.ToModelCurves(new Transform(0, 0, 0.4), BuiltInMaterials.ZAxis)));
 
+        }
+
+        [Fact]
+        public void DifferenceProduceTwoResultsInOneLoop()
+        {
+            this.Name = nameof(DifferenceProduceTwoResultsInOneLoop);
+            var differenceSet = JsonConvert.DeserializeObject<List<Polygon>>("[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":55.111379557489,\"Y\":-41.62452252843075,\"Z\":0.0},{\"X\":40.31819221050546,\"Y\":-56.41770987541429,\"Z\":0.0},{\"X\":81.7767669252342,\"Y\":-111.06787576729614,\"Z\":0.0},{\"X\":98.28933388079639,\"Y\":-98.54115275215467,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":132.15718134116867,\"Y\":35.421279255248876,\"Z\":0.0},{\"X\":117.50140335158372,\"Y\":50.07705724483371,\"Z\":0.0},{\"X\":42.46720873704877,\"Y\":-24.95713736970123,\"Z\":0.0},{\"X\":55.111379557489,\"Y\":-41.62452252843075,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":42.46720873704877,\"Y\":-24.95713736970123,\"Z\":0.0},{\"X\":27.674021390065235,\"Y\":-39.750324716684744,\"Z\":0.0},{\"X\":40.31819221050546,\"Y\":-56.41770987541429,\"Z\":0.0},{\"X\":55.111379557489,\"Y\":-41.62452252843075,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":206.5874534112776,\"Y\":-39.008992814859354,\"Z\":0.0},{\"X\":221.2432314008624,\"Y\":-24.35321482527442,\"Z\":0.0},{\"X\":146.8129593307535,\"Y\":50.07705724483374,\"Z\":0.0},{\"X\":132.15718134116867,\"Y\":35.421279255248876,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":146.8129593307535,\"Y\":50.07705724483374,\"Z\":0.0},{\"X\":132.15718134116858,\"Y\":64.73283523441854,\"Z\":0.0},{\"X\":117.50140335158372,\"Y\":50.07705724483371,\"Z\":0.0},{\"X\":132.15718134116867,\"Y\":35.421279255248876,\"Z\":0.0}]}]");
+            var basePolygon = JsonConvert.DeserializeObject<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":91.00437787098954,\"Y\":-104.0676482000112,\"Z\":0.0},{\"X\":43.00666271891972,\"Y\":-40.7976705526605,\"Z\":0.0},{\"X\":132.1571813411686,\"Y\":48.35284806958845,\"Z\":0.0},{\"X\":213.0532378184474,\"Y\":-32.54320840768953,\"Z\":0.0},{\"X\":214.77744699369268,\"Y\":-30.818999232444238,\"Z\":0.0},{\"X\":132.1571813411686,\"Y\":51.801266420079,\"Z\":0.0},{\"X\":39.77873822863455,\"Y\":-40.577176692455055,\"Z\":0.0},{\"X\":89.06172293504105,\"Y\":-105.54138031943961,\"Z\":0.0}]}");
+
+            Model.AddElements(differenceSet.Select(p => new ModelCurve(p, material: BuiltInMaterials.XAxis)));
+            Model.AddElements(new ModelCurve(basePolygon, material: BuiltInMaterials.YAxis));
+
+            var polygonDiff = Polygon.Difference(differenceSet, new[] { basePolygon });
+            Assert.NotEmpty(polygonDiff);
+
+            var profileDiff = Geometry.Profile.Difference(differenceSet.Select(x => new Profile(x)), 
+                                                          new[] { new Profile(basePolygon) });
+            Assert.Equal(2, profileDiff.Count());
+            Model.AddElements(profileDiff.SelectMany(p => p.ToModelCurves(new Transform(0, 0, 0.4), BuiltInMaterials.ZAxis)));
         }
 
         [Fact]

@@ -453,12 +453,12 @@ namespace Elements.Geometry
             co.AddPath(path, JoinType.jtMiter, clEndType);
             co.Execute(ref solution, offset * clipperScale);  // important, scale also used here
 
-            var result = new Polygon[solution.Count];
-            for (var i = 0; i < result.Length; i++)
+            var result = new List<Polygon>();
+            foreach (List<IntPoint> s in solution)
             {
-                result[i] = solution[i].ToPolygon(tolerance);
+                result.AddRange(s.ToPolygon(tolerance));
             }
-            return result;
+            return result.ToArray();
         }
 
         /// <summary>

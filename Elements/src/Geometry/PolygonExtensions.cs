@@ -34,7 +34,7 @@ namespace Elements.Geometry
         /// <param name="p"></param>
         /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
         /// <returns></returns>
-        internal static Polygon ToPolygon(this List<IntPoint> p, double tolerance = Vector3.EPSILON)
+        internal static List<Polygon> ToPolygon(this List<IntPoint> p, double tolerance = Vector3.EPSILON)
         {
             var scale = Math.Round(1.0 / tolerance);
             var converted = new Vector3[p.Count];
@@ -43,6 +43,32 @@ namespace Elements.Geometry
                 var v = p[i];
                 converted[i] = new Vector3(v.X / scale, v.Y / scale);
             }
+
+            var polygons = new List<Polygon>();
+            var cleaned = Vector3.RemoveSequentialDuplicates(converted, true);
+            Vector3.DeleteVerticesForOverlappingEdges(cleaned);
+            if (cleaned.Count < 3)
+            {
+                return polygons;
+            }
+
+            //Single perimeter can be split not only into one simple perimeter and several voids,
+            //but also as several independent simple perimeters.
+            var loops = Vector3.SplitInternalLoops(cleaned);
+
+            foreach (var loop in loops)
+            {
+                var polygon = ToPolygon(loop);
+                if (polygon != null)
+                {
+                    polygons.Add(polygon);
+                }
+            }
+            return polygons;
+        }
+
+        private static Polygon ToPolygon(List<Vector3> converted)
+        {
             try
             {
                 return new Polygon(converted);
