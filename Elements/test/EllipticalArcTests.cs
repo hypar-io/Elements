@@ -29,5 +29,15 @@ namespace Elements.Geometry.Tests
             }
             this.Model.AddElement(new ModelCurve(ellipticalArc, BuiltInMaterials.ZAxis));
         }
+
+        [Fact]
+        public void ToPolyline()
+        {
+            var arc = new EllipticalArc(Vector3.Origin, 1, 2, 10, 20);
+            var p = arc.ToPolyline(10);
+            Assert.Equal(10, p.Segments().Length);
+            Assert.Equal(arc.Start, p.Vertices[0]);
+            Assert.Equal(arc.End, p.Vertices[p.Vertices.Count - 1]);
+        }
     }
 }
