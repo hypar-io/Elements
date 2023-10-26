@@ -1080,7 +1080,7 @@ namespace Elements.Serialization.glTF
                     errors.Add(new ElementError(e.Id, ex));
                 }
             }
-            if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0)
+            if (allBuffers.Sum(b => b.Count()) + buffer.Count == 0 && lights.Count == 0 && nodes.Count < 1)
             {
                 return null;
             }
@@ -1311,22 +1311,35 @@ namespace Elements.Serialization.glTF
                             else if (representation.Representation.TryToGraphicsBuffers(geometricElement, out var graphicsBuffers,
                                 out var bufferId, out var mode))
                             {
-                                meshId = AddMesh(bufferId,
-                                            buffer,
-                                            bufferViews,
-                                            accessors,
-                                            materialIndexMap[representation.Material.Id.ToString()],
-                                            graphicsBuffers,
-                                            (MeshPrimitive.ModeEnum)mode,
-                                            meshes);
+                                var addedNodes = new List<int>();
+                                if (graphicsBuffers.Any())
+                                {
+                                    meshId = AddMesh(bufferId,
+                                                buffer,
+                                                bufferViews,
+                                                accessors,
+                                                materialIndexMap[representation.Material.Id.ToString()],
+                                                graphicsBuffers,
+                                                (MeshPrimitive.ModeEnum)mode,
+                                                meshes);
+
+                                    if (meshId != -1)
+                                    {
+                                        var meshIdList = new List<int> { meshId };
+                                        representationsMap.Add(combinedId, meshIdList);
+                                        addedNodes.AddRange(NodeUtilities.AddNodes(nodes, meshIdList, elementNodeId));
+                                    }
+                                }
+                                else
+                                {
+                                    meshId = NodeUtilities.AddEmptyNode(nodes, elementNodeId);
+                                    addedNodes.Add(meshId);
+                                }
 
                                 // If the id == -1, the mesh is malformed.
                                 // It may have no geometry.
                                 if (meshId != -1)
                                 {
-                                    var meshIdList = new List<int> { meshId };
-                                    representationsMap.Add(combinedId, meshIdList);
-                                    var addedNodes = NodeUtilities.AddNodes(nodes, meshIdList, elementNodeId);
                                     foreach (var index in addedNodes)
                                     {
                                         NodeUtilities.SetRepresentationInfo(nodes[index], representation);

@@ -18,26 +18,22 @@ namespace Elements
         /// <summary>The bounding box of the content.</summary>
         public BBox3 BoundingBox { get; set; }
 
-        /// <summary>The scale needed to convert the glb to meters.</summary>
-        public double GlbScaleToMeters { get; set; }
-
-        /// <summary>A vector indicating the direction the source object was originally facing.</summary>
-        public Vector3 SourceDirection { get; set; }
+        /// <summary>
+        /// Initializes a new instance of ContentRepresentation class
+        /// </summary>
+        /// <param name="glbLocation">The URI of the glb for this element.</param>
+        /// <param name="boundingBox">The bounding box of the content.</param>
+        public ContentRepresentation(string glbLocation, BBox3 boundingBox)
+        {
+            GlbLocation = glbLocation;
+            BoundingBox = boundingBox;
+        }
 
         /// <summary>
         /// Initializes a new instance of ContentRepresentation class
         /// </summary>
-        /// <param name="boundingBox">The bounding box of the content.</param>
         /// <param name="glbLocation">The URI of the glb for this element.</param>
-        /// <param name="glbScaleToMeters">The scale needed to convert the glb to meters.</param>
-        /// <param name="sourceDirection">A vector indicating the direction the source object was originally facing.</param>
-        public ContentRepresentation(BBox3 boundingBox, string glbLocation, double glbScaleToMeters, Vector3 sourceDirection)
-        {
-            GlbLocation = glbLocation;
-            BoundingBox = boundingBox;
-            GlbScaleToMeters = glbScaleToMeters;
-            SourceDirection = sourceDirection;
-        }
+        public ContentRepresentation(string glbLocation) : this(glbLocation, default) { }
 
         /// <inheritdoc/>
         public override bool TryToGraphicsBuffers(GeometricElement element, out List<GraphicsBuffers> graphicsBuffers, out string id, out MeshPrimitive.ModeEnum? mode)
@@ -49,14 +45,14 @@ namespace Elements
 
             if (!BoundingBox.IsValid() || BoundingBox.IsDegenerate())
             {
-                return false;
+                return true;
             }
 
             var bottomProfile = new Geometry.Polygon(new List<Vector3>{
-                            new Vector3(BoundingBox.Min.X - 2, BoundingBox.Min.Y, BoundingBox.Min.Z + 3),
-                            new Vector3(BoundingBox.Min.X - 2, BoundingBox.Max.Y, BoundingBox.Min.Z + 3),
-                            new Vector3(BoundingBox.Max.X - 2, BoundingBox.Max.Y, BoundingBox.Min.Z + 3),
-                            new Vector3(BoundingBox.Max.X - 2, BoundingBox.Min.Y, BoundingBox.Min.Z + 3),
+                            new Vector3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z),
+                            new Vector3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z),
+                            new Vector3(BoundingBox.Max.X, BoundingBox.Max.Y, BoundingBox.Min.Z),
+                            new Vector3(BoundingBox.Max.X, BoundingBox.Min.Y, BoundingBox.Min.Z),
                         });
 
             var height = BoundingBox.Max.Z - BoundingBox.Min.Z;
