@@ -699,7 +699,6 @@ namespace Elements.Geometry
         /// This can lead to highly distorted result.</param>
         /// <returns>A polyline.</returns>
         public override Polyline ToPolyline(int divisions = 10)
-        public override Polyline ToPolyline(int divisions = 10)
         {
             //
             if (divisions < _curves.Count)
