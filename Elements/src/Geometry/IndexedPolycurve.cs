@@ -670,7 +670,7 @@ namespace Elements.Geometry
         /// Create a polyline through curves of IndexedPolycurve, interpolating any curves that are not lines.
         /// </summary>
         /// <returns>A polyline.</returns>
-        public virtual Polyline ToPolyline()
+        public override Polyline ToPolyline()
         {
             List<Vector3> vertices = new List<Vector3>();
             foreach (var curve in _curves)
@@ -698,7 +698,7 @@ namespace Elements.Geometry
         /// <param name="divisions">The number of divisions of the curve. 
         /// This can lead to highly distorted result.</param>
         /// <returns>A polyline.</returns>
-        public override Polyline ToPolyline(int divisions = 10)
+        public override Polyline ToPolyline(int divisions)
         {
             //
             if (divisions < _curves.Count)
