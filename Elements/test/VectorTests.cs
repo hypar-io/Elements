@@ -596,6 +596,19 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DistanceToL()
+        {
+            var L = Polygon.L(10, 15, 5);
+            var position = new Vector3(-1, 3);
+            var distance = position.DistanceTo(L.ToPolyline(), out var closestA);
+            var distancePolygon = position.DistanceTo(L, out var closestB);
+            Assert.Equal(1, distance);
+            Assert.Equal(1, distancePolygon);
+            Assert.Equal(new Vector3(0, 3), closestA);
+            Assert.Equal(new Vector3(0, 3), closestB);
+        }
+
+        [Fact]
         public void PointsAreCoplanarWithinTolerance()
         {
             // Test with three points that are collinear.

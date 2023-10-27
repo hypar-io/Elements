@@ -2391,5 +2391,46 @@ namespace Elements.Geometry.Tests
             Assert.Equal((1, 2), frames[3].Origin);
             Assert.True(Vector3.XAxis.IsParallelTo(frames[3].ZAxis));
         }
+
+        [Fact]
+        public void ToPolyline()
+        {
+            var L = Polygon.L(10, 15, 5);
+            var pl = L.ToPolyline();
+            Assert.Equal(L.Vertices.Count + 1, pl.Vertices.Count);
+            for (int i = 0; i < L.Vertices.Count; i++)
+            {
+                Assert.True(L.Vertices[i].IsAlmostEqualTo(pl.Vertices[i]));
+            }
+            Assert.True(pl.Vertices.Last().IsAlmostEqualTo(L.End));
+
+            pl = L.ToPolyline(4);
+            var segments = L.Segments();
+            Assert.Equal(5, pl.Vertices.Count);
+            Assert.True(L.Start.IsAlmostEqualTo(pl.Vertices[0]));
+            Assert.True(segments[1].Mid().IsAlmostEqualTo(pl.Vertices[1]));
+            Assert.True(L.Vertices[3].IsAlmostEqualTo(pl.Vertices[2]));
+            Assert.True(segments[4].Mid().IsAlmostEqualTo(pl.Vertices[3]));
+            Assert.True(L.End.IsAlmostEqualTo(pl.Vertices[4]));
+
+            pl = L.ToPolyline(13);
+            segments = L.Segments();
+            Assert.Equal(pl.Length(), L.Length());
+            Assert.Equal(14, pl.Vertices.Count);
+            Assert.True(L.Start.IsAlmostEqualTo(pl.Vertices[0]));
+            Assert.True(segments[0].PointAtNormalized(1.0 / 3).IsAlmostEqualTo(pl.Vertices[1]));
+            Assert.True(segments[0].PointAtNormalized(2.0 / 3).IsAlmostEqualTo(pl.Vertices[2]));
+            Assert.True(segments[1].Start.IsAlmostEqualTo(pl.Vertices[3]));
+            Assert.True(segments[1].Mid().IsAlmostEqualTo(pl.Vertices[4]));
+            Assert.True(segments[2].Start.IsAlmostEqualTo(pl.Vertices[5]));
+            Assert.True(segments[2].Mid().IsAlmostEqualTo(pl.Vertices[6]));
+            Assert.True(segments[3].Start.IsAlmostEqualTo(pl.Vertices[7]));
+            Assert.True(segments[3].Mid().IsAlmostEqualTo(pl.Vertices[8]));
+            Assert.True(segments[4].Start.IsAlmostEqualTo(pl.Vertices[9]));
+            Assert.True(segments[4].Mid().IsAlmostEqualTo(pl.Vertices[10]));
+            Assert.True(segments[5].Start.IsAlmostEqualTo(pl.Vertices[11]));
+            Assert.True(segments[5].Mid().IsAlmostEqualTo(pl.Vertices[12]));
+            Assert.True(L.End.IsAlmostEqualTo(pl.Vertices[13]));
+        }
     }
 }

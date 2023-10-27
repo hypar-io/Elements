@@ -49,6 +49,7 @@
 - `Profile.ThickenedEdgePolygons`
 - `Elements.MEP`
 - `GeometricElement.RepresentationInstances`
+- Custom implementations of `ToPolyline` for `IndexedPolycurve`, `Polyline` and `Polygon`.
 
 ### Fixed
 
