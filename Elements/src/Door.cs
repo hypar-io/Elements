@@ -34,8 +34,6 @@ namespace Elements
         public Wall Wall { get; private set; }
         /// <summary>Height of a door without a frame.</summary>
         public double ClearHeight { get; private set; }
-        /// <summary>Position where door was placed originally.</summary>
-        public Vector3 OriginalPosition { get; private set; }
         /// <summary>Opening for a door.</summary>
         public Opening Opening { get; private set; }
 
@@ -44,7 +42,6 @@ namespace Elements
         /// </summary>
         /// <param name="wall">The wall the door is attached to.</param>
         /// <param name="wallLine">A center line of a wall that door is attached to.</param>
-        /// <param name="originalPosition">The position where the door was plased originally.</param>
         /// <param name="currentPosition">The current door's position.</param>
         /// <param name="width">The with of a single door.</param>
         /// <param name="height">The door's height.</param>
@@ -59,7 +56,6 @@ namespace Elements
         /// <param name="flip">Is the door flipped?</param>
         public Door(Wall wall,
                     Line wallLine,
-                    Vector3 originalPosition,
                     Vector3 currentPosition,
                     double width,
                     double height,
@@ -76,7 +72,6 @@ namespace Elements
             Wall = wall;
             OpeningType = openingType;
             OpeningSide = openingSide;
-            OriginalPosition = originalPosition;
             ClearWidth = WidthWithoutFrame(width, openingSide);
             ClearHeight = height;
             Material = material ?? DEFAULT_MATERIAL;
@@ -123,7 +118,6 @@ namespace Elements
             Material = material ?? DEFAULT_MATERIAL;
             Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
-            OriginalPosition = Transform.Origin;
             Id = id;
             Name = name;
         }
@@ -161,7 +155,6 @@ namespace Elements
                     bool flip = false)
             : this(wall,
                    wallLine,
-                   wallLine.PointAtNormalized(tPos),
                    wallLine.PointAtNormalized(tPos),
                    width,
                    height,
