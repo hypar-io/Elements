@@ -692,11 +692,13 @@ namespace Elements.Geometry
         /// <summary>
         /// Create a polyline through a set of points along the curve.
         /// End points of curves are added first and then non straight curves are divided uniformly.
-        /// If number of divisions is less than number of curves - points are uniformly distributed though whole domain.
+        /// If number of divisions is less than number of curves - points are uniformly distributed
+        /// though whole domain, deviating heavily from original shape.
         /// </summary>
         /// <param name="divisions">The number of divisions of the curve. 
         /// This can lead to highly distorted result.</param>
         /// <returns>A polyline.</returns>
+        public override Polyline ToPolyline(int divisions = 10)
         public override Polyline ToPolyline(int divisions = 10)
         {
             //
@@ -710,6 +712,8 @@ namespace Elements.Geometry
             var numArcs = _curves.Count(c => !(c is Line));
             if (numArcs > 0)
             {
+                // If polycurve consists of lines and curves - excess divisions are uniformly distributed
+                // among curves as dividing the lines wont add any new details in Polyline.
                 foreach (var curve in _curves)
                 {
                     if (!(curve is Line))
@@ -730,7 +734,7 @@ namespace Elements.Geometry
             }
             else
             {
-                //If polycurve consists only of lines - divisions are distributed uniformly among them.
+                // If polycurve consists only of lines - divisions are distributed uniformly among them.
                 var linesLeft = _curves.Count;
                 foreach (var curve in _curves)
                 {
