@@ -38,51 +38,6 @@ namespace Elements
         public Opening Opening { get; private set; }
 
         /// <summary>
-        /// Create a door that attaches to the closest point on a certain wall.
-        /// </summary>
-        /// <param name="wall">The wall the door is attached to.</param>
-        /// <param name="wallLine">A center line of a wall that door is attached to.</param>
-        /// <param name="currentPosition">The current door's position.</param>
-        /// <param name="width">The with of a single door.</param>
-        /// <param name="height">The door's height.</param>
-        /// <param name="openingSide">The side where the door opens.</param>
-        /// <param name="openingType">The way the door opens.</param>
-        /// <param name="material">The door's material.</param>
-        /// <param name="representation">The door's representation.</param>
-        /// <param name="id">The door's id.</param>
-        /// <param name="name">The door's name.</param>
-        /// <param name="depthFront">The door's opening depth front.</param>
-        /// <param name="depthBack">The door's opening depth back.</param>
-        /// <param name="flip">Is the door flipped?</param>
-        public Door(Wall wall,
-                    Line wallLine,
-                    Vector3 currentPosition,
-                    double width,
-                    double height,
-                    DoorOpeningSide openingSide,
-                    DoorOpeningType openingType,
-                    Material material = null,
-                    Representation representation = null,
-                    Guid id = default,
-                    string name = "Door",
-                    double depthFront = 1,
-                    double depthBack = 1,
-                    bool flip = false)
-        {
-            Wall = wall;
-            OpeningType = openingType;
-            OpeningSide = openingSide;
-            ClearWidth = WidthWithoutFrame(width, openingSide);
-            ClearHeight = height;
-            Material = material ?? DEFAULT_MATERIAL;
-            Transform = GetDoorTransform(currentPosition, wallLine, flip);
-            Representation = representation ?? new Representation(new List<SolidOperation>() { });
-            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
-            Id = id;
-            Name = name;
-        }
-
-        /// <summary>
         /// Create a door that is not attached to a wall.
         /// </summary>
         /// <param name="width">The with of a single door.</param>
@@ -153,21 +108,18 @@ namespace Elements
                     double depthFront = 1,
                     double depthBack = 1,
                     bool flip = false)
-            : this(wall,
-                   wallLine,
-                   wallLine.PointAtNormalized(tPos),
-                   width,
-                   height,
-                   openingSide,
-                   openingType,
-                   material,
-                   representation,
-                   id,
-                   name,
-                   depthFront,
-                   depthBack,
-                   flip)
         {
+            Wall = wall;
+            OpeningType = openingType;
+            OpeningSide = openingSide;
+            ClearWidth = WidthWithoutFrame(width, openingSide);
+            ClearHeight = height;
+            Material = material ?? DEFAULT_MATERIAL;
+            Transform = GetDoorTransform(wallLine.PointAtNormalized(tPos), wallLine, flip);
+            Representation = representation ?? new Representation(new List<SolidOperation>() { });
+            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
+            Id = id;
+            Name = name;
         }
 
         private Transform GetOpeningTransform()
