@@ -59,6 +59,7 @@
 - `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
+- `Vector3.DistanceToDistanceTo(Polygon polygon, out Vector3 closestPoint)` now also checks the last edge of the polygon.
 
 
 ### Changed

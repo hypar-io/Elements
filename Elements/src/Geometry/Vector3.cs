@@ -523,7 +523,7 @@ namespace Elements.Geometry
             }
             else
             {
-                return this.DistanceTo(new Polyline(polygon.Vertices), out closestPoint);
+                return this.DistanceTo(polygon as Polyline, out closestPoint);
             }
         }
 
