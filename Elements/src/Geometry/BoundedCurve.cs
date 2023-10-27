@@ -85,7 +85,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a polyline through a set of points along the curve.
+        /// Create a polyline through a set of 10 segments along the curve.
         /// </summary>
         /// <returns>A polyline.</returns>
         public virtual Polyline ToPolyline()
