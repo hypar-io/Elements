@@ -85,11 +85,20 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a polyline through a set of 10 segments along the curve.
+        /// </summary>
+        /// <returns>A polyline.</returns>
+        public virtual Polyline ToPolyline()
+        {
+            return ToPolyline(10);
+        }
+
+        /// <summary>
         /// Create a polyline through a set of points along the curve.
         /// </summary>
         /// <param name="divisions">The number of divisions of the curve.</param>
         /// <returns>A polyline.</returns>
-        public virtual Polyline ToPolyline(int divisions = 10)
+        public virtual Polyline ToPolyline(int divisions)
         {
             var pts = new List<Vector3>(divisions + 1);
             var step = this.Domain.Length / divisions;

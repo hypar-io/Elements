@@ -1824,6 +1824,18 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a polyline through vertices of a polygon.
+        /// </summary>
+        /// <returns>A polyline.</returns>
+        public override Polyline ToPolyline()
+        {
+            var vertices = new List<Vector3>(Vertices.Count + 1);
+            vertices.AddRange(Vertices);
+            vertices.Add(End);
+            return new Polyline(vertices);
+        }
+
+        /// <summary>
         /// Reverse the direction of a polygon.
         /// </summary>
         /// <returns>Returns a new Polygon whose vertices are reversed.</returns>

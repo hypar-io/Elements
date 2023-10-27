@@ -85,6 +85,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a copy of a polyline.
+        /// </summary>
+        /// <returns>A polyline.</returns>
+        public override Polyline ToPolyline()
+        {
+            return new Polyline(Vertices.ToList());
+        }
+
+        /// <summary>
         /// Get the transform at the specified parameter along the polyline.
         /// </summary>
         /// <param name="u">The parameter on the polygon between 0.0 and length.</param>

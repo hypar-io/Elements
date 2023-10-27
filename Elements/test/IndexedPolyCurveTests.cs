@@ -227,5 +227,64 @@ namespace Elements.Tests
             Assert.Equal(1.25, parameters[0]);
             Assert.Equal(1.75, parameters[1]);
         }
+
+        [Fact]
+        public void ToPolyyline()
+        {
+            var arc0 = new Arc(new Vector3(2.5, 5), 2.5, 0, 180);
+            var arc1 = new Arc(new Vector3(-2.5, 0), 2.5, 360, 180);
+            var a = new Vector3(5, 0, 0);
+            var b = new Vector3(5, 5, 0);
+            var c = arc0.Mid();
+            var d = new Vector3(0, 5, 0);
+            var e = Vector3.Origin;
+            var f = arc1.Mid();
+            var g = new Vector3(-5, 0, 0);
+            var vertices = new[] { a, b, c, d, e, f, g };
+            var indices = new[]{
+                new[]{0,1},
+                new[]{1,2,3},
+                new[]{3,4},
+                new[]{4,5,6}
+            };
+            var pc = new IndexedPolycurve(vertices, indices);
+
+            var pl = pc.ToPolyline(indices.Count());
+            Assert.Equal(5, pl.Vertices.Count);
+            Assert.True(a.IsAlmostEqualTo(pl.Vertices[0]));
+            Assert.True(b.IsAlmostEqualTo(pl.Vertices[1]));
+            Assert.True(d.IsAlmostEqualTo(pl.Vertices[2]));
+            Assert.True(e.IsAlmostEqualTo(pl.Vertices[3]));
+            Assert.True(g.IsAlmostEqualTo(pl.Vertices.Last()));
+
+            pl = pc.ToPolyline();
+            Assert.Equal(arc0.ToPolyline().Vertices.Count + arc1.ToPolyline().Vertices.Count + 1,
+                         pl.Vertices.Count);
+            Assert.True(a.IsAlmostEqualTo(pl.Vertices[0]));
+            Assert.True(b.IsAlmostEqualTo(pl.Vertices[1]));
+            Assert.True(g.IsAlmostEqualTo(pl.Vertices.Last()));
+
+            pl = pc.ToPolyline(9);
+            Assert.Equal(10, pl.Vertices.Count);
+            Assert.True(a.IsAlmostEqualTo(pl.Vertices[0]));
+            Assert.True(b.IsAlmostEqualTo(pl.Vertices[1]));
+            Assert.True(arc0.PointAtNormalized(0.25).IsAlmostEqualTo(pl.Vertices[2]));
+            Assert.True(arc0.PointAtNormalized(0.50).IsAlmostEqualTo(pl.Vertices[3]));
+            Assert.True(arc0.PointAtNormalized(0.75).IsAlmostEqualTo(pl.Vertices[4]));
+            Assert.True(d.IsAlmostEqualTo(pl.Vertices[5]));
+            Assert.True(e.IsAlmostEqualTo(pl.Vertices[6]));
+            Assert.True(arc1.PointAtNormalized(1.0 / 3).IsAlmostEqualTo(pl.Vertices[7]));
+            Assert.True(arc1.PointAtNormalized(2.0 / 3).IsAlmostEqualTo(pl.Vertices[8]));
+            Assert.True(g.IsAlmostEqualTo(pl.Vertices[9]));
+
+            pl = pc.ToPolyline(5);
+            Assert.Equal(6, pl.Vertices.Count);
+            Assert.True(a.IsAlmostEqualTo(pl.Vertices[0]));
+            Assert.True(b.IsAlmostEqualTo(pl.Vertices[1]));
+            Assert.True(arc0.PointAtNormalized(0.50).IsAlmostEqualTo(pl.Vertices[2]));
+            Assert.True(d.IsAlmostEqualTo(pl.Vertices[3]));
+            Assert.True(e.IsAlmostEqualTo(pl.Vertices[4]));
+            Assert.True(g.IsAlmostEqualTo(pl.Vertices[5]));
+        }
     }
 }

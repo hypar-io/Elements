@@ -667,6 +667,94 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Create a polyline through curves of IndexedPolycurve, interpolating any curves that are not lines.
+        /// </summary>
+        /// <returns>A polyline.</returns>
+        public override Polyline ToPolyline()
+        {
+            List<Vector3> vertices = new List<Vector3>();
+            foreach (var curve in _curves)
+            {
+                if (curve is Line)
+                {
+                    vertices.Add(curve.Start);
+                }
+                else
+                {
+                    var pl = curve.ToPolyline();
+                    vertices.AddRange(pl.Vertices.Take(pl.Vertices.Count - 1));
+                }
+            }
+            vertices.Add(End);
+            return new Polyline(vertices);
+        }
+
+        /// <summary>
+        /// Create a polyline through a set of points along the curve.
+        /// End points of curves are added first and then non straight curves are divided uniformly.
+        /// If number of divisions is less than number of curves - points are uniformly distributed
+        /// though whole domain, deviating heavily from original shape.
+        /// </summary>
+        /// <param name="divisions">The number of divisions of the curve. 
+        /// This can lead to highly distorted result.</param>
+        /// <returns>A polyline.</returns>
+        public override Polyline ToPolyline(int divisions)
+        {
+            //
+            if (divisions < _curves.Count)
+            {
+                return base.ToPolyline(divisions);
+            }
+
+            double extraSplits = divisions - _curves.Count;
+            List<Vector3> vertices = new List<Vector3>(divisions + 1) { Start };
+            var numArcs = _curves.Count(c => !(c is Line));
+            if (numArcs > 0)
+            {
+                // If polycurve consists of lines and curves - excess divisions are uniformly distributed
+                // among curves as dividing the lines wont add any new details in Polyline.
+                foreach (var curve in _curves)
+                {
+                    if (!(curve is Line))
+                    {
+                        var splitsPerArc = Math.Ceiling(1.0d * extraSplits / numArcs);
+                        var splits = Math.Min(splitsPerArc, extraSplits);
+                        var step = curve.Domain.Length / (splitsPerArc + 1);
+                        for (int i = 1; i <= splitsPerArc; i++)
+                        {
+                            var t = curve.Domain.Min + i * step;
+                            vertices.Add(curve.PointAt(t));
+                        }
+                        extraSplits -= splitsPerArc;
+                        numArcs--;
+                    }
+                    vertices.Add(curve.End);
+                }
+            }
+            else
+            {
+                // If polycurve consists only of lines - divisions are distributed uniformly among them.
+                var linesLeft = _curves.Count;
+                foreach (var curve in _curves)
+                {
+                    var splitsPerLine = Math.Ceiling(1.0d * extraSplits / linesLeft);
+                    var splits = Math.Min(splitsPerLine, extraSplits);
+                    var step = curve.Domain.Length / (splitsPerLine + 1);
+                    for (int i = 1; i <= splitsPerLine; i++)
+                    {
+                        var t = curve.Domain.Min + i * step;
+                        vertices.Add(curve.PointAt(t));
+                    }
+                    vertices.Add(curve.End);
+                    extraSplits -= splitsPerLine;
+                    linesLeft--;
+                }
+            }
+            vertices.Add(End);
+            return new Polyline(vertices);
+        }
+
+        /// <summary>
         /// Get the enumerator for this indexed polycurve.
         /// </summary>
         /// <returns>An enumerator of bounded curves.</returns>
