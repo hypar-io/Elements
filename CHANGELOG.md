@@ -58,6 +58,7 @@
 - `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
 
 
 ### Changed
