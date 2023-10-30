@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Elements.Validators;
 using Newtonsoft.Json;
 
@@ -106,6 +107,30 @@ namespace Elements.Geometry.Solids
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();
+        }
+
+        internal override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var result = new List<SnappingPoints>();
+            var localTransform = new Transform(Direction * Height);
+            var bottomVertices = new List<Vector3>();
+            result.Add(new SnappingPoints(Profile.Perimeter.Vertices));
+            bottomVertices.AddRange(Profile.Perimeter.Vertices);
+            result.Add(new SnappingPoints(Profile.Perimeter.TransformedPolygon(localTransform).Vertices));
+
+            foreach (var item in Profile.Voids)
+            {
+                result.Add(new SnappingPoints(item.Vertices));
+                bottomVertices.AddRange(item.Vertices);
+                result.Add(new SnappingPoints(item.TransformedPolygon(localTransform).Vertices));
+            }
+
+            foreach (var item in bottomVertices)
+            {
+                result.Add(new SnappingPoints(new List<Vector3> { item, localTransform.OfPoint(item) }));
+            }
+
+            return result;
         }
 
         private void UpdateGeometry()

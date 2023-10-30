@@ -23,8 +23,32 @@ public abstract class ElementRepresentation : SharedObject
     public abstract bool TryToGraphicsBuffers(GeometricElement element, out List<GraphicsBuffers> graphicsBuffers,
         out string id, out MeshPrimitive.ModeEnum? mode);
 
-    internal virtual List<NodeExtension> GetNodeExtensions(GeometricElement element)
+    internal virtual List<NodeExtension> GetNodeExtensions(GeometricElement element, RepresentationInstance representationInstance)
     {
-        return new List<NodeExtension>();
+        var extensions = new List<NodeExtension>();
+        if (representationInstance.SnappingPointsSource == SnappingPointsSource.None)
+        {
+            return extensions;
+        }
+
+        var snappingPointsDict = new Dictionary<string, object>() { { "source", representationInstance.SnappingPointsSource } };
+        if (representationInstance.SnappingPointsSource == SnappingPointsSource.ElementRepresentation)
+        {
+            var snappingPoints = CreateSnappingPoints(element);
+            snappingPointsDict.Add("points", snappingPoints);
+        }
+
+        extensions.Add(new NodeExtension("HYPAR_snapping_points", snappingPointsDict));
+        return extensions;
+    }
+
+    /// <summary>
+    ///Creates the set of snapping points
+    /// </summary>
+    /// <param name="element">The element with this representation.</param>
+    /// <returns></returns>
+    public virtual List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+    {
+        return new List<SnappingPoints>();
     }
 }

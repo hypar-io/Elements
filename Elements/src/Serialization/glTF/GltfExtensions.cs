@@ -453,6 +453,19 @@ namespace Elements.Serialization.glTF
         }
 
         /// <summary>
+        /// Add a custom Mesh extension.
+        /// </summary>
+        private static void AddExtension(Gltf gltf, glTFLoader.Schema.Mesh gltfMesh, string extensionName, Dictionary<string, object> extensionAttributes)
+        {
+            if (gltfMesh.Extensions == null)
+            {
+                gltfMesh.Extensions = new Dictionary<string, object>();
+            }
+            AddExtension(gltf, extensionName, extensionAttributes);
+            gltfMesh.Extensions.Add(extensionName, extensionAttributes);
+        }
+
+        /// <summary>
         /// Add a generic custom extension.
         /// </summary>
         /// <param name="gltf"></param>
@@ -1302,7 +1315,7 @@ namespace Elements.Serialization.glTF
                                 {
                                     NodeUtilities.SetRepresentationInfo(nodes[index], representation);
                                     NodeUtilities.SetElementInfo(nodes[index], element.Id);
-                                    foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element))
+                                    foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element, representation))
                                     {
                                         AddExtension(gltf, nodes[index], nodeExtension.Name, nodeExtension.Attributes);
                                     }
@@ -1344,7 +1357,7 @@ namespace Elements.Serialization.glTF
                                     {
                                         NodeUtilities.SetRepresentationInfo(nodes[index], representation);
                                         NodeUtilities.SetElementInfo(nodes[index], element.Id);
-                                        foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element))
+                                        foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element, representation))
                                         {
                                             AddExtension(gltf, nodes[index], nodeExtension.Name, nodeExtension.Attributes);
                                         }
