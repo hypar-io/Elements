@@ -83,7 +83,7 @@ namespace Elements
             Transform = GetDoorTransform(currentPosition, wallLine, flip);
             Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
-            Id = id;
+            Id = id != default ? id : Guid.NewGuid();
             Name = name;
         }
 
@@ -124,7 +124,7 @@ namespace Elements
             Representation = representation ?? new Representation(new List<SolidOperation>() { });
             Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
             OriginalPosition = Transform.Origin;
-            Id = id;
+            Id = id != default ? id : Guid.NewGuid();
             Name = name;
         }
 
