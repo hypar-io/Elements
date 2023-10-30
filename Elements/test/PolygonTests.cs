@@ -241,6 +241,32 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void Contains3d()
+        {
+            var p0 = new Polygon(new Vector3[]
+            {
+                (0, 0, 2),
+                (0, 0, 10),
+                (2, 0, 10),
+                (2, 0, 5),
+                (8, 0, 5),
+                (8, 0, 10),
+                (10, 0, 10),
+                (10, 0, 2)
+            });
+
+            var p1 = new Polygon(new Vector3[]
+            {
+                (1, 0, 6),
+                (1, 0, 8),
+                (9.5, 0, 7.5),
+                (9, 0, 6)
+            });
+
+            Assert.False(p0.Contains3D(p1));
+        }
+
+        [Fact]
         public void Disjoint()
         {
             var v1 = new Vector3();
