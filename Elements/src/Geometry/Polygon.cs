@@ -555,8 +555,7 @@ namespace Elements.Geometry
         // Projects non-flat containment request into XY plane and returns the answer for this projection
         internal bool Contains3D(Vector3 location, out Containment containment)
         {
-            // Test that the test point is in the same plane
-            // as the polygon.
+            // Test that the test point is in the same plane as the polygon.
             var transformTo3D = Vertices.ToTransform();
             if (!location.DistanceTo(transformTo3D.XY()).ApproximatelyEquals(0))
             {
@@ -564,14 +563,13 @@ namespace Elements.Geometry
                 return false;
             }
 
-            var is3D = Vertices.Any(vertex => vertex.Z != 0);
+            var is3D = Vertices.Any(vertex => !vertex.Z.ApproximatelyEquals(0));
             if (!is3D)
             {
                 return Contains(Edges(), location, out containment);
             }
 
-            var transformToGround = new Transform(transformTo3D);
-            transformToGround.Invert();
+            var transformToGround = transformTo3D.Inverted();
             var groundSegments = Edges(transformToGround);
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
@@ -579,11 +577,13 @@ namespace Elements.Geometry
 
         internal bool Contains3D(Polygon polygon)
         {
-            return polygon.Vertices.All(v => this.Contains(v, out _));
+            return Contains3D(polygon, out _);
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
-        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
+        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges,
+                                      Vector3 location,
+                                      out Containment containment)
         {
             int windingNumber = 0;
 
@@ -626,6 +626,70 @@ namespace Elements.Geometry
             var result = windingNumber != 0;
             containment = result ? Containment.Inside : Containment.Outside;
             return result;
+        }
+
+        internal static bool Contains(IEnumerable<(Vector3 from, Vector3 to)> edges1,
+                                      IEnumerable<(Vector3 from, Vector3 to)> edges2,
+                                      out Containment containment)
+        {
+            containment = Containment.Inside;
+
+            // If an edge crosses without being fully overlapping, the polygon is only partially covered.
+            foreach (var edge1 in edges1)
+            {
+                foreach (var edge2 in edges2)
+                {
+                    var direction1 = Line.Direction(edge1.from, edge1.to);
+                    var direction2 = Line.Direction(edge2.from, edge2.to);
+                    if (Line.Intersects2d(edge1.from, edge1.to, edge2.from, edge2.to) &&
+                        !direction1.IsParallelTo(direction2))
+                    {
+                        containment = Containment.Outside;
+                        return false;
+                    }
+                }
+            }
+
+            var allInside = true;
+            foreach (var vertex in edges2.Select(e => e.from))
+            {
+                Contains(edges1, vertex, out var vertexContainment);
+                if (vertexContainment == Containment.Outside)
+                {
+                    containment = Containment.Outside;
+                    return false;
+                }
+
+                if (vertexContainment > containment)
+                {
+                    containment = vertexContainment;
+                }
+
+                if (vertexContainment != Containment.Inside)
+                {
+                    allInside = false;
+                }
+            }
+
+            // If all vertices of the polygon are inside this polygon then there is full coverage since no edges cross.
+            if (allInside)
+            {
+                return true;
+            }
+
+            // If some edges are partially shared (!allInside) then we must still make sure that none of this.Vertices are inside the given polygon.
+            // The above two checks aren't sufficient in cases like two almost identical polygons, but with an extra vertex on an edge of this polygon that's pulled into the other polygon.
+            foreach (var vertex in edges1.Select(e => e.from))
+            {
+                Contains(edges2, vertex, out var otherContainment);
+                if (otherContainment == Containment.Inside)
+                {
+                    containment = Containment.Outside;
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         #region WindingNumberCalcs
@@ -755,21 +819,24 @@ namespace Elements.Geometry
         /// <returns>Returns false if any part of the polygon is entirely outside of this polygon.</returns>
         public bool Contains3D(Polygon polygon, out Containment containment)
         {
-            containment = Containment.Inside;
-            foreach (var v in polygon.Vertices)
+            // Test that the test polygon is in the same plane as this.
+            var transformTo3D = Vertices.ToTransform();
+            if (polygon.Vertices.Any(v => !v.DistanceTo(transformTo3D.XY()).ApproximatelyEquals(0)))
             {
-                Contains3D(v, out var foundContainment);
-                if (foundContainment == Containment.Outside)
-                {
-                    containment = foundContainment;
-                    return false;
-                }
-                if (foundContainment > containment)
-                {
-                    containment = foundContainment;
-                }
+                containment = Containment.Outside;
+                return false;
             }
-            return true;
+
+            var is3D = Vertices.Any(vertex => !vertex.Z.ApproximatelyEquals(0));
+            if (!is3D)
+            {
+                return Contains(Edges(), polygon.Edges(), out containment);
+            }
+
+            var transformToGround = transformTo3D.Inverted();
+            var edges0 = Edges(transformToGround);
+            var edges1 = polygon.Edges(transformToGround);
+            return Contains(edges0, edges1, out containment);
         }
 
         /// <summary>
@@ -786,54 +853,7 @@ namespace Elements.Geometry
                 return false;
             }
 
-            // If an edge crosses without being fully overlapping, the polygon is only partially covered.
-            foreach (var edge1 in Edges())
-            {
-                foreach (var edge2 in polygon.Edges())
-                {
-                    var direction1 = Line.Direction(edge1.from, edge1.to);
-                    var direction2 = Line.Direction(edge2.from, edge2.to);
-                    if (Line.Intersects2d(edge1.from, edge1.to, edge2.from, edge2.to) &&
-                        !direction1.IsParallelTo(direction2) &&
-                        !direction1.IsParallelTo(direction2.Negate()))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            var allInside = true;
-            foreach (var vertex in polygon.Vertices)
-            {
-                Contains(Edges(), vertex, out Containment containment);
-                if (containment == Containment.Outside)
-                {
-                    return false;
-                }
-                if (containment != Containment.Inside)
-                {
-                    allInside = false;
-                }
-            }
-
-            // If all vertices of the polygon are inside this polygon then there is full coverage since no edges cross.
-            if (allInside)
-            {
-                return true;
-            }
-
-            // If some edges are partially shared (!allInside) then we must still make sure that none of this.Vertices are inside the given polygon.
-            // The above two checks aren't sufficient in cases like two almost identical polygons, but with an extra vertex on an edge of this polygon that's pulled into the other polygon.
-            foreach (var vertex in Vertices)
-            {
-                Contains(polygon.Edges(), vertex, out Containment containment);
-                if (containment == Containment.Inside)
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return Contains(Edges(), polygon.Edges(), out _);
         }
 
         /// <summary>
