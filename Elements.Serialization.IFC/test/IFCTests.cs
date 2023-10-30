@@ -165,7 +165,6 @@ namespace Elements.IFC.Tests
             model.ToIFC(ConstructIfcPath("IfcWallPlan"));
         }
 
-        // TODO: Fix
         [Fact]
         public void Floor()
         {
