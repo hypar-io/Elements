@@ -1,4 +1,5 @@
 using Elements.Analysis;
+using Elements.BuildingElements.Door;
 using Elements.Geometry;
 using IFC;
 using STEP;

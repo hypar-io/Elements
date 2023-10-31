@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Elements
+namespace Elements.BuildingElements.Door
 {
     /// <summary>Definition of a door</summary>
     public class Door : GeometricElement
@@ -66,7 +66,7 @@ namespace Elements
                 string name = "Door",
                 double depthFront = 1,
                 double depthBack = 1
-            ) : base (
+            ) : base(
                     transform: transform,
                     representation: representation,
                     isElementDefinition: isElementDefinition,
@@ -114,7 +114,7 @@ namespace Elements
                     double depthFront = 1,
                     double depthBack = 1,
                     bool flip = false
-            ) : base (
+            ) : base(
                     representation: representation,
                     isElementDefinition: isElementDefinition,
                     id: id,
@@ -344,7 +344,7 @@ namespace Elements
 
         private Vector3 GetClosestValidDoorPos(Line wallLine, Vector3 currentPosition)
         {
-            var fullWidth = _fullDoorWidthWithoutFrame + (DOOR_FRAME_WIDTH * 2);
+            var fullWidth = _fullDoorWidthWithoutFrame + DOOR_FRAME_WIDTH * 2;
             double wallWidth = wallLine.Length();
             Vector3 p1 = wallLine.PointAt(0.5 * fullWidth);
             Vector3 p2 = wallLine.PointAt(wallWidth - 0.5 * fullWidth);
