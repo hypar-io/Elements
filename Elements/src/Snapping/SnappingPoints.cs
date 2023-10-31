@@ -14,11 +14,11 @@ namespace Elements
         /// Initializes a new instance of SnappingPoints class.
         /// </summary>
         /// <param name="points">The set of points.</param>
-        /// <param name="isPolygon">Indicates if snapping points create polygon.</param>
-        public SnappingPoints(IEnumerable<Vector3> points, bool isPolygon = false)
+        /// <param name="edgeMode">The mode for creating snap edges.</param>
+        public SnappingPoints(IEnumerable<Vector3> points, SnappingEdgeMode edgeMode = SnappingEdgeMode.LineStrip)
         {
             Points.AddRange(points);
-            IsPolygon = isPolygon;
+            EdgeMode = edgeMode;
         }
 
         /// <summary>
@@ -29,10 +29,9 @@ namespace Elements
         public List<Vector3> Points { get; } = new List<Vector3>();
 
         /// <summary>
-        /// Indicates if snapping points create polygon.
-        /// If true, the first and the last points will be connected.
+        /// The modes for creating snap edges.
         /// </summary>
-        [JsonProperty("isPolygon")]
-        public bool IsPolygon { get; set; }
+        [JsonProperty("edgeMode")]
+        public SnappingEdgeMode EdgeMode { get; set; }
     }
 }
