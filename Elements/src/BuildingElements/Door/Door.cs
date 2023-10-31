@@ -154,146 +154,15 @@ namespace Elements.BuildingElements.Door
         }
 
         /// <summary>
-        /// Get graphics buffers and other metadata required to modify a GLB.
-        /// </summary>
-        /// <returns>
-        /// True if there is graphicsbuffers data applicable to add, false otherwise.
-        /// Out variables should be ignored if the return value is false.
-        /// </returns>
-        public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
-        {
-            var points = CollectPointsForSchematicVisualization();
-            GraphicsBuffers buffer = new GraphicsBuffers();
-            Color color = Colors.Black;
-            for (int i = 0; i < points.Count; i++)
-            {
-                buffer.AddVertex(points[i], default, default, color);
-                buffer.AddIndex((ushort)i);
-            }
-
-            id = $"{Id}_door";
-            // Only one type is allowed, since line are not linked into one loop, LINES is used.
-            // This mean that each line segment need both endpoints stored, often duplicated.
-            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
-            graphicsBuffers = new List<GraphicsBuffers> { buffer };
-            return true;
-        }
-
-        // TODO: Move visualization logic out of the class in case of DoorOpeningType enum extension.
-        private List<Vector3> CollectPointsForSchematicVisualization()
-        {
-            var points = new List<Vector3>();
-
-            if (OpeningSide == DoorOpeningSide.Undefined || OpeningType == DoorOpeningType.Undefined)
-            {
-                return points;
-            }
-
-            if (OpeningSide != DoorOpeningSide.LeftHand)
-            {
-                points.AddRange(CollectSchematicVisualizationLines(false, false, 90));
-            }
-
-            if (OpeningSide != DoorOpeningSide.RightHand)
-            {
-                points.AddRange(CollectSchematicVisualizationLines(true, false, 90));
-            }
-
-            if (OpeningType == DoorOpeningType.SingleSwing)
-            {
-                return points;
-            }
-
-            if (OpeningSide != DoorOpeningSide.LeftHand)
-            {
-                points.AddRange(CollectSchematicVisualizationLines(false, true, 90));
-            }
-
-            if (OpeningSide != DoorOpeningSide.RightHand)
-            {
-                points.AddRange(CollectSchematicVisualizationLines(true, true, 90));
-            }
-
-            return points;
-        }
-
-        private List<Vector3> CollectSchematicVisualizationLines(bool leftSide, bool inside, double angle)
-        {
-            // Depending on which side door in there are different offsets.
-            var doorOffset = leftSide ? _fullDoorWidthWithoutFrame / 2 : -_fullDoorWidthWithoutFrame / 2;
-            var horizontalOffset = leftSide ? DOOR_THICKNESS : -DOOR_THICKNESS;
-            var verticalOffset = inside ? DOOR_THICKNESS : -DOOR_THICKNESS;
-            var widthOffset = inside ? ClearWidth : -ClearWidth;
-
-            // Draw open door silhouette rectangle.
-            Vector3 corner = Vector3.XAxis * doorOffset;
-            var c0 = corner + Vector3.YAxis * verticalOffset;
-            var c1 = c0 + Vector3.YAxis * widthOffset;
-            var c2 = c1 - Vector3.XAxis * horizontalOffset;
-            var c3 = c0 - Vector3.XAxis * horizontalOffset;
-
-            // Rotate silhouette is it's need to be drawn as partially open.
-            if (!angle.ApproximatelyEquals(90))
-            {
-                double rotation = 90 - angle;
-                if (!leftSide)
-                {
-                    rotation = -rotation;
-                }
-
-                if (!inside)
-                {
-                    rotation = -rotation;
-                }
-
-                Transform t = new Transform();
-                t.RotateAboutPoint(c0, Vector3.ZAxis, rotation);
-                c1 = t.OfPoint(c1);
-                c2 = t.OfPoint(c2);
-                c3 = t.OfPoint(c3);
-            }
-            List<Vector3> points = new List<Vector3>() { c0, c1, c1, c2, c2, c3, c3, c0 };
-
-            // Calculated correct arc angles based on door orientation.
-            double adjustedAngle = inside ? angle : -angle;
-            double anchorAngle = leftSide ? 180 : 0;
-            double endAngle = leftSide ? 180 - adjustedAngle : adjustedAngle;
-            if (endAngle < 0)
-            {
-                endAngle = 360 + endAngle;
-                anchorAngle = 360;
-            }
-
-            // If arc is constructed from bigger angle to smaller is will have incorrect domain 
-            // with max being smaller than min and negative length.
-            // ToPolyline will return 0 points for it.
-            // Until it's fixed angles should be aligned manually.
-            bool flipEnds = endAngle < anchorAngle;
-            if (flipEnds)
-            {
-                (anchorAngle, endAngle) = (endAngle, anchorAngle);
-            }
-
-            // Draw the arc from closed door to opened door.
-            Arc arc = new Arc(c0, ClearWidth, anchorAngle, endAngle);
-            var tessalatedArc = arc.ToPolyline((int)(Math.Abs(angle) / 2));
-            for (int i = 0; i < tessalatedArc.Vertices.Count - 1; i++)
-            {
-                points.Add(tessalatedArc.Vertices[i]);
-                points.Add(tessalatedArc.Vertices[i + 1]);
-            }
-
-            return points;
-        }
-
-        /// <summary>
         /// Update the representations.
         /// </summary>
         public override void UpdateRepresentations()
         {
-            RepresentationInstances.Clear();
-            var solidRepInstance = DoorRepresentationFactory.CreateSolidDoorRepresentation(this);
-            RepresentationInstances.Add(solidRepInstance);
+            RepresentationInstances = new List<RepresentationInstance>()
+            {
+                DoorRepresentationFactory.CreateSolidDoorRepresentation(this),
+                DoorRepresentationFactory.CreateCurveDoorRepresentation(this)
+            };
         }
 
         private Vector3 GetClosestValidDoorPos(Line wallLine, Vector3 currentPosition)
