@@ -485,29 +485,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Create a polyline through a set of points along the curve.
-        /// </summary>
-        /// <param name="divisions">The number of divisions of the curve.</param>
-        /// <returns>A polyline.</returns>
-        public override Polyline ToPolyline(int divisions = 10)
-        {
-            var pts = new List<Vector3>(divisions + 1);
-            var step = this.Domain.Length / divisions;
-            for (var t = this.Domain.Min; t < this.Domain.Max; t += step)
-            {
-                pts.Add(PointAt(t));
-            }
-
-            // We don't go all the way to the end parameter, and
-            // add it here explicitly because rounding errors can
-            // cause small imprecision which accumulates to make
-            // the final parameter slightly more/less than the actual
-            // end parameter.
-            pts.Add(PointAt(this.Domain.Max));
-            return new Polyline(pts);
-        }
-
-        /// <summary>
         /// Get the parameter at a distance from the start parameter along the curve.
         /// </summary>
         /// <param name="distance">The distance from the start parameter.</param>

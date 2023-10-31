@@ -93,10 +93,17 @@ namespace Elements.Geometry
         {
             var pts = new List<Vector3>(divisions + 1);
             var step = this.Domain.Length / divisions;
-            for (var t = 0; t <= divisions; t++)
+            for (var t = this.Domain.Min; t < this.Domain.Max; t += step)
             {
-                pts.Add(PointAt(t * step));
+                pts.Add(PointAt(t));
             }
+
+            // We don't go all the way to the end parameter, and
+            // add it here explicitly because rounding errors can
+            // cause small imprecision which accumulates to make
+            // the final parameter slightly more/less than the actual
+            // end parameter.
+            pts.Add(PointAt(this.Domain.Max));
             return new Polyline(pts);
         }
 
