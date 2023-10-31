@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Elements.Geometry;
+using Elements.Serialization.JSON;
 using Newtonsoft.Json;
 
 namespace Elements
@@ -24,6 +25,7 @@ namespace Elements
         /// Snapping points.
         /// </summary>
         [JsonProperty("points")]
+        [JsonConverter(typeof(VectorListToByteArrayConverter))]
         public List<Vector3> Points { get; } = new List<Vector3>();
 
         /// <summary>
