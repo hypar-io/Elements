@@ -114,17 +114,21 @@ namespace Elements.Geometry.Solids
             var result = new List<SnappingPoints>();
             var localTransform = new Transform(Direction * Height);
             var bottomVertices = new List<Vector3>();
-            result.Add(new SnappingPoints(Profile.Perimeter.Vertices));
+            // add perimeter bottom points
+            result.Add(new SnappingPoints(Profile.Perimeter.Vertices, true));
             bottomVertices.AddRange(Profile.Perimeter.Vertices);
-            result.Add(new SnappingPoints(Profile.Perimeter.TransformedPolygon(localTransform).Vertices));
+            // add perimeter top points
+            result.Add(new SnappingPoints(Profile.Perimeter.TransformedPolygon(localTransform).Vertices, true));
 
+            // add each void
             foreach (var item in Profile.Voids)
             {
-                result.Add(new SnappingPoints(item.Vertices));
+                result.Add(new SnappingPoints(item.Vertices, true));
                 bottomVertices.AddRange(item.Vertices);
-                result.Add(new SnappingPoints(item.TransformedPolygon(localTransform).Vertices));
+                result.Add(new SnappingPoints(item.TransformedPolygon(localTransform).Vertices, true));
             }
 
+            // connect top and bottom points
             foreach (var item in bottomVertices)
             {
                 result.Add(new SnappingPoints(new List<Vector3> { item, localTransform.OfPoint(item) }));

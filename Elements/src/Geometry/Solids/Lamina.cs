@@ -85,11 +85,11 @@ namespace Elements.Geometry.Solids
         internal override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
         {
             var result = new List<SnappingPoints>();
-            result.Add(new SnappingPoints(Perimeter.Vertices));
+            result.Add(new SnappingPoints(Perimeter.Vertices, true));
 
             foreach (var item in Voids)
             {
-                result.Add(new SnappingPoints(item.Vertices));
+                result.Add(new SnappingPoints(item.Vertices, true));
             }
 
             return result;
