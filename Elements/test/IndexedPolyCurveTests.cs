@@ -188,6 +188,24 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void PreservesIndicesTransformed()
+        {
+            var pc = CreateTestPolycurve();
+            var indices = pc.CurveIndices;
+            var copy = pc.TransformedPolycurve(new Transform(10, 0, 0));
+            var newIndicies = copy.CurveIndices;
+            Assert.Equal(indices.Count, newIndicies.Count);
+            for (int i = 0; i < indices.Count; i++)
+            {
+                Assert.Equal(indices[i].Count, newIndicies[i].Count);
+                for (int j = 0; j < indices[i].Count; j++)
+                {
+                    Assert.Equal(indices[i][j], newIndicies[i][j]);
+                }
+            }
+        }
+
+        [Fact]
         public void GetSubdivisionParameters()
         {
             var pc = new IndexedPolycurve(new List<Vector3>()
