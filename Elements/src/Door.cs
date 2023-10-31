@@ -3,6 +3,7 @@ using Elements.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -30,96 +31,104 @@ namespace Elements
         public DoorOpeningType OpeningType { get; private set; }
         /// <summary>The opening side of the door that should be placed</summary>
         public DoorOpeningSide OpeningSide { get; private set; }
-        /// <summary>The wall on which a door is placed.</summary>
-        public Wall Wall { get; private set; }
         /// <summary>Height of a door without a frame.</summary>
         public double ClearHeight { get; private set; }
         /// <summary>Opening for a door.</summary>
         public Opening Opening { get; private set; }
 
+        private readonly double _fullDoorWidthWithoutFrame;
+
         /// <summary>
-        /// Create a door that is not attached to a wall.
+        /// Create a door.
         /// </summary>
-        /// <param name="width">The with of a single door.</param>
-        /// <param name="height">The door's height.</param>
+        /// <param name="clearWidth">The width of a single door.</param>
+        /// <param name="clearHeight">The door's height.</param>
         /// <param name="openingSide">The side where the door opens.</param>
         /// <param name="openingType">The way the door opens.</param>
         /// <param name="transform">The door's transform. X-direction is aligned with the door, Y-direction is the opening direction.</param>
         /// <param name="material">The door's material.</param>
         /// <param name="representation">The door's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The door's id.</param>
         /// <param name="name">The door's name.</param>
         /// <param name="depthFront">The door's opening depth front.</param>
         /// <param name="depthBack">The door's opening depth back.</param>
-        public Door(double width,
-                double height,
+        [JsonConstructor]
+        public Door(double clearWidth,
+                double clearHeight,
                 DoorOpeningSide openingSide,
                 DoorOpeningType openingType,
                 Transform transform = null,
                 Material material = null,
                 Representation representation = null,
+                bool isElementDefinition = false,
                 Guid id = default,
                 string name = "Door",
                 double depthFront = 1,
                 double depthBack = 1
-            )
+            ) : base (
+                    transform: transform,
+                    representation: representation,
+                    isElementDefinition: isElementDefinition,
+                    id: id,
+                    name: name
+                )
         {
-            Wall = null;
-            Transform = transform;
             OpeningSide = openingSide;
             OpeningType = openingType;
-            ClearHeight = height;
-            ClearWidth = WidthWithoutFrame(width, openingSide);
+            ClearHeight = clearHeight;
+            ClearWidth = clearWidth;
             Material = material ?? DEFAULT_MATERIAL;
-            Representation = representation ?? new Representation(new List<SolidOperation>() { });
-            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
-            Id = id;
-            Name = name;
+            _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(clearWidth, openingSide);
+            Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
         }
 
         /// <summary>
-        /// Create a door at the certain point of a wall.
+        /// Create a door at the certain point of a line.
         /// </summary>
-        /// <param name="wall">The wall the door is attached to.</param>
-        /// <param name="wallLine">A center line of a wall that door is attached to.</param>
-        /// <param name="tPos">Relative position on the wall where door is placed. Should be in [0; 1].</param>
-        /// <param name="width">The with of a single door.</param>
-        /// <param name="height">The door's height.</param>
+        /// <param name="line">The line where the door is placed.</param>
+        /// <param name="tPos">Relative position on the line where door is placed. Should be in [0; 1].</param>
+        /// <param name="clearWidth">The width of a single door.</param>
+        /// <param name="clearHeight">The door's height.</param>
         /// <param name="openingSide">The side where the door opens.</param>
         /// <param name="openingType">The way the door opens.</param>
         /// <param name="material">The door's material.</param>
         /// <param name="representation">The door's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The door's id.</param>
         /// <param name="name">The door's name.</param>
         /// <param name="depthFront">The door's opening depth front.</param>
         /// <param name="depthBack">The door's opening depth back.</param>
         /// <param name="flip">Is the door flipped?</param>
-        public Door(Wall wall,
-                    Line wallLine,
+        public Door(Line line,
                     double tPos,
-                    double width,
-                    double height,
+                    double clearWidth,
+                    double clearHeight,
                     DoorOpeningSide openingSide,
                     DoorOpeningType openingType,
                     Material material = null,
                     Representation representation = null,
+                    bool isElementDefinition = false,
                     Guid id = default,
                     string name = "Door",
                     double depthFront = 1,
                     double depthBack = 1,
-                    bool flip = false)
+                    bool flip = false
+            ) : base (
+                    representation: representation,
+                    isElementDefinition: isElementDefinition,
+                    id: id,
+                    name: name
+                )
         {
-            Wall = wall;
             OpeningType = openingType;
             OpeningSide = openingSide;
-            ClearWidth = WidthWithoutFrame(width, openingSide);
-            ClearHeight = height;
+            ClearWidth = clearWidth;
+            ClearHeight = clearHeight;
             Material = material ?? DEFAULT_MATERIAL;
-            Transform = GetDoorTransform(wallLine.PointAtNormalized(tPos), wallLine, flip);
-            Representation = representation ?? new Representation(new List<SolidOperation>() { });
-            Opening = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, GetOpeningTransform());
-            Id = id;
-            Name = name;
+            _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(ClearWidth, openingSide);
+            Transform = GetDoorTransform(line.PointAtNormalized(tPos), line, flip);
+            Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
         }
 
         private Transform GetOpeningTransform()
@@ -141,7 +150,7 @@ namespace Elements
         /// </summary>
         public static bool CanFit(Line wallLine, DoorOpeningSide openingSide, double width)
         {
-            var doorWidth = WidthWithoutFrame(width, openingSide) + DOOR_FRAME_WIDTH * 2;
+            var doorWidth = GetDoorFullWidthWithoutFrame(width, openingSide) + DOOR_FRAME_WIDTH * 2;
             return wallLine.Length() - doorWidth > DOOR_FRAME_WIDTH * 2;
         }
 
@@ -211,13 +220,11 @@ namespace Elements
 
         private List<Vector3> CollectSchematicVisualizationLines(bool leftSide, bool inside, double angle)
         {
-            var doorWidth = OpeningSide == DoorOpeningSide.DoubleDoor ? ClearWidth / 2 : ClearWidth;
-
             // Depending on which side door in there are different offsets.
-            var doorOffset = leftSide ? ClearWidth / 2 : -ClearWidth / 2;
+            var doorOffset = leftSide ? _fullDoorWidthWithoutFrame / 2 : -_fullDoorWidthWithoutFrame / 2;
             var horizontalOffset = leftSide ? DOOR_THICKNESS : -DOOR_THICKNESS;
             var verticalOffset = inside ? DOOR_THICKNESS : -DOOR_THICKNESS;
-            var widthOffset = inside ? doorWidth : -doorWidth;
+            var widthOffset = inside ? ClearWidth : -ClearWidth;
 
             // Draw open door silhouette rectangle.
             Vector3 corner = Vector3.XAxis * doorOffset;
@@ -269,7 +276,7 @@ namespace Elements
             }
 
             // Draw the arc from closed door to opened door.
-            Arc arc = new Arc(c0, doorWidth, anchorAngle, endAngle);
+            Arc arc = new Arc(c0, ClearWidth, anchorAngle, endAngle);
             var tessalatedArc = arc.ToPolyline((int)(Math.Abs(angle) / 2));
             for (int i = 0; i < tessalatedArc.Vertices.Count - 1; i++)
             {
@@ -285,8 +292,8 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            Vector3 left = Vector3.XAxis * ClearWidth / 2;
-            Vector3 right = Vector3.XAxis.Negate() * ClearWidth / 2;
+            Vector3 left = Vector3.XAxis * _fullDoorWidthWithoutFrame / 2;
+            Vector3 right = Vector3.XAxis.Negate() * _fullDoorWidthWithoutFrame / 2;
 
             var doorPolygon = new Polygon(new List<Vector3>() {
                 left + Vector3.YAxis * DOOR_THICKNESS,
@@ -337,7 +344,7 @@ namespace Elements
 
         private Vector3 GetClosestValidDoorPos(Line wallLine, Vector3 currentPosition)
         {
-            var fullWidth = ClearWidth + DOOR_FRAME_WIDTH * 2;
+            var fullWidth = _fullDoorWidthWithoutFrame + (DOOR_FRAME_WIDTH * 2);
             double wallWidth = wallLine.Length();
             Vector3 p1 = wallLine.PointAt(0.5 * fullWidth);
             Vector3 p2 = wallLine.PointAt(wallWidth - 0.5 * fullWidth);
@@ -345,15 +352,15 @@ namespace Elements
             return currentPosition.ClosestPointOn(reducedWallLine);
         }
 
-        private static double WidthWithoutFrame(double internalWidth, DoorOpeningSide openingSide)
+        private static double GetDoorFullWidthWithoutFrame(double doorClearWidth, DoorOpeningSide doorOpeningSide)
         {
-            switch (openingSide)
+            switch (doorOpeningSide)
             {
                 case DoorOpeningSide.LeftHand:
                 case DoorOpeningSide.RightHand:
-                    return internalWidth;
+                    return doorClearWidth;
                 case DoorOpeningSide.DoubleDoor:
-                    return internalWidth * 2;
+                    return doorClearWidth * 2;
             }
             return 0;
         }

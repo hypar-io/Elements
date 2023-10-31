@@ -182,11 +182,11 @@ namespace Elements.Serialization.IFC
                 throw new Exception("This DoorOperationType is not supported yet.");
             }
 
+            var wall = GetWallFromDoor(ifcDoor, allWalls);
             var transform = GetTransformFromIfcElement(ifcDoor);
 
-            var wall = GetWallFromDoor(ifcDoor, allWalls);
-
-            var result = new Door(wall, transform, (IfcLengthMeasure)ifcDoor.OverallWidth, (IfcLengthMeasure)ifcDoor.OverallHeight, openingSide, openingType);
+            var result = new Door((IfcLengthMeasure)ifcDoor.OverallWidth, (IfcLengthMeasure)ifcDoor.OverallHeight, openingSide, openingType, transform);
+            result.AdditionalProperties["Wall"] = wall;
             return result;
         }
 
