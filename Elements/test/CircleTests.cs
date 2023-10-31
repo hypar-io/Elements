@@ -136,6 +136,11 @@ namespace Elements.Geometry.Tests
             Assert.Equal(Units.DegreesToRadians(-100), Units.AdjustRadian(Units.DegreesToRadians(-100), reference), 6);
         }
 
+        public CircleTests()
+        {
+            this.GenerateIfc = false;
+        }
+
         [Fact, Trait("Category", "Examples")]
         public void CircleExample()
         {

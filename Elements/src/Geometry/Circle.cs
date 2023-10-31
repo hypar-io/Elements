@@ -225,6 +225,46 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculates and returns the point on the circle at a specific arc length.
+        /// </summary>
+        /// <param name="length">The arc length along the circumference of the circle.</param>
+        /// <returns>The point on the circle at the specified arc length.</returns>
+        public Vector3 PointAtLength(double length)
+        {
+            double parameter = (length / Circumference) * 2 * Math.PI;
+            return PointAt(parameter);
+        }
+
+        /// <summary>
+        /// Calculates and returns the point on the circle at a normalized arc length.
+        /// </summary>
+        /// <param name="normalizedLength">The normalized arc length between 0 and 1.</param>
+        /// <returns>The point on the circle at the specified normalized arc length.</returns>
+        public Vector3 PointAtNormalizedLength(double normalizedLength)
+        {
+            double parameter = normalizedLength * 2 * Math.PI;
+            return PointAt(parameter);
+        }
+
+        /// <summary>
+        /// Calculates the parameter within the range of 0 to 2π at a given point on the circle.
+        /// </summary>
+        /// <param name="point">The point on the circle.</param>
+        /// <returns>The parameter within the range of 0 to 2π at the given point on the circle.</returns>
+        public double GetParameterAt(Vector3 point)
+        {
+            Vector3 relativePoint = point - Center;
+
+            double theta = Math.Atan2(relativePoint.Y, relativePoint.X);
+
+            if (theta < 0)
+            {
+                theta += 2 * Math.PI;
+            }
+            return theta;
+        }
+
+        /// <summary>
         /// Return transform on the arc at parameter u.
         /// </summary>
         /// <param name="u">A parameter on the arc.</param>
@@ -260,6 +300,43 @@ namespace Elements.Geometry
             var theta = distance / this.Radius;
 
             return start + theta;
+        }
+
+        /// <summary>
+        /// Divides the circle into segments of the specified length and returns a list of points representing the division.
+        /// </summary>
+        /// <param name="length">The length of each segment.</param>
+        /// <returns>A list of points representing the division of the circle.</returns>
+        public Vector3[] DivideByLength(double length)
+        {
+            List<Vector3> points = new List<Vector3>();
+            double circumference = 2 * Math.PI * Radius;
+            int segmentCount = (int)Math.Ceiling(circumference / length);
+            double segmentLength = circumference / segmentCount;
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                double parameter = i * segmentLength / circumference;
+                points.Add(PointAtNormalizedLength(parameter));
+            }
+
+            return points.ToArray();
+        }
+
+        /// <summary>
+        /// Checks if a given point lies on a circle within a specified tolerance.
+        /// </summary>
+        /// <param name="point">The point to be checked.</param>
+        /// <param name="circle">The circle to check against.</param>
+        /// <param name="tolerance">The tolerance value (optional). Default is 1E-05.</param>
+        /// <returns>True if the point lies on the circle within the tolerance, otherwise false.</returns>
+        public static bool PointOnCircle(Vector3 point, Circle circle, double tolerance = 1E-05)
+        {
+            Vector3 centerToPoint = point - circle.Center;
+            double distanceToCenter = centerToPoint.Length();
+
+            // Check if the distance from the point to the center is within the tolerance of the circle's radius
+            return Math.Abs(distanceToCenter - circle.Radius) < tolerance;
         }
     }
 }
