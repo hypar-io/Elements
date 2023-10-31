@@ -156,6 +156,11 @@ namespace Elements.Serialization.glTF
             return AddNode(nodes, newNode, 0);
         }
 
+        internal static int AddEmptyNode(List<glTFLoader.Schema.Node> nodes, int parentId)
+        {
+            return AddNode(nodes, new Node(), parentId);
+        }
+
         internal static int[] AddInstanceNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             List<int> meshIds,
