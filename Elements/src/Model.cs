@@ -270,8 +270,10 @@ namespace Elements
         /// </summary>
         public string ToJson()
         {
-            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
-            return ToJson(false, true);
+            // By default we don't want to update representations because the UpdateRepresentation
+            // method is called during function adding.  Setting this to false makes the behavior
+            // match our function wrapping code behavior.
+            return ToJson(false, true, false);
         }
 
         /// <summary>
