@@ -110,14 +110,7 @@ namespace Elements
                 return;
             }
 
-            // Some elements compute profiles and transforms
-            // during UpdateRepresentation. Call UpdateRepresentation
-            // here to ensure these values are correct in the JSON.
-
-            // TODO: This is really expensive. This should be removed
-            // when all internal types have been updated to not create elements
-            // during UpdateRepresentation. This is now possible because
-            // geometry operations are reactive to changes in their properties.
+            // Function wrapper code no longer calls UpdateRepresentations, so we need to do it here.
             if (updateElementRepresentations && element is GeometricElement geo)
             {
                 geo.UpdateRepresentations();
@@ -135,6 +128,8 @@ namespace Elements
                 {
                     if (!this.Elements.ContainsKey(e.Id))
                     {
+                        // Because function wrapper code doesn't called UpdateRepresentations any more
+                        // we need to call it her for all nested elements while they are added.
                         if (updateElementRepresentations && e is GeometricElement geoE)
                         {
                             geoE.UpdateRepresentations();
