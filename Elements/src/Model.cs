@@ -37,9 +37,8 @@ namespace Elements
 
         /// <summary>
         /// Collection of subelements from shared objects or RepresentationInstances (e.g. SolidRepresentation.Profile or RepresentationInstance.Material).
-        /// 
         /// We do not serialize shared objects to json, but we do include them in other formats like gltf.
-        /// This collection contains all elements referenced directly by RepresentationInstances, such as Materials and Profiles. 
+        /// This collection contains all elements referenced directly by RepresentationInstances, such as Materials and Profiles.
         /// These objects affect representation appearance and may be used at glTF creation time.
         /// </summary>
         [JsonIgnore]
@@ -136,6 +135,10 @@ namespace Elements
                 {
                     if (!this.Elements.ContainsKey(e.Id))
                     {
+                        if (updateElementRepresentations && e is GeometricElement geoE)
+                        {
+                            geoE.UpdateRepresentations();
+                        }
                         this.Elements.Add(e.Id, e);
                     }
                 }
