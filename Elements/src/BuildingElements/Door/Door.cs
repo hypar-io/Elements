@@ -36,6 +36,7 @@ namespace Elements.BuildingElements.Door
         public Opening Opening { get; private set; }
 
         private readonly double _fullDoorWidthWithoutFrame;
+        private readonly DoorRepresentationProvider _representationProvider;
 
         /// <summary>
         /// Create a door.
@@ -80,6 +81,8 @@ namespace Elements.BuildingElements.Door
             Material = material ?? DEFAULT_MATERIAL;
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(clearWidth, openingSide);
             Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
+
+            _representationProvider = new DoorRepresentationProvider();
         }
 
         /// <summary>
@@ -128,6 +131,8 @@ namespace Elements.BuildingElements.Door
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(ClearWidth, openingSide);
             Transform = GetDoorTransform(line.PointAtNormalized(tPos), line, flip);
             Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
+
+            _representationProvider = new DoorRepresentationProvider();
         }
 
         private Transform GetOpeningTransform()
@@ -158,11 +163,7 @@ namespace Elements.BuildingElements.Door
         /// </summary>
         public override void UpdateRepresentations()
         {
-            RepresentationInstances = new List<RepresentationInstance>()
-            {
-                DoorRepresentationFactory.CreateSolidDoorRepresentation(this),
-                DoorRepresentationFactory.CreateCurveDoorRepresentation(this)
-            };
+            RepresentationInstances = _representationProvider.GetInstances(this);
         }
 
         private Vector3 GetClosestValidDoorPos(Line wallLine, Vector3 currentPosition)

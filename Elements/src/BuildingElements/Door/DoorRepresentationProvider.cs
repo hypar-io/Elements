@@ -3,23 +3,35 @@ using Elements.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Elements.CoreModels;
 
 namespace Elements.BuildingElements.Door
 {
-    internal static class DoorRepresentationFactory
+    internal class DoorRepresentationProvider : RepresentationProvider<Door>
     {
+        public override List<RepresentationInstance> GetInstances(Door element)
+        {
+            var representationInstances = new List<RepresentationInstance>()
+            {
+                CreateSolidDoorRepresentation(element),
+                CreateCurveDoorRepresentation(element)
+            };
+
+            return representationInstances;
+        }
+
         /// <summary>
         /// Create a solid representation of a <paramref name="door"/>.
         /// </summary>
         /// <param name="door">Parameters of <paramref name="door"/> 
         /// will be used for the representation creation.</param>
         /// <returns>A solid representation, created from properties of <paramref name="door"/>.</returns>
-        public static RepresentationInstance CreateSolidDoorRepresentation(Door door)
+        private static RepresentationInstance CreateSolidDoorRepresentation(Door door)
         {
             double fullDoorWidthWithoutFrame = door.GetFullDoorWidthWithoutFrame();
 
-            Vector3 left = Vector3.XAxis * fullDoorWidthWithoutFrame / 2;
-            Vector3 right = Vector3.XAxis.Negate() * fullDoorWidthWithoutFrame / 2;
+            Vector3 left = Vector3.XAxis * (fullDoorWidthWithoutFrame / 2);
+            Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
 
             var doorPolygon = new Polygon(new List<Vector3>() {
                 left + Vector3.YAxis * Door.DOOR_THICKNESS,
@@ -72,7 +84,7 @@ namespace Elements.BuildingElements.Door
         /// <param name="door">Parameters of <paramref name="door"/> 
         /// will be used for the representation creation.</param>
         /// <returns>A curve 2D representation, created from properties of <paramref name="door"/>.</returns>
-        public static RepresentationInstance CreateCurveDoorRepresentation(Door door)
+        private static RepresentationInstance CreateCurveDoorRepresentation(Door door)
         {
             var points = CollectPointsForSchematicVisualization(door);
             var curve = new IndexedPolycurve(points);
