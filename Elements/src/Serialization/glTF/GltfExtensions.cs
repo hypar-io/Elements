@@ -1315,7 +1315,7 @@ namespace Elements.Serialization.glTF
                                 {
                                     NodeUtilities.SetRepresentationInfo(nodes[index], representation);
                                     NodeUtilities.SetElementInfo(nodes[index], element.Id);
-                                    foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element, representation))
+                                    foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element))
                                     {
                                         AddExtension(gltf, nodes[index], nodeExtension.Name, nodeExtension.Attributes);
                                     }
@@ -1341,6 +1341,11 @@ namespace Elements.Serialization.glTF
                                         var meshIdList = new List<int> { meshId };
                                         representationsMap.Add(combinedId, meshIdList);
                                         addedNodes.AddRange(NodeUtilities.AddNodes(nodes, meshIdList, elementNodeId));
+                                        var snappingPoints = representation.Representation.CreateSnappingPoints(element);
+                                        if (snappingPoints.Any())
+                                        {
+                                            AddExtension(gltf, meshes[meshId], "HYPAR_snapping_points", new Dictionary<string, object>() { { "points", snappingPoints } });
+                                        }
                                     }
                                 }
                                 else
@@ -1357,7 +1362,7 @@ namespace Elements.Serialization.glTF
                                     {
                                         NodeUtilities.SetRepresentationInfo(nodes[index], representation);
                                         NodeUtilities.SetElementInfo(nodes[index], element.Id);
-                                        foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element, representation))
+                                        foreach (var nodeExtension in representation.Representation.GetNodeExtensions(element))
                                         {
                                             AddExtension(gltf, nodes[index], nodeExtension.Name, nodeExtension.Attributes);
                                         }

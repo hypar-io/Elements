@@ -77,9 +77,9 @@ namespace Elements
             return true;
         }
 
-        internal override List<NodeExtension> GetNodeExtensions(GeometricElement element, RepresentationInstance representationInstance)
+        internal override List<NodeExtension> GetNodeExtensions(GeometricElement element)
         {
-            var extensions = base.GetNodeExtensions(element, representationInstance);
+            var extensions = base.GetNodeExtensions(element);
             extensions.Add(new NodeExtension("HYPAR_referenced_content", "contentUrl", GlbLocation));
             return extensions;
         }

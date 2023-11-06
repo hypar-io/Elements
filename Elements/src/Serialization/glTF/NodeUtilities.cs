@@ -90,7 +90,7 @@ namespace Elements.Serialization.glTF
             // Two new nodes are created: a top-level node, which has the
             // element's Transform, and one just below that, which handles
             // flipping the orientation of the glb to have Z up. That node has
-            // the node to copy as its only child. 
+            // the node to copy as its only child.
             // We use the node to copy exactly as is, with an unmodified
             // transform.
             // We need the outermost node to be "purely" the element's
@@ -109,7 +109,7 @@ namespace Elements.Serialization.glTF
             var rootTransform = new Transform();
             // glb has Y up. transform it to have Z up so we
             // can create instances of it in a Z up world. It will get switched
-            // back to Y up further up in the node hierarchy. 
+            // back to Y up further up in the node hierarchy.
             rootTransform.Rotate(new Vector3(1, 0, 0), 90.0);
             float[] glbOrientationTransform = TransformToMatrix(rootTransform);
             var elementOrientationNode = new glTFLoader.Schema.Node();
@@ -237,8 +237,14 @@ namespace Elements.Serialization.glTF
             var extensionDict = new Dictionary<string, object>
                 {
                     {"isDefault", representationInstance.IsDefault},
-                    {"representationType", representationInstance.RepresentationTypes}
+                    {"representationType", representationInstance.RepresentationTypes},
+                    {"snappingSource", representationInstance.SnappingPointsSource},
                 };
+
+            if (node.Mesh.HasValue)
+            {
+                extensionDict.Add("mesh", node.Mesh.Value);
+            }
 
             node.Extensions["HYPAR_representation_info"] = extensionDict;
         }
