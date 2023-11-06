@@ -4,7 +4,7 @@
 
 #!csharp
 
-#r "/Users/iankeough/dev/Hypar/Elements/Elements/src/bin/Debug/netstandard2.0/Hypar.Elements.dll"
+#r "./Elements/src/bin/Debug/netstandard2.0/Hypar.Elements.dll"
 #r "nuget:glTF2Loader, 1.1.3-alpha"
 #r "nuget:Unofficial.LibTessDotNet, 2.0.0"
 #r "nuget:SixLabors.Fonts, 1.0.0-beta19"
@@ -23,6 +23,7 @@ using Elements.Serialization.glTF;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using Elements.Geometry.Solids;
 
 var viewerSrc = @"
 <div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
@@ -135,6 +136,7 @@ if (KernelInvocationContext.Current is { } currentContext)
 double DEFAULT_MODEL_WIDTH = 600;
 double DEFAULT_MODEL_HEIGHT = 400;
 Material DEFAULT_CURVE_MATERIAL = BuiltInMaterials.XAxis;
+Material DEFAULT_SOLID_MATERIAL = BuiltInMaterials.Default;
 
 string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
     var gltf = model.ToGlTF();
@@ -194,6 +196,45 @@ Formatter.Register<Model>((model, writer) => {
     writer.Write(src);
 }, "text/html");
 
+Formatter.Register<SolidOperation>((solidOp, writer) => {
+    var model = new Model();
+    model.AddElement(new GeometricElement { Representation = solidOp, Material= DEFAULT_SOLID_MATERIAL});
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+Formatter.Register<Representation>((representation, writer) => {
+    var model = new Model();
+    model.AddElement(new GeometricElement { Representation = representation, Material= DEFAULT_SOLID_MATERIAL});
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+Formatter.Register<IEnumerable<SolidOperation>>((solidOps, writer) => {
+    var model = new Model();
+    foreach(var solidOp in solidOps) {
+        model.AddElement(new GeometricElement { Representation = solidOp, Material= DEFAULT_SOLID_MATERIAL});
+    }
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+Formatter.Register<Transform>((xform, writer) => {
+    var model = new Model();
+        model.AddElements(xform.ToModelCurves());
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Transform>>((xforms, writer) => {
+    var model = new Model();
+    foreach(var xform in xforms) {
+        model.AddElements(xform.ToModelCurves());
+    }
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
 void DisplayModel(Model model, double? width=null, double? height=null) {
     var src = GetModelViewerSrc(model, width ?? DEFAULT_MODEL_WIDTH, height ?? DEFAULT_MODEL_HEIGHT);
     KernelInvocationContext.Current.DisplayAs(src, "text/html");
@@ -206,6 +247,10 @@ void SetDefaultDisplaySize(double width, double height) {
 
 void SetDefaultCurveMaterial(Material mat) {
     DEFAULT_CURVE_MATERIAL = mat;
+}
+
+void SetDefaultSolidMaterial(Material mat) {
+    DEFAULT_SOLID_MATERIAL = mat;
 }
 
 #!csharp
