@@ -128,8 +128,8 @@ namespace Elements
                 {
                     if (!this.Elements.ContainsKey(e.Id))
                     {
-                        // Because function wrapper code doesn't called UpdateRepresentations any more
-                        // we need to call it her for all nested elements while they are added.
+                        // Because function wrapper code doesn't call UpdateRepresentations any more
+                        // we need to call it here for all nested elements while they are added.
                         if (updateElementRepresentations && e is GeometricElement geoE)
                         {
                             geoE.UpdateRepresentations();
