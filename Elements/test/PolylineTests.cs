@@ -776,6 +776,36 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void PolylineTransformAt()
+        {
+            var polyline = new Polyline((0, 0), (5, 0), (5, 10), (-5, 10));
+
+            var transform = polyline.TransformAt(0);
+            Assert.Equal((0, 0), transform.Origin);
+            Assert.Equal(Vector3.XAxis.Negate(), transform.ZAxis);
+
+            transform = polyline.TransformAt(0.5);
+            Assert.Equal((2.5, 0), transform.Origin);
+            Assert.Equal(Vector3.XAxis.Negate(), transform.ZAxis);
+
+            transform = polyline.TransformAt(1);
+            Assert.Equal((5, 0), transform.Origin);
+            Assert.Equal((Vector3.XAxis + Vector3.YAxis).Unitized().Negate(), transform.ZAxis);
+
+            transform = polyline.TransformAt(1.25);
+            Assert.Equal((5, 2.5), transform.Origin);
+            Assert.Equal(Vector3.YAxis.Negate(), transform.ZAxis);
+
+            transform = polyline.TransformAt(2);
+            Assert.Equal((5, 10), transform.Origin);
+            Assert.Equal((Vector3.YAxis - Vector3.XAxis).Unitized().Negate(), transform.ZAxis);
+
+            transform = polyline.TransformAt(2.75);
+            Assert.Equal((-2.5, 10), transform.Origin);
+            Assert.Equal(Vector3.XAxis, transform.ZAxis);
+        }
+
+        [Fact]
         public void Frames()
         {
             var polyline = new Polyline((0, 0), (2, 0), (2, 2), (0, 2));

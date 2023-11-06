@@ -205,7 +205,7 @@ namespace Elements.Geometry
                     vertices.Add(curve.Start);
                     last = curve.End;
                     curveIndices.Add(new[] { index, index + 1 });
-                    index += 2;
+                    index += 1;
                 }
                 else if (curve is Arc)
                 {
@@ -213,7 +213,7 @@ namespace Elements.Geometry
                     vertices.Add(curve.Mid());
                     last = curve.End;
                     curveIndices.Add(new[] { index, index + 1, index + 2 });
-                    index += 3;
+                    index += 2;
                 }
                 else
                 {
