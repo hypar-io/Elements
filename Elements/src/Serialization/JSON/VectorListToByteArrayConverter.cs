@@ -7,6 +7,8 @@ namespace Elements.Serialization.JSON
 {
     internal class VectorListToByteArrayConverter : JsonConverter
     {
+        public override bool CanRead => false;
+
         public override bool CanConvert(Type objectType)
         {
             return objectType == typeof(List<Vector3>);
