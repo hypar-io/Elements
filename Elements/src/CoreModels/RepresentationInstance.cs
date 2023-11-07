@@ -10,32 +10,13 @@ namespace Elements
     public class RepresentationInstance
     {
         /// <summary>
-        /// The source of the snapping points.
-        /// </summary>
-        public SnappingPointsSource SnappingPointsSource { get; set; }
-
-
-        /// <summary>
-        /// Initializes a new instance of RepresentationInstance class.
-        /// </summary>
-        /// <param name="representation">The element representation.</param>
-        /// <param name="material">The material applied to the element representation.</param>
-        /// <param name="isDefault">Indicates if this representation is default.</param>
-        /// <param name="representationTypes">The set of representation type names that can be used by view or by other parts of the sysetem to identify
-        /// if this element representation is suitable for display.</param>
-        public RepresentationInstance(ElementRepresentation representation, Material material, bool isDefault = true, params string[] representationTypes) :
-            this(representation, material, isDefault, SnappingPointsSource.None, representationTypes)
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of RepresentationInstance class.
         /// </summary>
         /// <param name="representation">The element representation.</param>
         /// <param name="material">The material applied to the element representation.</param>
         /// <param name="isDefault">Indicates if this representation is default.</param>
         public RepresentationInstance(ElementRepresentation representation, Material material, bool isDefault = true) :
-            this(representation, material, isDefault, SnappingPointsSource.None, "")
+            this(representation, material, isDefault, "")
         {
         }
 
@@ -45,16 +26,14 @@ namespace Elements
         /// <param name="representation">The element representation.</param>
         /// <param name="material">The material applied to the element representation.</param>
         /// <param name="isDefault">Indicates if this representation is default.</param>
-        /// <param name="snappingPointsSource">The snapping points source.</param>
         /// <param name="representationTypes">The set of representation type names that can be used by view or by other parts of the sysetem to identify
         /// if this element representation is suitable for display.</param>
         public RepresentationInstance(ElementRepresentation representation, Material material,
-                 bool isDefault = true, SnappingPointsSource snappingPointsSource = SnappingPointsSource.None, params string[] representationTypes)
+                 bool isDefault = true, params string[] representationTypes)
         {
             Representation = representation;
             Material = material;
             IsDefault = isDefault;
-            SnappingPointsSource = snappingPointsSource;
             foreach (var type in representationTypes)
             {
                 RepresentationTypes.Add(type);

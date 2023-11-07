@@ -238,7 +238,6 @@ namespace Elements.Serialization.glTF
                 {
                     {"isDefault", representationInstance.IsDefault},
                     {"representationType", representationInstance.RepresentationTypes},
-                    {"snappingSource", representationInstance.SnappingPointsSource},
                 };
 
             if (node.Mesh.HasValue)
