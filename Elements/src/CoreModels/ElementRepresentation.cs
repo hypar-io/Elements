@@ -27,4 +27,14 @@ public abstract class ElementRepresentation : SharedObject
     {
         return new List<NodeExtension>();
     }
+
+    /// <summary>
+    ///Creates the set of snapping points
+    /// </summary>
+    /// <param name="element">The element with this representation.</param>
+    /// <returns></returns>
+    public virtual List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+    {
+        return new List<SnappingPoints>();
+    }
 }

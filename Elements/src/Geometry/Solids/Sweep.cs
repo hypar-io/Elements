@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
@@ -107,6 +108,11 @@ namespace Elements.Geometry.Solids
                     RaisePropertyChanged();
                 }
             }
+        }
+
+        internal override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            return base.CreateSnappingPoints(element);
         }
 
         private void UpdateGeometry()

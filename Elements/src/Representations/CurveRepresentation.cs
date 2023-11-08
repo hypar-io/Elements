@@ -45,5 +45,14 @@ namespace Elements
             mode = _curve.IsClosedForRendering ? glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_LOOP : glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
             return true;
         }
+
+        /// <inheritdoc/>
+        public override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var snappingPoints = new List<SnappingPoints>();
+            var curvePoints = _curve.RenderVertices();
+            snappingPoints.Add(new SnappingPoints(curvePoints));
+            return snappingPoints;
+        }
     }
 }
