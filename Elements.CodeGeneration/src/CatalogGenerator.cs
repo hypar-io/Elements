@@ -49,19 +49,25 @@ namespace Elements.Generate
         /// <param name="useReferenceOrientation">Should ContentElements be reoriented to match the rotation they had when they were exported?</param>
         public static void FromUri(string uri, string saveDirectory, bool useReferenceOrientation = false)
         {
-            Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content", "ReferenceConfiguration" });
-            Template.RegisterSafeType(typeof(ContentElement), GetContentElementToRender);
-            Template.RegisterSafeType(typeof(ElementInstance), GetElementInstanceToRender);
-            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
 
             var json = GetContentsOfUri(uri);
             ContentCatalog catalog = ContentCatalog.FromJson(json);
+
             // TODO useReferenceOrientation may have fallen out of use entirely.  Consider removing this optional flag.
             if (useReferenceOrientation)
             {
                 catalog.UseReferenceOrientation();
             }
 
+            GenerateCatalogClass(catalog, saveDirectory);
+        }
+
+        public static void GenerateCatalogClass(ContentCatalog catalog, string saveDirectory)
+        {
+            Template.RegisterSafeType(typeof(ContentCatalog), new[] { "Name", "Content", "ReferenceConfiguration" });
+            Template.RegisterSafeType(typeof(ContentElement), GetContentElementToRender);
+            Template.RegisterSafeType(typeof(ElementInstance), GetElementInstanceToRender);
+            DotLiquid.Template.RegisterFilter(typeof(HyparFilters));
             catalog = DeduplicateContentNames(catalog);
 
             var templateText = File.ReadAllText(CatalogTemplatePath);
