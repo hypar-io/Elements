@@ -37,9 +37,8 @@ namespace Elements
 
         /// <summary>
         /// Collection of subelements from shared objects or RepresentationInstances (e.g. SolidRepresentation.Profile or RepresentationInstance.Material).
-        /// 
         /// We do not serialize shared objects to json, but we do include them in other formats like gltf.
-        /// This collection contains all elements referenced directly by RepresentationInstances, such as Materials and Profiles. 
+        /// This collection contains all elements referenced directly by RepresentationInstances, such as Materials and Profiles.
         /// These objects affect representation appearance and may be used at glTF creation time.
         /// </summary>
         [JsonIgnore]
@@ -111,14 +110,7 @@ namespace Elements
                 return;
             }
 
-            // Some elements compute profiles and transforms
-            // during UpdateRepresentation. Call UpdateRepresentation
-            // here to ensure these values are correct in the JSON.
-
-            // TODO: This is really expensive. This should be removed
-            // when all internal types have been updated to not create elements
-            // during UpdateRepresentation. This is now possible because
-            // geometry operations are reactive to changes in their properties.
+            // Function wrapper code no longer calls UpdateRepresentations, so we need to do it here.
             if (updateElementRepresentations && element is GeometricElement geo)
             {
                 geo.UpdateRepresentations();
@@ -136,6 +128,12 @@ namespace Elements
                 {
                     if (!this.Elements.ContainsKey(e.Id))
                     {
+                        // Because function wrapper code doesn't call UpdateRepresentations any more
+                        // we need to call it here for all nested elements while they are added.
+                        if (updateElementRepresentations && e is GeometricElement geoE)
+                        {
+                            geoE.UpdateRepresentations();
+                        }
                         this.Elements.Add(e.Id, e);
                     }
                 }
@@ -272,8 +270,10 @@ namespace Elements
         /// </summary>
         public string ToJson()
         {
-            // The arguments here are meant to match the default arguments of the ToJson(bool, bool) method above.
-            return ToJson(false, true);
+            // By default we don't want to update representations because the UpdateRepresentation
+            // method is called during function adding.  Setting this to false makes the behavior
+            // match our function wrapping code behavior.
+            return ToJson(false, true, false);
         }
 
         /// <summary>
