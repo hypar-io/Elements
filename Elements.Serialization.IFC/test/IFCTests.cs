@@ -53,14 +53,14 @@ namespace Elements.IFC.Tests
             )
         {
             var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors);
-            
+
             int countOfFloors = model.AllElementsOfType<Floor>().Count();
             int countOfOpenings = model.AllElementsOfType<Opening>().Count();
             int countOfWalls = model.AllElementsOfType<Wall>().Count();
             int countOfDoors = model.AllElementsOfType<Door>().Count();
             int countOfSpaces = model.AllElementsOfType<Space>().Count();
             int countOfBeams = model.AllElementsOfType<Beam>().Count();
-            
+
             Assert.Equal(expectedElementsCount, model.Elements.Count);
 
             Assert.Equal(expectedCountOfFloors, countOfFloors);
@@ -69,7 +69,7 @@ namespace Elements.IFC.Tests
             Assert.Equal(expectedCountOfDoors, countOfDoors);
             Assert.Equal(expectedCountOfSpaces, countOfSpaces);
             Assert.Equal(expectedCountOfBeams, countOfBeams);
-            
+
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
@@ -115,6 +115,15 @@ namespace Elements.IFC.Tests
             Assert.Equal(wallCount, 4);
             Assert.Equal(openingCount, 5);
             Assert.Equal(floorCount, 1);
+        }
+
+        [Fact]
+        public void SpaceTemplate()
+        {
+            var model = System.IO.File.ReadAllText("../../../models/Hypar/space-planning.json");
+            var hyparModel = Model.FromJson(model);
+            var path = ConstructIfcPath("space-planning-test");
+            hyparModel.ToIFC(path);
         }
 
         [Fact]
