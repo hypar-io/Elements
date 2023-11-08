@@ -3,11 +3,10 @@ using Elements.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Elements.CoreModels;
 
 namespace Elements
 {
-    internal class DoorRepresentationProvider : RepresentationProvider<Door>
+    internal class DoorRepresentationProvider
     {
         private readonly Dictionary<DoorProperties, List<RepresentationInstance>> _doorTypeToRepresentations;
 
@@ -16,7 +15,7 @@ namespace Elements
             _doorTypeToRepresentations = new Dictionary<DoorProperties, List<RepresentationInstance>>();
         }
 
-        public override List<RepresentationInstance> GetInstances(Door door)
+        public List<RepresentationInstance> GetInstances(Door door)
         {
             var doorProps = new DoorProperties(door);
 
