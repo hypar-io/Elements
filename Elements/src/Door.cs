@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Elements.BuildingElements.Door
+namespace Elements
 {
     /// <summary>Definition of a door</summary>
     public class Door : GeometricElement

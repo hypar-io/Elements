@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Elements.BuildingElements.Door
+namespace Elements
 {
     public enum DoorOpeningType
     {

@@ -1,5 +1,4 @@
-﻿using Elements.BuildingElements.Door;
-using Elements.Geometry;
+﻿using Elements.Geometry;
 using Elements.Tests;
 using System;
 using System.Collections.Generic;

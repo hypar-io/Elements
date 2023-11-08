@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Elements.CoreModels;
 
-namespace Elements.BuildingElements.Door
+namespace Elements
 {
     internal class DoorRepresentationProvider : RepresentationProvider<Door>
     {
