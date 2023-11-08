@@ -9,14 +9,29 @@ namespace Elements
 {
     internal class DoorRepresentationProvider : RepresentationProvider<Door>
     {
-        public override List<RepresentationInstance> GetInstances(Door element)
+        private readonly Dictionary<DoorProperties, List<RepresentationInstance>> _doorTypeToRepresentations;
+
+        public DoorRepresentationProvider()
         {
+            _doorTypeToRepresentations = new Dictionary<DoorProperties, List<RepresentationInstance>>();
+        }
+
+        public override List<RepresentationInstance> GetInstances(Door door)
+        {
+            var doorProps = new DoorProperties(door);
+
+            if (_doorTypeToRepresentations.TryGetValue(doorProps, out var representations))
+            {
+                return representations;
+            }
+
             var representationInstances = new List<RepresentationInstance>()
             {
-                CreateSolidDoorRepresentation(element),
-                CreateCurveDoorRepresentation(element)
+                CreateSolidDoorRepresentation(door),
+                CreateCurveDoorRepresentation(door)
             };
 
+            _doorTypeToRepresentations[doorProps] = representationInstances;
             return representationInstances;
         }
 
