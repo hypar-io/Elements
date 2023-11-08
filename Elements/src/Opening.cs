@@ -90,10 +90,7 @@ namespace Elements
         {
             this.Representation.SolidOperations.Clear();
             var depth = this.DepthFront + this.DepthBack;
-            var op = new Extrude(this.Perimeter, depth, Normal, true)
-            {
-                LocalTransform = new Transform(new Vector3(0, 0, -this.DepthBack))
-            };
+            var op = new Extrude(this.Perimeter, depth, Normal, true);
             this.Representation.SolidOperations.Add(op);
         }
     }
