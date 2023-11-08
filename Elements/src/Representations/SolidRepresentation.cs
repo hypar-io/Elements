@@ -191,5 +191,18 @@ namespace Elements
 
             return intersectionPoints;
         }
+
+        /// <inheritdoc/>
+        public override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var snappingPoints = new List<SnappingPoints>();
+
+            foreach (var solidOperation in SolidOperations)
+            {
+                snappingPoints.AddRange(solidOperation.CreateSnappingPoints(element));
+            }
+
+            return snappingPoints;
+        }
     }
 }
