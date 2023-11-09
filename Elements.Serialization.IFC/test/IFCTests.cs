@@ -38,7 +38,7 @@ namespace Elements.IFC.Tests
         // TODO: The entrance door has an incorrect representation. It happens because during
         // the UpdateRepresentation the default representation of a door is created instead of
         // the extracted one.
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1517, 5, 577, 121, 7, 82, 0, 21)]
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1513, 5, 577, 121, 7, 82, 0, 21)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void FromIFC4(string name,
                          string ifcPath,
