@@ -32,7 +32,6 @@ namespace Elements.Geometry.Tessellation
         {
             var tess = new Tess
             {
-                UsePooling = true,
                 NoEmptyPolygons = true
             };
 
