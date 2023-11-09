@@ -10,6 +10,8 @@ namespace Elements
     {
         private readonly Dictionary<DoorProperties, List<RepresentationInstance>> _doorTypeToRepresentations;
 
+        private static readonly Material frameMaterial = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
+
         public DoorRepresentationProvider()
         {
             _doorTypeToRepresentations = new Dictionary<DoorProperties, List<RepresentationInstance>>();
@@ -27,6 +29,7 @@ namespace Elements
             var representationInstances = new List<RepresentationInstance>()
             {
                 CreateSolidDoorRepresentation(door),
+                CreateSolidFrameRepresentation(door),
                 CreateCurveDoorRepresentation(door)
             };
 
@@ -37,12 +40,13 @@ namespace Elements
         /// <summary>
         /// Create a solid representation of a <paramref name="door"/>.
         /// </summary>
-        /// <param name="door">Parameters of <paramref name="door"/> 
+        /// <param name="door">Parameters of <paramref name="door"/>
         /// will be used for the representation creation.</param>
         /// <returns>A solid representation, created from properties of <paramref name="door"/>.</returns>
         private static RepresentationInstance CreateSolidDoorRepresentation(Door door)
         {
-            double fullDoorWidthWithoutFrame = door.GetFullDoorWidthWithoutFrame();
+            //subtracting a bit for Z fighting
+            double fullDoorWidthWithoutFrame = door.GetFullDoorWidthWithoutFrame() - 0.001;
 
             Vector3 left = Vector3.XAxis * (fullDoorWidthWithoutFrame / 2);
             Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
@@ -72,6 +76,28 @@ namespace Elements
                 doorExtrusions.Add(doorExtrude);
             }
 
+            var solidRep = new SolidRepresentation(doorExtrusions);
+            var repInstance = new RepresentationInstance(solidRep, BuiltInMaterials.Wood, true);
+            return repInstance;
+        }
+
+
+        /// <summary>
+        /// Create a solid frame representation of a <paramref name="door"/>.
+        /// </summary>
+        /// <param name="door">Parameters of <paramref name="door"/>
+        /// will be used for the representation creation.</param>
+        /// <returns>A solid representation, created from properties of <paramref name="door"/>.</returns>
+        private static RepresentationInstance CreateSolidFrameRepresentation(Door door)
+        {
+            //subtracting a bit for Z fighting
+            double fullDoorWidthWithoutFrame = door.GetFullDoorWidthWithoutFrame() - 0.001;
+
+            Vector3 left = Vector3.XAxis * (fullDoorWidthWithoutFrame / 2);
+            Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
+
+            var doorExtrusions = new List<SolidOperation>();
+
             var frameLeft = left + Vector3.XAxis * Door.DOOR_FRAME_WIDTH;
             var frameRight = right - Vector3.XAxis * Door.DOOR_FRAME_WIDTH;
             var frameOffset = Vector3.YAxis * Door.DOOR_FRAME_THICKNESS;
@@ -88,14 +114,16 @@ namespace Elements
             doorExtrusions.Add(doorFrameExtrude);
 
             var solidRep = new SolidRepresentation(doorExtrusions);
-            var repInstance = new RepresentationInstance(solidRep, door.Material, true);
+
+
+            var repInstance = new RepresentationInstance(solidRep, frameMaterial, true);
             return repInstance;
         }
 
         /// <summary>
         /// Create a curve 2D representation of a <paramref name="door"/>.
         /// </summary>
-        /// <param name="door">Parameters of <paramref name="door"/> 
+        /// <param name="door">Parameters of <paramref name="door"/>
         /// will be used for the representation creation.</param>
         /// <returns>A curve 2D representation, created from properties of <paramref name="door"/>.</returns>
         private static RepresentationInstance CreateCurveDoorRepresentation(Door door)
@@ -193,7 +221,7 @@ namespace Elements
                 anchorAngle = 360;
             }
 
-            // If arc is constructed from bigger angle to smaller is will have incorrect domain 
+            // If arc is constructed from bigger angle to smaller is will have incorrect domain
             // with max being smaller than min and negative length.
             // ToPolyline will return 0 points for it.
             // Until it's fixed angles should be aligned manually.

@@ -34,8 +34,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             // TODO: Implement during the connections establishment.
             //var wall = GetWallFromDoor(ifcDoor, allWalls);
-            var doorWidth = (IfcLengthMeasure) ifcDoor.OverallWidth;
-            var doorHeight = (IfcLengthMeasure) ifcDoor.OverallHeight;
+            var doorWidth = (IfcLengthMeasure)ifcDoor.OverallWidth;
+            var doorHeight = (IfcLengthMeasure)ifcDoor.OverallHeight;
 
             var result = new Door(doorWidth,
                                   doorHeight,
@@ -44,6 +44,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                   repData.Transform,
                                   repData.Material,
                                   new Representation(repData.SolidOperations),
+                                  false,
                                   IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
                                   ifcDoor.Name
                                   );

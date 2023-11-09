@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 
 namespace Elements
 {
+
     /// <summary>Definition of a door</summary>
     public class Door : GeometricElement
     {
@@ -14,11 +15,11 @@ namespace Elements
         /// <summary>
         /// Default thickness of a door.
         /// </summary>
-        public const double DOOR_THICKNESS = 0.125;
+        public const double DOOR_THICKNESS = 1.375 * 0.0254;
         /// <summary>
         /// Default thickness of a door frame.
         /// </summary>
-        public const double DOOR_FRAME_THICKNESS = 0.15;
+        public const double DOOR_FRAME_THICKNESS = 4 * 0.0254;
         /// <summary>
         /// Default width of a door frame.
         /// </summary>
@@ -34,6 +35,8 @@ namespace Elements
         public double ClearHeight { get; private set; }
         /// <summary>Opening for a door.</summary>
         public Opening Opening { get; private set; }
+
+        public Vector3 OriginalPosition { get; set; }
 
         private readonly double _fullDoorWidthWithoutFrame;
         private readonly DoorRepresentationProvider _representationProvider;
