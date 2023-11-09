@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
@@ -52,6 +53,11 @@ namespace Elements.Geometry.Solids
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
+        internal virtual List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            return new List<SnappingPoints>();
         }
     }
 }

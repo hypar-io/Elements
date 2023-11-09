@@ -453,6 +453,19 @@ namespace Elements.Serialization.glTF
         }
 
         /// <summary>
+        /// Add a custom Mesh extension.
+        /// </summary>
+        private static void AddExtension(Gltf gltf, glTFLoader.Schema.Mesh gltfMesh, string extensionName, Dictionary<string, object> extensionAttributes)
+        {
+            if (gltfMesh.Extensions == null)
+            {
+                gltfMesh.Extensions = new Dictionary<string, object>();
+            }
+            AddExtension(gltf, extensionName, extensionAttributes);
+            gltfMesh.Extensions.Add(extensionName, extensionAttributes);
+        }
+
+        /// <summary>
         /// Add a generic custom extension.
         /// </summary>
         /// <param name="gltf"></param>
@@ -1328,6 +1341,11 @@ namespace Elements.Serialization.glTF
                                         var meshIdList = new List<int> { meshId };
                                         representationsMap.Add(combinedId, meshIdList);
                                         addedNodes.AddRange(NodeUtilities.AddNodes(nodes, meshIdList, elementNodeId));
+                                        var snappingPoints = representation.Representation.CreateSnappingPoints(element);
+                                        if (snappingPoints.Any())
+                                        {
+                                            AddExtension(gltf, meshes[meshId], "HYPAR_snapping_points", new Dictionary<string, object>() { { "points", snappingPoints } });
+                                        }
                                     }
                                 }
                                 else
