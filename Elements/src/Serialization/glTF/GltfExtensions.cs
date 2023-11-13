@@ -1623,7 +1623,7 @@ namespace Elements.Serialization.glTF
                 return -1;
             }
 
-            if (geometricElement.Representation != null)
+            if (geometricElement.Representation != null && geometricElement._csg != null)
             {
                 meshId = ProcessSolidsAsCSG(geometricElement,
                                     e.Id.ToString(),
