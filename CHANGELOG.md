@@ -50,6 +50,7 @@
 - `Elements.MEP`
 - `GeometricElement.RepresentationInstances`
 - `ContentRepresentation`
+- `Elements.Door`
 
 ### Fixed
 
@@ -58,8 +59,9 @@
 - `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
+- `Polyline.TransformAt` returns correct transformations when parameter on domain is provided.
+- `IndexedPolycurve` constructor that takes list of `BoundedCurve` now produces `CurveIndices` that share vertices and are withing index range. This means `IndexedPolyline.TransformedPolyline` preserves `CurveIndicies` on new `IndexedPolyline`.
 - `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
-
 
 ### Changed
 - `GltfExtensions.UseReferencedContentExtension` is now true by default.
