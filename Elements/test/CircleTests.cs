@@ -76,6 +76,7 @@ namespace Elements.Geometry.Tests
 
             Assert.True(Math.Abs(circle.GetParameterAt(mid) - Math.PI) < double.Epsilon ? true : false);
 
+            Assert.Equal(circle.Circumference, 2 * Math.PI * radius);
             var vector = new Vector3(3.535533, 3.535533, 0.0);
             var uValue = circle.GetParameterAt(vector);
             var expectedVector = circle.PointAt(uValue);

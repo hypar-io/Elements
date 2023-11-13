@@ -56,6 +56,7 @@ namespace Elements.Geometry
         public Circle(Vector3 center, double radius = 1.0)
         {
             this.Radius = radius;
+            this.Circumference = 2 * Math.PI * this.Radius;
             this.Transform = new Transform(center);
         }
 
@@ -66,6 +67,7 @@ namespace Elements.Geometry
         public Circle(double radius = 1.0)
         {
             this.Radius = radius;
+            this.Circumference = 2 * Math.PI * this.Radius;
             this.Transform = new Transform();
         }
 
@@ -76,6 +78,7 @@ namespace Elements.Geometry
         {
             this.Transform = transform;
             this.Radius = radius;
+            this.Circumference = 2 * Math.PI * this.Radius;
         }
 
         /// <summary>
@@ -322,13 +325,12 @@ namespace Elements.Geometry
         public Vector3[] DivideByLength(double length)
         {
             List<Vector3> points = new List<Vector3>();
-            double circumference = 2 * Math.PI * Radius;
-            int segmentCount = (int)Math.Ceiling(circumference / length);
-            double segmentLength = circumference / segmentCount;
+            int segmentCount = (int)Math.Ceiling(Circumference / length);
+            double segmentLength = Circumference / segmentCount;
 
             for (int i = 0; i < segmentCount; i++)
             {
-                double parameter = i * segmentLength / circumference;
+                double parameter = i * segmentLength / Circumference;
                 points.Add(PointAtNormalizedLength(parameter));
             }
 
