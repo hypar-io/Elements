@@ -105,7 +105,7 @@
 - `Polyline` is now parameterized 0->length.
 - `Polyline` now implements the `IHasArcLength` interface.
 - `Arc` now inherits from `TrimmedCurve<Circle>`.
-- `Arc` is now parameterized 0->2Pi
+- `Arc` is now parameterized 0->2Pi.
 - `Line` now inherits from `TrimmedCurve<InfiniteLine>`.
 - `Line` is now parameterized 0->length.
 - `Line` now implements the `IHasArcLength` interface.
