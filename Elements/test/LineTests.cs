@@ -259,18 +259,18 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void DivideByLengthToSegments()
+        public void DivideByLengthToPoints()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));
-            var segments = l.DivideByLengthToSegments(1.1);
+            var segments = l.DivideByLengthToPoints(1.1);
             Assert.Equal(6, segments.Count());
 
-            var segments1 = l.DivideByLengthToSegments(2);
+            var segments1 = l.DivideByLengthToPoints(2);
             Assert.Equal(4, segments1.Count());
         }
 
         [Fact]
-        public void DivideByLengthToPoints()
+        public void DivideByLengthToPSegments()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));
             var segments = l.DivideByLengthToSegments(1.1);
