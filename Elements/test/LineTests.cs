@@ -270,6 +270,17 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void DivideByLengthToPoints()
+        {
+            var l = new Line(Vector3.Origin, new Vector3(5, 0));
+            var segments = l.DivideByLengthToSegments(1.1);
+            Assert.Equal(5, segments.Count());
+
+            var segments1 = l.DivideByLengthToSegments(2);
+            Assert.Equal(3, segments1.Count());
+        }
+
+        [Fact]
         public void DivideByLengthFromCenter()
         {
             // 5 whole size panels.
