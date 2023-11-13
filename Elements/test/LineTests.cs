@@ -141,7 +141,7 @@ namespace Elements.Geometry.Tests
         public void IntersectsCircle()
         {
             Circle c = new Circle(new Vector3(5, 5, 5), 5);
-            
+
             // Intersects circle at one point and touches at other.
             Line l = new Line(new Vector3(0, 5, 5), new Vector3(15, 5, 5));
             Assert.True(l.Intersects(c, out var results));
@@ -259,13 +259,13 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void DivideByLength()
+        public void DivideByLengthToSegments()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));
-            var segments = l.DivideByLength(1.1);
+            var segments = l.DivideByLengthToSegments(1.1);
             Assert.Equal(6, segments.Count());
 
-            var segments1 = l.DivideByLength(2);
+            var segments1 = l.DivideByLengthToSegments(2);
             Assert.Equal(4, segments1.Count());
         }
 

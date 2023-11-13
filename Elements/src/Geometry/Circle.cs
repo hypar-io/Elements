@@ -27,6 +27,11 @@ namespace Elements.Geometry
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
         public double Radius { get; protected set; }
 
+        /// <summary>The circumference of the circle.</summary>
+        [JsonIgnore]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Circumference { get; protected set; }
+
         /// <summary>
         /// The coordinate system of the plane containing the circle.
         /// </summary>

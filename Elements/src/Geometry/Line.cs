@@ -595,14 +595,12 @@ namespace Elements.Geometry
             return false;
         }
 
-
-
         /// <summary>
         /// Divide the line into as many segments of the provided length as possible.
         /// </summary>
         /// <param name="l">The length.</param>
         /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
-        public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        public List<Line> DivideByLengthToSegments(double l, bool removeShortSegments = false)
         {
             var len = this.Length();
             if (l > len)
@@ -636,7 +634,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="divisionLength">The desired length of each segment.</param>
         /// <returns>A list of points representing the segments.</returns>
-        public Vector3[] DivideByLength(double divisionLength)
+        public Vector3[] DivideByLengthToPoints(double divisionLength)
         {
             var segments = new List<Vector3>();
 

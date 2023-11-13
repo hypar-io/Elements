@@ -36,7 +36,7 @@ namespace Elements.Fittings
 
             var path = reducerAtEnd ? pipe.Path.Segments()[0].Reversed() : pipe.Path.Segments()[0];
 
-            var position = path.DivideByLength(distanceFromEnd)[0].End;
+            var position = path.DivideByLengthToSegments(distanceFromEnd)[0].End;
 
             var orientation = path.Direction();
             // var fittingMaterial = new Material("green", new Color(0, 1, 0, 0.5);
@@ -133,7 +133,7 @@ namespace Elements.Fittings
         }
 
         /// <summary>
-        /// Port with smaller diameter points to the +X axis. 
+        /// Port with smaller diameter points to the +X axis.
         /// If there is eccentric transform, the smaller part will be shifted to the -Z axis.
         /// We point smaller diameter in the +X direction so that there is one reducer defined in the standard orientation, to which this transformation is then applied.
         /// This let's us just have one size 110/90 that is rotated into a 90/110 orientation when needed.
