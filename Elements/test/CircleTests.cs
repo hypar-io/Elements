@@ -15,6 +15,11 @@ namespace Elements.Geometry.Tests
             this.GenerateIfc = false;
         }
 
+        public CircleTests()
+        {
+            this.GenerateIfc = false;
+        }
+
         [Fact, Trait("Category", "Examples")]
         public void CircleExample()
         {
