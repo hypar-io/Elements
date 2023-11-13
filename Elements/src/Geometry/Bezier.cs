@@ -105,6 +105,32 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Calculate the length of the bezier between start and end parameters.
+        /// </summary>
+        /// <returns>The length of the bezier between start and end.</returns>
+        public override double ArcLength(double start, double end)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            // if we have a true Bezier, calculate a more accurate ArcLength using Gauss weights
+            if (ControlPoints.Count == 2)
+            {
+                return BezierArcLength(start, end);
+            }
+
+            // TODO: We use max value here so that the calculation will continue
+            // until at least the end of the curve. This is not a nice solution.
+            return ArcLengthUntil(start, double.MaxValue, out end);
+        }
+
+        /// <summary>
         /// Constants for Gauss quadrature points and weights (n = 24)
         /// https://pomax.github.io/bezierinfo/legendre-gauss.html
         /// </summary>
@@ -175,7 +201,7 @@ namespace Elements.Geometry
         /// <param name="start">The starting parameter value of the Bézier curve.</param>
         /// <param name="end">The ending parameter value of the Bézier curve.</param>
         /// <returns>The arc length between the specified parameter values.</returns>
-        public override double ArcLength(double start, double end)
+        public double BezierArcLength(double start, double end)
         {
             double z = 0.5; // Scaling factor for the Legendre-Gauss quadrature
             int len = T.Length; // Number of points in the Legendre-Gauss quadrature

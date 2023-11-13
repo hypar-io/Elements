@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Validators;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
@@ -55,6 +56,13 @@ namespace Elements.Geometry
         [JsonConstructor]
         public Circle(Vector3 center, double radius = 1.0)
         {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Math.Abs(radius - 0.0) < double.Epsilon ? true : false)
+                {
+                    throw new ArgumentException($"The circle could not be created. The radius of the circle cannot be the zero: radius {radius}");
+                }
+            }
             this.Radius = radius;
             this.Circumference = 2 * Math.PI * this.Radius;
             this.Transform = new Transform(center);
@@ -66,6 +74,13 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the circle.</param>
         public Circle(double radius = 1.0)
         {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Math.Abs(radius - 0.0) < double.Epsilon ? true : false)
+                {
+                    throw new ArgumentException($"The circle could not be created. The radius of the circle cannot be the zero: radius {radius}");
+                }
+            }
             this.Radius = radius;
             this.Circumference = 2 * Math.PI * this.Radius;
             this.Transform = new Transform();
@@ -76,6 +91,13 @@ namespace Elements.Geometry
         /// </summary>
         public Circle(Transform transform, double radius = 1.0)
         {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Math.Abs(radius - 0.0) < double.Epsilon ? true : false)
+                {
+                    throw new ArgumentException($"The circle could not be created. The radius of the circle cannot be the zero: radius {radius}");
+                }
+            }
             this.Transform = transform;
             this.Radius = radius;
             this.Circumference = 2 * Math.PI * this.Radius;
