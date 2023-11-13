@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
 using Elements.Search;
-using Elements.Geometry.Interfaces;
-using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -16,7 +14,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : IndexedPolycurve, IHasArcLength
+    public class Polyline : IndexedPolycurve
     {
         /// <summary>
         /// The domain of the curve.
@@ -919,7 +917,6 @@ namespace Elements.Geometry
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                 var edge = (a, b);
 
-                // An edge may have multiple split points.
                 // An edge may have multiple split points.
                 // We store these in a list and sort it along the
                 // direction of the edge, before inserting the points

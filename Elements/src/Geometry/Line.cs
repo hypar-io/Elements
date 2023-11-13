@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Elements.Spatial;
-using Elements.Geometry.Interfaces;
 
 namespace Elements.Geometry
 {
@@ -16,7 +15,7 @@ namespace Elements.Geometry
     /// [!code-csharp[Main](../../Elements/test/LineTests.cs?name=example)]
     /// </example>
     /// TODO: Rename this class to LineSegment
-    public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>, IHasArcLength
+    public class Line : TrimmedCurve<InfiniteLine>, IEquatable<Line>
     {
         /// <summary>
         /// The domain of the curve.
@@ -596,39 +595,41 @@ namespace Elements.Geometry
             return false;
         }
 
-        // /// <summary>
-        // /// Divide the line into as many segments of the provided length as possible.
-        // /// </summary>
-        // /// <param name="l">The length.</param>
-        // /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
-        // public List<Line> DivideByLength(double l, bool removeShortSegments = false)
-        // {
-        //     var len = this.Length();
-        //     if (l > len)
-        //     {
-        //         return new List<Line>() { new Line(this.Start, this.End) };
-        //     }
 
-        //     var total = 0.0;
-        //     var d = this.Direction();
-        //     var lines = new List<Line>();
-        //     while (total + l <= len)
-        //     {
-        //         var a = this.Start + d * total;
-        //         var b = a + d * l;
-        //         lines.Add(new Line(a, b));
-        //         total += l;
-        //     }
-        //     if (total < len && !removeShortSegments)
-        //     {
-        //         var a = this.Start + d * total;
-        //         if (!a.IsAlmostEqualTo(End))
-        //         {
-        //             lines.Add(new Line(a, End));
-        //         }
-        //     }
-        //     return lines;
-        // }
+
+        /// <summary>
+        /// Divide the line into as many segments of the provided length as possible.
+        /// </summary>
+        /// <param name="l">The length.</param>
+        /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
+        public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        {
+            var len = this.Length();
+            if (l > len)
+            {
+                return new List<Line>() { new Line(this.Start, this.End) };
+            }
+
+            var total = 0.0;
+            var d = this.Direction();
+            var lines = new List<Line>();
+            while (total + l <= len)
+            {
+                var a = this.Start + d * total;
+                var b = a + d * l;
+                lines.Add(new Line(a, b));
+                total += l;
+            }
+            if (total < len && !removeShortSegments)
+            {
+                var a = this.Start + d * total;
+                if (!a.IsAlmostEqualTo(End))
+                {
+                    lines.Add(new Line(a, End));
+                }
+            }
+            return lines;
+        }
 
         /// <summary>
         /// Divides the line into segments of the specified length.
@@ -671,7 +672,9 @@ namespace Elements.Geometry
             return segments.ToArray();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// The mid point of the line.
+        /// </summary>
         public override Vector3 Mid()
         {
             return Start.Average(End);
