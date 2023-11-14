@@ -13,6 +13,7 @@ namespace Elements.Fittings
 
     public abstract partial class ComponentBase : IComponent
     {
+        public static bool UseRepresentationInstances = false;
         /// <summary>
         /// The component that is towards the trunk of the tree.
         /// </summary>
@@ -42,6 +43,8 @@ namespace Elements.Fittings
         public abstract void ApplyAdditionalTransform();
 
         public abstract void ClearAdditionalTransform();
+
+        public abstract string GetRepresentationHash();
 
         /// <summary>
         /// Checks if transformation should be applied and propagated to the next connections.
@@ -348,10 +351,10 @@ namespace Elements.Fittings
                     return ps.Length();
                 case Terminal t:
                     var heightDelta = Math.Abs(t.Transform.Origin.Z - t.Port.Position.Z);
-            
+
                     var terminalTransformOrigin = t.Transform.Origin.Project(Plane.XY);
                     var terminalPortPosition = t.Port.Position.Project(Plane.XY);
-            
+
                     return terminalTransformOrigin.IsAlmostEqualTo(terminalPortPosition)
                         ? heightDelta
                         : heightDelta + terminalTransformOrigin.DistanceTo(terminalPortPosition);

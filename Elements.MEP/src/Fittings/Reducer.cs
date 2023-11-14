@@ -133,7 +133,7 @@ namespace Elements.Fittings
         }
 
         /// <summary>
-        /// Port with smaller diameter points to the +X axis. 
+        /// Port with smaller diameter points to the +X axis.
         /// If there is eccentric transform, the smaller part will be shifted to the -Z axis.
         /// We point smaller diameter in the +X direction so that there is one reducer defined in the standard orientation, to which this transformation is then applied.
         /// This let's us just have one size 110/90 that is rotated into a 90/110 orientation when needed.
@@ -162,6 +162,11 @@ namespace Elements.Fittings
             }
             var t = new Transform(Vector3.Origin, xAxis, zAxis);
             return t;
+        }
+
+        public override string GetRepresentationHash()
+        {
+            throw new NotImplementedException();
         }
     }
 }

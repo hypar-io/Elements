@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace Elements.MEP.Tests
         [Fact]
         public void MakeWye()
         {
-            var model = new Model();
+            ComponentBase.UseRepresentationInstances = true;
             var branchDirection = new Vector3(Math.Sqrt(2) / 2, 1, Math.Sqrt(2) / 2);
             var mainDir = new Vector3(0, 1, 0);
             var connectionPoint = new Vector3(1, 0, 1);
@@ -42,10 +42,12 @@ namespace Elements.MEP.Tests
             var pipe2 = new StraightSegment(0,
                                             wye.SideBranch,
                                             new Port(wye.SideBranch.Position + branchDirection, branchDirection, wye.SideBranch.Diameter));
+            var pipe3 = new StraightSegment(0,
+                                            new Port(wye.Trunk.Position + wye.Trunk.Direction * 2, branchDirection, wye.Trunk.Diameter),
+                                            wye.Trunk
+                                            );
 
-            model.AddElements(new Element[] { pipe1, pipe2, wye });
-            model.AddElement(new Mass(Polygon.Rectangle(0.1, 0.1), 0.1));
-            model.ToGlTF(TestUtils.GetTestPath() + "wye.gltf", false);
+            SaveToGltf(nameof(MakeWye), new Element[] { pipe1, pipe2, pipe3, wye });
         }
 
         [Fact]
@@ -79,13 +81,32 @@ namespace Elements.MEP.Tests
         [Fact]
         public void MakeElbow()
         {
+            ComponentBase.UseRepresentationInstances = true;
             Port.ShowArrows = true;
             var position = new Vector3(1, 0, 1);
             var endDirection = new Vector3(1, 0, 0);
-            var otherDirection = new Vector3(0, 1, 0);
+            var otherDirection = new Vector3(0, -1, 1);
 
             var elbow = new Elbow(position, endDirection, otherDirection, 0.2, 0.1, FittingTreeRouting.DefaultFittingMaterial);
-            SaveToGltf(nameof(MakeElbow), elbow);
+            var startReferencePipe = new StraightSegment(0, elbow.Start, new Port(elbow.Start.Position + elbow.Start.Direction,
+                                                                                   elbow.Start.Direction.Negate(),
+                                                                                   elbow.Start.Diameter));
+            var endReferencePipe = new StraightSegment(0, elbow.End, new Port(elbow.End.Position + elbow.End.Direction,
+                                                                               elbow.End.Direction.Negate(),
+                                                                               elbow.End.Diameter));
+
+            position = (2, 2, 2);
+            otherDirection = (0, 1, 0);
+
+            var elbow2 = new Elbow(position, endDirection, otherDirection, 0.2, 0.1, FittingTreeRouting.DefaultFittingMaterial);
+            var startReferencePipe2 = new StraightSegment(0, elbow2.Start, new Port(elbow2.Start.Position + elbow2.Start.Direction,
+                                                                                     elbow2.Start.Direction.Negate(),
+                                                                                     elbow2.Start.Diameter));
+            var endReferencePipe2 = new StraightSegment(0, elbow2.End, new Port(elbow2.End.Position + elbow2.End.Direction,
+                                                                          elbow2.End.Direction.Negate(),
+                                                                          elbow2.End.Diameter));
+
+            SaveToGltf(nameof(MakeElbow), new Element[] { elbow, startReferencePipe, endReferencePipe, elbow2, startReferencePipe2, endReferencePipe2 });
         }
 
         [Fact]

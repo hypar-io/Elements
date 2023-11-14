@@ -131,23 +131,45 @@ namespace Elements.Fittings
             var trunkPosition = Trunk.Position;
             var mainPosition = MainBranch.Position;
             var branchPosition = SideBranch.Position;
-            var origin = this.Transform.Origin;
+            var origin = Transform.Origin;
 
-            var trunkProfile = new Circle(new Vector3(), this.Trunk.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
+            var trunkProfile = new Circle(new Vector3(), Trunk.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
             var trunkLine = new Line(Vector3.Origin, trunkPosition - origin);
+            if (UseRepresentationInstances)
+            {
+                trunkLine = trunkLine.TransformedLine(GetRotatedTransform().Inverted());
+            }
             var trunk = new Sweep(trunkProfile, trunkLine, 0, 0, 0, false);
 
-            var mainProfile = new Circle(new Vector3(), this.MainBranch.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
+            var mainProfile = new Circle(new Vector3(), MainBranch.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
             var mainLine = new Line(Vector3.Origin, mainPosition - origin);
+            if (UseRepresentationInstances)
+            {
+                mainLine = mainLine.TransformedLine(GetRotatedTransform().Inverted());
+            }
             var main = new Sweep(mainProfile, mainLine, 0, 0, 0, false);
 
-            var branchProfile = new Circle(new Vector3(), this.SideBranch.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
+            var branchProfile = new Circle(new Vector3(), SideBranch.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
             var branchLine = new Line(Vector3.Origin, branchPosition - origin);
+            if (UseRepresentationInstances)
+            {
+                branchLine = branchLine.TransformedLine(GetRotatedTransform().Inverted());
+            }
             var branch = new Sweep(branchProfile, branchLine, 0, 0, 0, false);
 
-            var arrows = this.Trunk.GetArrow(this.Transform.Origin).Concat(this.SideBranch.GetArrow(this.Transform.Origin)).Concat(this.MainBranch.GetArrow(this.Transform.Origin));
+            var arrows = new List<SolidOperation>();
+            arrows.AddRange(Trunk.GetArrow(Transform.Origin, fittingRotationTransform: GetRotatedTransform()));
+            arrows.AddRange(SideBranch.GetArrow(Transform.Origin, fittingRotationTransform: GetRotatedTransform()));
+            arrows.AddRange(MainBranch.GetArrow(Transform.Origin, fittingRotationTransform: GetRotatedTransform()));
             var solidOps = new List<SolidOperation> { trunk, main, branch }.Concat(arrows).Concat(GetExtensions()).ToList();
-            this.Representation = new Geometry.Representation(solidOps);
+            if (UseRepresentationInstances)
+            {
+                FittingRepresentationStorageClass.SetFittingRepresentation(this, () => solidOps);
+            }
+            else
+            {
+                Representation = new Geometry.Representation(solidOps);
+            }
         }
 
         public override Port[] GetPorts()
@@ -188,6 +210,21 @@ namespace Elements.Fittings
             var zAxis = Trunk.Direction.Cross(SideBranch.Direction).Unitized();
             var t = new Transform(Vector3.Origin, Trunk.Direction, zAxis);
             return t;
+        }
+
+        /// <inheritdoc/>
+        public override string GetRepresentationHash()
+        {
+            var props = new double[] {
+                Trunk.Diameter,
+                (Trunk.Position - Transform.Origin).LengthSquared(),
+                MainBranch.Diameter,
+                (MainBranch.Position - Transform.Origin).LengthSquared(),
+                SideBranch.Diameter,
+                (SideBranch.Position - Transform.Origin).LengthSquared(),
+                Angle
+            };
+            return $"{this.GetType().Name}-{String.Join("-", props.Select(p => p.ToString()))}";
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Elements.Fittings
 
         public override Port[] GetPorts()
         {
-            return new[] {Trunk}.Concat(Branches).ToArray();
+            return new[] { Trunk }.Concat(Branches).ToArray();
         }
 
         public override Port TrunkSidePort()
@@ -61,6 +61,11 @@ namespace Elements.Fittings
         }
 
         public override Transform GetRotatedTransform()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetRepresentationHash()
         {
             throw new NotImplementedException();
         }
