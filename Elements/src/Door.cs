@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
+using Elements.Representations.DoorRepresentations;
 
 namespace Elements
 {
@@ -82,7 +83,7 @@ namespace Elements
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(clearWidth, openingSide);
             Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
 
-            _representationProvider = new DoorRepresentationProvider();
+            _representationProvider = new DoorRepresentationProvider(new DefaultDoorRepresentationFactory());
         }
 
         /// <summary>
@@ -132,7 +133,7 @@ namespace Elements
             Transform = GetDoorTransform(line.PointAtNormalized(tPos), line, flip);
             Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
 
-            _representationProvider = new DoorRepresentationProvider();
+            _representationProvider = new DoorRepresentationProvider(new DefaultDoorRepresentationFactory());
         }
 
         private Transform GetOpeningTransform()
