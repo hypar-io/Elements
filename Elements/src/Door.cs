@@ -35,8 +35,6 @@ namespace Elements
         public double ClearHeight { get; private set; }
         /// <summary>Door thickness.</summary>
         public double Thickness { get; private set; }
-        /// <summary>Opening for a door.</summary>
-        public Opening Opening { get; private set; }
 
         private readonly double _fullDoorWidthWithoutFrame;
         private readonly DoorRepresentationProvider _representationProvider;
@@ -55,8 +53,6 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The door's id.</param>
         /// <param name="name">The door's name.</param>
-        /// <param name="depthFront">The door's opening depth front.</param>
-        /// <param name="depthBack">The door's opening depth back.</param>
         [JsonConstructor]
         public Door(double clearWidth,
                 double clearHeight,
@@ -68,9 +64,7 @@ namespace Elements
                 Representation representation = null,
                 bool isElementDefinition = false,
                 Guid id = default,
-                string name = "Door",
-                double depthFront = 1,
-                double depthBack = 1
+                string name = "Door"
             ) : base(
                     transform: transform,
                     representation: representation,
@@ -86,7 +80,6 @@ namespace Elements
             Thickness = thickness;
             Material = material ?? DEFAULT_MATERIAL;
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(clearWidth, openingSide);
-            Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
 
             _representationProvider = new DoorRepresentationProvider(new DefaultDoorRepresentationFactory());
         }
@@ -106,9 +99,6 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The door's id.</param>
         /// <param name="name">The door's name.</param>
-        /// <param name="depthFront">The door's opening depth front.</param>
-        /// <param name="depthBack">The door's opening depth back.</param>
-        /// <param name="flip">Is the door flipped?</param>
         public Door(Line line,
                     double tPos,
                     double clearWidth,
@@ -120,10 +110,7 @@ namespace Elements
                     Representation representation = null,
                     bool isElementDefinition = false,
                     Guid id = default,
-                    string name = "Door",
-                    double depthFront = 1,
-                    double depthBack = 1,
-                    bool flip = false
+                    string name = "Door"
             ) : base(
                     representation: representation,
                     isElementDefinition: isElementDefinition,
@@ -138,23 +125,37 @@ namespace Elements
             Thickness = thickness;
             Material = material ?? DEFAULT_MATERIAL;
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(ClearWidth, openingSide);
-            Transform = GetDoorTransform(line.PointAtNormalized(tPos), line, flip);
-            Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
+            Transform = GetDoorTransform(line.PointAtNormalized(tPos), line);
 
             _representationProvider = new DoorRepresentationProvider(new DefaultDoorRepresentationFactory());
         }
 
-        private Transform GetOpeningTransform()
+        /// <summary>
+        /// Create an opening for the door.
+        /// </summary>
+        /// <param name="depthFront">The door's opening depth front.</param>
+        /// <param name="depthBack">The door's opening depth back.</param>
+        /// <param name="flip">Is the opening flipped?</param>
+        /// <returns>An opening where the door can be inserted.</returns>
+        public Opening CreateDoorOpening(double depthFront, double depthBack, bool flip)
         {
-            var halfHeightDir = 0.5 * (ClearHeight + DOOR_FRAME_THICKNESS) * Vector3.ZAxis;
-            var openingTransform = new Transform(Transform.Origin + halfHeightDir, Transform.XAxis, Transform.XAxis.Cross(Vector3.ZAxis));
-            return openingTransform;
+            var openingWidth = _fullDoorWidthWithoutFrame + 2 * DOOR_FRAME_WIDTH;
+            var openingHeight = ClearHeight + DOOR_FRAME_WIDTH;
+
+            var openingDir = flip ? Vector3.YAxis.Negate() : Vector3.YAxis;
+            var widthDir = flip ? Vector3.XAxis.Negate() : Vector3.XAxis;
+            var openingTransform = new Transform(0.5 * openingHeight * Vector3.ZAxis, widthDir, openingDir);
+
+            var openingPolygon = Polygon.Rectangle(openingWidth, openingHeight).TransformedPolygon(openingTransform);
+
+            var opening = new Opening(openingPolygon, openingDir, depthFront, depthBack, Transform);
+            return opening;
         }
 
-        private Transform GetDoorTransform(Vector3 currentPosition, Line wallLine, bool flip)
+        private Transform GetDoorTransform(Vector3 currentPosition, Line wallLine)
         {
             var adjustedPosition = GetClosestValidDoorPos(wallLine, currentPosition);
-            var xDoorAxis = flip ? wallLine.Direction().Negate() : wallLine.Direction();
+            var xDoorAxis = wallLine.Direction();
             return new Transform(adjustedPosition, xDoorAxis, Vector3.ZAxis);
         }
 
