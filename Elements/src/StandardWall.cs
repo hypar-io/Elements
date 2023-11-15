@@ -135,5 +135,16 @@ namespace Elements
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
             this.Representation.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
         }
+
+        /// <summary>
+        /// Creates an opening that suits <paramref name="door"/>.
+        /// </summary>
+        /// <param name="door">Properties of <paramref name="door"/> will be used to create an opening.</param>
+        public void AddDoorOpening(Door door)
+        {
+            var halfThickness = 0.5 * Thickness;
+            var opening = door.CreateDoorOpening(halfThickness, halfThickness, false);
+            Openings.Add(opening);
+        }
     }
 }
