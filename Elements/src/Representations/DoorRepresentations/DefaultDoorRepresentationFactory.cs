@@ -50,16 +50,16 @@ namespace Elements.Representations.DoorRepresentations
             Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
 
             var doorPolygon = new Polygon(new List<Vector3>() {
-                left + Vector3.YAxis * Door.DOOR_THICKNESS,
-                left - Vector3.YAxis * Door.DOOR_THICKNESS,
-                right - Vector3.YAxis * Door.DOOR_THICKNESS,
-                right + Vector3.YAxis * Door.DOOR_THICKNESS});
+                left + Vector3.YAxis * door.Thickness,
+                left - Vector3.YAxis * door.Thickness,
+                right - Vector3.YAxis * door.Thickness,
+                right + Vector3.YAxis * door.Thickness});
 
             var doorPolygons = new List<Polygon>();
 
             if (door.OpeningSide == DoorOpeningSide.DoubleDoor)
             {
-                doorPolygons = doorPolygon.Split(new Polyline(new Vector3(0, Door.DOOR_THICKNESS, 0), new Vector3(0, -Door.DOOR_THICKNESS, 0)));
+                doorPolygons = doorPolygon.Split(new Polyline(new Vector3(0, door.Thickness, 0), new Vector3(0, -door.Thickness, 0)));
             }
             else
             {

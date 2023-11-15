@@ -140,8 +140,8 @@ namespace Elements.IFC.Tests
             model.AddElement(wall1);
             model.AddElement(wall2);
 
-            var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-            var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door1 = new Door(wallLine1, 0.5, 1.5, Door.DOOR_DEFAULT_THICKNESS, 2.0, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door2 = new Door(wallLine2, 0.5, 1.5, Door.DOOR_DEFAULT_THICKNESS, 1.8, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
 
             model.AddElement(door1);
             model.AddElement(door2);

@@ -50,8 +50,8 @@ namespace Elements.Representations.DoorRepresentations
 
             // Depending on which side door in there are different offsets.
             var doorOffset = leftSide ? fullDoorWidthWithoutFrame / 2 : -fullDoorWidthWithoutFrame / 2;
-            var horizontalOffset = leftSide ? Door.DOOR_THICKNESS : -Door.DOOR_THICKNESS;
-            var verticalOffset = inside ? Door.DOOR_THICKNESS : -Door.DOOR_THICKNESS;
+            var horizontalOffset = leftSide ? door.Thickness : -door.Thickness;
+            var verticalOffset = inside ? door.Thickness : -door.Thickness;
             var widthOffset = inside ? door.ClearWidth : -door.ClearWidth;
 
             // Draw open door silhouette rectangle.

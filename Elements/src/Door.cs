@@ -15,7 +15,7 @@ namespace Elements
         /// <summary>
         /// Default thickness of a door.
         /// </summary>
-        public const double DOOR_THICKNESS = 0.125;
+        public const double DOOR_DEFAULT_THICKNESS = 0.125;
         /// <summary>
         /// Default thickness of a door frame.
         /// </summary>
@@ -33,6 +33,8 @@ namespace Elements
         public DoorOpeningSide OpeningSide { get; private set; }
         /// <summary>Height of a door without a frame.</summary>
         public double ClearHeight { get; private set; }
+        /// <summary>Door thickness.</summary>
+        public double Thickness { get; private set; }
         /// <summary>Opening for a door.</summary>
         public Opening Opening { get; private set; }
 
@@ -43,7 +45,8 @@ namespace Elements
         /// Create a door.
         /// </summary>
         /// <param name="clearWidth">The width of a single door.</param>
-        /// <param name="clearHeight">The door's height.</param>
+        /// <param name="clearHeight">Height of the door without frame.</param>
+        /// <param name="thickness">Door thickness.</param>
         /// <param name="openingSide">The side where the door opens.</param>
         /// <param name="openingType">The way the door opens.</param>
         /// <param name="transform">The door's transform. X-direction is aligned with the door, Y-direction is the opening direction.</param>
@@ -57,6 +60,7 @@ namespace Elements
         [JsonConstructor]
         public Door(double clearWidth,
                 double clearHeight,
+                double thickness,
                 DoorOpeningSide openingSide,
                 DoorOpeningType openingType,
                 Transform transform = null,
@@ -79,6 +83,7 @@ namespace Elements
             OpeningType = openingType;
             ClearHeight = clearHeight;
             ClearWidth = clearWidth;
+            Thickness = thickness;
             Material = material ?? DEFAULT_MATERIAL;
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(clearWidth, openingSide);
             Opening = new Opening(Polygon.Rectangle(_fullDoorWidthWithoutFrame, clearHeight), depthFront, depthBack, GetOpeningTransform());
@@ -92,7 +97,8 @@ namespace Elements
         /// <param name="line">The line where the door is placed.</param>
         /// <param name="tPos">Relative position on the line where door is placed. Should be in [0; 1].</param>
         /// <param name="clearWidth">The width of a single door.</param>
-        /// <param name="clearHeight">The door's height.</param>
+        /// <param name="clearHeight">Height of the door without frame.</param>
+        /// <param name="thickness">Door thickness.</param>
         /// <param name="openingSide">The side where the door opens.</param>
         /// <param name="openingType">The way the door opens.</param>
         /// <param name="material">The door's material.</param>
@@ -107,6 +113,7 @@ namespace Elements
                     double tPos,
                     double clearWidth,
                     double clearHeight,
+                    double thickness,
                     DoorOpeningSide openingSide,
                     DoorOpeningType openingType,
                     Material material = null,
@@ -128,6 +135,7 @@ namespace Elements
             OpeningSide = openingSide;
             ClearWidth = clearWidth;
             ClearHeight = clearHeight;
+            Thickness = thickness;
             Material = material ?? DEFAULT_MATERIAL;
             _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(ClearWidth, openingSide);
             Transform = GetDoorTransform(line.PointAtNormalized(tPos), line, flip);
