@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Elements.IFC.Tests
 {
@@ -137,15 +138,18 @@ namespace Elements.IFC.Tests
             var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "Wall1");
             var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "Wall2");
 
-            model.AddElement(wall1);
-            model.AddElement(wall2);
-
             var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, Door.DOOR_DEFAULT_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
             var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, Door.DOOR_DEFAULT_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
 
+            wall1.AddDoorOpening(door1);
+            wall2.AddDoorOpening(door2);
+
+            model.AddElement(wall1);
+            model.AddElement(wall2);
             model.AddElement(door1);
             model.AddElement(door2);
 
+            model.ToJson(ConstructJsonPath("IfcDoor"));
             model.ToIFC(ConstructIfcPath("IfcDoor"));
         }
 
