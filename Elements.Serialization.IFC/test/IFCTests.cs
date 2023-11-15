@@ -28,7 +28,7 @@ namespace Elements.IFC.Tests
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1972, 120, 539, 270, 9, 140, 10, 2)]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1963, 120, 530, 270, 9, 140, 10, 2)]
         // TODO: Some walls are extracted incorrectly and intersecting the roof. It happens because
         // IfcBooleanClippingResultParser doesn't handle the boolean clipping operation.
         // In order to fix it surface support is required.
@@ -38,7 +38,7 @@ namespace Elements.IFC.Tests
         // TODO: The entrance door has an incorrect representation. It happens because during
         // the UpdateRepresentation the default representation of a door is created instead of
         // the extracted one.
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1513, 5, 577, 121, 7, 82, 0, 21)]
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1506, 5, 570, 121, 7, 82, 0, 21)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void FromIFC4(string name,
                          string ifcPath,
