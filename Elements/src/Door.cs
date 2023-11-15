@@ -10,21 +10,15 @@ namespace Elements
         /// <summary>Definition of a door</summary>
         public class Door : GeometricElement
         {
-                private readonly Material DEFAULT_MATERIAL = new Material("Door material", Colors.White);
+                private readonly Material DEFAULT_MATERIAL = BuiltInMaterials.Wood;
+                private readonly Material FRAME_MATERIAL = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
 
-                /// <summary>
-                /// Default thickness of a door.
-                /// </summary>
+                /// <summary>Default thickness of a door.</summary>
                 public const double DOOR_THICKNESS = 1.375 * 0.0254;
-                /// <summary>
-                /// Default thickness of a door frame.
-                /// </summary>
+                /// <summary>Default thickness of a door frame.</summary>
                 public const double DOOR_FRAME_THICKNESS = 4 * 0.0254;
-                /// <summary>
-                /// Default width of a door frame.
-                /// </summary>
+                /// <summary>Default width of a door frame.</summary>
                 public const double DOOR_FRAME_WIDTH = 2 * 0.0254; //2 inches
-
                 /// <summary>Door width without a frame</summary>
                 public double ClearWidth { get; private set; }
                 /// <summary>The opening type of the door that should be placed</summary>
@@ -35,10 +29,11 @@ namespace Elements
                 public double ClearHeight { get; private set; }
                 /// <summary>Door thickness.</summary>
                 public double Thickness { get; private set; }
-
+                /// <summary>Original position of the door used for override identity</summary>
                 public Vector3 OriginalPosition { get; set; }
 
-                private readonly double _fullDoorWidthWithoutFrame;
+                [JsonIgnore]
+                private double fullDoorWidthWithoutFrame => GetDoorFullWidthWithoutFrame(ClearWidth, OpeningSide);
 
                 /// <summary>
                 /// Create a door.
@@ -80,7 +75,6 @@ namespace Elements
                         ClearWidth = clearWidth;
                         Thickness = thickness;
                         Material = material ?? DEFAULT_MATERIAL;
-                        _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(clearWidth, openingSide);
                 }
 
                 /// <summary>
@@ -123,7 +117,6 @@ namespace Elements
                         ClearHeight = clearHeight;
                         Thickness = thickness;
                         Material = material ?? DEFAULT_MATERIAL;
-                        _fullDoorWidthWithoutFrame = GetDoorFullWidthWithoutFrame(ClearWidth, openingSide);
                         Transform = GetDoorTransform(line.PointAtNormalized(tPos), line);
                 }
 
@@ -136,7 +129,7 @@ namespace Elements
                 /// <returns>An opening where the door can be inserted.</returns>
                 public Opening CreateDoorOpening(double depthFront, double depthBack, bool flip)
                 {
-                        var openingWidth = _fullDoorWidthWithoutFrame + 2 * DOOR_FRAME_WIDTH;
+                        var openingWidth = fullDoorWidthWithoutFrame + 2 * DOOR_FRAME_WIDTH;
                         var openingHeight = ClearHeight + DOOR_FRAME_WIDTH;
 
                         var openingDir = flip ? Vector3.YAxis.Negate() : Vector3.YAxis;
@@ -173,7 +166,6 @@ namespace Elements
                         RepresentationInstances = this.GetInstances(this);
                 }
 
-
                 public List<RepresentationInstance> GetInstances(Door door)
                 {
                         var representationInstances = new List<RepresentationInstance>()
@@ -188,17 +180,12 @@ namespace Elements
 
                 private Vector3 GetClosestValidDoorPos(Line wallLine, Vector3 currentPosition)
                 {
-                        var fullWidth = _fullDoorWidthWithoutFrame + DOOR_FRAME_WIDTH * 2;
+                        var fullWidth = fullDoorWidthWithoutFrame + DOOR_FRAME_WIDTH * 2;
                         double wallWidth = wallLine.Length();
                         Vector3 p1 = wallLine.PointAt(0.5 * fullWidth);
                         Vector3 p2 = wallLine.PointAt(wallWidth - 0.5 * fullWidth);
                         var reducedWallLine = new Line(p1, p2);
                         return currentPosition.ClosestPointOn(reducedWallLine);
-                }
-
-                internal double GetFullDoorWidthWithoutFrame()
-                {
-                        return _fullDoorWidthWithoutFrame;
                 }
 
                 private static double GetDoorFullWidthWithoutFrame(double doorClearWidth, DoorOpeningSide doorOpeningSide)
@@ -215,7 +202,7 @@ namespace Elements
                 }
 
 
-                public RepresentationInstance CreateDoorCurveRepresentation()
+                private RepresentationInstance CreateDoorCurveRepresentation()
                 {
                         var points = CollectPointsForSchematicVisualization();
                         var curve = new IndexedPolycurve(points);
@@ -224,9 +211,8 @@ namespace Elements
                         return repInstance;
                 }
 
-                public RepresentationInstance CreateDoorFrameRepresentation()
+                private RepresentationInstance CreateDoorFrameRepresentation()
                 {
-                        double fullDoorWidthWithoutFrame = this.GetFullDoorWidthWithoutFrame();
                         Vector3 left = Vector3.XAxis * (fullDoorWidthWithoutFrame / 2);
                         Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
 
@@ -234,25 +220,23 @@ namespace Elements
                         var frameRight = right - Vector3.XAxis * Door.DOOR_FRAME_WIDTH;
                         var frameOffset = Vector3.YAxis * Door.DOOR_FRAME_THICKNESS;
                         var doorFramePolygon = new Polygon(new List<Vector3>() {
-                left + Vector3.ZAxis * this.ClearHeight - frameOffset,
-                left - frameOffset,
-                frameLeft - frameOffset,
-                frameLeft + Vector3.ZAxis * (this.ClearHeight + Door.DOOR_FRAME_WIDTH) - frameOffset,
-                frameRight + Vector3.ZAxis * (this.ClearHeight + Door.DOOR_FRAME_WIDTH) - frameOffset,
-                frameRight - frameOffset,
-                right - frameOffset,
-                right + Vector3.ZAxis * this.ClearHeight - frameOffset });
+                                left + Vector3.ZAxis * this.ClearHeight - frameOffset,
+                                left - frameOffset,
+                                frameLeft - frameOffset,
+                                frameLeft + Vector3.ZAxis * (this.ClearHeight + Door.DOOR_FRAME_WIDTH) - frameOffset,
+                                frameRight + Vector3.ZAxis * (this.ClearHeight + Door.DOOR_FRAME_WIDTH) - frameOffset,
+                                frameRight - frameOffset,
+                                right - frameOffset,
+                                right + Vector3.ZAxis * this.ClearHeight - frameOffset });
                         var doorFrameExtrude = new Extrude(new Profile(doorFramePolygon), Door.DOOR_FRAME_THICKNESS * 2, Vector3.YAxis);
 
                         var solidRep = new SolidRepresentation(doorFrameExtrude);
-                        var repInstance = new RepresentationInstance(solidRep, this.Material, true);
+                        var repInstance = new RepresentationInstance(solidRep, FRAME_MATERIAL, true);
                         return repInstance;
                 }
 
-                public RepresentationInstance CreateDoorSolidRepresentation()
+                private RepresentationInstance CreateDoorSolidRepresentation()
                 {
-                        double fullDoorWidthWithoutFrame = this.GetFullDoorWidthWithoutFrame();
-
                         Vector3 left = Vector3.XAxis * (fullDoorWidthWithoutFrame / 2);
                         Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
 
@@ -286,7 +270,7 @@ namespace Elements
                         return repInstance;
                 }
 
-                public List<Vector3> CollectPointsForSchematicVisualization()
+                private List<Vector3> CollectPointsForSchematicVisualization()
                 {
                         var points = new List<Vector3>();
 
@@ -323,10 +307,8 @@ namespace Elements
                         return points;
                 }
 
-                private static List<Vector3> CollectSchematicVisualizationLines(Door door, bool leftSide, bool inside, double angle)
+                private List<Vector3> CollectSchematicVisualizationLines(Door door, bool leftSide, bool inside, double angle)
                 {
-                        var fullDoorWidthWithoutFrame = door.GetFullDoorWidthWithoutFrame();
-
                         // Depending on which side door in there are different offsets.
                         var doorOffset = leftSide ? fullDoorWidthWithoutFrame / 2 : -fullDoorWidthWithoutFrame / 2;
                         var horizontalOffset = leftSide ? door.Thickness : -door.Thickness;
@@ -416,6 +398,4 @@ namespace Elements
                 [System.Runtime.Serialization.EnumMember(Value = @"Double Swing")]
                 DoubleSwing
         }
-
-
 }

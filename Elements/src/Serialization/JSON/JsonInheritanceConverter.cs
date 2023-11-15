@@ -295,7 +295,6 @@ namespace Elements.Serialization.JSON
 
                 if (discriminator != null)
                 {
-                    return null;
                     throw new Exception($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage} {moreInfoMessage}", ex);
                 }
                 else
