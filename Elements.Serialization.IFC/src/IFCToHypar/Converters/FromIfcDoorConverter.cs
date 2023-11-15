@@ -39,7 +39,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             var result = new Door(doorWidth,
                                   doorHeight,
-                                  Door.DOOR_DEFAULT_THICKNESS,
+                                  Door.DOOR_THICKNESS,
                                   openingSide,
                                   openingType,
                                   repData.Transform,
