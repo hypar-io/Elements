@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
-.vscode/settings.json
+**/.vscode/settings.json
 *.suo
 *.user
 *.userosscache
@@ -17,7 +17,6 @@
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
-[Rr]eleases/
 x64/
 x86/
 bld/

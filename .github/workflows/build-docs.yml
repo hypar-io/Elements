@@ -9,13 +9,19 @@ jobs:
     runs-on: windows-2019
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 10
+          token: ${{ secrets.HYPAR_GITHUB_BOT_PAT }}
+          ref: master
+      - name: Setup Git
+        run: |
+          git config user.name "hypar-eric-bot"
+          git config user.email "github.bot@hypar.io"
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - name: Setup docfx
         run: choco install docfx -y
       - name: Build docs
@@ -24,11 +30,7 @@ jobs:
           dotnet test --filter Category=Examples
           docfx ./doc/docfx.json -f
       - name: Deploy Docs
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-west-1
-        run: |
-          aws s3 sync ./docs s3://${{ secrets.AWS_BUCKET }} --delete --exclude '*.js'
-          aws s3 sync ./docs s3://${{ secrets.AWS_BUCKET }} --delete --exclude '*' --include '*.js' --content-type 'text/javascript'
-          aws cloudfront create-invalidation --distribution-id E2PS0S8A6ZSOKE --paths "/*"
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: "docs"
+          message: "Update documentation"

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Model
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -142,7 +142,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Model(Position origin, Transform transform, IDictionary&lt;Guid, Element&gt; elements)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -207,6 +208,39 @@
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Model__ctor_" data-uid="Elements.Model.#ctor*"></a>
+  <h4 id="Elements_Model__ctor_System_Collections_Generic_IEnumerable_Elements_Element__Elements_Geometry_Transform_" data-uid="Elements.Model.#ctor(System.Collections.Generic.IEnumerable{Elements.Element},Elements.Geometry.Transform)">Model(IEnumerable&lt;Element&gt;, Transform)</h4>
+  <div class="markdown level1 summary"><p>Construct a model with the given elements.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Model(IEnumerable&lt;Element&gt; elements, Transform transform = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Elements.Element.html">Element</a>&gt;</td>
+        <td><span class="parametername">elements</span></td>
+        <td><p>The model's elements.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The models' transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="properties">Properties
   </h3>
   <a id="Elements_Model_Elements_" data-uid="Elements.Model.Elements*"></a>
@@ -216,7 +250,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Elements&quot;, Required = Required.Always)]
+[Required]
+public IDictionary&lt;Guid, Element&gt; Elements { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -240,7 +276,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Transform instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Origin&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+[Obsolete(&quot;Use Transform instead.&quot;)]
 public Position Origin { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -265,7 +302,8 @@ public Position Origin { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Transform Transform { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Transform&quot;, Required = Required.AllowNull)]
+public Transform Transform { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -375,14 +413,59 @@ added to the model's elements collection?</p>
       </tr>
     </tbody>
   </table>
-  <a id="Elements_Model_AllElementsOfType_" data-uid="Elements.Model.AllElementsOfType*"></a>
-  <h4 id="Elements_Model_AllElementsOfType__1" data-uid="Elements.Model.AllElementsOfType``1">AllElementsOfType&lt;T&gt;()</h4>
-  <div class="markdown level1 summary"><p>Get all entities of the specified Type.</p>
+  <a id="Elements_Model_AllElementsAssignableFromType_" data-uid="Elements.Model.AllElementsAssignableFromType*"></a>
+  <h4 id="Elements_Model_AllElementsAssignableFromType__1" data-uid="Elements.Model.AllElementsAssignableFromType``1">AllElementsAssignableFromType&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Get all elements assignable from type T. This will include
+types which derive from T and types which implement T if T
+is an interface.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; AllElementsOfType&lt;T&gt;()</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; AllElementsAssignableFromType&lt;T&gt;()
+    where T : Element</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;T&gt;</td>
+        <td><p>A collection of elements derived from the specified type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The type of the element from which returned elements derive.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Model_AllElementsOfType_" data-uid="Elements.Model.AllElementsOfType*"></a>
+  <h4 id="Elements_Model_AllElementsOfType__1" data-uid="Elements.Model.AllElementsOfType``1">AllElementsOfType&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Get all elements of the type T.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; AllElementsOfType&lt;T&gt;()
+    where T : Element</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -411,7 +494,7 @@ added to the model's elements collection?</p>
     <tbody>
       <tr>
         <td><span class="parametername">T</span></td>
-        <td><p>The Type of element to return.</p>
+        <td><p>The type of element to return.</p>
 </td>
       </tr>
     </tbody>
@@ -634,6 +717,54 @@ with the provided id.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Model_Intersect_" data-uid="Elements.Model.Intersect*"></a>
+  <h4 id="Elements_Model_Intersect_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____" data-uid="Elements.Model.Intersect(Elements.Geometry.Plane,System.Collections.Generic.Dictionary{System.Guid,System.Collections.Generic.List{Elements.Geometry.Polygon}}@,System.Collections.Generic.Dictionary{System.Guid,System.Collections.Generic.List{Elements.Geometry.Polygon}}@,System.Collections.Generic.Dictionary{System.Guid,System.Collections.Generic.List{Elements.Geometry.Line}}@)">Intersect(Plane, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, out Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Intersect the model with the provided plane.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Intersect(Plane plane, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt; intersectionPolygons, out Dictionary&lt;Guid, List&lt;Polygon&gt;&gt; beyondPolygons, out Dictionary&lt;Guid, List&lt;Line&gt;&gt; lines)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The intersection plane.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;&gt;</td>
+        <td><span class="parametername">intersectionPolygons</span></td>
+        <td><p>A collection of polygons resulting from the
+intersection of the plane with all elements in the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a>&gt;&gt;</td>
+        <td><span class="parametername">beyondPolygons</span></td>
+        <td><p>A collection of polygons resulting from intersection
+of the beyond plane with all elements in the model.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.Dictionary</span>&lt;<span class="xref">System.Guid</span>, <span class="xref">System.Collections.Generic.List</span>&lt;<a class="xref" href="Elements.Geometry.Line.html">Line</a>&gt;&gt;</td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>A collection of line segments resulting from intersection of the plane
+with all elements in the model.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Model_ToJson_" data-uid="Elements.Model.ToJson*"></a>
   <h4 id="Elements_Model_ToJson" data-uid="Elements.Model.ToJson">ToJson()</h4>
   <div class="markdown level1 summary"><p>Serialize the model to JSON using default arguments.</p>
@@ -778,6 +909,24 @@ TODO this method can be removed after Hypar.Functions release 0.9.11 occurs.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Model_UpdateBoundsAndComputedSolids_" data-uid="Elements.Model.UpdateBoundsAndComputedSolids*"></a>
+  <h4 id="Elements_Model_UpdateBoundsAndComputedSolids" data-uid="Elements.Model.UpdateBoundsAndComputedSolids">UpdateBoundsAndComputedSolids()</h4>
+  <div class="markdown level1 summary"><p>Update the bounds and computed solids of all geometric elements in the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateBoundsAndComputedSolids()</code></pre>
+  </div>
+  <a id="Elements_Model_UpdateRepresentations_" data-uid="Elements.Model.UpdateRepresentations*"></a>
+  <h4 id="Elements_Model_UpdateRepresentations" data-uid="Elements.Model.UpdateRepresentations">UpdateRepresentations()</h4>
+  <div class="markdown level1 summary"><p>Update the representations of all geometric elements in the model.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void UpdateRepresentations()</code></pre>
+  </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
       <a class="xref" href="Elements.Serialization.glTF.GltfExtensions.html#Elements_Serialization_glTF_GltfExtensions_ToGlTF_Elements_Model_System_String_System_Collections_Generic_List_Elements_BaseError___System_Boolean_System_Boolean_">GltfExtensions.ToGlTF(Model, String, out List&lt;BaseError&gt;, Boolean, Boolean)</a>

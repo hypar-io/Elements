@@ -88,28 +88,6 @@ namespace Elements.Validators
     }
 
     [Obsolete]
-    public class BBox3Validator : IValidator
-    {
-        public Type ValidatesType => typeof(BBox3);
-
-        public void PostConstruct(object obj)
-        { }
-
-        public void PreConstruct(object[] args)
-        {
-            var min = (Vector3)args[0];
-            var max = (Vector3)args[1];
-            if (min.X == max.X
-             || min.Y == max.Y
-             )
-            {
-                throw new System.ArgumentException("The bounding box will have zero volume, please ensure that the Min and Max don't have any identical vertex values.");
-            }
-        }
-
-    }
-
-    [Obsolete]
     public class LineValidator : IValidator
     {
         public Type ValidatesType => typeof(Line);
@@ -339,9 +317,11 @@ namespace Elements.Validators
 
         private void UpdateGeometry(Sweep sweep)
         {
-            var profileTrans = new Transform();
-            profileTrans.Rotate(profileTrans.ZAxis, sweep.ProfileRotation);
-            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(profileTrans.OfProfile(sweep.Profile), sweep.Curve, sweep.StartSetback, sweep.EndSetback);
+            sweep._solid = Kernel.Instance.CreateSweepAlongCurve(sweep.Profile,
+                                                                 sweep.Curve,
+                                                                 sweep.StartSetback,
+                                                                 sweep.EndSetback,
+                                                                 sweep.ProfileRotation);
         }
 
         public void PreConstruct(object[] args)

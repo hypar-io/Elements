@@ -21,7 +21,7 @@ namespace Elements.Tests
             // Create a model curve to visualize the light direction.
             var dirCurve = new ModelCurve(new Line(light.Transform.Origin, light.Transform.Origin + light.Transform.ZAxis.Negate() * 10), sunMaterial);
             var floor = new Floor(Polygon.Rectangle(20, 20), 0.1);
-            var column = new Column(new Vector3(5, 5), 5.0, Polygon.Rectangle(0.2, 0.2));
+            var column = new Column(new Vector3(5, 5), 5.0, null, Polygon.Rectangle(0.2, 0.2));
             var mass = new Mass(Polygon.Rectangle(1, 1), 1.0, sunMaterial, new Transform(light.Transform.Origin));
             // </directional_example>
 

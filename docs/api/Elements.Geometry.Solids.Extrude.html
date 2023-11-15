@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Extrude
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -147,13 +147,14 @@
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Geometry_Solids_Extrude__ctor_" data-uid="Elements.Geometry.Solids.Extrude.#ctor*"></a>
-  <h4 id="Elements_Geometry_Solids_Extrude__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Vector3_System_Boolean_" data-uid="Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Boolean)">Extrude(Profile, Double, Vector3, Boolean)</h4>
+  <h4 id="Elements_Geometry_Solids_Extrude__ctor_Elements_Geometry_Profile_System_Double_Elements_Geometry_Vector3_System_Boolean_System_Boolean_" data-uid="Elements.Geometry.Solids.Extrude.#ctor(Elements.Geometry.Profile,System.Double,Elements.Geometry.Vector3,System.Boolean,System.Boolean)">Extrude(Profile, Double, Vector3, Boolean, Boolean)</h4>
   <div class="markdown level1 summary"><p>Construct an extrusion.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Extrude(Profile profile, double height, Vector3 direction, bool isVoid)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Extrude(Profile profile, double height, Vector3 direction, bool isVoid = false, bool reverseWinding = false)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -168,22 +169,36 @@
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
         <td><span class="parametername">profile</span></td>
-        <td></td>
+        <td><p>The profile to extrude.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">height</span></td>
-        <td></td>
+        <td><p>The height/length of the extrusion.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
         <td><span class="parametername">direction</span></td>
-        <td></td>
+        <td><p>The direction of the extrusion.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
         <td><span class="parametername">isVoid</span></td>
-        <td></td>
+        <td><p>If true, the extrusion is a &quot;void&quot; in a group
+of solid operations, subtracted from other solids.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">reverseWinding</span></td>
+        <td><p>True if the extrusion should be flipped inside
+out, with face normals facing in instead of out. Use with caution if
+using with other solid operations in a representation — boolean
+results may be unexpected.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -196,7 +211,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Direction { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Direction&quot;, Required = Required.AllowNull)]
+public Vector3 Direction { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -220,7 +236,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Height { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Height&quot;, Required = Required.Always)]
+[Range(0, 1.7976931348623157E+308)]
+public double Height { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -244,7 +262,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Profile Profile { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Profile&quot;, Required = Required.AllowNull)]
+public Profile Profile { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -257,6 +276,31 @@
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Solids_Extrude_ReverseWinding_" data-uid="Elements.Geometry.Solids.Extrude.ReverseWinding*"></a>
+  <h4 id="Elements_Geometry_Solids_Extrude_ReverseWinding" data-uid="Elements.Geometry.Solids.Extrude.ReverseWinding">ReverseWinding</h4>
+  <div class="markdown level1 summary"><p>Is the extrusion's profile reversed relative to its extrusion vector, resulting in inward-facing face normals?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Reverse Winding&quot;)]
+public bool ReverseWinding { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
         <td></td>
       </tr>
     </tbody>

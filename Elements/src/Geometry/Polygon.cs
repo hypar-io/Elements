@@ -1,17 +1,18 @@
 using ClipperLib;
+using Elements.Geometry.Profiles;
 using Elements.Search;
 using Elements.Spatial;
-using Elements.Validators;
-using LibTessDotNet.Double;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A closed planar polygon.
+    /// Parameterization of the curve is 0->n-1 where n is the number of vertices..
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
@@ -25,15 +26,49 @@ namespace Elements.Geometry
         internal Plane _plane;
 
         /// <summary>
+        /// The end of the polyline.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 End
+        {
+            get { return Vertices[0]; }
+        }
+
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, Vertices.Count);
+
+        /// <summary>
+        /// Should the curve be considered closed for rendering?
+        /// </summary>
+        public override bool IsClosedForRendering => true;
+
+        /// <summary>
         /// Construct a polygon.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Polygon(IList<Vector3> @vertices) : base(vertices)
         {
             _plane = Plane();
         }
 
+        /// <summary>
+        /// Construct a polygon.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
+        public Polygon(IList<Vector3> @vertices, bool disableValidation = false) : base(vertices, disableValidation)
+        {
+            _plane = Plane();
+        }
+
+        /// <summary>
+        /// Validate that this Polygon's vertices are coplanar, clean up any
+        /// duplicate vertices, and fix any overlapping edges.
+        /// </summary>
         protected override void ValidateVertices()
         {
             if (!Vertices.AreCoplanar())
@@ -76,6 +111,23 @@ namespace Elements.Geometry
         public Polygon(params Vector3[] vertices) : this(new List<Vector3>(vertices)) { }
 
         /// <summary>
+        /// Construct a polygon from points.
+        /// </summary>
+        /// <param name="disableValidation">Should self-intersection testing be disabled?</param>
+        /// <param name="vertices">The vertices of the polygon.</param>
+        public Polygon(bool disableValidation, params Vector3[] vertices) : this(new List<Vector3>(vertices), disableValidation) { }
+
+        internal override List<IList<int>> CreateCurveIndices(IList<Vector3> vertices)
+        {
+            var curveIndices = new List<IList<int>>();
+            for (var i = 0; i < vertices.Count; i++)
+            {
+                curveIndices.Add(new[] { i, i == vertices.Count - 1 ? 0 : i + 1 });
+            }
+            return curveIndices;
+        }
+
+        /// <summary>
         /// Construct a transformed copy of this Polygon.
         /// </summary>
         /// <param name="transform">The transform to apply.</param>
@@ -95,10 +147,7 @@ namespace Elements.Geometry
             return p;
         }
 
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             if (transform == null)
@@ -119,27 +168,29 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge when compared on a shared plane.
+        /// Tests if the supplied Vector3 is within this Polygon in 3D without coincidence with an edge or vertex when compared on a shared plane.
         /// </summary>
-        /// <param name="vector">The Vector3 to compare to this Polygon.</param>
+        /// <param name="point">The point to compare to this polygon.</param>
         /// <returns>
-        /// Returns true if the supplied Vector3 is within this Polygon when compared on a shared plane. Returns false if the Vector3 is outside this Polygon or if the supplied Vector3 is null.
+        /// Returns true if the supplied point is within this polygon when compared on a shared plane.
         /// </returns>
-        public bool Contains(Vector3 vector)
+        public bool Contains(Vector3 point)
         {
-            Contains(vector, out Containment containment);
+            Contains(point, out Containment containment);
             return containment == Containment.Inside;
         }
 
         /// <summary>
-        /// Tests if the supplied Vector3 is within this Polygon in 3D, using a 2D method.
+        /// Tests if the supplied point is within this polygon in 3D, using a 2D method.
         /// </summary>
-        /// <param name="vector">The position to test.</param>
+        /// <param name="point">The point to compare to this polygon.</param>
         /// <param name="containment">Whether the point is inside, outside, at an edge, or at a vertex.</param>
-        /// <returns>Returns true if the supplied Vector3 is within this polygon.</returns>
-        public bool Contains(Vector3 vector, out Containment containment)
+        /// <returns>
+        /// Returns true if the supplied point is within this polygon when compared on a shared plane.
+        /// </returns>
+        public bool Contains(Vector3 point, out Containment containment)
         {
-            return Contains3D(Edges(), vector, out containment);
+            return Contains3D(point, out containment);
         }
 
         /// <summary>
@@ -160,21 +211,41 @@ namespace Elements.Geometry
                     plane = new Plane(plane.Origin, plane.Normal.Negate());
                 }
 
-                if (!this.Intersects(plane, out List<Vector3> intersections, false))
+                if (!this.Intersects(plane, out List<Vector3> intersections, true))
                 {
                     return null;
                 }
 
-                var newVertices = new List<Vector3>();
-                for (var i = 0; i <= this.Vertices.Count - 1; i++)
+                var split = this;
+                if (intersections.Count > 0)
                 {
-                    var v1 = this.Vertices[i];
-                    var v2 = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
+                    split = new Polygon(this.Vertices);
+                    split.Split(intersections);
+                }
+                else
+                {
+                    // A polygon with one intersection will not be trimmed;
+                    return null;
+                }
+
+                var newVertices = new List<Vector3>();
+                for (var i = 0; i <= split.Vertices.Count - 1; i++)
+                {
+                    var v1 = split.Vertices[i];
+                    var v2 = i == split.Vertices.Count - 1 ? split.Vertices[0] : split.Vertices[i + 1];
 
                     var d1 = v1.DistanceTo(plane);
                     var d2 = v2.DistanceTo(plane);
+                    if (d1.ApproximatelyEquals(0, precision))
+                    {
+                        d1 = 0.0;
+                    }
+                    if (d2.ApproximatelyEquals(0, precision))
+                    {
+                        d2 = 0.0;
+                    }
 
-                    if (d1.ApproximatelyEquals(0, precision) && d2.ApproximatelyEquals(0, precision))
+                    if (d1 == 0.0 && d2 == 0.0)
                     {
                         // The segment is in the plane.
                         newVertices.Add(v1);
@@ -188,6 +259,13 @@ namespace Elements.Geometry
                         continue;
                     }
 
+                    if (d1 < 0 && d2 == 0.0)
+                    {
+                        // The first point is outside and
+                        // the second point is on the plane.
+                        continue;
+                    }
+
                     if (d1 > 0 && d2 > 0)
                     {
                         // Both points are on the inside of
@@ -196,7 +274,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (d1 > 0 && d2.ApproximatelyEquals(0, precision))
+                    if (d1 > 0 && d2 == 0.0)
                     {
                         // The first point is inside and
                         // the second point is on the plane.
@@ -208,7 +286,7 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    if (d1.ApproximatelyEquals(0, precision) && d2 > 0)
+                    if (d1 == 0.0 && d2 > 0)
                     {
                         // The first point is on the plane,
                         // and the second is inside.
@@ -216,74 +294,88 @@ namespace Elements.Geometry
                         continue;
                     }
 
-                    var l = new Line(v1, v2);
-                    if (l.Intersects(plane, out Vector3 result))
+                    if (d1 < 0 && d2 > 0)
                     {
-                        // Figure out what side the intersection is on.
-                        if (d1 < 0)
+                        // The first point is inside,
+                        // and the second point is outside.
+                        var l = new Line(v1, v2);
+                        if (l.Intersects(plane, out Vector3 result))
                         {
-                            newVertices.Add(result);
-                        }
-                        else
-                        {
-                            newVertices.Add(v1);
-                            newVertices.Add(result);
+                            // Figure out what side the intersection is on.
+                            if (d1 < 0)
+                            {
+                                newVertices.Add(result);
+                            }
+                            else
+                            {
+                                newVertices.Add(v1);
+                                newVertices.Add(result);
+                            }
                         }
                     }
                 }
 
-                var graph = new HalfEdgeGraph2d();
-                graph.EdgesPerVertex = new List<List<(int from, int to, int? tag)>>();
-
-                if (newVertices.Count > 0)
+                var graph = new HalfEdgeGraph2d
                 {
-                    graph.Vertices = newVertices;
+                    EdgesPerVertex = new List<List<(int from, int to, int? tag)>>()
+                };
 
-                    // Initialize the graph.
-                    foreach (var v in newVertices)
-                    {
-                        graph.EdgesPerVertex.Add(new List<(int from, int to, int? tag)>());
-                    }
-
-                    for (var i = 0; i < newVertices.Count - 1; i++)
-                    {
-                        var a = i;
-                        var b = i + 1 > newVertices.Count - 1 ? 0 : i + 1;
-                        if (intersections.Contains(newVertices[a]) && intersections.Contains(newVertices[b]))
-                        {
-                            continue;
-                        }
-
-                        // Only add one edge around the outside of the shape.
-                        graph.EdgesPerVertex[a].Add((a, b, null));
-                    }
-
-                    for (var i = 0; i < intersections.Count - 1; i += 2)
-                    {
-                        // Because we'll have duplicate vertices where an
-                        // intersection is on the plane, we need to choose
-                        // which one to use. This follows the rule of finding
-                        // the one whose index is closer to the first index used.
-                        var a = ClosestIndexOf(newVertices, intersections[i], i);
-                        var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
-
-                        graph.EdgesPerVertex[a].Add((a, b, null));
-                    }
-
-                    if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
-                    {
-                        // Close the graph
-                        var a = newVertices.Count - 1;
-                        var b = 0;
-                        graph.EdgesPerVertex[a].Add((a, b, null));
-                    }
-                    return graph.Polygonize();
+                if (newVertices.Count == 0)
+                {
+                    return null;
                 }
+
+                graph.Vertices = newVertices;
+
+                // Initialize the graph.
+                foreach (var v in newVertices)
+                {
+                    graph.EdgesPerVertex.Add(new List<(int from, int to, int? tag)>());
+                }
+
+                for (var i = 0; i < newVertices.Count - 1; i++)
+                {
+                    var a = i;
+                    var b = i + 1 > newVertices.Count - 1 ? 0 : i + 1;
+                    if (intersections.Contains(newVertices[a]) && intersections.Contains(newVertices[b]))
+                    {
+                        continue;
+                    }
+
+                    // Only add one edge around the outside of the shape.
+                    graph.EdgesPerVertex[a].Add((a, b, null));
+                }
+
+                for (var i = 0; i < intersections.Count - 1; i++)
+                {
+                    // Because we'll have duplicate vertices where an
+                    // intersection is on the plane, we need to choose
+                    // which one to use. This follows the rule of finding
+                    // the one whose index is closer to the first index used.
+                    var a = ClosestIndexOf(newVertices, intersections[i], i);
+                    var b = ClosestIndexOf(newVertices, intersections[i + 1], a);
+
+                    if (!Contains(newVertices[a].Average(newVertices[b]), out _))
+                    {
+                        continue;
+                    }
+                    graph.EdgesPerVertex[a].Add((a, b, null));
+                }
+
+                if (graph.EdgesPerVertex[newVertices.Count - 1].Count == 0)
+                {
+                    // Close the graph
+                    var a = newVertices.Count - 1;
+                    var b = 0;
+                    graph.EdgesPerVertex[a].Add((a, b, null));
+                }
+                return graph.Polygonize();
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
             }
             return null;
         }
@@ -338,7 +430,7 @@ namespace Elements.Geometry
         /// Polygon.Intersects(Plane plane, ...) method.
         /// </summary>
         /// <param name="polygon">The target polygon.</param>
-        /// <param name="result">The points resulting from the intersection
+        /// <param name="intersections">The points resulting from the intersection
         /// of the two polygons.</param>
         /// <param name="sort">Should the resulting intersections be sorted along
         /// the plane?</param>
@@ -346,10 +438,10 @@ namespace Elements.Geometry
         /// The result collection may have duplicate vertices where intersection
         /// with a vertex occurs as there is one intersection associated with each
         /// edge attached to the vertex.</returns>
-        internal bool Intersects3d(Polygon polygon, out List<Vector3> result, bool sort = true)
+        internal bool Intersects3d(Polygon polygon, out List<Vector3> intersections, bool sort = true)
         {
             var p = this._plane;
-            result = new List<Vector3>();
+            intersections = new List<Vector3>();
             var targetP = polygon._plane;
 
             if (p.IsCoplanar(targetP))
@@ -361,36 +453,42 @@ namespace Elements.Geometry
 
             // Intersect the polygon against this polygon's plane.
             // Keep the points that lie within the polygon.
-            if (polygon.Intersects(p, out List<Vector3> results, false, false))
+            if (polygon.Intersects(p, out List<Vector3> results, sort: false))
             {
                 foreach (var r in results)
                 {
-                    if (this.Contains3D(r))
+                    if (this.Contains(r, out _))
                     {
-                        result.Add(r);
+                        if (!intersections.Contains(r))
+                        {
+                            intersections.Add(r);
+                        }
                     }
                 }
             }
 
             // Intersect this polygon against the target polygon's plane.
             // Keep the points within the target polygon.
-            if (this.Intersects(targetP, out List<Vector3> results2, false, false))
+            if (this.Intersects(targetP, out List<Vector3> results2, sort: false))
             {
                 foreach (var r in results2)
                 {
-                    if (polygon.Contains3D(r))
+                    if (polygon.Contains(r, out _))
                     {
-                        result.Add(r);
+                        if (!intersections.Contains(r))
+                        {
+                            intersections.Add(r);
+                        }
                     }
                 }
             }
 
             if (sort)
             {
-                result.Sort(new DirectionComparer(d));
+                intersections.Sort(new DirectionComparer(d));
             }
 
-            return result.Count > 0;
+            return intersections.Count > 0;
         }
 
         private int ClosestIndexOf(List<Vector3> vertices, Vector3 target, int targetIndex)
@@ -427,9 +525,9 @@ namespace Elements.Geometry
             results = new List<Vector3>();
             var d = this.Normal().Cross(plane.Normal).Unitized();
 
-            foreach (var s in this.Segments())
+            foreach (var (from, to) in this.Edges())
             {
-                if (s.Intersects(plane, out Vector3 result))
+                if (Line.Intersects(plane, from, to, out Vector3 result))
                 {
                     if (distinct)
                     {
@@ -455,70 +553,33 @@ namespace Elements.Geometry
         }
 
         // Projects non-flat containment request into XY plane and returns the answer for this projection
-        internal static bool Contains3D(IEnumerable<(Vector3 from, Vector3 to)> edges, Vector3 location, out Containment containment)
+        internal bool Contains3D(Vector3 location, out Containment containment)
         {
-            var vertices = edges.Select(edge => edge.from).ToList();
-            var is3D = vertices.Any(vertex => vertex.Z != 0);
+            // Test that the test point is in the same plane
+            // as the polygon.
+            var transformTo3D = Vertices.ToTransform();
+            if (!location.DistanceTo(transformTo3D.XY()).ApproximatelyEquals(0))
+            {
+                containment = Containment.Outside;
+                return false;
+            }
+
+            var is3D = Vertices.Any(vertex => vertex.Z != 0);
             if (!is3D)
             {
-                return Contains(edges, location, out containment);
+                return Contains(Edges(), location, out containment);
             }
-            var transformTo3D = vertices.ToTransform();
+
             var transformToGround = new Transform(transformTo3D);
             transformToGround.Invert();
-            var groundSegments = edges.Select(edge => (transformToGround.OfPoint(edge.from), transformToGround.OfPoint(edge.to)));
+            var groundSegments = Edges(transformToGround);
             var groundLocation = transformToGround.OfPoint(location);
             return Contains(groundSegments, groundLocation, out containment);
         }
 
-        /// <summary>
-        /// Does this polygon contain the specified point.
-        /// https://en.wikipedia.org/wiki/Point_in_polygon
-        /// </summary>
-        /// <param name="point">The point to test.</param>
-        /// <param name="unique">Should intersections be unique?</param>
-        /// <returns>True if the point is contained in the polygon, otherwise false.</returns>
-        internal bool Contains3D(Vector3 point, bool unique = true)
-        {
-            var p = this.Plane();
-
-            if (!point.DistanceTo(p).ApproximatelyEquals(0))
-            {
-                return false;
-            }
-
-            var t = new Transform(point, p.Normal);
-
-            // Intersect a randomly directed ray in the plane
-            // of the polygon and intersect with the polygon edges.
-            var ray = new Ray(point, t.XAxis);
-            var intersects = 0;
-            var xsects = new List<Vector3>();
-            foreach (var (from, to) in this.Edges())
-            {
-                if (ray.Intersects(from, to, out Vector3 result))
-                {
-                    if (unique)
-                    {
-                        if (!xsects.Contains(result))
-                        {
-                            xsects.Add(result);
-                            intersects++;
-                        }
-                    }
-                    else
-                    {
-                        xsects.Add(result);
-                        intersects++;
-                    }
-                }
-            }
-            return intersects % 2 != 0;
-        }
-
         internal bool Contains3D(Polygon polygon)
         {
-            return polygon.Vertices.All(v => this.Contains3D(v));
+            return polygon.Vertices.All(v => this.Contains(v, out _));
         }
 
         // Adapted from https://stackoverflow.com/questions/46144205/point-in-polygon-using-winding-number/46144206
@@ -549,7 +610,6 @@ namespace Elements.Geometry
                     containment = Containment.CoincidesAtEdge;
                     return true;
                 }
-
 
                 if (AscendingRelativeTo(location, edge) &&
                     LocationInRange(location, Orientation.Ascending, edge))
@@ -698,9 +758,10 @@ namespace Elements.Geometry
             containment = Containment.Inside;
             foreach (var v in polygon.Vertices)
             {
-                Polygon.Contains3D(Edges(), v, out var foundContainment);
+                Contains3D(v, out var foundContainment);
                 if (foundContainment == Containment.Outside)
                 {
+                    containment = foundContainment;
                     return false;
                 }
                 if (foundContainment > containment)
@@ -1013,7 +1074,7 @@ namespace Elements.Geometry
             {
                 var polygon = polygons[i];
 
-                // Add a results collection for each polygon. 
+                // Add a results collection for each polygon.
                 // This may or may not have results in it after processing.
                 results[i] = new List<Vector3>();
 
@@ -1055,9 +1116,9 @@ namespace Elements.Geometry
                         if (localPlane.Intersects(planes[i], planes[j], out Vector3 xsect))
                         {
                             // Test containment in the current splitting polygon.
-                            if (polygon.Contains3D(xsect)
-                                && inner.Contains3D(xsect)
-                                && this.Contains3D(xsect))
+                            if (polygon.Contains(xsect)
+                                && inner.Contains(xsect)
+                                && this.Contains(xsect))
                             {
                                 if (!results[i].Contains(xsect))
                                 {
@@ -1182,7 +1243,7 @@ namespace Elements.Geometry
         /// <summary>
         /// Intersect a polygon against a set of trim polygons and identify the
         /// resulting polygons as "inside" or "outside" of the set of trimming
-        /// polygons. Containment is done using edge direction comparison for 
+        /// polygons. Containment is done using edge direction comparison for
         /// polygons which intersect with their trims, or ray testing in the
         /// case of polygons which do not intersect with their trims.
         /// </summary>
@@ -1258,7 +1319,7 @@ namespace Elements.Geometry
 
                         var trimPolyIndex = compareEdge.parentPolygonIndex.Value;
 
-                        // During intersection of one to many, this polygon's 
+                        // During intersection of one to many, this polygon's
                         // edges are added and given the index -1.
                         var trimPoly = trimPolyIndex == -1 ? this : trimPolygons[trimPolyIndex];
                         var bn = trimPoly._plane.Normal;
@@ -1663,6 +1724,74 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find all intersection lines between two polygons that are not on the same plane.
+        /// </summary>
+        /// <param name="polygon">The intersecting polygon.</param>
+        /// <param name="includeIntersectionAtEdge">Include intersection at edge of one or both polygons.</param>
+        /// <returns>A list of the segment(s) what are inside both polygons.</returns>
+        public List<Line> IntersectionLines(Polygon polygon, bool includeIntersectionAtEdge = false)
+        {
+            var lines = new List<Line>();
+            if (!Plane().Intersects(polygon.Plane(), out InfiniteLine intersectionLine))
+            {
+                return lines;
+            }
+
+            var tempLine = new Line(intersectionLine.Origin, intersectionLine.Origin + intersectionLine.Direction);
+            var insideSegmentsLeft = tempLine.Trim(this, out _, includeIntersectionAtEdge, true);
+            if (!insideSegmentsLeft.Any())
+            {
+                return lines;
+            }
+
+            var insideSegmentsRight = tempLine.Trim(polygon, out _, includeIntersectionAtEdge, true);
+            if (!insideSegmentsRight.Any())
+            {
+                return lines;
+            }
+
+            int left = 0;
+            int right = 0;
+            // Trim produced ordered lines. Both lists have segments on the same infinite line.
+            // Iterate though both lists and find overlapping line segments that belong to both Polygons.
+            while (left < insideSegmentsLeft.Count && right < insideSegmentsRight.Count)
+            {
+                intersectionLine.ParameterAt(insideSegmentsLeft[left].Start, out var p0min);
+                intersectionLine.ParameterAt(insideSegmentsRight[right].End, out var p1max);
+                if (p1max < p0min)
+                {
+                    right++;
+                    continue;
+                }
+
+                intersectionLine.ParameterAt(insideSegmentsLeft[left].End, out var p0max);
+                intersectionLine.ParameterAt(insideSegmentsRight[right].Start, out var p1min);
+                if (p0max < p1min)
+                {
+                    left++;
+                    continue;
+                }
+
+                bool leftStart = p0min > p1min;
+                bool leftEnd = p1max > p0max;
+                var start = leftStart ? insideSegmentsLeft[left].Start : insideSegmentsRight[right].Start;
+                var end = leftEnd ? insideSegmentsLeft[left].End : insideSegmentsRight[right].End;
+                lines.Add(new Line(start, end));
+
+                if (leftEnd)
+                {
+                    left++;
+                }
+                else
+                {
+                    right++;
+                }
+            }
+
+            return lines;
+        }
+
+        /// <summary>
         /// Offset this polygon by the specified amount.
         /// </summary>
         /// <param name="offset">The amount to offset.</param>
@@ -1676,10 +1805,7 @@ namespace Elements.Geometry
         }
 
 
-        /// <summary>
-        /// Get a collection a lines representing each segment of this polyline.
-        /// </summary>
-        /// <returns>A collection of Lines.</returns>
+        /// <inheritdoc/>
         public override Line[] Segments()
         {
             return SegmentsInternal(this.Vertices);
@@ -1818,6 +1944,48 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Find the rectangle along axis containing a set of points,
+        /// calculated without regard for Z coordinate,
+        /// located at the height of points minimum Z coordinate.
+        /// </summary>
+        /// <param name="points">The points to contain within the rectangle.</param>
+        /// <param name="axis">The axis along which the rectangle is built. Must be a non-zero vector.</param>
+        /// <param name="minSideSize">The minimum size of a side of a polygon when all points lie on the same line and polygon cannot be constructed. Must be greater than 0.</param>
+        /// <returns></returns>
+        public static Polygon FromAlignedBoundingBox2d(IEnumerable<Vector3> points, Vector3 axis, double minSideSize = 0.1)
+        {
+            if (minSideSize < Vector3.EPSILON)
+            {
+                throw new ArgumentOutOfRangeException(nameof(minSideSize), "Must be greater than 0.");
+            }
+
+            if (axis.IsZero())
+            {
+                throw new ArgumentException("Axis must be a non-zero vector.", nameof(axis));
+            }
+            var transform = new Transform(Vector3.Origin, axis, Vector3.ZAxis);
+            var box = new Box(points, transform);
+            var xOffset = 0.0;
+            var length = box.Bounds.Max.X - box.Bounds.Min.X;
+            var yOffset = 0.0;
+            var width = box.Bounds.Max.Y - box.Bounds.Min.Y;
+            if (length.ApproximatelyEquals(0))
+            {
+                length = minSideSize / 2;
+                xOffset = minSideSize / 2;
+            }
+            if (width.ApproximatelyEquals(0))
+            {
+                width = minSideSize / 2;
+                yOffset = minSideSize / 2;
+            }
+            var boundary = Rectangle(new Vector3(box.Bounds.Min.X - xOffset, box.Bounds.Min.Y - yOffset),
+                                     new Vector3(box.Bounds.Min.X + length, box.Bounds.Min.Y + width))
+                          .TransformedPolygon(transform.Moved(new Vector3(0, 0, box.Bounds.Min.Z)));
+            return boundary;
+        }
+
+        /// <summary>
         /// Find a point that is guaranteed to be internal to the polygon.
         /// </summary>
         public Vector3 PointInternal()
@@ -1946,45 +2114,100 @@ namespace Elements.Geometry
         /// Remove collinear points from this Polygon.
         /// </summary>
         /// <returns>New Polygon without collinear points.</returns>
-        public Polygon CollinearPointsRemoved()
+        public Polygon CollinearPointsRemoved(double tolerance = Vector3.EPSILON)
         {
             int count = this.Vertices.Count;
             var unique = new List<Vector3>(count);
 
-            if (!Vector3.AreCollinear(Vertices[count - 1], Vertices[0], Vertices[1]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 1], Vertices[0], Vertices[1], tolerance))
                 unique.Add(Vertices[0]);
 
             for (int i = 1; i < count - 1; i++)
             {
-                if (!Vector3.AreCollinear(Vertices[i - 1], Vertices[i], Vertices[i + 1]))
+                if (!Vector3.AreCollinearByDistance(Vertices[i - 1], Vertices[i], Vertices[i + 1], tolerance))
                     unique.Add(Vertices[i]);
             }
 
-            if (!Vector3.AreCollinear(Vertices[count - 2], Vertices[count - 1], Vertices[0]))
+            if (!Vector3.AreCollinearByDistance(Vertices[count - 2], Vertices[count - 1], Vertices[0], tolerance))
+            {
                 unique.Add(Vertices[count - 1]);
-
+            }
+            if (unique.Count < 3)
+            {
+                return this;
+            }
             return new Polygon(unique);
         }
 
-        /// <summary>
-        /// Get the transforms used to transform a Profile extruded along this Polyline.
-        /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        /// <inheritdoc/>
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
+                                           double additionalRotation = 0.0)
         {
-            // Create an array of transforms with the same
-            // number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
 
-            // Cache the normal so we don't have to recalculate
-            // using Newell for every frame.
-            var up = this.Normal();
-            for (var i = 0; i < result.Length; i++)
+            if (startParam >= endParam)
             {
-                var a = this.Vertices[i];
-                result[i] = CreateMiterTransform(i, a, up);
+                return new Transform[0];
             }
+
+            var startIndex = (int)Math.Ceiling(startParam);
+            var endIndex = (int)Math.Floor(endParam);
+            bool startAtVertex = false;
+            bool endsAtVertex = false;
+
+            // Calculate number of frames. 2 frames corresponding to end parameters.
+            // 1 if startIndex == endIndex.
+            var length = endIndex - startIndex + 3;
+
+            // startIndex is set to the first distinct vertex after startParam.
+            if (startParam.ApproximatelyEquals(startIndex))
+            {
+                startAtVertex = true;
+                length--;
+            }
+
+            // endIndex is set to the first distinct vertex before endParam.
+            if (endParam.ApproximatelyEquals(endIndex))
+            {
+                endsAtVertex = true;
+                length--;
+            }
+
+            var result = new Transform[length];
+            var up = this.Normal();
+
+            int index = 0;
+            if (!startAtVertex)
+            {
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
+                result[0] = new Transform(PointAt(startParam), up.Cross(tangent), tangent);
+                index++;
+            }
+
+            // CreateMiterTransform expects index of previous and next vertex, that's why index must be adjusted.
+            for (var i = startIndex; i <= endIndex; i++, index++)
+            {
+                var adjusted = i == Vertices.Count ? 0 : i;
+                result[index] = CreateMiterTransform(adjusted, Vertices[adjusted], up);
+            }
+
+            if (!endsAtVertex)
+            {
+                var nextIndex = (endIndex + 1) % Vertices.Count;
+                var tangent = (Vertices[endIndex] - Vertices[nextIndex]).Unitized();
+                result[index] = new Transform(PointAt(endParam), up.Cross(tangent), tangent);
+            }
+
+            if (additionalRotation != 0.0)
+            {
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
+                }
+            }
+
             return result;
         }
 
@@ -2016,22 +2239,57 @@ namespace Elements.Geometry
         /// </summary>
         public Vector3 Centroid()
         {
-            var x = 0.0;
-            var y = 0.0;
-            var z = 0.0;
-            foreach (var pnt in Vertices)
+            var normal = Normal();
+            var pgon = this;
+            Transform transform = null;
+            if (Math.Abs(normal.Dot(Vector3.ZAxis)) < 1 - Vector3.EPSILON)
             {
-                x += pnt.X;
-                y += pnt.Y;
-                z += pnt.Z;
+                transform = new Transform(Vertices[0], normal);
+                var inverse = transform.Inverted();
+                pgon = TransformedPolygon(inverse);
             }
-            return new Vector3(x / Vertices.Count, y / Vertices.Count, z / Vertices.Count);
+            double area = 0;
+            var (x, y) = (0.0, 0.0);
+            var vertices = pgon.Vertices;
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                int j = (i + 1) % vertices.Count;
+                double crossProduct = vertices[i].X * vertices[j].Y - vertices[j].X * vertices[i].Y;
+
+                area += crossProduct;
+                x += (vertices[i].X + vertices[j].X) * crossProduct;
+                y += (vertices[i].Y + vertices[j].Y) * crossProduct;
+            }
+
+            area *= 0.5;
+            x /= (6 * area);
+            y /= (6 * area);
+            return transform == null ? new Vector3(x, y, vertices[0].Z) : transform.OfPoint(new Vector3(x, y, 0));
         }
 
         /// <summary>
-        /// Calculate the polygon's signed area in 3D.
+        /// Calculate the center of the polygon as the average of vertices.
         /// </summary>
-        public double Area()
+        /// <returns></returns>
+        public Vector3 Center()
+        {
+            var center = Vector3.Origin;
+            foreach (var v in this.Vertices)
+            {
+                center += v;
+            }
+            return center / this.Vertices.Count;
+        }
+
+        /// <summary>
+        /// Calculate the polygon's area in 3D.
+        /// </summary>
+        /// <param name="signed">
+        /// When true will return a signed area, counter-clockwise polygons will yield
+        /// a positive area, while clockwise polygons will yield a negative area.
+        /// </param>
+        /// <returns>A double representing the signed or absolute value of this Polygon's area.</returns>
+        public double Area(bool signed = false)
         {
             var vertices = this.Vertices;
             var normal = Normal();
@@ -2050,7 +2308,7 @@ namespace Elements.Geometry
                 area += vertices[i].X * vertices[j].Y;
                 area -= vertices[i].Y * vertices[j].X;
             }
-            return area / 2.0;
+            return signed ? area / 2.0 : Math.Abs(area / 2.0);
         }
 
         /// <summary>
@@ -2080,78 +2338,35 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="radius">The fillet radius.</param>
         /// <returns>A contour containing trimmed edge segments and fillets.</returns>
-        public Contour Fillet(double radius)
+        public new IndexedPolycurve Fillet(double radius)
         {
-            var curves = new List<Curve>();
-            Vector3 contourStart = new Vector3();
-            Vector3 contourEnd = new Vector3();
+            var curves = new List<BoundedCurve>();
+            var segments = this.Segments();
 
-            var segs = this.Segments();
-            for (var i = 0; i < segs.Length; i++)
+            for (var i = 0; i < segments.Length; i++)
             {
-                var a = segs[i];
-                var b = i == segs.Length - 1 ? segs[0] : segs[i + 1];
-                var fillet = a.Fillet(b, radius);
-
-                var right = a.Direction().Cross(Vector3.ZAxis);
-                var dot = b.Direction().Dot(right);
-                var convex = dot <= 0.0;
+                var a = segments[i];
+                var b = segments[i == segments.Length - 1 ? 0 : i + 1];
+                var arc = b.Fillet(a, radius);
                 if (i > 0)
                 {
-                    var l = new Line(contourEnd, convex ? fillet.Start : fillet.End);
-                    curves.Add(l);
+                    curves.Add(new Line(curves[curves.Count - 1].End, arc.Start));
                 }
-                else
-                {
-                    contourStart = convex ? fillet.Start : fillet.End;
-                }
-                contourEnd = convex ? fillet.End : fillet.Start;
-                curves.Add(fillet);
+                curves.Add(arc);
             }
-            curves.Add(new Line(contourEnd, contourStart));
-            return new Contour(curves);
-        }
+            curves.Add(new Line(curves[curves.Count - 1].End, curves[0].Start));
 
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected override Vector3 PointAtInternal(double u, out int segmentIndex)
-        {
-            if (u < 0.0 || u > 1.0)
-            {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
-            }
-
-            var d = this.Length() * u;
-            var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count; i++)
-            {
-                var a = this.Vertices[i];
-                var b = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
-                {
-                    segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
-                }
-                totalLength += currLength;
-            }
-            segmentIndex = this.Vertices.Count - 1;
-            return this.End;
+            return new IndexedPolycurve(curves);
         }
 
         // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        internal override IEnumerable<(Vector3 from, Vector3 to)> Edges()
+        internal override IEnumerable<(Vector3 from, Vector3 to)> Edges(Transform transform = null)
         {
             for (var i = 0; i < this.Vertices.Count; i++)
             {
                 var from = this.Vertices[i];
                 var to = i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
-                yield return (from, to);
+                yield return transform != null ? (transform.OfPoint(from), transform.OfPoint(to)) : (from, to);
             }
         }
 
@@ -2184,16 +2399,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var verts = new List<Vector3>(this.Vertices);
-            verts.Add(this.Start);
-            return verts;
-        }
-
-        /// <summary>
         /// Deletes Vertices that are out on overloping Edges
         /// D__________C
         ///  |         |
@@ -2201,7 +2406,6 @@ namespace Elements.Geometry
         /// E|_________|B_____A
         /// Vertex A will be deleted
         /// </summary>
-        /// <param name="vertices"></param>
         private void DeleteVerticesForOverlappingEdges()
         {
             if (Vertices.Count < 4)
@@ -2242,7 +2446,7 @@ namespace Elements.Geometry
             List<Vector3> loopVertices = new List<Vector3>();
             List<Line> openLoop = new List<Line>();
 
-            //Check if a point lay on active open loop lines. 
+            //Check if a point lay on active open loop lines.
             foreach (var v in Vertices)
             {
                 bool intersectionFound = false;
@@ -2261,7 +2465,7 @@ namespace Elements.Geometry
                         //Loop can possibly be just two points connected forth and back.
                         //Filter it early.
                         vertices.Add(v);
-                        if(vertices.Count > 2)
+                        if (vertices.Count > 2)
                         {
                             polygonPresets.Add(vertices);
                         }
@@ -2328,127 +2532,6 @@ namespace Elements.Geometry
                 }
             }
             return polygons;
-        }
-    }
-
-    /// <summary>
-    /// Mode to apply a boolean operation
-    /// </summary>
-    public enum BooleanMode
-    {
-        /// <summary>
-        /// A and not B
-        /// </summary>
-        Difference,
-        /// <summary>
-        /// A or B
-        /// </summary>
-        Union,
-        /// <summary>
-        /// A and B
-        /// </summary>
-        Intersection,
-        /// <summary>
-        /// Exclusive or — either A or B but not both.
-        /// </summary>
-        XOr
-    }
-
-
-    /// <summary>
-    /// Controls the handling of internal regions in a polygon boolean operation.
-    /// </summary>
-    public enum VoidTreatment
-    {
-        /// <summary>
-        /// Use an Even/Odd fill pattern to decide whether internal polygons are solid or void.
-        /// This corresponds to Clipper's "EvenOdd" PolyFillType.
-        /// </summary>
-        PreserveInternalVoids = 0,
-        /// <summary>
-        /// Treat all contained or overlapping polygons as solid.
-        /// This corresponds to Clipper's "Positive" PolyFillType.
-        /// </summary>
-        IgnoreInternalVoids = 1
-    }
-
-    /// <summary>
-    /// Polygon extension methods.
-    /// </summary>
-    internal static class PolygonExtensions
-    {
-        /// <summary>
-        /// Construct a clipper path from a Polygon.
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="tolerance">Optional tolerance value. If converting back to a polygon after the operation, be sure to use the same tolerance value.</param>
-        /// <returns></returns>
-        internal static List<IntPoint> ToClipperPath(this Polygon p, double tolerance = Vector3.EPSILON)
-        {
-            var scale = Math.Round(1.0 / tolerance);
-            var path = new List<IntPoint>();
-            foreach (var v in p.Vertices)
-            {
-                path.Add(new IntPoint(Math.Round(v.X * scale), Math.Round(v.Y * scale)));
-            }
-            return path;
-        }
-
-        /// <summary>
-        /// Construct a Polygon from a clipper path
-        /// </summary>
-        /// <param name="p"></param>
-        /// <param name="tolerance">Optional tolerance value. Be sure to use the same tolerance value as you used when converting to Clipper path.</param>
-        /// <returns></returns>
-        internal static Polygon ToPolygon(this List<IntPoint> p, double tolerance = Vector3.EPSILON)
-        {
-            var scale = Math.Round(1.0 / tolerance);
-            var converted = new Vector3[p.Count];
-            for (var i = 0; i < converted.Length; i++)
-            {
-                var v = p[i];
-                converted[i] = new Vector3(v.X / scale, v.Y / scale);
-            }
-            try
-            {
-                return new Polygon(converted);
-            }
-            catch
-            {
-                // Often, the polygons coming back from clipper will have self-intersections, in the form of lines that go out and back.
-                // here we make a last-ditch attempt to fix this and construct a new polygon.
-                var cleanedVertices = Vector3.AttemptPostClipperCleanup(converted);
-                if (cleanedVertices.Count < 3)
-                {
-                    return null;
-                }
-                try
-                {
-                    return new Polygon(cleanedVertices);
-                }
-                catch
-                {
-                    throw new Exception("Unable to clean up bad polygon resulting from a polygon boolean operation.");
-                }
-            }
-        }
-
-        public static IList<Polygon> Reversed(this IList<Polygon> polygons)
-        {
-            return polygons.Select(p => p.Reversed()).ToArray();
-        }
-
-        internal static ContourVertex[] ToContourVertexArray(this Polyline poly)
-        {
-            var contour = new ContourVertex[poly.Vertices.Count];
-            for (var i = 0; i < poly.Vertices.Count; i++)
-            {
-                var vert = poly.Vertices[i];
-                var cv = new ContourVertex();
-                cv.Position = new Vec3 { X = vert.X, Y = vert.Y, Z = vert.Z };
-                contour[i] = cv;
-            }
-            return contour;
         }
     }
 }

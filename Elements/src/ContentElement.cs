@@ -1,33 +1,34 @@
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
     /// An element representing user content.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class ContentElement : GeometricElement
     {
         /// <summary>The URI of the gltf for this element.</summary>
-        [Newtonsoft.Json.JsonProperty("gltfLocation", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("gltfLocation", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string GltfLocation { get; set; }
 
         /// <summary>The bounding box of the content.</summary>
-        [Newtonsoft.Json.JsonProperty("Bounding Box", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Bounding Box", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public BBox3 BoundingBox { get; set; }
 
         /// <summary>The scale needed to convert the gltf to meters.</summary>
-        [Newtonsoft.Json.JsonProperty("Gltf Scale to Meters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Gltf Scale to Meters", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double GltfScaleToMeters { get; set; }
 
         /// <summary>A vector indicating the direction the source object was originally facing.</summary>
-        [Newtonsoft.Json.JsonProperty("SourceDirection", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("SourceDirection", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 SourceDirection { get; set; }
 
         /// <summary>Alternate symbolic representations of the object.</summary>
-        [Newtonsoft.Json.JsonProperty("Symbols", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Symbols", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Symbol> Symbols { get; set; }
 
         private System.Collections.Generic.IDictionary<string, object> _additionalProperties = new System.Collections.Generic.Dictionary<string, object>();
@@ -46,7 +47,7 @@ namespace Elements
         /// <param name="isElementDefinition"></param>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public ContentElement(string @gltfLocation,
                               BBox3 @boundingBox,
                               double @gltfScaleToMeters,
@@ -143,7 +144,6 @@ namespace Elements
             {
                 return;
             }
-            var vertices = new List<Vector3> { BoundingBox.Min, BoundingBox.Max };
             var bottomProfile = new Polygon(new List<Vector3>{
                             new Vector3(BoundingBox.Min.X, BoundingBox.Min.Y, BoundingBox.Min.Z),
                             new Vector3(BoundingBox.Min.X, BoundingBox.Max.Y, BoundingBox.Min.Z),

@@ -7,6 +7,7 @@ using Xunit.Abstractions;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Elements.Tests
 {
@@ -186,11 +187,22 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void PerpendicularLines()
+        public void FigureEight()
         {
-            var p = Polygon.Rectangle(5, 5);
-            var pts = p.Segments().Intersections();
-            Assert.Single(pts);
+            this.Name = nameof(FigureEight);
+            var t = new Transform();
+            t.Rotate(Vector3.ZAxis, 0.0);
+
+            var a = new Line(t.OfPoint(Vector3.Origin), t.OfPoint(new Vector3(10, 0, 0)));
+            var b = new Line(t.OfPoint(new Vector3(0, 5, 0)), t.OfPoint(new Vector3(10, 5, 0)));
+            var c = new Line(t.OfPoint(new Vector3(0, 10, 0)), t.OfPoint(new Vector3(10, 10, 0)));
+            var d = new Line(t.OfPoint(new Vector3(5, 0, 0)), t.OfPoint(new Vector3(5, 5, 0)));
+            var e = new Line(t.OfPoint(new Vector3(5, 5, 0)), t.OfPoint(new Vector3(5, 10, 0)));
+            var f = new Line(t.OfPoint(Vector3.Origin), t.OfPoint(new Vector3(0, 10, 0)));
+            var g = new Line(t.OfPoint(new Vector3(10, 0, 0)), t.OfPoint(new Vector3(10, 10, 0)));
+            var network = Network<Line>.FromSegmentableItems(new[] { a, b, c, d, e, f, g }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
+            Assert.Equal(9, network.BranchNodes().Count());
+            this.Model.AddElement(network.ToModelArrows(allNodeLocations, Colors.Black));
         }
 
         [Fact]
@@ -201,40 +213,6 @@ namespace Elements.Tests
             var b = new Line(new Vector3(0, 5, 0), new Vector3(5, 3, 0));
             var c = new Line(new Vector3(5, 3, 0), new Vector3(0, 0, 0));
             var network = Network<Line>.FromSegmentableItems(new[] { a, b, c }, (o) => { return o; }, out List<Vector3> allNodeLocations, out _, true);
-
-            Func<(int currentIndex, int previousIndex, List<int> edgeIndices), int> next = (a) =>
-                {
-                    var minAngle = double.MaxValue;
-                    var minIndex = -1;
-                    var baseEdge = a.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[a.currentIndex] - allNodeLocations[a.previousIndex]).Unitized();
-                    var localEdges = a.edgeIndices.Select(e => (e, allNodeLocations[a.currentIndex], allNodeLocations[e])).ToList();
-                    foreach (var e in a.edgeIndices)
-                    {
-                        if (e == a.previousIndex)
-                        {
-                            continue;
-                        }
-
-                        var localEdge = (allNodeLocations[e] - allNodeLocations[a.currentIndex]).Unitized();
-                        var angle = baseEdge.PlaneAngleTo(localEdge);
-
-                        // The angle of traversal is not actually zero here,
-                        // it's 180 (unless the path is invalid). We want to
-                        // ensure that traversal happens along the straight
-                        // edge if possible.
-                        if (angle == 0)
-                        {
-                            angle = 180.0;
-                        }
-
-                        if (angle < minAngle)
-                        {
-                            minAngle = angle;
-                            minIndex = e;
-                        }
-                    }
-                    return minIndex;
-                };
 
             var leafIndices = new List<int>();
             for (var i = 0; i < network.NodeCount(); i++)
@@ -247,12 +225,535 @@ namespace Elements.Tests
 
             Assert.Single(leafIndices);
 
+            var visitedEdges = new List<LocalEdge>();
             foreach (var leafIndex in leafIndices)
             {
-                var path = network.Traverse(leafIndex, next, out List<int> visited);
+                var path = network.Traverse(leafIndex, Network<Line>.TraverseSmallestPlaneAngle, allNodeLocations, visitedEdges, out List<int> visited);
                 Assert.Equal(6, path.Count);
                 _output.WriteLine(string.Join(',', visited));
             }
+        }
+
+        private List<Line> CreateClosedRegionTestLines()
+        {
+            var lines = new List<Line>();
+
+            foreach (var line in Polygon.Rectangle(5, 5).Segments())
+            {
+                lines.Add(line);
+            }
+            var t = new Transform(new Vector3(5, 0));
+            foreach (var line in Polygon.Rectangle(5, 5).TransformedPolygon(t).Segments())
+            {
+                var match = false;
+                foreach (var otherLine in lines)
+                {
+                    if (otherLine.IsAlmostEqualTo(line, false))
+                    {
+                        match = true;
+                    }
+                }
+                if (!match)
+                {
+                    lines.Add(line);
+                }
+            }
+            lines.Add(new Line(new Vector3(0, 0), new Vector3(0, 5)));
+            lines.Add(new Line(new Vector3(-5, -1), new Vector3(12.5, 1)));
+            lines.Add(new Line(new Vector3(5, 0), new Vector3(5, 5)));
+
+            return lines;
+        }
+
+        [Fact]
+        public void FindAllClosedRegions()
+        {
+            this.Name = nameof(FindAllClosedRegions);
+
+            var lines = CreateClosedRegionTestLines();
+
+            foreach (var line in lines)
+            {
+                this.Model.AddElement(new ModelCurve(line));
+            }
+
+            var network = Network<Line>.FromSegmentableItems(lines, (item) => { return item; }, out var allNodeLocations, out _);
+
+            var closedRegions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(closedRegions, allNodeLocations);
+
+            this.Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            this.Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Black));
+
+            Assert.Equal(5, counterClockwiseRegions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
+        }
+
+        [Fact]
+        public void FindAllClosedRegionsDoesNotLoopInfinitely()
+        {
+            this.Name = nameof(FindAllClosedRegionsDoesNotLoopInfinitely);
+            var json = File.ReadAllText("../../../models/Geometry/BadNetwork.json");
+            var lines = JsonConvert.DeserializeObject<List<Line>>(json);
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+            Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            Model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+        }
+
+        [Fact]
+        public void RevitWallsIntersectCorrectly()
+        {
+            this.Name = nameof(RevitWallsIntersectCorrectly);
+
+            var json = File.ReadAllText("../../../models/Geometry/RevitIntersectingWalls.json");
+            var model = Model.FromJson(json);
+            var walls = model.AllElementsOfType<WallByProfile>();
+            foreach (var wall in walls)
+            {
+                wall.Material = BuiltInMaterials.Mass;
+            }
+            Assert.Equal(4, walls.Count());
+            var network = Network<WallByProfile>.FromSegmentableItems(walls.ToList(),
+                                                                      (wall) => { return wall.Centerline; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToBoundedAreaPanels(allNodeLocations));
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 3 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 4, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 1, 6, 7 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(6).Select(i => i.Item1), new List<int>() { 3 });
+            Assert.Equal(network.EdgesAt(7).Select(i => i.Item1), new List<int>() { 3 });
+
+            Model = model;
+        }
+
+        [Fact]
+        public void FourQuadrantsWithPointerFindsCorrectNumberOfClosedRegions()
+        {
+            // --------------
+            // |      |      |\
+            // |      |      | \
+            // ---------------  |
+            // |      |      | /
+            // |      |      |/
+            // ---------------
+
+            this.Name = nameof(FourQuadrantsWithPointerFindsCorrectNumberOfClosedRegions);
+
+            var rect = Polygon.Rectangle(6, 2);
+            var a = new Line(new Vector3(0, 1), new Vector3(0, -1));
+            var b = new Line(new Vector3(-3, 0), new Vector3(3, 0));
+            var c = new Line(new Vector3(3, 1), new Vector3(5, 0));
+            var d = new Line(new Vector3(5, 0), new Vector3(3, -1));
+            var lines = rect.Segments().Concat(new[] { a, b, c, d }).ToList();
+            var network = Network<Line>.FromSegmentableItems(lines, (line) => line, out var allNodeLocations, out var allIntersections);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
+
+            Assert.Equal(5, counterClockwiseRegions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
+        }
+
+        [Fact]
+        public void ConcaveRegion()
+        {
+            this.Name = nameof(ConcaveRegion);
+            var l = Polygon.L(5, 7, 2);
+            var network = Network<Line>.FromSegmentableItems(l.Segments(), (line) => line, out var allNodeLocations, out var allIntersectionLocations);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Equal(2, regions.Count);
+            DrawNetwork(network, allNodeLocations, Model, regions);
+        }
+
+        [Fact]
+        public void FindClosedRegionWithInnerSegments()
+        {
+            this.Name = nameof(FindClosedRegionWithInnerSegments);
+            var lines = new[] {
+                new Line((0,0), (10, 0)),
+                new Line((10, 0), (10, 10)),
+                new Line((10, 10), (5, 10)),
+                new Line((5, 10), (5, 7)),
+                new Line((5, 7), (5, 5)),
+                new Line((5, 10), (0, 10)),
+                new Line((0, 10), (0, 0))
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Equal(2, regions.Count);
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void FindClosedRegionWithOuterSegments()
+        {
+            // An intersecting path that ends at the edge 
+            // of a closed region.
+            //
+            //        /      
+            //       |      
+            // ---------------
+            // |             |
+            // |             |
+            // |             |
+            // |             | 
+            // |             |
+            // ---------------
+
+            this.Name = nameof(FindClosedRegionWithOuterSegments);
+            var lines = new[] {
+                new Line((0,0), (10, 0)),
+                new Line((10, 0), (10, 10)),
+                new Line((10, 10), (5, 10)),
+                new Line((5, 10), (5, 15)),
+                new Line((5, 15), (5, 17)),
+                new Line((5, 10), (0, 10)),
+                new Line((0, 10), (0, 0))
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+
+            Assert.Equal(2, regions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void IntersectingLeafPathFindsCorrectClosedRegions()
+        {
+            // An intersecting path that isn't a leaf, but still shouldn't
+            // be traversed.
+            //
+            // ---------------
+            // |             |
+            // |-------------|
+            // |             |
+            // |       /     | 
+            // |      |      |
+            // ---------------
+            //        |
+
+            this.Name = nameof(IntersectingLeafPathFindsCorrectClosedRegions);
+            var lines = new List<Line> {
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                new Line((-2.00, 6.00), (12.00, 6.00)),
+                new Line((5.00, -2.00), (4.00, 1.00)),
+                new Line((4.00, 1.00), (6.00, 2.00)),
+                new Line((6.00, 2.00), (5.00, 4.00)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
+
+            Assert.Equal(2, counterClockwiseRegions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
+        }
+
+        [Fact]
+        public void EShapeNetworkClosedRegions()
+        {
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+
+            this.Name = nameof(EShapeNetwork1);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            Assert.Empty(regions);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void TwoInnerLeavesClosedRegions()
+        {
+            // 3              2
+            // ---------------
+            // |         8   |
+            // |          ---| 1
+            // |    7   9/   |
+            // |     \6      | 
+            // |      |      |
+            // ---------------
+            // 4      5       0
+
+            this.Name = nameof(IntersectingLeafPathFindsCorrectClosedRegions);
+            var lines = new List<Line> {
+                // Room
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                // First leaf
+                new Line((5.00, 0.00), (5.00, 2.00)),
+                new Line((5.00, 2.00), (4.00, 3.00)),
+                // Second leaf
+                new Line((10.00, 7.00), (8.00, 7.00)),
+                new Line((8.00, 7.00), (7.00, 6.00))
+            };
+
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
+
+            Assert.Single(counterClockwiseRegions);
+
+            DrawNetwork(network, allNodeLocations, this.Model, regions);
+        }
+
+        [Fact]
+        public void ThreeFourAndFiveSidedRegionsFound()
+        {
+            this.Name = nameof(ThreeFourAndFiveSidedRegionsFound);
+            var lines = new List<Line> {
+                new Line((10.00, 0.00), (10.00, 10.00)),
+                new Line((10.00, 10.00), (-0.00, 10.00)),
+                new Line((-0.00, 10.00), (0.00, 0.00)),
+                new Line((0.00, 0.00), (10.00, 0.00)),
+                new Line((-2.00, 6.00), (12.00, 6.00)),
+                new Line((-2.96, -0.16), (2.13, 2.51)),
+                new Line((2.13, 2.51), (7.81, 2.51)),
+                new Line((7.81, 2.51), (13.11, 0.28)),
+                new Line((7.81, 2.51), (11.60, 4.88)),
+                new Line((2.13, 2.51), (-1.46, 4.62)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
+            var regions = network.FindAllClosedRegions(allNodeLocations);
+            var counterClockwiseRegions = GetCounterClockwiseRegions(regions, allNodeLocations);
+
+            Assert.Equal(5, counterClockwiseRegions.Count);
+
+            DrawNetwork(network, allNodeLocations, this.Model, counterClockwiseRegions);
+        }
+
+        [Fact]
+        public void EShapeNetwork1()
+        {
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+            // -----|
+            //      |
+            //      |
+
+            this.Name = nameof(EShapeNetwork1);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        [Fact]
+        public void EShapeNetwork2()
+        {
+            //       |
+            //       |
+            //  -----|
+            //       |
+            //       |
+            // ------|
+            //       |
+            //       |
+
+            this.Name = nameof(EShapeNetwork2);
+
+            var lines = new List<Line> {
+                new Line((10, 0), (10, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((-2, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        [Fact]
+        public void EShapeNetwork3()
+        {
+            // |
+            // |
+            // |-----
+            // |
+            // |
+            // |-----
+            // |
+            // |
+
+            this.Name = nameof(EShapeNetwork3);
+
+            var lines = new List<Line> {
+                new Line((0, 0), (0, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (10, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        [Fact]
+        public void EShapeNetwork4()
+        {
+            // |
+            // |
+            // |-----
+            // |
+            // |
+            // |--------
+            // |
+            // |
+
+            this.Name = nameof(EShapeNetwork4);
+
+            var lines = new List<Line> {
+                new Line((0, 0), (0, 10)),
+                new Line((0, 5), (10, 5)),
+                new Line((0, 7), (12, 7)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+
+        [Fact]
+        public void EShapeNetwork5()
+        {
+            // ----------------
+            //    |     |
+            //    |     |
+            //    |     |
+
+
+            this.Name = nameof(EShapeNetwork5);
+
+            var lines = new List<Line> {
+                new Line((0, 0), (10, 0)),
+                new Line((5, 0), (5, 10)),
+                new Line((7, 0), (7, 10)),
+            };
+            var network = Network<Line>.FromSegmentableItems(lines,
+                                                                      (line) => { return line; },
+                                                                      out var allNodeLocations,
+                                                                      out var allIntersectionLocations);
+
+
+            Assert.Equal(network.EdgesAt(0).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(1).Select(i => i.Item1), new List<int>() { 0, 2, 4 });
+            Assert.Equal(network.EdgesAt(2).Select(i => i.Item1), new List<int>() { 1, 3, 5 });
+            Assert.Equal(network.EdgesAt(3).Select(i => i.Item1), new List<int>() { 2 });
+            Assert.Equal(network.EdgesAt(4).Select(i => i.Item1), new List<int>() { 1 });
+            Assert.Equal(network.EdgesAt(5).Select(i => i.Item1), new List<int>() { 2 });
+
+            DrawNetwork(network, allNodeLocations, this.Model);
+        }
+
+        private static void DrawNetwork<T>(Network<T> network, List<Vector3> allNodeLocations, Model model, List<List<int>> regions = null)
+        {
+            var random = new Random(11);
+
+            if (regions != null)
+            {
+                foreach (var r in regions)
+                {
+                    var poly = new Polygon(r.Select(i => allNodeLocations[i]).ToList());
+                    model.AddElement(new Panel(poly, random.NextMaterial()));
+                }
+            }
+            model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
+            model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
+        }
+
+        private static List<List<int>> GetCounterClockwiseRegions(List<List<int>> closedRegions, List<Vector3> allNodeLocations)
+        {
+            var result = closedRegions.Where(r => !IsClockwise(r, allNodeLocations)).ToList();
+            return result;
+        }
+
+        private static bool IsClockwise(List<int> nodeIds, List<Vector3> allNodeLocations)
+        {
+            var vertices = nodeIds.Select(i => allNodeLocations[i]).ToList();
+            return new Polygon(vertices).IsClockWise();
         }
     }
 }

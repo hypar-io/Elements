@@ -19,7 +19,7 @@ namespace Elements
         /// The elevation from which the floor is extruded.
         /// </summary>
         [JsonIgnore]
-        public double Elevation => this.Transform.Origin.Z;
+        public double Elevation => Transform.Origin.Z;
 
         /// <summary>
         /// The thickness of the floor.
@@ -35,6 +35,43 @@ namespace Elements
         /// A collection of openings in the floor.
         /// </summary>
         public List<Opening> Openings { get; } = new List<Opening>();
+
+        /// <summary>
+        /// The Level this floor belongs to.
+        /// </summary>
+        /// <value></value>
+        public Guid? Level { get; set; }
+
+        /// <summary>
+        /// Create a floor.
+        /// </summary>
+        /// <param name="profile">The perimeter of the floor.</param>
+        /// <param name="thickness">The thickness of the floor.</param>
+        /// <param name="level">The level this floor belongs to.</param>
+        /// <param name="transform">The floor's transform. Create a transform with a Z coordinate for the origin, to define the elevation of the floor.</param>
+        /// <param name="material">The floor's material.</param>
+        /// <param name="representation">The floor's representation.</param>
+        /// <param name="isElementDefinition">Is this an element definition?</param>
+        /// <param name="id">The floor's id.</param>
+        /// <param name="name">The floor's name.</param>
+        public Floor(Profile profile,
+                     double thickness,
+                     Guid? level,
+                     Transform transform = null,
+                     Material material = null,
+                     Representation representation = null,
+                     bool isElementDefinition = false,
+                     Guid id = default,
+                     string name = null) : base(transform ?? new Transform(),
+                                                material ?? BuiltInMaterials.Concrete,
+                                                representation ?? new Representation(new List<SolidOperation>()),
+                                                isElementDefinition,
+                                                id != default ? id : Guid.NewGuid(),
+                                                name)
+        {
+            Level = level;
+            SetProperties(profile, thickness);
+        }
 
         /// <summary>
         /// Create a floor.
@@ -80,8 +117,8 @@ namespace Elements
                 throw new ArgumentOutOfRangeException($"The floor could not be created. The provided thickness ({thickness}) was less than or equal to zero.");
             }
 
-            this.Profile = profile;
-            this.Thickness = thickness;
+            Profile = profile;
+            Thickness = thickness;
         }
 
         /// <summary>
@@ -89,7 +126,7 @@ namespace Elements
         /// </summary>
         public Profile ProfileTransformed()
         {
-            return this.Transform != null ? this.Transform.OfProfile(this.Profile) : this.Profile;
+            return Transform != null ? Transform.OfProfile(Profile) : Profile;
         }
 
         /// <summary>
@@ -98,7 +135,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Area()
         {
-            return Math.Abs(this.Profile.Area());
+            return Profile.Area();
         }
 
         /// <summary>
@@ -107,7 +144,7 @@ namespace Elements
         /// <returns>The area of the floor, not including the area of openings.</returns>
         public double Volume()
         {
-            return Math.Abs(this.Profile.Area()) * this.Thickness;
+            return Profile.Area() * Thickness;
         }
 
         /// <summary>
@@ -115,8 +152,8 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            this.Representation.SolidOperations.Clear();
-            this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Thickness, Vector3.ZAxis, false));
+            Representation.SolidOperations.Clear();
+            Representation.SolidOperations.Add(new Extrude(Profile, Thickness, Vector3.ZAxis, false));
         }
 
         /// <summary>
@@ -130,8 +167,8 @@ namespace Elements
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1, double depthBack = 1)
         {
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, new Transform(x, y, 0));
-            this.Openings.Add(o);
+            var o = new Opening(Polygon.Rectangle(width, height), Vector3.ZAxis, depthFront, depthBack, new Transform(x, y, 0));
+            Openings.Add(o);
             return o;
         }
 
@@ -145,8 +182,8 @@ namespace Elements
         /// <param name="depthBack">The depth of the opening along the opening's -Z axis.</param>
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1, double depthBack = 1)
         {
-            var o = new Opening(perimeter, depthFront, depthBack, new Transform(x, y, 0));
-            this.Openings.Add(o);
+            var o = new Opening(perimeter, Vector3.ZAxis, depthFront, depthBack, new Transform(x, y, 0));
+            Openings.Add(o);
             return o;
         }
     }

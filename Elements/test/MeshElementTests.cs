@@ -41,7 +41,7 @@ namespace Elements.Tests
                 }
             }
             mesh.ComputeNormals();
-            var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime));
+            var meshElement = new MeshElement(mesh, material: new Material("Lime", Colors.Lime));
             //</example>
             this.Model.AddElement(meshElement);
         }

@@ -3,62 +3,53 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
-using Elements.Validators;
 using Elements.Search;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A continuous set of lines.
+    /// Parameterization of the curve is 0->n-1 where n is the number of vertices.
     /// </summary>
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    public class Polyline : Curve, IEquatable<Polyline>
+    public class Polyline : IndexedPolycurve
     {
         /// <summary>
-        /// A bounding box created once during the polyline's construction.
-        /// This will not be updated when a polyline's vertices are changed.
+        /// The domain of the curve.
         /// </summary>
-        internal BBox3 _bounds;
-
-        /// <summary>The vertices of the polygon.</summary>
-        [Newtonsoft.Json.JsonProperty("Vertices", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.MinLength(2)]
-        public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(0, Vertices.Count - 1);
 
         /// <summary>
         /// Construct a polyline.
         /// </summary>
         /// <param name="vertices">A collection of vertex locations.</param>
-        [Newtonsoft.Json.JsonConstructor]
-        public Polyline(IList<Vector3> @vertices) : base()
-        {
-            this.Vertices = @vertices;
+        [JsonConstructor]
+        public Polyline(IList<Vector3> @vertices) : base(vertices) { }
 
-            if (!Validator.DisableValidationOnConstruction)
-            {
-                ValidateVertices();
-            }
-            _bounds = new BBox3(Vertices);
-        }
-
-        protected virtual void ValidateVertices()
-        {
-            Vertices = Vector3.RemoveSequentialDuplicates(Vertices);
-            CheckSegmentLengthAndThrow(Edges());
-        }
+        /// <summary>
+        /// Construct a polyline.
+        /// </summary>
+        /// <param name="vertices">A collection of vertex locations.</param>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
+        public Polyline(IList<Vector3> @vertices, bool disableValidation = false) : base(vertices, disableValidation: disableValidation) { }
 
         /// <summary>
         /// Construct a polyline from points. This is a convenience constructor
         /// that can be used like this: `new Polyline((0,0,0), (10,0,0), (10,10,0))`
         /// </summary>
         /// <param name="vertices">The vertices of the polyline.</param>
-        public Polyline(params Vector3[] vertices) : this(new List<Vector3>(vertices))
-        {
+        public Polyline(params Vector3[] vertices) : base(vertices) { }
 
-        }
+        /// <summary>
+        /// Construct a polyline from points. This is a convenience constructor
+        /// that can be used like this: `new Polyline((0,0,0), (10,0,0), (10,10,0))`
+        /// </summary>
+        /// <param name="disableValidation">Should self intersection testing be disabled?</param>
+        /// <param name="vertices">The vertices of the polyline.</param>
+        public Polyline(bool disableValidation, params Vector3[] vertices) : base(vertices, disableValidation: disableValidation) { }
 
         /// <summary>
         /// Calculate the length of the polygon.
@@ -74,24 +65,6 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// The start of the polyline.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 Start
-        {
-            get { return this.Vertices[0]; }
-        }
-
-        /// <summary>
-        /// The end of the polyline.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 End
-        {
-            get { return this.Vertices[this.Vertices.Count - 1]; }
-        }
-
-        /// <summary>
         /// Reverse the direction of a polyline.
         /// </summary>
         /// <returns>Returns a new polyline with opposite winding.</returns>
@@ -103,16 +76,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Get a string representation of this polyline.
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return string.Join<Vector3>(",", this.Vertices);
-        }
-
-        /// <summary>
-        /// Get a collection a lines representing each segment of this polyline.
+        /// Get a collection a line segments which connect the vertices of this polyline.
         /// </summary>
         /// <returns>A collection of Lines.</returns>
         public virtual Line[] Segments()
@@ -120,44 +84,19 @@ namespace Elements.Geometry
             return SegmentsInternal(this.Vertices);
         }
 
-        // TODO: Investigate converting Polyline to IEnumerable<(Vector3, Vector3)>
-        virtual internal IEnumerable<(Vector3 from, Vector3 to)> Edges()
-        {
-            for (var i = 0; i < Vertices.Count - 1; i++)
-            {
-                var from = Vertices[i];
-                var to = Vertices[i + 1];
-                yield return (from, to);
-            }
-        }
-
         /// <summary>
-        /// Get a point on the polygon at parameter u.
+        /// Get the transform at the specified parameter along the polyline.
         /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        public override Vector3 PointAt(double u)
-        {
-            var segmentIndex = 0;
-            var p = PointAtInternal(u, out segmentIndex);
-            return p;
-        }
-
-        /// <summary>
-        /// Get the Transform at the specified parameter along the Polygon.
-        /// </summary>
-        /// <param name="u">The parameter on the Polygon between 0.0 and 1.0.</param>
-        /// <returns>A Transform with its Z axis aligned trangent to the Polygon.</returns>
+        /// <param name="u">The parameter on the polygon between 0.0 and length.</param>
+        /// <returns>A transform with its Z axis aligned tangent to the polyline.</returns>
         public override Transform TransformAt(double u)
         {
-            if (u < 0.0 || u > 1.0)
+            if (!Domain.Includes(u, true))
             {
-                throw new ArgumentOutOfRangeException($"The provided value for u ({u}) must be between 0.0 and 1.0.");
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var segmentIndex = 0;
-            var o = PointAtInternal(u, out segmentIndex);
-            Vector3 x = Vector3.XAxis; // Vector3: Convert to XAxis
+            var o = PointAtInternal(u, out var segmentIndex);
 
             // Check if the provided parameter is equal
             // to one of the vertices.
@@ -178,7 +117,7 @@ namespace Elements.Geometry
             {
                 var idx = this.Vertices.IndexOf(a);
 
-                if (idx == 0 || idx == this.Vertices.Count - 1)
+                if (!(this is Polygon) && (idx == 0 || idx == this.Vertices.Count - 1))
                 {
                     return CreateOrthogonalTransform(idx, a, normals[idx]);
                 }
@@ -188,26 +127,14 @@ namespace Elements.Geometry
                 }
             }
 
-            var d = this.Length() * u;
-            var totalLength = 0.0;
-            var segments = Segments();
-            var normal = new Vector3();
-            for (var i = 0; i < segments.Length; i++)
-            {
-                var s = segments[i];
-                var currLength = s.Length();
-                if (totalLength <= d && totalLength + currLength >= d)
-                {
-                    var parameterOnSegment = (d - totalLength) / currLength;
-                    o = s.PointAt(parameterOnSegment);
-                    var previousNormal = normals[i];
-                    var nextNormal = normals[(i + 1) % this.Vertices.Count];
-                    normal = ((nextNormal - previousNormal) * parameterOnSegment + previousNormal).Unitized();
-                    x = s.Direction().Cross(normal);
-                    break;
-                }
-                totalLength += currLength;
-            }
+            var nextIndex = (segmentIndex + 1) % this.Vertices.Count;
+            var segment = new Line(Vertices[segmentIndex], Vertices[nextIndex]);
+            var parameterOnSegment = u - segmentIndex;
+            var previousNormal = normals[segmentIndex];
+            var nextNormal = normals[nextIndex];
+            var normal = ((nextNormal - previousNormal) * parameterOnSegment + previousNormal).Unitized();
+            var x = segment.Direction().Cross(normal);
+
             return new Transform(o, x, normal, x.Cross(normal));
         }
 
@@ -231,10 +158,7 @@ namespace Elements.Geometry
             return p;
         }
 
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             if (transform == null)
@@ -291,7 +215,7 @@ namespace Elements.Geometry
 
             // At the first point, use either the next non-collinear edge or a cardinal direction to choose a normal.
             var previousDirection = new Vector3();
-            if (Vector3Extensions.AreCollinear(this.Vertices))
+            if (Vector3Extensions.AreCollinearByDistance(this.Vertices))
             {
                 // If the polyline is collinear, use whichever cardinal direction isn't collinear with it.
                 if (Math.Abs(nextDirection.Dot(Vector3.YAxis)) < 1 - Vector3.EPSILON)
@@ -309,7 +233,7 @@ namespace Elements.Geometry
                 for (var i = 2; i < this.Vertices.Count; i++)
                 {
                     previousDirection = (this.Vertices[i] - this.Vertices[1]).Unitized();
-                    if (Math.Abs(previousDirection.Dot(nextDirection)) > 1 - Vector3.EPSILON)
+                    if (Math.Abs(previousDirection.Dot(nextDirection)) < 1 - Vector3.EPSILON)
                     {
                         break;
                     }
@@ -323,7 +247,7 @@ namespace Elements.Geometry
             {
                 // If this vertex has a bend, use the normal computed from the previous and next edges.
                 // Otherwise keep using the normal from the previous bend.
-                if (i < result.Length - 1)
+                if (i > 0 && i < result.Length - 1)
                 {
                     var direction = (this.Vertices[i + 1] - this.Vertices[i]).Unitized();
                     if (Math.Abs(nextDirection.Dot(direction)) < 1 - Vector3.EPSILON)
@@ -335,41 +259,84 @@ namespace Elements.Geometry
                 var normal = nextDirection.Cross(previousDirection);
 
                 // Flip the normal if it's pointing away from the previous point's normal.
-                if (i > 1 && previousNormal.Dot(normal) < 0)
+                if (i >= 1 && previousNormal.Dot(normal) < 0)
                 {
                     normal *= -1;
                 }
                 result[i] = normal.Unitized();
-                previousNormal = normal;
+                previousNormal = result[i];
             }
             return result;
         }
 
-        /// <summary>
-        /// Get the transforms used to transform a Profile extruded along this Polyline.
-        /// </summary>
-        /// <param name="startSetback"></param>
-        /// <param name="endSetback"></param>
-        public override Transform[] Frames(double startSetback, double endSetback)
+        /// <inheritdoc/>
+        public override Transform[] Frames(double startSetbackDistance = 0.0,
+                                           double endSetbackDistance = 0.0,
+                                           double additionalRotation = 0.0)
         {
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, Domain.Min);
+            var endParam = ParameterAtDistanceFromParameter(Length() - endSetbackDistance, Domain.Min);
+
+            if (startParam >= endParam)
+            {
+                return new Transform[0];
+            }
+
+            var startIndex = (int)Math.Ceiling(startParam);
+            var endIndex = (int)Math.Floor(endParam);
+            bool startAtVertex = false;
+            bool endsAtVertex = false;
+
+            // Calculate number of frames. 2 frames corresponding to end parameters.
+            // 1 if startIndex == endIndex.
+            var length =  endIndex - startIndex + 3;
+
+            // startIndex is set to the first distinct vertex after startParam.
+            if (startParam.ApproximatelyEquals(startIndex))
+            {
+                startAtVertex = true;
+                length--;
+            }
+
+            // endIndex is set to the first distinct vertex before endParam.
+            if (endParam.ApproximatelyEquals(endIndex))
+            {
+                endsAtVertex = true;
+                length--;
+            }
+
+            var result = new Transform[length];
             var normals = this.NormalsAtVertices();
 
-            // Create an array of transforms with the same number of items as the vertices.
-            var result = new Transform[this.Vertices.Count];
-            for (var i = 0; i < result.Length; i++)
+            int index = 0;
+            // CreateOrthogonalTransform expects index of previous vertex, that's why index must be adjusted.
+            if (!startAtVertex)
             {
-                var a = this.Vertices[i];
-                result[i] = CreateOrthogonalTransform(i, a, normals[i]);
+                var tangent = (Vertices[startIndex - 1] - Vertices[startIndex]).Unitized();
+                result[0] = new Transform(PointAt(startParam), normals[startIndex - 1].Cross(tangent), tangent);
+                index++;
             }
-            return result;
-        }
+            
+            for (var i = startIndex; i <= endIndex; i++, index++)
+            {
+                result[index] = CreateOrthogonalTransform(i, Vertices[i], normals[i]);
+            }
 
-        /// <summary>
-        /// Get the bounding box for this curve.
-        /// </summary>
-        public override BBox3 Bounds()
-        {
-            return new BBox3(this.Vertices);
+            if (!endsAtVertex)
+            {
+                var tangent = (Vertices[endIndex] - Vertices[endIndex + 1]).Unitized();
+                result[index] = new Transform(PointAt(endParam), normals[endIndex].Cross(tangent), tangent);
+            }
+
+            if (additionalRotation != 0.0)
+            {
+                for (int i = 0; i < result.Length; i++)
+                {
+                    result[i].RotateAboutPoint(result[i].Origin, result[i].ZAxis, additionalRotation);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -382,84 +349,7 @@ namespace Elements.Geometry
             return xform.OfPlane(new Plane(Vector3.Origin, Vector3.ZAxis));
         }
 
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            return this.Vertices;
-        }
-
-        /// <summary>
-        /// Check for coincident vertices in the supplied vertex collection.
-        /// </summary>
-        /// <param name="vertices"></param>
-        protected void CheckCoincidenceAndThrow(IList<Vector3> vertices)
-        {
-            for (var i = 0; i < vertices.Count; i++)
-            {
-                for (var j = 0; j < vertices.Count; j++)
-                {
-                    if (i == j)
-                    {
-                        continue;
-                    }
-                    if (vertices[i].IsAlmostEqualTo(vertices[j]))
-                    {
-                        throw new ArgumentException($"The polyline could not be created. Two vertices were almost equal: {i} {vertices[i]} {j} {vertices[j]}.");
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check if any of the polygon segments have zero length.
-        /// </summary>
-        internal static void CheckSegmentLengthAndThrow(IEnumerable<(Vector3 from, Vector3 to)> segments)
-        {
-            foreach (var (from, to) in segments)
-            {
-                if (from.DistanceTo(to) == 0)
-                {
-                    throw new ArgumentException("A segment of the polyline has zero length.");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Check for self-intersection in the supplied line segment collection.
-        /// </summary>
-        /// <param name="t">The transform representing the plane of the polygon.</param>
-        /// <param name="segments"></param>
-        internal static void CheckSelfIntersectionAndThrow(Transform t, IEnumerable<(Vector3 from, Vector3 to)> segments)
-        {
-            var segmentsT = new List<(Vector3 from, Vector3 to)>();
-            foreach (var (from, to) in segments)
-            {
-                segmentsT.Add((t.OfPoint(from), t.OfPoint(to)));
-            }
-
-            for (var i = 0; i < segmentsT.Count; i++)
-            {
-                for (var j = 0; j < segmentsT.Count; j++)
-                {
-                    if (i == j)
-                    {
-                        // Don't check against itself.
-                        continue;
-                    }
-                    var s1 = segmentsT[i];
-                    var s2 = segmentsT[j];
-
-                    if (Line.Intersects2d(s1.from, s1.to, s2.from, s2.to))
-                    {
-                        throw new ArgumentException($"The polyline could not be created. Segments {i} and {j} intersect.");
-                    }
-                }
-            }
-        }
-
-        internal static Line[] SegmentsInternal(IList<Vector3> vertices)
+        internal Line[] SegmentsInternal(IList<Vector3> vertices)
         {
             var result = new Line[vertices.Count - 1];
             for (var i = 0; i < vertices.Count - 1; i++)
@@ -483,66 +373,39 @@ namespace Elements.Geometry
             var x1 = l1.Cross(up);
             var x2 = l2.Cross(up);
             var x = x1.Average(x2);
-            return new Transform(this.Vertices[i], x, x.Cross(up));
+            return new Transform(a, x, x.Cross(up));
         }
 
-        private Transform CreateOrthogonalTransform(int i, Vector3 a, Vector3 up)
+        private Transform CreateOrthogonalTransform(int i, Vector3 origin, Vector3 up)
         {
-            Vector3 b, x, c;
+            Vector3 prev, next, tangent;
 
             if (i == 0)
             {
-                b = this.Vertices[i + 1];
-                var z = (a - b).Unitized();
-                return new Transform(a, up.Cross(z), z);
+                next = this.Vertices[i + 1];
+                tangent = (next - origin).Unitized();
             }
             else if (i == this.Vertices.Count - 1)
             {
-                b = this.Vertices[i - 1];
-                var z = (b - a).Unitized();
-                return new Transform(a, up.Cross(z), z);
+                prev = this.Vertices[i - 1];
+                tangent = (origin - prev).Unitized();
             }
             else
             {
-                b = this.Vertices[i - 1];
-                c = this.Vertices[i + 1];
-                var v1 = (b - a).Unitized();
-                var v2 = (c - a).Unitized();
-                x = v1.Average(v2).Negate();
-                return new Transform(this.Vertices[i], x, x.Cross(up));
-            }
-        }
-
-        /// <summary>
-        /// Get a point on the polygon at parameter u.
-        /// </summary>
-        /// <param name="u">A value between 0.0 and 1.0.</param>
-        /// <param name="segmentIndex">The index of the segment containing parameter u.</param>
-        /// <returns>Returns a Vector3 indicating a point along the Polygon length from its start vertex.</returns>
-        protected virtual Vector3 PointAtInternal(double u, out int segmentIndex)
-        {
-            if (u < 0.0 || u > 1.0)
-            {
-                throw new Exception($"The value of u ({u}) must be between 0.0 and 1.0.");
-            }
-
-            var d = this.Length() * u;
-            var totalLength = 0.0;
-            for (var i = 0; i < this.Vertices.Count - 1; i++)
-            {
-                var a = this.Vertices[i];
-                var b = this.Vertices[i + 1];
-                var currLength = a.DistanceTo(b);
-                var currVec = (b - a);
-                if (totalLength <= d && totalLength + currLength >= d)
+                prev = this.Vertices[i - 1];
+                next = this.Vertices[i + 1];
+                var v1 = (origin - prev).Unitized();
+                var v2 = (next - origin).Unitized();
+                tangent = v1.Average(v2).Unitized();
+                // if a segment doubles back on itself, this will be zero — just
+                // pick one tangent if this happens.
+                if (tangent.IsZero())
                 {
-                    segmentIndex = i;
-                    return a + currVec * ((d - totalLength) / currLength);
+                    tangent = v1;
                 }
-                totalLength += currLength;
             }
-            segmentIndex = this.Vertices.Count - 1;
-            return this.End;
+            tangent = tangent.Negate();
+            return new Transform(origin, up.Cross(tangent), tangent);
         }
 
         /// <summary>
@@ -602,6 +465,123 @@ namespace Elements.Geometry
             var isCycle = this.Vertices.Count > 2 && this.Vertices[0].DistanceTo(this.Vertices.Last()) <= offset / 2;
             var segments = this.Segments();
 
+            // Step through each point, collecting info on what its join will look like.
+            var joinInfo = GetOffsetPoints(isCycle, segments, offset, flip);
+
+            // Create a polygon for each point's join, connecting back to the end of the previous point's join.
+            for (var joinIndex = 0; joinIndex < joinInfo.Count; joinIndex++)
+            {
+                if (joinIndex == 0 && !isCycle)
+                {
+                    continue;
+                }
+
+                var joinPoints = joinInfo[joinIndex];
+                var previousJoinPoints = joinIndex > 0 ? joinInfo[joinIndex - 1] : joinInfo.Last();
+                var vertices = new List<Vector3>();
+                vertices.Add(previousJoinPoints.Last());
+                vertices.Add(previousJoinPoints[previousJoinPoints.Length - 2]);
+                vertices.AddRange(joinPoints);
+                var polygon = new Polygon(vertices);
+                if (polygon.IsClockWise())
+                {
+                    polygons.Add(polygon.Reversed());
+                }
+                else
+                {
+                    polygons.Add(polygon);
+                }
+            }
+
+            return polygons.ToArray();
+        }
+
+        /// <summary>
+        /// A naïve control-point-only 2D open offset. This algorithm does not
+        /// do any self-intersection checking.
+        /// </summary>
+        /// <param name="offset">The offset distance.</param>
+        /// <returns>A new polyline with the same number of control points.</returns>
+        public Polyline OffsetOpen(double offset)
+        {
+            var newVertices = new List<Vector3>();
+            var segments = Segments().Select(s => s.Offset(offset, false)).ToList();
+            if (segments.Count == 1)
+            {
+                return new Polyline(segments[0].Start, segments[0].End);
+            }
+            for (int i = 0; i < segments.Count - 1; i++)
+            {
+                var currSegment = segments[i];
+                var nextSegment = segments[i + 1];
+                if (i == 0)
+                {
+                    newVertices.Add(currSegment.Start);
+                }
+
+                if (currSegment.Direction().Dot(nextSegment.Direction()) > 1 - Vector3.EPSILON)
+                {
+                    newVertices.Add(currSegment.End);
+                }
+                else
+                {
+                    if (currSegment.Intersects(nextSegment, out Vector3 intersection, true, true))
+                    {
+                        newVertices.Add(intersection);
+                    }
+                    else
+                    {
+                        newVertices.Add(currSegment.End);
+                    }
+                }
+
+                if (i == segments.Count - 2)
+                {
+                    newVertices.Add(nextSegment.End);
+                }
+            }
+            var polyline = new Polyline(newVertices);
+            if (polyline.Vertices.Count < 2)
+            {
+                throw new Exception("The offset of the polyline resulted in invalid geometry, such as a single point.");
+            }
+            return polyline;
+        }
+
+        /// <summary>
+        /// Offset this polyline by the specified amount. The resulting polygon will have acute angles.
+        /// </summary>
+        /// <remarks>This blunts sharp corners to keep widths close to the target.</remarks>
+        /// <param name="offset">The amount to offset.</param>
+        public Polygon[] OffsetWithAcuteAngle(double offset)
+        {
+            var polygons = new List<Polygon>();
+            if (this.Vertices.Count <= 1)
+            {
+                return polygons.ToArray();
+            }
+
+            var isCycle = this.Vertices.Count > 2 && this.Vertices[0].DistanceTo(this.Vertices.Last()) <= offset / 2;
+            var segments = this.Segments();
+
+            // Step through each point, collecting info on what its join will look like.
+            var joinInfo = GetOffsetPoints(isCycle, segments, offset, false, true);
+
+            polygons.Add(new Polygon(joinInfo.SelectMany(p => p).ToList()));
+
+            return polygons.ToArray();
+        }
+
+        /// <summary>
+        /// Return offset points for polyline
+        /// </summary>
+        /// <param name="isCycle">The polyline has the shape of a circle.</param>
+        /// <param name="segments">List of polyline segments.</param>
+        /// <param name="offset">The amount to offset.</param>
+        /// <param name="flip">Offset on the opposite of the default side. The default is to draw on the +X side of a polyline that goes up the +Y axis.</param>
+        /// <param name="isSkipOriginVertices">Option to specify whether to skip the original polyline points.</param>
+        private List<Vector3[]> GetOffsetPoints(bool isCycle, Line[] segments, double offset, bool flip, bool isSkipOriginVertices = false)
+        {
             // Step through each point, collecting info on what its join will look like.
             var joinInfo = new List<Vector3[]>();
             for (var vertexIndex = 0; vertexIndex < this.Vertices.Count; vertexIndex++)
@@ -698,7 +678,7 @@ namespace Elements.Geometry
                     }
 
                     var isAcuteExteriorAngle = false;
-                    if (intersects)
+                    if (intersects && !isSkipOriginVertices)
                     {
                         isAcuteExteriorAngle = nextOffsetSegment.Direction().Dot((offsetIntersection - vertex).Unitized()) < Math.Cos(Math.PI * -3 / 4);
                     }
@@ -709,8 +689,8 @@ namespace Elements.Geometry
                         (previousOffsetSegment.End.DistanceTo(offsetIntersection) > offset ||
                         nextOffsetSegment.Start.DistanceTo(offsetIntersection) > offset))
                     {
-                        var offsetPoint1 = previousOffsetSegment.Direction() * offset + previousOffsetSegment.End;
-                        var offsetPoint2 = nextOffsetSegment.Direction() * (offset * -1) + nextOffsetSegment.Start;
+                        var offsetPoint1 = previousOffsetSegment.End + (isSkipOriginVertices ? new Vector3() : previousOffsetSegment.Direction() * offset);
+                        var offsetPoint2 = nextOffsetSegment.Start + (isSkipOriginVertices ? new Vector3() : nextOffsetSegment.Direction() * (offset * -1));
                         joinPoints.Add(offsetPoint1);
                         if (offsetPoint1.DistanceTo(offsetPoint2) != 0)
                         {
@@ -735,109 +715,14 @@ namespace Elements.Geometry
                     continue;
                 }
 
-                joinPoints.Add(vertex);
+                if (!isSkipOriginVertices)
+                {
+                    joinPoints.Add(vertex);
+                }
                 joinInfo.Add(joinPoints.ToArray());
             }
 
-            // Create a polygon for each point's join, connecting back to the end of the previous point's join.
-            for (var joinIndex = 0; joinIndex < joinInfo.Count; joinIndex++)
-            {
-                if (joinIndex == 0 && !isCycle)
-                {
-                    continue;
-                }
-
-                var joinPoints = joinInfo[joinIndex];
-                var previousJoinPoints = joinIndex > 0 ? joinInfo[joinIndex - 1] : joinInfo.Last();
-                var vertices = new List<Vector3>();
-                vertices.Add(previousJoinPoints.Last());
-                vertices.Add(previousJoinPoints[previousJoinPoints.Length - 2]);
-                vertices.AddRange(joinPoints);
-                var polygon = new Polygon(vertices);
-                if (polygon.IsClockWise())
-                {
-                    polygons.Add(polygon.Reversed());
-                }
-                else
-                {
-                    polygons.Add(polygon);
-                }
-            }
-
-            return polygons.ToArray();
-        }
-
-        /// <summary>
-        /// A naïve control-point-only 2D open offset. This algorithm does not
-        /// do any self-intersection checking.
-        /// </summary>
-        /// <param name="offset">The offset distance.</param>
-        /// <returns>A new polyline with the same number of control points.</returns>
-        public Polyline OffsetOpen(double offset)
-        {
-            var newVertices = new List<Vector3>();
-            var segments = Segments().Select(s => s.Offset(offset, false)).ToList();
-            if (segments.Count == 1)
-            {
-                return new Polyline(segments[0].Start, segments[0].End);
-            }
-            for (int i = 0; i < segments.Count - 1; i++)
-            {
-                var currSegment = segments[i];
-                var nextSegment = segments[i + 1];
-                if (i == 0)
-                {
-                    newVertices.Add(currSegment.Start);
-                }
-
-                if (currSegment.Direction().Dot(nextSegment.Direction()) > 1 - Vector3.EPSILON)
-                {
-                    newVertices.Add(currSegment.End);
-                }
-                else
-                {
-                    if (currSegment.Intersects(nextSegment, out Vector3 intersection, true, true))
-                    {
-                        newVertices.Add(intersection);
-                    }
-                    else
-                    {
-                        newVertices.Add(currSegment.End);
-                    }
-                }
-
-                if (i == segments.Count - 2)
-                {
-                    newVertices.Add(nextSegment.End);
-                }
-            }
-            var polyline = new Polyline(newVertices);
-            if (polyline.Vertices.Count < 2)
-            {
-                throw new Exception("The offset of the polyline resulted in invalid geometry, such as a single point.");
-            }
-            return polyline;
-        }
-
-        /// <summary>
-        /// Does this polyline equal the provided polyline?
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(Polyline other)
-        {
-            if (this.Vertices.Count != other.Vertices.Count)
-            {
-                return false;
-            }
-            for (var i = 0; i < Vertices.Count; i++)
-            {
-                if (!this.Vertices[i].Equals(other.Vertices[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return joinInfo;
         }
 
         /// <summary>
@@ -964,54 +849,405 @@ namespace Elements.Geometry
             }
             return;
         }
-    }
 
-    /// <summary>
-    /// Polyline extension methods.
-    /// </summary>
-    internal static class PolylineExtensions
-    {
         /// <summary>
-        /// Construct a clipper path from a Polygon.
+        /// Find the parameter corresponding to a point along a polyline.
         /// </summary>
-        /// <param name="p"></param>
-        /// <param name="tolerance">An optional tolerance. If converting back to a Polyline, be sure to use the same tolerance.</param>
-        /// <returns></returns>
-        internal static List<IntPoint> ToClipperPath(this Polyline p, double tolerance = Vector3.EPSILON)
+        /// <param name="point">A point.</param>
+        /// <returns>A parameter for the point along a polyline if the point is on the polyline. Otherwise, -1.</returns>
+        public double GetParameterAt(Vector3 point)
         {
-            var clipperScale = Math.Round(1.0 / tolerance);
-            var path = new List<IntPoint>();
-            foreach (var v in p.Vertices)
+            if (point.IsAlmostEqualTo(Start))
             {
-                path.Add(new IntPoint(Math.Round(v.X * clipperScale), Math.Round(v.Y * clipperScale)));
+                return Domain.Min;
             }
-            return path;
+
+            if (point.IsAlmostEqualTo(End))
+            {
+                return Domain.Max;
+            }
+
+            var i = 0;
+            foreach (var e in Edges())
+            {
+                if (Line.PointOnLine(point, e.from, e.to, true))
+                {
+                    var l = e.from.DistanceTo(e.to);
+                    var t = point.DistanceTo(e.from) / l; // normalized length along this segment
+                    return i + t;
+                }
+                i++;
+            }
+
+            return -1;
         }
 
         /// <summary>
-        /// Convert a line to a polyline
+        /// Check if polyline intersects with line
         /// </summary>
-        /// <param name="l">The line to convert.</param>
-        public static Polyline ToPolyline(this Line l) => new Polyline(new[] { l.Start, l.End });
+        /// <param name="line">Line to check</param>
+        /// <param name="intersections">Intersections between polyline and line</param>
+        /// <param name="infinite">Threat the line as infinite?</param>
+        /// <param name="includeEnds">If the end of line lies exactly on the vertex of polyline, count it as an intersection? </param>
+        /// <returns>True if line intersects with polyline, false if they do not intersect</returns>
+        public bool Intersects(Line line, out List<Vector3> intersections, bool infinite = false, bool includeEnds = false)
+        {
+            var segments = Segments();
 
-    }
+            intersections = new List<Vector3>();
 
-    /// <summary>
-    /// Offset end types
-    /// </summary>
-    public enum EndType
-    {
+            foreach (var segment in segments)
+            {
+                if (segment.Intersects(line, out var point, infinite: infinite, includeEnds: includeEnds))
+                {
+                    if (segment.PointOnLine(point, includeEnds) && intersections.All(x => !x.IsAlmostEqualTo(point)))
+                    {
+                        intersections.Add(point);
+                    }
+                }
+            }
+
+            return intersections.Any();
+        }
+
         /// <summary>
-        /// Open ends are extended by the offset distance and squared off
+        /// Checks if polyline intersects with polygon
         /// </summary>
-        Square,
+        /// <param name="polygon">Polygon to check</param>
+        /// <param name="sharedSegments">List of shared subsegments</param>
+        /// <returns>Result of check if polyline and polygon intersects</returns>
+        public bool Intersects(Polygon polygon, out List<Polyline> sharedSegments)
+        {
+            sharedSegments = new List<Polyline>();
+
+            var intersections = polygon.Segments()
+                .SelectMany(x =>
+                {
+                    Intersects(x, out var result, includeEnds: true);
+                    return result;
+                })
+                .UniqueWithinTolerance()
+                .OrderBy(GetParameterAt)
+                .ToList();
+
+            if (intersections.Count == 0)
+            {
+                if (polygon.Contains(Start) && polygon.Contains(End))
+                {
+                    sharedSegments.Add(this);
+                }
+                return sharedSegments.Any();
+            }
+
+            if (polygon.Contains(Start))
+            {
+                var intersection = intersections.First();
+                var startSegment = GetSubsegment(Start, intersection);
+                sharedSegments.Add(startSegment);
+                intersections.Remove(intersection);
+            }
+
+            for (var i = 0; i < intersections.Count - 1; i++)
+            {
+                var subsegment = GetSubsegment(intersections[i], intersections[i + 1]);
+                if (polygon.Contains(subsegment.Mid(), out var containment) && containment == Containment.Inside)
+                {
+                    sharedSegments.Add(subsegment);
+                }
+            }
+
+            if (polygon.Contains(End))
+            {
+                var intersection = intersections.Last();
+                var endSegment = GetSubsegment(intersection, End);
+                sharedSegments.Add(endSegment);
+            }
+
+            return sharedSegments.Any();
+        }
+
         /// <summary>
-        /// Ends are squared off with no extension
+        /// Get new polyline between two points
         /// </summary>
-        Butt,
+        /// <param name="start">Start point</param>
+        /// <param name="end">End point</param>
+        /// <returns>New polyline or null if any of points is not on polyline</returns>
+        public Polyline GetSubsegment(Vector3 start, Vector3 end)
+        {
+            if (start.IsAlmostEqualTo(end))
+            {
+                return null;
+            }
+
+            var startParameter = GetParameterAt(start);
+            var endParameter = GetParameterAt(end);
+
+            if (startParameter < 0 || endParameter < 0)
+            {
+                return null;
+            }
+
+            List<Vector3> filteredVertices;
+
+            if (startParameter > endParameter)
+            {
+                filteredVertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter < startParameter && parameter > endParameter;
+                    })
+                    .Reverse()
+                    .ToList();
+            }
+            else
+            {
+                filteredVertices = Vertices
+                    .Where(x =>
+                    {
+                        var parameter = GetParameterAt(x);
+                        return parameter > startParameter && parameter < endParameter;
+                    })
+                    .ToList();
+            }
+
+            filteredVertices.Insert(0, start);
+            filteredVertices.Add(end);
+
+            return new Polyline(filteredVertices);
+        }
+
         /// <summary>
-        /// If open, ends are joined and treated as a closed polygon
+        /// Make the polyline correspond to the supported angles by moving the vertices slightly.
+        /// The result polyline will have only allowed angles, but vertices positions can be changed.
+        /// The first vertex is never moved.
         /// </summary>
-        ClosedPolygon,
+        /// <param name="supportedAngles">List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</param>
+        /// <param name="referenceVector">Vector to align first segment of polyline with.</param>
+        /// <param name="pathType">
+        /// The path type.
+        /// For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:
+        /// - NormalizationType.Start: move B vertex
+        /// - NormalizationType.Middle: move both B and C vertices in approximately equivalent proportions
+        /// - NormalizationType.End : move C vertex
+        /// </param>
+        /// <param name="furthestDistancePointsMoved">The furthest distance that any point moved.</param>
+        /// <returns>The result polyline that has only allowed angles.</returns>
+        public Polyline ForceAngleCompliance(IEnumerable<double> supportedAngles,
+            Vector3 referenceVector, out double furthestDistancePointsMoved, NormalizationType pathType = NormalizationType.Start)
+        {
+            if (supportedAngles.Any(a => a > 90 || a < 0))
+            {
+                throw new ArgumentException("Supported angles must be between 0 and 90");
+            }
+
+            List<Vector3> normalized = Vertices.ToList();
+
+            for (int i = 0; i < normalized.Count - 1; i++)
+            {
+                NormalizationType localType = pathType;
+                if (i == 0)
+                {
+                    localType = NormalizationType.End;
+                }
+                else if (i == normalized.Count - 2)
+                {
+                    localType = NormalizationType.Start;
+                }
+
+                Vector3 incomingDirection = referenceVector;
+                if (i > 0)
+                {
+                    incomingDirection = (normalized[i] - normalized[i - 1]).Unitized();
+                    if (i > 1)
+                    {
+                        var before = (normalized[i - 1] - normalized[i - 2]).Unitized();
+                        referenceVector = before.Cross(incomingDirection);
+                    }
+                }
+
+                var direction = (normalized[i + 1] - normalized[i]).Unitized();
+                if (direction.Dot(incomingDirection).Equals(0) ||
+                    direction.ProjectOnto(incomingDirection).Length().ApproximatelyEquals(0))
+                {
+                    // When path drastically changes direction - (1, 2, 2) -> (1, 0, 2) -> (0, 0, 0) for example,
+                    // angle will be 90 degrees regardless if third point is (0, 0, 0), (0, 0, 1) or (0, 0, 1.5).
+                    // These points still need to be aligned to avoid bad angles further in the path.
+                    // Reference vector is used in this case as cross product of 3 previous points.
+                    if (i < normalized.Count - 2)
+                    {
+                        incomingDirection = referenceVector.Dot(direction) < 0 ? referenceVector.Negate() : referenceVector;
+                        localType = NormalizationType.End;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                double incomingAngle = direction.AngleTo(incomingDirection);
+                if (incomingAngle.ApproximatelyEquals(180, 0.1) || incomingAngle.ApproximatelyEquals(0, 0.1) ||
+                    supportedAngles.Any(a => incomingAngle.ApproximatelyEquals(a, 0.1) ||
+                                            (incomingAngle - 90).ApproximatelyEquals(a, 0.1)))
+                {
+                    continue;
+                }
+
+                double angleDelta = 180;
+                double bestFitAngle = -1;
+                foreach (var angle in supportedAngles)
+                {
+                    var delta = Math.Abs(angle - incomingAngle);
+                    if (delta < angleDelta)
+                    {
+                        bestFitAngle = angle;
+                        angleDelta = delta;
+                    }
+                }
+
+                double directionalDistance = AngleAlignedDistance(
+                    normalized[i], normalized[i + 1], incomingDirection, bestFitAngle, out var cornerPoint);
+                var directionalVector = normalized[i] - cornerPoint;
+
+                if (bestFitAngle.ApproximatelyEquals(0))
+                {
+                    switch (localType)
+                    {
+                        case NormalizationType.Start:
+                        case NormalizationType.Middle:
+                            normalized[i] = cornerPoint;
+                            break;
+                        default:
+                            normalized[i + 1] = cornerPoint;
+                            break;
+                    }
+                    continue;
+                }
+                switch (localType)
+                {
+                    case NormalizationType.Start:
+                        {
+                            normalized[i] = cornerPoint + directionalVector.Unitized() * directionalDistance;
+                        }
+                        break;
+                    case NormalizationType.Middle:
+                        {
+                            var delta = (directionalDistance - directionalVector.Length()) / 2;
+                            normalized[i] = cornerPoint + directionalVector.Unitized() * (directionalDistance - delta);
+
+                            var point = DisplacementAlignedPoint(
+                                normalized[i], normalized[i + 1], normalized[i + 2], directionalVector.Unitized(), delta);
+                            if (point.HasValue)
+                            {
+                                normalized[i + 1] = point.Value;
+                            }
+                        }
+                        break;
+                    default:
+                    case NormalizationType.End:
+                        {
+                            var delta = directionalDistance - directionalVector.Length();
+                            var point = DisplacementAlignedPoint(
+                                normalized[i], normalized[i + 1], normalized[i + 2], directionalVector.Unitized(), delta);
+                            if (point.HasValue)
+                            {
+                                normalized[i + 1] = point.Value;
+                            }
+                        }
+                        break;
+                }
+            }
+
+            furthestDistancePointsMoved = normalized.Zip(Vertices, (a, b) => a.DistanceTo(b)).Max();
+            return new Polyline(normalized);
+        }
+
+        /// <summary>
+        /// Make the polyline correspond to the supported angles by moving the vertices slightly.
+        /// The result polyline will have only allowed angles, but vertices positions can be changed.
+        /// </summary>
+        /// <param name="supportedAngles">List of supported angles that the returned polyline can have. Supported angles must be between 0 and 90.</param>
+        /// <param name="referenceVector">Vector to align first segment of polyline with.</param>
+        /// <param name="pathType">
+        /// The path type.
+        /// For each 3 consecutive points A, B, C to make angle ABC be one of allowed angles:
+        /// - NormalizationType.Start: move B vertex
+        /// - NormalizationType.Middle: move both B and C vertices in approximately equivalent proportions
+        /// - NormalizationType.End : move C vertex
+        /// </param>
+        /// <returns>The result polyline that has only allowed angles.</returns>
+        public Polyline ForceAngleCompliance(IEnumerable<double> supportedAngles,
+            Vector3 referenceVector, NormalizationType pathType = NormalizationType.Start)
+        {
+            return ForceAngleCompliance(supportedAngles, referenceVector, out _, pathType);
+        }
+
+        /// <summary>
+        /// Calculate distance from corner point, so point X = cornerPoint + incoming * D has needed angle (cornerPoint -> X -> end)
+        /// </summary>
+        private double AngleAlignedDistance(Vector3 start, Vector3 end, Vector3 incoming, double angle, out Vector3 cornerPoint)
+        {
+            var dot = (end - start).Dot(incoming);
+            cornerPoint = start + incoming * dot;
+            double directionalDistance = 0;
+
+            if (!angle.ApproximatelyEquals(90, 0.1))
+            {
+                var perdendicularDistance = (end - cornerPoint).Length();
+                directionalDistance = perdendicularDistance / Math.Tan(Units.DegreesToRadians(angle));
+            }
+
+            return directionalDistance;
+        }
+
+        /// <summary>
+        /// Calculate a point X on infinite B->C line, that intersects with A->(B+d) line, where d is displacement.
+        /// </summary>
+        private Vector3? DisplacementAlignedPoint(Vector3 a, Vector3 b, Vector3 c,
+            Vector3 displacementDirection, double displacementDistance)
+        {
+            var roughEndPoint = b - displacementDirection * displacementDistance;
+            Plane plane = new Plane(a, roughEndPoint, c);
+            var bcProjected = new Line(b, c).Projected(plane);
+            Line displacementLine = new Line(a, roughEndPoint);
+            if (displacementLine.Intersects(bcProjected, out var position, infinite: true))
+            {
+                return position;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Fillet all corners on this polygon.
+        /// </summary>
+        /// <param name="radius">The fillet radius.</param>
+        /// <returns>A contour containing trimmed edge segments and fillets.</returns>
+        public IndexedPolycurve Fillet(double radius)
+        {
+            var curves = new List<BoundedCurve>();
+            var segments = this.Segments();
+
+            for (var i = 0; i < segments.Length - 1; i++)
+            {
+                var a = segments[i];
+                var b = segments[i + 1];
+                var arc = b.Fillet(a, radius);
+                if (i == 0)
+                {
+                    curves.Add(new Line(Start, arc.Start));
+                }
+                else
+                {
+                    curves.Add(new Line(curves[curves.Count - 1].End, arc.Start));
+                }
+                curves.Add(arc);
+            }
+            curves.Add(new Line(curves[curves.Count - 1].End, End));
+
+            return new IndexedPolycurve(curves);
+        }
     }
 }

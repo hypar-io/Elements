@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Beam
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -202,18 +202,23 @@ var profile = _wideFlangeFactory.GetProfileByType(WideFlangeProfileType.W10x100)
 
 // Create a straight beam.
 var line = new Line(Vector3.Origin, new Vector3(5, 0, 5));
-var linearBeam = new Beam(line, profile, BuiltInMaterials.Wood, 0, 0, 15);
+var linearBeam = new Beam(line, profile, 0, 0, 15, material: BuiltInMaterials.Wood);
 var lineT = line.TransformAt(0).ToModelCurves(linearBeam.Transform);
 
 // Create a polygon beam.
 var polygon = Polygon.Ngon(5, 2);
-var polygonBeam = new Beam(polygon, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(6, 0, 0));
+var polygonBeam = new Beam(polygon, profile, 0, 0, 45, new Transform(6, 0, 0), BuiltInMaterials.Steel);
 var polyT = polygon.TransformAt(0).ToModelCurves(polygonBeam.Transform);
 
 // Create a curved beam.
-var arc = new Arc(Vector3.Origin, 5.0, 45.0, 135.0);
-var arcBeam = new Beam(arc, profile, BuiltInMaterials.Steel, 0, 0, 45.0, new Transform(12, 0, 0));
-var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
+var arc = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 5.0, Math.PI * 0.25, Math.PI * 0.75);
+var arcBeam = new Beam(arc, profile, 0, 0, 0, new Transform(12, 0, 0), BuiltInMaterials.Steel);
+var arcT = arc.TransformAt(arc.Domain.Min).ToModelCurves(arcBeam.Transform);
+
+// Create an elliptical beam.
+var ellipticalArc = new EllipticalArc(Vector3.Origin, 2.5, 1.5, 0, 210);
+var ellipticBeam = new Beam(ellipticalArc, profile, 0, 0, 0, new Transform(18, 0, 0), BuiltInMaterials.Steel);
+var ellipseT = ellipticalArc.TransformAt(ellipticalArc.Domain.Min).ToModelCurves(ellipticBeam.Transform);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -254,6 +259,9 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
       <a class="xref" href="Elements.StructuralFraming.html#Elements_StructuralFraming_UpdateRepresentations">StructuralFraming.UpdateRepresentations()</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Bounds">GeometricElement.Bounds</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Transform">GeometricElement.Transform</a>
     </div>
     <div>
@@ -269,6 +277,9 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_ModifyVertexAttributes">GeometricElement.ModifyVertexAttributes</a>
     </div>
     <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_UpdateBoundsAndComputeSolid_System_Boolean_">GeometricElement.UpdateBoundsAndComputeSolid(Boolean)</a>
+    </div>
+    <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_CreateInstance_Elements_Geometry_Transform_System_String_">GeometricElement.CreateInstance(Transform, String)</a>
     </div>
     <div>
@@ -276,6 +287,12 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
     </div>
     <div>
       <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_HasGeometry">GeometricElement.HasGeometry()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_Intersects_Elements_Geometry_Plane_System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Polygon____System_Collections_Generic_Dictionary_System_Guid_System_Collections_Generic_List_Elements_Geometry_Line____">GeometricElement.Intersects(Plane, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Polygon&gt;&gt;, Dictionary&lt;Guid, List&lt;Line&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.GeometricElement.html#Elements_GeometricElement_TryToGraphicsBuffers_System_Collections_Generic_List_Elements_Geometry_GraphicsBuffers___System_String__System_Nullable_glTFLoader_Schema_MeshPrimitive_ModeEnum___">GeometricElement.TryToGraphicsBuffers(List&lt;GraphicsBuffers&gt;, String, Nullable&lt;MeshPrimitive.ModeEnum&gt;)</a>
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_Id">Element.Id</a>
@@ -291,6 +308,15 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
     </div>
     <div>
       <a class="xref" href="Elements.Element.html#Elements_Element_RaisePropertyChanged_System_String_">Element.RaisePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_SetMapping_System_String_Elements_MappingBase_">Element.SetMapping(String, MappingBase)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping_System_String_">Element.GetMapping(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Element.html#Elements_Element_GetMapping__1_System_String_">Element.GetMapping&lt;T&gt;(String)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -323,13 +349,22 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
   <h3 id="constructors">Constructors
   </h3>
   <a id="Elements_Beam__ctor_" data-uid="Elements.Beam.#ctor*"></a>
-  <h4 id="Elements_Beam__ctor_Elements_Geometry_Curve_Elements_Geometry_Profile_Elements_Material_System_Double_System_Double_System_Double_Elements_Geometry_Transform_System_Boolean_System_Guid_System_String_" data-uid="Elements.Beam.#ctor(Elements.Geometry.Curve,Elements.Geometry.Profile,Elements.Material,System.Double,System.Double,System.Double,Elements.Geometry.Transform,System.Boolean,System.Guid,System.String)">Beam(Curve, Profile, Material, Double, Double, Double, Transform, Boolean, Guid, String)</h4>
+  <h4 id="Elements_Beam__ctor" data-uid="Elements.Beam.#ctor">Beam()</h4>
   <div class="markdown level1 summary"><p>Construct a beam.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Beam(Curve curve, Profile profile, Material material = null, double startSetback = 0, double endSetback = 0, double rotation = 0, Transform transform = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">public Beam()</code></pre>
+  </div>
+  <a id="Elements_Beam__ctor_" data-uid="Elements.Beam.#ctor*"></a>
+  <h4 id="Elements_Beam__ctor_Elements_Geometry_BoundedCurve_Elements_Geometry_Profile_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Beam.#ctor(Elements.Geometry.BoundedCurve,Elements.Geometry.Profile,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Beam(BoundedCurve, Profile, Transform, Material, Representation, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a beam.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Beam(BoundedCurve curve, Profile profile, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -342,7 +377,7 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></td>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
         <td><span class="parametername">curve</span></td>
         <td><p>The beam's center line.</p>
 </td>
@@ -354,9 +389,72 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
 </td>
       </tr>
       <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The beam's transform.</p>
+</td>
+      </tr>
+      <tr>
         <td><a class="xref" href="Elements.Material.html">Material</a></td>
         <td><span class="parametername">material</span></td>
         <td><p>The beam's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The beam's representation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">isElementDefinition</span></td>
+        <td><p>Is this an element definition?</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td><span class="parametername">id</span></td>
+        <td><p>The id of the transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of the transform.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Beam__ctor_" data-uid="Elements.Beam.#ctor*"></a>
+  <h4 id="Elements_Beam__ctor_Elements_Geometry_BoundedCurve_Elements_Geometry_Profile_System_Double_System_Double_System_Double_Elements_Geometry_Transform_Elements_Material_Elements_Geometry_Representation_System_Boolean_System_Guid_System_String_" data-uid="Elements.Beam.#ctor(Elements.Geometry.BoundedCurve,Elements.Geometry.Profile,System.Double,System.Double,System.Double,Elements.Geometry.Transform,Elements.Material,Elements.Geometry.Representation,System.Boolean,System.Guid,System.String)">Beam(BoundedCurve, Profile, Double, Double, Double, Transform, Material, Representation, Boolean, Guid, String)</h4>
+  <div class="markdown level1 summary"><p>Construct a beam.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Beam(BoundedCurve curve, Profile profile, double startSetback, double endSetback, double rotation, Transform transform = null, Material material = null, Representation representation = null, bool isElementDefinition = false, Guid id = default(Guid), string name = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></td>
+        <td><span class="parametername">curve</span></td>
+        <td><p>The beam's center line.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></td>
+        <td><span class="parametername">profile</span></td>
+        <td><p>The beam's profile.</p>
 </td>
       </tr>
       <tr>
@@ -381,6 +479,18 @@ var arcT = arc.TransformAt(0).ToModelCurves(arcBeam.Transform);
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
         <td><span class="parametername">transform</span></td>
         <td><p>The beam's transform.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Material.html">Material</a></td>
+        <td><span class="parametername">material</span></td>
+        <td><p>The beam's material.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Representation.html">Representation</a></td>
+        <td><span class="parametername">representation</span></td>
+        <td><p>The beam's representation.</p>
 </td>
       </tr>
       <tr>

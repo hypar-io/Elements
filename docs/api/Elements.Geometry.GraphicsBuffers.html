@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GraphicsBuffers
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -87,7 +87,7 @@
   <h1 id="Elements_Geometry_GraphicsBuffers" data-uid="Elements.Geometry.GraphicsBuffers" class="text-break">Class GraphicsBuffers
   </h1>
   <div class="markdown level0 summary"><p>A container for graphics data.
-The buffers used in this class align with webgl requirements.</p>
+The buffers used in this class align with webGL requirements.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -123,7 +123,7 @@ The buffers used in this class align with webgl requirements.</p>
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_GraphicsBuffers_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GraphicsBuffers : IGraphicsBuffers</code></pre>
+    <pre><code class="lang-csharp hljs">public class GraphicsBuffers</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -206,6 +206,30 @@ The buffers used in this class align with webgl requirements.</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Collections.Generic.List</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_GraphicsBuffers_FacetCount_" data-uid="Elements.Geometry.GraphicsBuffers.FacetCount*"></a>
+  <h4 id="Elements_Geometry_GraphicsBuffers_FacetCount" data-uid="Elements.Geometry.GraphicsBuffers.FacetCount">FacetCount</h4>
+  <div class="markdown level1 summary"><p>The number of facets represented by the buffer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int FacetCount { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -426,6 +450,30 @@ The buffers used in this class align with webgl requirements.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_GraphicsBuffers_VertexCount_" data-uid="Elements.Geometry.GraphicsBuffers.VertexCount*"></a>
+  <h4 id="Elements_Geometry_GraphicsBuffers_VertexCount" data-uid="Elements.Geometry.GraphicsBuffers.VertexCount">VertexCount</h4>
+  <div class="markdown level1 summary"><p>The number of vertices represented by the buffer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int VertexCount { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_GraphicsBuffers_Vertices_" data-uid="Elements.Geometry.GraphicsBuffers.Vertices*"></a>
   <h4 id="Elements_Geometry_GraphicsBuffers_Vertices" data-uid="Elements.Geometry.GraphicsBuffers.Vertices">Vertices</h4>
   <div class="markdown level1 summary"><p>A collection of vertex positions stored as sequential bytes.</p>
@@ -527,6 +575,33 @@ The buffers used in this class align with webgl requirements.</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_GraphicsBuffers_AddIndices_" data-uid="Elements.Geometry.GraphicsBuffers.AddIndices*"></a>
+  <h4 id="Elements_Geometry_GraphicsBuffers_AddIndices_System_Collections_Generic_IList_System_UInt16__" data-uid="Elements.Geometry.GraphicsBuffers.AddIndices(System.Collections.Generic.IList{System.UInt16})">AddIndices(IList&lt;UInt16&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add indices to the graphics buffers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddIndices(IList&lt;ushort&gt; indices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.UInt16</span>&gt;</td>
+        <td><span class="parametername">indices</span></td>
+        <td><p>The indices to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_GraphicsBuffers_AddVertex_" data-uid="Elements.Geometry.GraphicsBuffers.AddVertex*"></a>
   <h4 id="Elements_Geometry_GraphicsBuffers_AddVertex_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_UV_System_Nullable_Elements_Geometry_Color__" data-uid="Elements.Geometry.GraphicsBuffers.AddVertex(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.UV,System.Nullable{Elements.Geometry.Color})">AddVertex(Vector3, Vector3, UV, Nullable&lt;Color&gt;)</h4>
   <div class="markdown level1 summary"><p>Add a vertex to the graphics buffers.</p>
@@ -534,7 +609,7 @@ The buffers used in this class align with webgl requirements.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = default(Color? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public void AddVertex(Vector3 position, Vector3 normal, UV uv, Color? color = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -635,6 +710,65 @@ The buffers used in this class align with webgl requirements.</p>
         <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;</td>
         <td><span class="parametername">color</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_GraphicsBuffers_AddVertices_" data-uid="Elements.Geometry.GraphicsBuffers.AddVertices*"></a>
+  <h4 id="Elements_Geometry_GraphicsBuffers_AddVertices_System_Collections_Generic_IList_System_ValueTuple_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_UV_System_Nullable_Elements_Geometry_Color____" data-uid="Elements.Geometry.GraphicsBuffers.AddVertices(System.Collections.Generic.IList{System.ValueTuple{Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.UV,System.Nullable{Elements.Geometry.Color}}})">AddVertices(IList&lt;(Vector3 position, Vector3 normal, UV uv, Nullable&lt;Color&gt; color)&gt;)</h4>
+  <div class="markdown level1 summary"><p>Add vertices to the graphics buffers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddVertices(IList&lt;(Vector3 position, Vector3 normal, UV uv, Color? color)&gt; vertices)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>, <a class="xref" href="Elements.Geometry.UV.html">UV</a>, <span class="xref">System.Nullable</span>&lt;<a class="xref" href="Elements.Geometry.Color.html">Color</a>&gt;&gt;&gt;</td>
+        <td><span class="parametername">vertices</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_GraphicsBuffers_Initialize_" data-uid="Elements.Geometry.GraphicsBuffers.Initialize*"></a>
+  <h4 id="Elements_Geometry_GraphicsBuffers_Initialize_System_Int32_System_Int32_" data-uid="Elements.Geometry.GraphicsBuffers.Initialize(System.Int32,System.Int32)">Initialize(Int32, Int32)</h4>
+  <div class="markdown level1 summary"><p>Pre allocates the buffers according to the preallocation size.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Initialize(int vertexCount = 100, int indexCount = 100)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">vertexCount</span></td>
+        <td><p>How many vertices are expected.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">indexCount</span></td>
+        <td><p>How many indices are likely to be used.</p>
+</td>
       </tr>
     </tbody>
   </table>

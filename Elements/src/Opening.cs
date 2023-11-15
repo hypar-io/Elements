@@ -48,7 +48,7 @@ namespace Elements
                        Transform transform = null,
                        Representation representation = null,
                        bool isElementDefinition = false,
-                       Guid id = default(Guid),
+                       Guid id = default,
                        string name = null) : this(perimeter, Vector3.ZAxis, depthFront, depthBack, transform, representation, isElementDefinition, id, name) { }
 
         /// <summary>
@@ -62,15 +62,15 @@ namespace Elements
                        Transform transform = null,
                        Representation representation = null,
                        bool isElementDefinition = false,
-                       Guid id = default(Guid),
-                       string name = null) : base(transform != null ? transform : new Transform(),
+                       Guid id = default,
+                       string name = null) : base(transform ?? new Transform(),
                                                   BuiltInMaterials.Void,
-                                                  representation != null ? representation : new Representation(new List<SolidOperation>()),
+                                                  representation ?? new Representation(new List<SolidOperation>()),
                                                   isElementDefinition,
-                                                  id != default(Guid) ? id : Guid.NewGuid(),
+                                                  id != default ? id : Guid.NewGuid(),
                                                   name)
         {
-            if (normal == default(Vector3))
+            if (normal == default)
             {
                 Normal = Vector3.ZAxis; // legacy openings don't have a normal and assume normal is the Z axis
             }
@@ -89,14 +89,9 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
-            if (this.DepthFront > 0)
-            {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthFront, Normal, true));
-            }
-            if (this.DepthBack > 0)
-            {
-                this.Representation.SolidOperations.Add(new Extrude(this.Perimeter, this.DepthBack, Normal.Negate(), true));
-            }
+            var depth = this.DepthFront + this.DepthBack;
+            var op = new Extrude(this.Perimeter, depth, Normal, true);
+            this.Representation.SolidOperations.Add(op);
         }
     }
 }

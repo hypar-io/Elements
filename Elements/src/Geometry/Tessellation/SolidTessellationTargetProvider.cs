@@ -10,16 +10,19 @@ namespace Elements.Geometry.Tessellation
     {
         private readonly Solid solid;
         private readonly Transform transform;
+        private uint solidId;
 
         /// <summary>
         /// Construct a SolidTesselationTargetProvider.
         /// </summary>
         /// <param name="solid"></param>
+        /// <param name="solidId"></param>
         /// <param name="transform"></param>
-        public SolidTesselationTargetProvider(Solid solid, Transform transform = null)
+        public SolidTesselationTargetProvider(Solid solid, uint solidId, Transform transform = null)
         {
             this.solid = solid;
             this.transform = transform;
+            this.solidId = solidId;
         }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace Elements.Geometry.Tessellation
         {
             foreach (var f in solid.Faces.Values)
             {
-                yield return new SolidFaceTessAdapter(f, transform);
+                yield return new SolidFaceTessAdapter(f, solidId, transform);
             }
         }
     }

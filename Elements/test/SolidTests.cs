@@ -10,6 +10,7 @@ using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using System.Linq;
+using Elements.Geometry.Tessellation;
 
 namespace Elements.Tests
 {
@@ -379,7 +380,7 @@ namespace Elements.Tests
             {
                 var from = e.Value.Right.Vertex.Point;
                 var to = e.Value.Left.Vertex.Point;
-                modelCurves.Add(new ModelCurve(new Line(from, to).Transformed(t)));
+                modelCurves.Add(new ModelCurve(new Line(from, to).TransformedLine(t)));
             }
             return modelCurves;
         }
@@ -389,7 +390,7 @@ namespace Elements.Tests
             var r = new Transform();
             r.Move(2.5, 2.5, 2.5);
             a = new Mass(Polygon.Rectangle(5, 5), 5);
-            b = new Mass(new Circle(2.5).ToPolygon(19).TransformedPolygon(r), 5);
+            b = new Mass(new Circle(r, 2.5).ToPolygon(19), 5);
 
             a.UpdateRepresentations();
             b.UpdateRepresentations();
@@ -503,6 +504,33 @@ namespace Elements.Tests
             var rep = new Representation(new List<SolidOperation>() { sweep });
             var solidElement = new GeometricElement(representation: rep, material: BuiltInMaterials.Mass);
             this.Model.AddElement(solidElement);
+        }
+
+        [Fact]
+        public void SweepWithSetbacksRegressionTest()
+        {
+            Name = nameof(SweepWithSetbacksRegressionTest);
+            Polygon crossSection = Polygon.Rectangle(0.25, 0.25);
+            
+            Polyline curve = new(new List<Vector3>
+            {
+                    new Vector3(x: 20.0, y: 15.0, z:0.0),
+                    new Vector3(x: 20.0, y: 15.0, z:1.0),
+                    new Vector3(x: 20.0, y: 14.5, z:1.5),
+                    new Vector3(x: 19.5, y: 14.5, z:1.5),
+            }
+            );
+            
+            var sweep = new Sweep(
+                new Profile(crossSection),
+                curve,
+                startSetback: 1,
+                endSetback: 1,
+                profileRotation: 0,
+                isVoid: false
+            );
+            var rep = new Representation(new List<SolidOperation>() { sweep });
+            Model.AddElement(new GeometricElement(representation: rep, material: BuiltInMaterials.Black));
         }
 
         [Theory]
@@ -727,6 +755,57 @@ namespace Elements.Tests
 
             this.Model.AddElements(DrawEdges(result, null));
             Assert.Equal(14, result.Faces.Count);
+        }
+
+        [Fact]
+        public void TessellationHasCorrectNumberOfVertices()
+        {
+            var panel = new Panel(Polygon.L(5, 5, 2));
+            panel.UpdateRepresentations();
+            var buffer = Tessellation.Tessellate<GraphicsBuffers>(panel.Representation.SolidOperations.Select(so => new SolidTesselationTargetProvider(so.Solid, 0, so.LocalTransform)));
+            Assert.Equal(12, buffer.VertexCount); // Two faces of 6 vertices each
+            Assert.Equal(8, buffer.FacetCount); // Two faces of 4 facets each.
+        }
+
+        [Fact]
+        public void TesselationOfModelThatProducesEmptyTrianles()
+        {
+            var model = Model.FromJson(File.ReadAllText("../../../models/Geometry/WallFromBasicModel.json"), out var errors);
+            var wall = model.AllElementsOfType<WallByProfile>().First();
+            wall.UpdateRepresentations();
+            wall.UpdateBoundsAndComputeSolid();
+            var buffer = wall._csg.Tessellate(modifyVertexAttributes: wall.ModifyVertexAttributes);
+            Assert.True(buffer.VertexCount > 0);
+        }
+
+        [Fact]
+        public void FlippedExtrude()
+        {
+            Name = nameof(FlippedExtrude);
+            var normalExtrude = new Extrude(Polygon.Rectangle(1, 1), 1, Vector3.ZAxis);
+            var flippedExtrude = new Extrude(Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(2, 0, 0)), 1, Vector3.ZAxis, false, true);
+            var geo = new GeometricElement
+            {
+                Representation = new Representation(normalExtrude, flippedExtrude)
+            };
+            Model.AddElement(geo);
+            var centroid1 = new Vector3(0, 0, 0.5);
+            var centroid2 = new Vector3(2, 0, 0.5);
+            Assert.All(normalExtrude._solid.Faces, (face) =>
+            {
+                var faceCenter = face.Value.Outer.ToPolygon().Centroid();
+                var centroidToFaceCenter = faceCenter - centroid1;
+                var faceNormal = face.Value.Plane().Normal;
+                Assert.True(centroidToFaceCenter.Unitized().Dot(faceNormal.Unitized()) == 1.0);
+            });
+            Assert.All(flippedExtrude._solid.Faces, (face) =>
+            {
+                var faceCenter = face.Value.Outer.ToPolygon().Centroid();
+                var centroidToFaceCenter = faceCenter - centroid2;
+                var faceNormal = face.Value.Plane().Normal;
+                Assert.True(centroidToFaceCenter.Unitized().Dot(faceNormal.Unitized()) == -1.0);
+            });
+            // Visually verify that flipped geometry is flipped.
         }
 
         private class DebugInfo

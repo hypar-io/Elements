@@ -17,12 +17,12 @@ namespace Elements
         /// <summary>
         /// The geometry of the symbol.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("Geometry", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Geometry", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public GeometryReference Geometry { get; set; }
 
         /// <summary>A named camera position for this representation, indicating the direction from which the camera is looking (a top view looks from top down, a north view looks from north to south.)</summary>
-        [Newtonsoft.Json.JsonProperty("CameraPosition", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+        [JsonProperty("CameraPosition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public SymbolCameraPosition CameraPosition { get; set; }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Elements
         /// </summary>
         /// <param name="geometry">The geometry of the symbol.</param>
         /// <param name="cameraPosition">A named camera position for this representation.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Symbol(GeometryReference @geometry, SymbolCameraPosition @cameraPosition)
         {
             this.Geometry = @geometry;

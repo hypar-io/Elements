@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct Domain1d
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -158,7 +158,8 @@ domains this value can be negative.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Length { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double Length { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -182,7 +183,7 @@ domains this value can be negative.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Max { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly double Max { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -206,7 +207,7 @@ domains this value can be negative.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Min { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public readonly double Min { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -308,6 +309,30 @@ domains this value can be negative.</p>
         <td><span class="xref">System.Boolean</span></td>
         <td><p>True if the position is within tolerance of the domain Min or Max.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Domain1d_Mid_" data-uid="Elements.Domain1d.Mid*"></a>
+  <h4 id="Elements_Domain1d_Mid" data-uid="Elements.Domain1d.Mid">Mid()</h4>
+  <div class="markdown level1 summary"><p>Calculate the middle of the domain.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Mid()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

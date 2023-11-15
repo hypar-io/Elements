@@ -16,9 +16,7 @@ namespace Elements
         /// <summary>
         /// The curve.
         /// </summary>
-        public Curve Curve { get; set; }
-
-        private bool _isSelectable = true;
+        public BoundedCurve Curve { get; set; }
 
         /// <summary>
         /// Create a model curve.
@@ -30,7 +28,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is this an element definition?</param>
         /// <param name="id">The id of the model curve.</param>
         /// <param name="name">The name of the model curve.</param>
-        public ModelCurve(Curve curve,
+        public ModelCurve(BoundedCurve curve,
                           Material material = null,
                           Transform transform = null,
                           Representation representation = null,
@@ -56,16 +54,23 @@ namespace Elements
             this._isSelectable = selectable;
         }
 
-        internal GraphicsBuffers ToGraphicsBuffers(bool lineLoop)
+        internal GraphicsBuffers ToGraphicsBuffers()
         {
-            return this.Curve.ToGraphicsBuffers(lineLoop);
+            return this.Curve.ToGraphicsBuffers();
         }
 
-        internal override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        /// <summary>
+        /// Get graphics buffers and other metadata required to modify a GLB.
+        /// </summary>
+        /// <returns>
+        /// True if there is graphicsbuffers data applicable to add, false otherwise.
+        /// Out variables should be ignored if the return value is false.
+        /// </returns>
+        public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = this._isSelectable ? $"{this.Id}_curve" : $"unselectable_{this.Id}_curve";
-            mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.LINES;
-            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers(true) };
+            mode = this.Curve.IsClosedForRendering ? glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_LOOP : glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
+            graphicsBuffers = new List<GraphicsBuffers>() { this.ToGraphicsBuffers() };
             return true;
         }
     }

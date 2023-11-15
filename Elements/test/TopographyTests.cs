@@ -266,9 +266,10 @@ namespace Elements.Tests
 
             var result = new Mesh();
             csg.Tessellate(ref result);
+            result.MapUVsToBounds();
 
             var material = new Material($"Topo", Colors.White, 0.0f, 0.0f, "./Topography/Texture_12454f24-690a-43e2-826d-e4deae5eb82e_2.jpg");
-            this.Model.AddElement(new MeshElement(result, material));
+            this.Model.AddElement(new MeshElement(result, material: material));
         }
 
         [Fact]
@@ -344,7 +345,7 @@ namespace Elements.Tests
 
             foreach (var mesh in fillVolumes)
             {
-                this.Model.AddElement(new MeshElement(mesh, BuiltInMaterials.XAxis));
+                this.Model.AddElement(new MeshElement(mesh, material: BuiltInMaterials.XAxis));
             }
         }
 
@@ -376,6 +377,34 @@ namespace Elements.Tests
             // introduced by the CSG operation. We round to 3 decimal places here
             // which is millimeter accuracy.
             Assert.Equal(1, result.CutVolume, 3);
+        }
+
+        [Fact]
+        public void TrimTopoWithRegion()
+        {
+            Name = nameof(TrimTopoWithRegion);
+            var count = 10;
+            var elevations = new List<double>();
+            for (int i = 0; i < count; i++)
+            {
+                for (int j = 0; j < count; j++)
+                {
+                    elevations.Add(Math.Sin(i) + Math.Sin(j));
+                }
+            }
+            var topo = new Topography(Vector3.Origin, count, elevations.ToArray())
+            {
+                DepthBelowMinimumElevation = 3,
+            };
+            var polygonToProject = new Profile(new Circle((5, 5), 3).ToPolygon(50), new Circle((5, 5), 1).ToPolygon(6));
+            var trimmed = topo.Trimmed(polygonToProject);
+            trimmed.Material = BuiltInMaterials.XAxis;
+            trimmed.Transform.Move(0, 0, 0.001);
+            var topSurface = trimmed.TopMesh();
+            var me = new MeshElement(topSurface, new Transform(0, 0, 1), BuiltInMaterials.ZAxis);
+            Model.AddElement(topo);
+            Model.AddElement(trimmed);
+            Model.AddElement(me);
         }
 
         [Fact]

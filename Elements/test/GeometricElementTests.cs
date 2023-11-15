@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Xunit;
 
 namespace Elements.Tests
@@ -74,10 +75,65 @@ namespace Elements.Tests
             Model.AddElement(geo);
         }
 
+        [Fact]
+        public void Intersect()
+        {
+            var geometricElement = new GeometricElement(new Transform(),
+                                             BuiltInMaterials.Default,
+                                             null,
+                                             false,
+                                             System.Guid.NewGuid(),
+                                             "");
+            var width = 10;
+            var height = 10;
+            var thickness = 0.2;
+            var frameOuterPolygon = new Polygon(new Vector3(-width / 2.0, 0, -height / 2.0), new Vector3(-width / 2.0, 0, height / 2.0),
+                new Vector3(width / 2.0, 0, height / 2.0), new Vector3(width / 2.0, 0, -height / 2.0));
+            var frameRepresentation = new SolidRepresentation();
+            var profile = new Profile(frameOuterPolygon);
+            frameRepresentation.SolidOperations.Add(new Extrude(profile, thickness, Vector3.YAxis));
+            geometricElement.RepresentationInstances.Add(new RepresentationInstance(frameRepresentation, BuiltInMaterials.XAxis));
+            var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+            var intersection = geometricElement.Intersects(plane, out var intersectionPolygons, out var beyondPolygons, out var lines);
+            Assert.True(intersection);
+            Assert.Single(intersectionPolygons[geometricElement.Id]);
+            Assert.True(intersectionPolygons[geometricElement.Id][0].Area().ApproximatelyEquals(2));
+            Assert.Empty(beyondPolygons[geometricElement.Id]);
+            Assert.True(!lines.Any() || !lines[geometricElement.Id].Any());
+        }
+
+
+        [Fact]
+        public void DoesNotIntersect()
+        {
+            var geometricElement = new GeometricElement(new Transform(),
+                                             BuiltInMaterials.Default,
+                                             null,
+                                             false,
+                                             System.Guid.NewGuid(),
+                                             "");
+            var width = 10;
+            var height = 10;
+            var thickness = 0.2;
+            var frameOuterPolygon = new Polygon(new Vector3(-width / 2.0, 0, -height / 2.0), new Vector3(-width / 2.0, 0, height / 2.0),
+                new Vector3(width / 2.0, 0, height / 2.0), new Vector3(width / 2.0, 0, -height / 2.0));
+            var frameRepresentation = new SolidRepresentation();
+            var profile = new Profile(frameOuterPolygon);
+            frameRepresentation.SolidOperations.Add(new Extrude(profile, thickness, Vector3.YAxis));
+            geometricElement.RepresentationInstances.Add(new RepresentationInstance(frameRepresentation, BuiltInMaterials.XAxis));
+            geometricElement.Transform = new Transform(new Vector3(width / 2.0, 0, height / 2.0));
+            var plane = new Plane(Vector3.Origin, Vector3.ZAxis);
+            var intersection = geometricElement.Intersects(plane, out var intersectionPolygons, out var beyondPolygons, out var lines);
+            Assert.False(intersection);
+            Assert.True(!intersectionPolygons.Any() || !intersectionPolygons[geometricElement.Id].Any());
+            Assert.True(!beyondPolygons.Any() || !beyondPolygons[geometricElement.Id].Any());
+            Assert.True(!lines.Any() || !lines[geometricElement.Id].Any());
+        }
     }
+
     class CustomGBClass : GeometricElement
     {
-        internal override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
+        public override bool TryToGraphicsBuffers(out List<GraphicsBuffers> graphicsBuffers, out string id, out glTFLoader.Schema.MeshPrimitive.ModeEnum? mode)
         {
             id = $"{this.Id}_customthing";
             mode = glTFLoader.Schema.MeshPrimitive.ModeEnum.TRIANGLE_FAN;
@@ -89,7 +145,7 @@ namespace Elements.Tests
                     (0.5, 1.5,0),
                     (0,1,0),
             };
-            graphicsBuffers = new List<GraphicsBuffers>() { vertices.ToGraphicsBuffers(false) };
+            graphicsBuffers = new List<GraphicsBuffers>() { vertices.ToGraphicsBuffers() };
             return true;
         }
     }

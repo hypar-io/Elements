@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Arc
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -204,30 +204,45 @@ Assert.True(new Vector3(0, 2, 0).IsAlmostEqualTo(arc.End));
 var arc1 = new Arc(Vector3.Origin, 2.0, 0.0, -90.0);
 Assert.True(new Vector3(2, 0, 0).IsAlmostEqualTo(arc1.Start));
 Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
+
+// A transformed arc.
+var arc2 = new Arc(new Transform(Vector3.Origin, Vector3.XAxis), 2.0, 0, Math.PI);
 </code></pre>
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
-    <div class="level2"><span class="xref">Arc</span></div>
-      <div class="level3"><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
+    <div class="level3"><a class="xref" href="Elements.Geometry.TrimmedCurve-1.html">TrimmedCurve</a>&lt;<a class="xref" href="Elements.Geometry.Circle.html">Circle</a>&gt;</div>
+    <div class="level4"><span class="xref">Arc</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.ITrimmedCurve-1.html">ITrimmedCurve</a>&lt;<a class="xref" href="Elements.Geometry.Circle.html">Circle</a>&gt;</div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Elements.Geometry.Arc.html">Arc</a>&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+      <a class="xref" href="Elements.Geometry.TrimmedCurve-1.html#Elements_Geometry_TrimmedCurve_1_BasisCurve">TrimmedCurve&lt;Circle&gt;.BasisCurve</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_DefaultMinimumChordLength">BoundedCurve.DefaultMinimumChordLength</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_IsClosedForRendering">BoundedCurve.IsClosedForRendering</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Frames_System_Double_System_Double_System_Double_">BoundedCurve.Frames(Double, Double, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_PointAtNormalized_System_Double_">BoundedCurve.PointAtNormalized(Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_TransformAtNormalized_System_Double_">BoundedCurve.TransformAtNormalized(Double)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -255,10 +270,95 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Arc_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Arc : Curve, ICurve, ITransformable&lt;Curve&gt;, IEquatable&lt;Arc&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Arc : TrimmedCurve&lt;Circle&gt;, ICurve, ITransformable&lt;Curve&gt;, IBoundedCurve, ITrimmedCurve&lt;Circle&gt;, IEquatable&lt;Arc&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
+  <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
+  <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Circle_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Circle,System.Double,System.Double)">Arc(Circle, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Create an arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Arc(Circle circle, double startParameter, double endParameter)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></td>
+        <td><span class="parametername">circle</span></td>
+        <td><p>The circle on which this arc is based.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startParameter</span></td>
+        <td><p>The parameter, from 0.0-&gt;2PI, of the start of the arc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endParameter</span></td>
+        <td><p>The parameter, from 0.0-&gt;2PI, of the end of the arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
+  <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Transform_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Transform,System.Double,System.Double,System.Double)">Arc(Transform, Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Create an arc.
+Constructs a circular basis curve internally with the provided transform.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Arc(Transform transform, double radius = 1, double startParameter = 0, double endParameter = 6.2831853071795862)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transform for the basis curve of the arc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The radius of the arc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startParameter</span></td>
+        <td><p>The parameter, from 0.0-&gt;2PI, of the start of the arc.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endParameter</span></td>
+        <td><p>The parameter, from 0.0-&gt;2PI, of the end of the arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
   <h4 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(Elements.Geometry.Vector3,System.Double,System.Double,System.Double)">Arc(Vector3, Double, Double, Double)</h4>
   <div class="markdown level1 summary"><p>Create an arc.</p>
@@ -266,7 +366,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Arc(Vector3 center, double radius, double startAngle, double endAngle)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -304,9 +405,39 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       </tr>
     </tbody>
   </table>
+  <h5 id="Elements_Geometry_Arc__ctor_Elements_Geometry_Vector3_System_Double_System_Double_System_Double__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the end angle is smaller than the start angle, they will be flipped and the underlying circle reversed to preserve a positive parameter domain.</p>
+</div>
+  <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
+  <h4 id="Elements_Geometry_Arc__ctor_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(System.Double)">Arc(Double)</h4>
+  <div class="markdown level1 summary"><p>Create a circular arc.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Arc(double radius)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Arc__ctor_" data-uid="Elements.Geometry.Arc.#ctor*"></a>
   <h4 id="Elements_Geometry_Arc__ctor_System_Double_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.#ctor(System.Double,System.Double,System.Double)">Arc(Double, Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Create an arc.</p>
+  <div class="markdown level1 summary"><p>Create an arc.
+Constructs a circular basis curve internally with a default transform.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -332,13 +463,13 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">startAngle</span></td>
-        <td><p>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</p>
+        <td><p>The CCW angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">endAngle</span></td>
-        <td><p>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</p>
+        <td><p>The CCW angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</p>
 </td>
       </tr>
     </tbody>
@@ -352,7 +483,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Center { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Vector3 Center { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -369,6 +500,33 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Arc_Domain_" data-uid="Elements.Geometry.Arc.Domain*"></a>
+  <h4 id="Elements_Geometry_Arc_Domain" data-uid="Elements.Geometry.Arc.Domain">Domain</h4>
+  <div class="markdown level1 summary"><p>The domain of the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public override Domain1d Domain { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Domain">BoundedCurve.Domain</a></div>
   <a id="Elements_Geometry_Arc_End_" data-uid="Elements.Geometry.Arc.End*"></a>
   <h4 id="Elements_Geometry_Arc_End" data-uid="Elements.Geometry.Arc.End">End</h4>
   <div class="markdown level1 summary"><p>The end point of the arc.</p>
@@ -376,7 +534,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 End { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public override Vector3 End { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -393,6 +552,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_End">BoundedCurve.End</a></div>
   <a id="Elements_Geometry_Arc_EndAngle_" data-uid="Elements.Geometry.Arc.EndAngle*"></a>
   <h4 id="Elements_Geometry_Arc_EndAngle" data-uid="Elements.Geometry.Arc.EndAngle">EndAngle</h4>
   <div class="markdown level1 summary"><p>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</p>
@@ -400,7 +561,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double EndAngle { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;EndAngle&quot;, Required = Required.Always)]
+public double EndAngle { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -424,7 +586,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Radius { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public double Radius { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -448,7 +610,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Start { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public override Vector3 Start { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -465,6 +628,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Start">BoundedCurve.Start</a></div>
   <a id="Elements_Geometry_Arc_StartAngle_" data-uid="Elements.Geometry.Arc.StartAngle*"></a>
   <h4 id="Elements_Geometry_Arc_StartAngle" data-uid="Elements.Geometry.Arc.StartAngle">StartAngle</h4>
   <div class="markdown level1 summary"><p>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</p>
@@ -472,7 +637,8 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double StartAngle { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;StartAngle&quot;, Required = Required.Always)]
+public double StartAngle { get; protected set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -491,6 +657,54 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Geometry_Arc_ArcLength_" data-uid="Elements.Geometry.Arc.ArcLength*"></a>
+  <h4 id="Elements_Geometry_Arc_ArcLength_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.ArcLength(System.Double,System.Double)">ArcLength(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the arc between start and end parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ArcLength(double start, double end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">end</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ArcLength_System_Double_System_Double_">BoundedCurve.ArcLength(Double, Double)</a></div>
   <a id="Elements_Geometry_Arc_Bounds_" data-uid="Elements.Geometry.Arc.Bounds*"></a>
   <h4 id="Elements_Geometry_Arc_Bounds" data-uid="Elements.Geometry.Arc.Bounds">Bounds()</h4>
   <div class="markdown level1 summary"><p>Get a bounding box for this arc.</p>
@@ -517,7 +731,62 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Bounds">BoundedCurve.Bounds()</a></div>
+  <a id="Elements_Geometry_Arc_ByThreePoints_" data-uid="Elements.Geometry.Arc.ByThreePoints*"></a>
+  <h4 id="Elements_Geometry_Arc_ByThreePoints_Elements_Geometry_Vector3_Elements_Geometry_Vector3_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.Arc.ByThreePoints(Elements.Geometry.Vector3,Elements.Geometry.Vector3,Elements.Geometry.Vector3)">ByThreePoints(Vector3, Vector3, Vector3)</h4>
+  <div class="markdown level1 summary"><p>Create an arc by three points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Arc ByThreePoints(Vector3 a, Vector3 b, Vector3 c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The third point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></td>
+        <td><p>An arc through the three points.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_Arc_Complement_" data-uid="Elements.Geometry.Arc.Complement*"></a>
   <h4 id="Elements_Geometry_Arc_Complement" data-uid="Elements.Geometry.Arc.Complement">Complement()</h4>
   <div class="markdown level1 summary"><p>Return the arc which is the complement of this arc.</p>
@@ -585,6 +854,112 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Arc_Fillet_" data-uid="Elements.Geometry.Arc.Fillet*"></a>
+  <h4 id="Elements_Geometry_Arc_Fillet_Elements_Geometry_Line_Elements_Geometry_Line_System_Double_" data-uid="Elements.Geometry.Arc.Fillet(Elements.Geometry.Line,Elements.Geometry.Line,System.Double)">Fillet(Line, Line, Double)</h4>
+  <div class="markdown level1 summary"><p>Create a fillet arc between two lines.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Arc Fillet(Line a, Line b, double radius)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">a</span></td>
+        <td><p>The first line.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Line.html">Line</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>The second line.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">radius</span></td>
+        <td><p>The radiuse of the fillet arc.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Arc.html">Arc</a></td>
+        <td><p>A fillet arc between the two lines.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_Arc_GetSubdivisionParameters_" data-uid="Elements.Geometry.Arc.GetSubdivisionParameters*"></a>
+  <h4 id="Elements_Geometry_Arc_GetSubdivisionParameters_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.GetSubdivisionParameters(System.Double,System.Double)">GetSubdivisionParameters(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get parameters to be used to find points along the curve for visualization.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">startSetbackDistance</span></td>
+        <td><p>An optional setback from the start of the curve.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">endSetbackDistance</span></td>
+        <td><p>An optional setback from the end of the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><p>A collection of parameter values.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_GetSubdivisionParameters_System_Double_System_Double_">BoundedCurve.GetSubdivisionParameters(Double, Double)</a></div>
   <a id="Elements_Geometry_Arc_Length_" data-uid="Elements.Geometry.Arc.Length*"></a>
   <h4 id="Elements_Geometry_Arc_Length" data-uid="Elements.Geometry.Arc.Length">Length()</h4>
   <div class="markdown level1 summary"><p>Calculate the length of the arc.</p>
@@ -610,7 +985,83 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Length">BoundedCurve.Length()</a></div>
+  <a id="Elements_Geometry_Arc_Mid_" data-uid="Elements.Geometry.Arc.Mid*"></a>
+  <h4 id="Elements_Geometry_Arc_Mid" data-uid="Elements.Geometry.Arc.Mid">Mid()</h4>
+  <div class="markdown level1 summary"><p>The point at the middle of the curve's parameter space.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Vector3 Mid()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Mid">BoundedCurve.Mid()</a></div>
+  <a id="Elements_Geometry_Arc_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.Arc.ParameterAtDistanceFromParameter*"></a>
+  <h4 id="Elements_Geometry_Arc_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.Arc.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the parameter at a distance from the start parameter along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ParameterAtDistanceFromParameter(double distance, double start)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance from the start parameter.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The parameter from which to measure the distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ParameterAtDistanceFromParameter_System_Double_System_Double_">Curve.ParameterAtDistanceFromParameter(Double, Double)</a></div>
   <a id="Elements_Geometry_Arc_Plane_" data-uid="Elements.Geometry.Arc.Plane*"></a>
   <h4 id="Elements_Geometry_Arc_Plane" data-uid="Elements.Geometry.Arc.Plane">Plane()</h4>
   <div class="markdown level1 summary"><p>Compute the plane of the arc.</p>
@@ -638,7 +1089,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   </table>
   <a id="Elements_Geometry_Arc_PointAt_" data-uid="Elements.Geometry.Arc.PointAt*"></a>
   <h4 id="Elements_Geometry_Arc_PointAt_System_Double_" data-uid="Elements.Geometry.Arc.PointAt(System.Double)">PointAt(Double)</h4>
-  <div class="markdown level1 summary"><p>Return the point at parameter u on the arc.</p>
+  <div class="markdown level1 summary"><p>Get the point at parameter u.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -658,8 +1109,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>A parameter between 0.0 and 1.0.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -674,7 +1124,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
-        <td><p>A Vector3 representing the point along the arc.</p>
+        <td><p>The point at parameter u if us is within the trim, otherwise an exception is thrown.</p>
 </td>
       </tr>
     </tbody>
@@ -705,9 +1155,54 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Arc_ToPolyline_" data-uid="Elements.Geometry.Arc.ToPolyline*"></a>
+  <h4 id="Elements_Geometry_Arc_ToPolyline_System_Int32_" data-uid="Elements.Geometry.Arc.ToPolyline(System.Int32)">ToPolyline(Int32)</h4>
+  <div class="markdown level1 summary"><p>Create a polyline through a set of points along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Polyline ToPolyline(int divisions = 10)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">divisions</span></td>
+        <td><p>The number of divisions of the curve.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></td>
+        <td><p>A polyline.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ToPolyline_System_Int32_">BoundedCurve.ToPolyline(Int32)</a></div>
   <a id="Elements_Geometry_Arc_TransformAt_" data-uid="Elements.Geometry.Arc.TransformAt*"></a>
   <h4 id="Elements_Geometry_Arc_TransformAt_System_Double_" data-uid="Elements.Geometry.Arc.TransformAt(System.Double)">TransformAt(Double)</h4>
-  <div class="markdown level1 summary"><p>Return transform on the arc at parameter u.</p>
+  <div class="markdown level1 summary"><p>Get the transform at parameter u.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -727,8 +1222,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>A parameter between 0.0 and 1.0 on the arc.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -743,7 +1237,7 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
     <tbody>
       <tr>
         <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
-        <td><p>A transform with its origin at u along the curve and its Z axis tangent to the curve.</p>
+        <td><p>The transform at parameter u if us is within the trim, otherwise an exception is thrown.</p>
 </td>
       </tr>
     </tbody>
@@ -752,7 +1246,9 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_TransformAt_System_Double_">Curve.TransformAt(Double)</a></div>
   <a id="Elements_Geometry_Arc_Transformed_" data-uid="Elements.Geometry.Arc.Transformed*"></a>
   <h4 id="Elements_Geometry_Arc_Transformed_Elements_Geometry_Transform_" data-uid="Elements.Geometry.Arc.Transformed(Elements.Geometry.Transform)">Transformed(Transform)</h4>
-  <div class="markdown level1 summary"><p>Construct a transformed copy of this Curve.</p>
+  <div class="markdown level1 summary"><p>Create a transformed copy of this curve.
+Use of non-affine transforms (i.e. scale) will
+result in unpredictable results for curve methods such as Length().</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -842,6 +1338,12 @@ Assert.True(new Vector3(0, -2, 0).IsAlmostEqualTo(arc1.End));
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.ITrimmedCurve-1.html">ITrimmedCurve&lt;TBasis&gt;</a>
   </div>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>

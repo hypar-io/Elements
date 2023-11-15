@@ -48,13 +48,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant I
             var polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
+                Vector3.Origin,
+                new Vector3(6.0, 0.0),
+                new Vector3(6.0, 6.0),
+                new Vector3(0.0, 6.0)
             );
             var centroid = polygon.Centroid();
             Assert.Equal(3.0, centroid.X);
@@ -63,13 +60,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant II
             polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, 6.0),
-                    new Vector3(0.0, 6.0),
-                }
+                Vector3.Origin,
+                new Vector3(-6.0, 0.0),
+                new Vector3(-6.0, 6.0),
+                new Vector3(0.0, 6.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(-3.0, centroid.X);
@@ -78,13 +72,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant III
             polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(-6.0, 0.0),
-                    new Vector3(-6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
+                Vector3.Origin,
+                new Vector3(-6.0, 0.0),
+                new Vector3(-6.0, -6.0),
+                new Vector3(0.0, -6.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(-3.0, centroid.X);
@@ -93,13 +84,10 @@ namespace Elements.Geometry.Tests
             // Square in Quadrant IV
             polygon = new Polygon
             (
-                new[]
-                {
-                    Vector3.Origin,
-                    new Vector3(6.0, 0.0),
-                    new Vector3(6.0, -6.0),
-                    new Vector3(0.0, -6.0),
-                }
+                Vector3.Origin,
+                new Vector3(6.0, 0.0),
+                new Vector3(6.0, -6.0),
+                new Vector3(0.0, -6.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(3.0, centroid.X);
@@ -108,15 +96,12 @@ namespace Elements.Geometry.Tests
             // Bow Tie in Quadrant I
             polygon = new Polygon
             (
-                new[]
-                {
-                    new Vector3(1.0, 1.0),
-                    new Vector3(4.0, 4.0),
-                    new Vector3(7.0, 1.0),
-                    new Vector3(7.0, 9.0),
-                    new Vector3(4.0, 6.0),
-                    new Vector3(1.0, 9.0)
-                }
+                new Vector3(1.0, 1.0),
+                new Vector3(4.0, 4.0),
+                new Vector3(7.0, 1.0),
+                new Vector3(7.0, 9.0),
+                new Vector3(4.0, 6.0),
+                new Vector3(1.0, 9.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(4.0, centroid.X);
@@ -125,19 +110,24 @@ namespace Elements.Geometry.Tests
             // Bow Tie in Quadrant III
             polygon = new Polygon
             (
-                new[]
-                {
-                    new Vector3(-1.0, -1.0),
-                    new Vector3(-4.0, -4.0),
-                    new Vector3(-7.0, -1.0),
-                    new Vector3(-7.0, -9.0),
-                    new Vector3(-4.0, -6.0),
-                    new Vector3(-1.0, -9.0)
-                }
+                new Vector3(-1.0, -1.0),
+                new Vector3(-4.0, -4.0),
+                new Vector3(-7.0, -1.0),
+                new Vector3(-7.0, -9.0),
+                new Vector3(-4.0, -6.0),
+                new Vector3(-1.0, -9.0)
             );
             centroid = polygon.Centroid();
             Assert.Equal(-4.0, centroid.X);
             Assert.Equal(-5.0, centroid.Y);
+        }
+
+        [Fact]
+        public void DoesNotContainPointNotInPlane()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            var point = new Vector3(0, 0, 2);
+            Assert.False(rect.Contains(point));
         }
 
         [Fact]
@@ -147,33 +137,24 @@ namespace Elements.Geometry.Tests
             var v2 = new Vector3(7.5, 7.5);
             var p1 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(0.0, 0.0),
-                    new Vector3(20.0, 0.0),
-                    new Vector3(20.0, 20.0),
-                    new Vector3(0.0, 20.0)
-                }
+                new Vector3(0.0, 0.0),
+                new Vector3(20.0, 0.0),
+                new Vector3(20.0, 20.0),
+                new Vector3(0.0, 20.0)
             );
             var p2 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(0.0, 0.0),
-                    new Vector3(10.0, 5.0),
-                    new Vector3(10.0, 10.0),
-                    new Vector3(5.0, 10.0)
-                }
+                new Vector3(0.0, 0.0),
+                new Vector3(10.0, 5.0),
+                new Vector3(10.0, 10.0),
+                new Vector3(5.0, 10.0)
             );
             var p3 = new Polygon
             (
-                new[]
-                {
-                    new Vector3(5.0, 5.0),
-                    new Vector3(10.0, 5.0),
-                    new Vector3(10.0, 10.0),
-                    new Vector3(5.0, 10.0)
-                }
+                new Vector3(5.0, 5.0),
+                new Vector3(10.0, 5.0),
+                new Vector3(10.0, 10.0),
+                new Vector3(5.0, 10.0)
             );
 
             Assert.False(p1.Contains(v1));
@@ -560,6 +541,139 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
+        public void IntersectionLines()
+        {
+            // Two complex shapes
+            var p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, -1),
+                    new Vector3(2, -1),
+                    new Vector3(2, 1),
+                    new Vector3(5, 1),
+                    new Vector3(5, -1),
+                    new Vector3(8, -1),
+                    new Vector3(8, 1),
+                    new Vector3(12, 1),
+                    new Vector3(12, -1),
+                    new Vector3(17, -1),
+                    new Vector3(17, 1),
+                    new Vector3(19, 1),
+                    new Vector3(19, -1),
+                    new Vector3(24, -1),
+                    new Vector3(24, 3),
+                    new Vector3(0, 3)
+                }
+            );
+            var p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 0, -1),
+                    new Vector3(6, 0, -1),
+                    new Vector3(6, 0, 1),
+                    new Vector3(9, 0, 1),
+                    new Vector3(9, 0, -1),
+                    new Vector3(11, 0, -1),
+                    new Vector3(11, 0, 1),
+                    new Vector3(13, 0, 1),
+                    new Vector3(13, 0, -1),
+                    new Vector3(16, 0, -1),
+                    new Vector3(16, 0, 1),
+                    new Vector3(18, 0, 1),
+                    new Vector3(18, 0, -1),
+                    new Vector3(21, 0, -1),
+                    new Vector3(21, 0, 1),
+                    new Vector3(22, 0, 1),
+                    new Vector3(22, 0, -1),
+                    new Vector3(26, 0, -1),
+                    new Vector3(26, 0, 3),
+                    new Vector3(1, 0, 3)
+                }
+            );
+
+            var lines = p1.IntersectionLines(p2);
+            Assert.Equal(5, lines.Count());
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((1, 0), (2, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((5, 0), (6, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((13, 0), (16, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((19, 0), (21, 0)), false));
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((22, 0), (24, 0)), false));
+
+            // Overlapping polygons on the same plane
+            p1 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(0, 0),
+                    new Vector3(2, 0),
+                    new Vector3(2, 2),
+                    new Vector3(0, 2)
+                }
+            );
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(1, 1),
+                    new Vector3(3, 1),
+                    new Vector3(3, 3),
+                    new Vector3(1, 3)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+
+            // Polygons on parallel planes
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(2, 0, 2),
+                    new Vector3(2, 2, 2),
+                    new Vector3(4, 2, 2),
+                    new Vector3(4, 0, 2)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+
+            // Touching polygons on the same plane
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(2, 0),
+                    new Vector3(2, 2),
+                    new Vector3(4, 2),
+                    new Vector3(4, 0)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+            lines = p1.IntersectionLines(p2, true);
+            Assert.Empty(lines);
+
+            // Touching polygons non parallel planes
+            p2 = new Polygon
+            (
+                new[]
+                {
+                    new Vector3(2, 0),
+                    new Vector3(2, 2),
+                    new Vector3(2, 2, 2),
+                    new Vector3(2, 0, 2)
+                }
+            );
+            lines = p1.IntersectionLines(p2);
+            Assert.Empty(lines);
+            lines = p1.IntersectionLines(p2, true);
+            Assert.Single(lines);
+            Assert.Contains(lines, l => l.IsAlmostEqualTo(new Line((2, 0), (2, 2)), false));
+        }
+
+        [Fact]
         public void Offset()
         {
             var a = new Vector3();
@@ -607,6 +721,9 @@ namespace Elements.Geometry.Tests
             var b = Polygon.Rectangle(2.0, 2.0);
             Assert.Equal(4.0, b.Area());
 
+            var c = Polygon.Rectangle(3.0, 2.0);
+            Assert.Equal(-6.0, c.Reversed().Area(true));
+
             var p1 = Vector3.Origin;
             var p2 = Vector3.XAxis;
             var p3 = new Vector3(1.0, 1.0);
@@ -653,10 +770,10 @@ namespace Elements.Geometry.Tests
             var d = new Vector3(0, 1);
             var p = new Polygon(new[] { a, b, c, d });
             Assert.Equal(4, p.Segments().Count());
-            Assert.Equal(new Vector3(1.0, 1.0), p.PointAt(0.5));
+            Assert.Equal(new Vector3(1.0, 1.0), p.Mid());
 
             var r = Polygon.Rectangle(2, 2);
-            Assert.Equal(new Vector3(1, 1, 0), r.PointAt(0.5));
+            Assert.Equal(new Vector3(1, 1, 0), r.Mid());
         }
 
         [Fact]
@@ -731,6 +848,37 @@ namespace Elements.Geometry.Tests
             };
             var coHull = ConvexHull.FromPoints(coPts);
             Assert.Equal(50, coHull.Area());
+        }
+
+        [Fact]
+        public void FromAlignedBoundingBox2dAlongAxis()
+        {
+            Name = nameof(FromAlignedBoundingBox2dAlongAxis);
+            // handle random points test
+            var pts = new List<Vector3> {
+                new Vector3(2,1),
+                new Vector3(1,3),
+                new Vector3(5,5),
+                new Vector3(6,3),
+                new Vector3(2,2),
+                new Vector3(2.5,3),
+                new Vector3(4,3)
+            };
+            var boundingRect = Polygon.FromAlignedBoundingBox2d(pts, pts[1] - pts[0]);
+            Assert.True(boundingRect.Area().ApproximatelyEquals(10));
+            Model.AddElements(pts.Select(p => new ModelCurve(new Circle(p, 0.2))));
+            Model.AddElements(new ModelCurve(boundingRect));
+
+            // handle collinear points test
+            var coPts = new List<Vector3> {
+                new Vector3(0,0),
+                new Vector3(1,0),
+                new Vector3(2,0),
+                new Vector3(4,0),
+                new Vector3(10,0)
+            };
+            var coBoundingRect = Polygon.FromAlignedBoundingBox2d(coPts, new Vector3(1, 0));
+            Assert.Equal(1, coBoundingRect.Area());
         }
 
         [Fact]
@@ -815,9 +963,7 @@ namespace Elements.Geometry.Tests
             var pointInternal = extremelyConcavePolygon.PointInternal();
             Assert.True(extremelyConcavePolygon.Contains(pointInternal));
             Model.AddElement(extremelyConcavePolygon);
-            Curve.MinimumChordLength = 0.001;
             Model.AddElement(new Circle(pointInternal, 0.02));
-            Curve.MinimumChordLength = 0.1;
         }
 
         [Fact]
@@ -1084,20 +1230,23 @@ namespace Elements.Geometry.Tests
             this.Name = "PolygonPointsAtToTheEnd";
 
             var polyCircle = new Circle(Vector3.Origin, 5).ToPolygon(7);
-            var polyline = new Polyline(polyCircle.Vertices.Take(polyCircle.Vertices.Count - 1).ToList());
+            var polyline = new Polyline(polyCircle.Vertices);
 
             // Ensure that the PointAt function for u=1.0 is at the
             // end of the polygon AND at the end of the polyline.
-            Assert.True(polyCircle.PointAt(1.0).IsAlmostEqualTo(polyCircle.Start));
-            Assert.True(polyline.PointAt(1.0).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            Assert.True(polyCircle.PointAt(polyCircle.Domain.Max).IsAlmostEqualTo(polyCircle.Start));
+            Assert.True(polyline.PointAt(polyline.Domain.Max).IsAlmostEqualTo(polyline.Vertices[polyline.Vertices.Count - 1]));
+            // Test value close to u=0.0 within tolerance
+            Assert.True(polyCircle.PointAt(-1e-15).IsAlmostEqualTo(polyCircle.End));
+            Assert.True(polyline.PointAt(-1e-15).IsAlmostEqualTo(polyline.Vertices[0]));
 
             this.Model.AddElement(new ModelCurve(polyCircle));
 
             var circle = new Circle(Vector3.Origin, 0.1).ToPolygon();
-            for (var u = 0.0; u <= 1.0; u += 0.05)
+            for (var u = 0.0; u <= polyCircle.Domain.Max; u += 0.05)
             {
                 var pt = polyCircle.PointAt(u);
-                this.Model.AddElement(new ModelCurve(circle.Transformed(new Transform(pt)), BuiltInMaterials.XAxis));
+                this.Model.AddElement(new ModelCurve(circle, BuiltInMaterials.XAxis, new Transform(pt)));
             }
         }
 
@@ -1473,25 +1622,35 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void PolygonIsTrimmedWithPlane()
+        public void PolygonIsTrimmedAbovePlane()
         {
-            this.Name = nameof(PolygonIsTrimmedWithPlane);
+            this.Name = nameof(PolygonIsTrimmedAbovePlane);
 
             var r = new Random();
 
             // Trim above
             var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
-            // t.Rotate(Vector3.XAxis, 15);
             var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
             var trimmed = polygon.Trimmed(plane);
             Assert.Single(trimmed);
             var panels = trimmed.Select(t => new Panel(t, r.NextMaterial()));
             this.Model.AddElement(new ModelCurve(polygon));
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(plane.Origin, plane.Normal)), BuiltInMaterials.Glass));
             this.Model.AddElements(trimmed.Select(t => new ModelCurve(t)));
             this.Model.AddElements(panels);
+        }
+
+        [Fact]
+        public void PolygonIsTrimmedBelowPlane()
+        {
+            this.Name = nameof(PolygonIsTrimmedBelowPlane);
+            var r = new Random();
 
             // Trim below
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            var plane = new Plane(new Vector3(0, 0, -2.5), Vector3.ZAxis);
             var trimmedReverse = polygon.Trimmed(plane, true);
             Assert.Equal<int>(2, trimmedReverse.Count);
             var move = new Transform(0, 0, 0);
@@ -1501,8 +1660,17 @@ namespace Elements.Geometry.Tests
             this.Model.AddElement(new ModelCurve(polygon, transform: move));
             this.Model.AddElements(trimmedReverse.Select(t => new ModelCurve(t, transform: move)));
             this.Model.AddElements(panel2);
+        }
+
+        [Fact]
+        public void TrimPolygonThroughVertex()
+        {
+            this.Name = nameof(TrimPolygonThroughVertex);
+            var r = new Random();
 
             // Trim through vertex
+            var t = new Transform(Vector3.Origin, Vector3.XAxis, Vector3.YAxis.Negate());
+            var polygon = Polygon.Star(5, 2, 5).TransformedPolygon(t);
             var vertexTrimPlane = new Plane(new Vector3(0, 0, polygon.Vertices[7].Z), Vector3.ZAxis);
             var trimmedAtVertex = polygon.Trimmed(vertexTrimPlane, true);
             Assert.Equal<int>(2, trimmedAtVertex.Count);
@@ -1511,6 +1679,48 @@ namespace Elements.Geometry.Tests
             this.Model.AddElements(panel3);
             this.Model.AddElements(trimmedAtVertex.Select(t => new ModelCurve(t, transform: move2)));
             this.Model.AddElement(new ModelCurve(polygon, transform: move2));
+        }
+
+        [Fact]
+        public void TrimPolygonThroughTwoVertices()
+        {
+            Name = nameof(TrimPolygonThroughTwoVertices);
+            var shape = Polygon.Ngon(4);
+            var plane = new Plane(Vector3.Origin, Vector3.YAxis);
+            var trimmed = shape.Trimmed(plane);
+            Assert.Single(trimmed);
+            if (trimmed != null)
+            {
+                Model.AddElement(new Panel(trimmed[0]));
+            }
+            else
+            {
+                Model.AddElement(new Panel(shape));
+            }
+
+            Model.AddElement(new Panel(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(plane.Origin, plane.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(shape));
+        }
+
+        [Fact]
+        public void TrimPolygonThroughVertexAndEdge()
+        {
+            Name = nameof(TrimPolygonThroughVertexAndEdge);
+            var shape = Polygon.Ngon(4);
+            var plane = new Plane(shape.Vertices[0], new Vector3(0.01, 1, 0).Unitized());
+            var trimmed = shape.Trimmed(plane);
+            Assert.Single(trimmed);
+            if (trimmed != null)
+            {
+                Model.AddElement(new Panel(trimmed[0]));
+            }
+            else
+            {
+                Model.AddElement(new Panel(shape));
+            }
+
+            Model.AddElement(new Panel(Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(plane.Origin, plane.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(shape));
         }
 
         [Fact]
@@ -1717,11 +1927,53 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void PolygonContains3D()
         {
-            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(rect.Contains3D(rect.Centroid(), true));
+            Name = nameof(PolygonContains3D);
+            var t = new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized());
+            var rect = Polygon.Rectangle(5, 5).TransformedPolygon(t);
+            Assert.True(rect.Contains(rect.Centroid()));
 
-            var star = Polygon.Star(5, 2, 5).TransformedPolygon(new Transform(new Vector3(0, 0, 1), new Vector3(0.1, 0.1, 1.0).Unitized()));
-            Assert.True(star.Contains3D(star.Centroid(), true));
+            var v1 = new Vector3(2.5, -2.5);
+            Assert.True(rect.Contains(t.OfPoint(v1), out _));
+            Model.AddElement(new ModelCurve(rect));
+            var arc = new Circle(v1, 0.1);
+            Model.AddElement(new ModelCurve(arc.ToPolygon().TransformedPolygon(t)));
+
+            var star = Polygon.Star(5, 2, 5).TransformedPolygon(t);
+            Model.AddElement(new ModelCurve(star));
+            var centroid = star.Centroid();
+            Assert.True(star.Contains(centroid));
+            var arc2 = new Circle(centroid, 0.1);
+            Model.AddElement(new ModelCurve(arc2.ToPolygon()));
+        }
+
+        [Fact]
+        public void PointAtLowerRightVertexIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(2.5, -2.5), out _));
+        }
+
+        [Fact]
+        public void PointAtUpperRightVertexIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(2.5, 2.5), out _));
+        }
+
+        [Fact]
+        public void PointOnEdgeIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3(0, -2.5), out _));
+            Assert.True(rect.Contains(new Vector3(2.5, 0), out _));
+            Assert.True(rect.Contains(new Vector3(0, 2.5), out _));
+        }
+
+        [Fact]
+        public void PointInCenterIsContained()
+        {
+            var rect = Polygon.Rectangle(5, 5);
+            Assert.True(rect.Contains(new Vector3()));
         }
 
         [Fact]
@@ -1850,6 +2102,18 @@ namespace Elements.Geometry.Tests
             var polygon = new Polygon(points);
             polygon = polygon.CollinearPointsRemoved();
             Assert.Equal(4, polygon.Vertices.Count());
+
+            var points2 = new Vector3[] {
+                (0, 0, 0),
+                (10, 0.0001, 0),
+                (20, 0, 0),
+                (20, 20, 0),
+                (10, 20.0001, 0),
+                (0, 20, 0)
+            };
+            var polygon2 = new Polygon(points2);
+            Assert.NotEqual(4, polygon2.CollinearPointsRemoved().Vertices.Count());
+            Assert.Equal(4, polygon2.CollinearPointsRemoved(0.001).Vertices.Count());
         }
 
         [Fact]
@@ -1893,7 +2157,7 @@ namespace Elements.Geometry.Tests
             sqPoly.Intersects3d(circlePoly, out List<Vector3> results);
             foreach (var r in results)
             {
-                this.Model.AddElement(new ModelCurve(new Circle(0.05).ToPolygon().Transformed(new Transform(r)), BuiltInMaterials.YAxis));
+                this.Model.AddElement(new ModelCurve(new Circle(new Transform(r), 0.05), BuiltInMaterials.YAxis));
             }
             Assert.Equal(2, results.Count);
             this.Model.AddElement(new Panel(sqPoly));
@@ -2012,6 +2276,120 @@ namespace Elements.Geometry.Tests
                 new Vector3(0.0, -6.0),
                 Vector3.Origin,
             });
+        }
+
+
+        [Fact]
+        public void CoplanarWithinTolerance()
+        {
+            // this polygon has some small amount of deviation from planar (6.3e-7)
+            var json = "{\n            \"discriminator\": \"Elements.Geometry.Polygon\",\n            \"Vertices\": [\n              {\n                \"X\": 30.00108,\n                \"Y\": 0.17123,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": -2.5323,\n                \"Y\": 0.17123,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": -2.5322999954223633,\n                \"Y\": -8.758851356437756,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": -2.5323,\n                \"Y\": -21.3088,\n                \"Z\": 24.666666666666668\n              },\n              {\n                \"X\": 7.8653690051598115,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 14.06867950383497,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 21.64777460957137,\n                \"Y\": -21.308799743652344,\n                \"Z\": 24.66666603088379\n              },\n              {\n                \"X\": 30.00108,\n                \"Y\": -21.3088,\n                \"Z\": 24.666666666666668\n              }\n            ]\n          }";
+            // verify does not throw
+            var polygon = JsonConvert.DeserializeObject<Polygon>(json);
+            Assert.NotNull(polygon);
+        }
+
+        [Fact]
+        public void U()
+        {
+            var u = Polygon.U(10, 20, 2);
+        }
+
+        [Fact]
+        public void UThicknessGreaterThanWidthOverTwoThrows()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => Polygon.U(10, 10, 6));
+        }
+
+        [Fact]
+        public void TrimSkyPlanePolygon1()
+        {
+            Name = nameof(TrimSkyPlanePolygon1);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":5.456602446962343,\"Y\":-0.9024812458451947,\"Z\":60.0},{\"X\":22.56585182362492,\"Y\":32.63913758323735,\"Z\":60.0},{\"X\":12.232537580045737,\"Y\":37.91005939478421,\"Z\":31.000000000000313},{\"X\":-4.876711796617052,\"Y\":4.3684405657018885,\"Z\":30.9999999999996}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Single(trimmed);
+            Model.AddElement(new Panel(trimmed[0]));
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void TrimSkyPlanePolygon2()
+        {
+            Name = nameof(TrimSkyPlanePolygon2);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":14.11044881100593,\"Y\":-5.316723034955274,\"Z\":60.0},{\"X\":24.445333749146343,\"Y\":-10.58844604232641,\"Z\":30.999999999999876},{\"X\":40.96973706172442,\"Y\":23.25149700325788,\"Z\":30.999999999999172},{\"X\":30.63485212358372,\"Y\":28.523220010629068,\"Z\":60.0}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Single(trimmed);
+            Model.AddElement(new Panel(trimmed[0]));
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void TrimSkyPlanePolygon3()
+        {
+            Name = nameof(TrimSkyPlanePolygon3);
+            var json = "{\"Item1\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":23.128761583107114,\"Y\":-13.28462370583442,\"Z\":30.99999999999992},{\"X\":23.12876158310712,\"Y\":-13.284623705834392,\"Z\":-7.588341022412967E-15},{\"X\":40.969737061724466,\"Y\":23.251497003257874,\"Z\":-4.6993153936072985E-15},{\"X\":40.96973706172446,\"Y\":23.251497003257846,\"Z\":30.99999999999918}]},\"Item2\":{\"Origin\":{\"X\":18.54496511754798,\"Y\":34.69015228590052,\"Z\":31.000000000000266},\"Normal\":{\"X\":0.4218903484051781,\"Y\":0.8270897771341386,\"Z\":0.3713906763541038}}}";
+            var items = JsonConvert.DeserializeObject<(Polygon, Plane)>(json);
+            var trimmed = items.Item1.Trimmed(items.Item2, true);
+            Assert.Null(trimmed);
+            Model.AddElement(new Panel(Polygon.Rectangle(100, 100).TransformedPolygon(new Transform(items.Item2.Origin, items.Item2.Normal)), BuiltInMaterials.Glass));
+            Model.AddElement(new ModelCurve(items.Item1));
+        }
+
+        [Fact]
+        public void BigRectangleContainsSmallRectangle()
+        {
+            var r1 = Polygon.Rectangle(2, 2);
+            var r2 = Polygon.Rectangle(1, 1).TransformedPolygon(new Transform(new Vector3(0.5, 0.5), Vector3.ZAxis));
+            Assert.True(r1.Contains3D(r2));
+        }
+
+        [Fact]
+        public void Frames()
+        {
+            var polygon = new Polygon((0, 0), (2, 0), (2, 2), (0, 2));
+            var frames = polygon.Frames();
+            Assert.Equal(5, frames.Count());
+            Assert.Equal(polygon.Vertices[0], frames[0].Origin);
+            Assert.True((Vector3.XAxis - Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polygon.Vertices[1], frames[1].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+            Assert.Equal(polygon.Vertices[2], frames[2].Origin);
+            Assert.True((Vector3.YAxis - Vector3.XAxis).Unitized().Negate().IsAlmostEqualTo(frames[2].ZAxis));
+            Assert.Equal(polygon.Vertices[3], frames[3].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().IsAlmostEqualTo(frames[3].ZAxis));
+            Assert.Equal(polygon.Vertices[0], frames[4].Origin);
+            Assert.True((Vector3.XAxis - Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[4].ZAxis));
+
+            frames = polygon.Frames(1, 1);
+            Assert.Equal(5, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal((0, 1), frames[4].Origin);
+            Assert.True(Vector3.YAxis.IsAlmostEqualTo(frames[4].ZAxis));
+
+            frames = polygon.Frames(2, 2);
+            Assert.Equal(3, frames.Count());
+            Assert.Equal(polygon.Vertices[1], frames[0].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().Negate().IsAlmostEqualTo(frames[0].ZAxis));
+            Assert.Equal(polygon.Vertices[2], frames[1].Origin);
+            Assert.True((Vector3.YAxis - Vector3.XAxis).Unitized().Negate().IsAlmostEqualTo(frames[1].ZAxis));
+            Assert.Equal(polygon.Vertices[3], frames[2].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().IsAlmostEqualTo(frames[2].ZAxis));
+
+            frames = polygon.Frames(1, 3);
+            Assert.Equal(4, frames.Count());
+            Assert.Equal((1, 0), frames[0].Origin);
+            Assert.True(Vector3.XAxis.IsParallelTo(frames[0].ZAxis));
+            Assert.Equal(polygon.Vertices[1], frames[1].Origin);
+            Assert.True((Vector3.XAxis + Vector3.YAxis).Unitized().IsParallelTo(frames[1].ZAxis));
+            Assert.Equal(polygon.Vertices[2], frames[2].Origin);
+            Assert.True((Vector3.XAxis - Vector3.YAxis).Unitized().IsParallelTo(frames[2].ZAxis));
+            Assert.Equal((1, 2), frames[3].Origin);
+            Assert.True(Vector3.XAxis.IsParallelTo(frames[3].ZAxis));
         }
     }
 }

@@ -3,28 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
     /// A wall drawn using the elevation profile
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class WallByProfile : Wall
     {
         /// <summary>The overall thickness of the Wall</summary>
-        [Newtonsoft.Json.JsonProperty("Thickness", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Thickness", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Thickness { get; set; }
 
         /// <summary>
         /// The perimeter of the Wall's elevation.  It is assumed to be in the same Plane as the Centerline,
         /// and will often be projected to that Plane during internal operations.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("Perimeter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Perimeter", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polygon Perimeter { get; set; }
 
         /// <summary>The Centerline of the wall</summary>
-        [Newtonsoft.Json.JsonProperty("Centerline", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Centerline", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Line Centerline { get; set; }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Elements
         /// <param name="isElementDefinition">Is the wall an element definition?</param>
         /// <param name="id">The id of the wall.</param>
         /// <param name="name">The name of the wall.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         [Obsolete("Do not use.  This constructor is only preserved to maintain backwards compatibility upon serialization/deserialization.")]
         public WallByProfile(Polygon @perimeter,
                              Profile @profile,

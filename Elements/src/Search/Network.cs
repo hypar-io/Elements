@@ -1,10 +1,89 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Elements.Geometry;
 
 namespace Elements.Search
 {
+    /// <summary>
+    /// Provides graph edge info
+    /// </summary>
+    public class LocalEdge
+    {
+        /// <summary>
+        /// Creates a new instance of Edge class
+        /// </summary>
+        /// <param name="vertexIndex1">The index of the first vertex.</param>
+        /// <param name="vertexIndex2">The index of the second vertex.</param>
+        public LocalEdge(int vertexIndex1, int vertexIndex2)
+        {
+            visitDirections = VisitDirections.None;
+            Start = vertexIndex1;
+            End = vertexIndex2;
+        }
+
+        /// <summary>
+        /// The index of the first vertex.
+        /// </summary>
+        public int Start { get; }
+
+        /// <summary>
+        /// The index of the second vertex.
+        /// </summary>
+        public int End { get; }
+
+        /// <summary>
+        /// Mark a vertex as having been visited from the specified index.
+        /// </summary>
+        /// <param name="start">The index of the vertex from which the edge is visited.</param>
+        public void MarkAsVisited(int start)
+        {
+            if (start == Start)
+            {
+                visitDirections |= VisitDirections.Straight;
+            }
+            else if (start == End)
+            {
+                visitDirections |= VisitDirections.Opposite;
+            }
+        }
+
+        /// <summary>
+        /// Is this edge between the provided vertices?
+        /// </summary>
+        /// <param name="start">The index of the first vertex.</param>
+        /// <param name="end">The index of the second vertex.</param>
+        /// <returns>Returns true if the edge is between the provided vertex indices.</returns>
+        public bool IsBetweenVertices(int start, int end)
+        {
+            return (Start == start && End == end) ||
+                (Start == end && End == start);
+        }
+
+        /// <summary>
+        /// Is this edge visited from the provided vertex?
+        /// </summary>
+        /// <param name="vertexIndex">The index of the vertex from which the vertex is visited.</param>
+        /// <returns>Returns true if the edge was visited from the vertex.</returns>
+        public bool IsVisitedFromVertex(int vertexIndex)
+        {
+            if (Start == vertexIndex)
+            {
+                return visitDirections.HasFlag(VisitDirections.Straight);
+            }
+
+            if (End == vertexIndex)
+            {
+                return visitDirections.HasFlag(VisitDirections.Opposite);
+            }
+
+            return false;
+        }
+
+        internal VisitDirections visitDirections;
+    }
+
     /// <summary>
     /// A network composed of nodes and edges with associated data.
     /// A network does not store spatial information. A network can
@@ -13,7 +92,7 @@ namespace Elements.Search
     /// <typeparam name="T">The type of data associated with the graph's edges.</typeparam>
     public class Network<T>
     {
-        private AdjacencyList<T> _adjacencyList;
+        private readonly AdjacencyList<T> _adjacencyList;
 
         /// <summary>
         /// Add a vertex to the network.
@@ -94,14 +173,27 @@ namespace Elements.Search
         /// Get all edges at the specified index.
         /// </summary>
         /// <param name="i">The index.</param>
-        public List<(int, T)> EdgesAt(int i)
+        public IEnumerable<(int, T)> EdgesAt(int i)
         {
-            return this._adjacencyList[i].ToList();
+            return this._adjacencyList[i];
+        }
+
+        private class XEqualityWithFallbackToYEqualityComparer : IComparer<Vector3>
+        {
+            public int Compare(Vector3 x, Vector3 y)
+            {
+                if (x.X.ApproximatelyEquals(y.X))
+                {
+                    return x.Y.CompareTo(y.Y);
+                }
+
+                return x.X.CompareTo(y.X);
+            }
         }
 
         /// <summary>
         /// Construct a network from the intersections of a collection
-        /// of items which are segmentable.
+        /// of items which provide segments in a shared plane.
         /// </summary>
         /// <param name="items">A collection of segmentable items.</param>
         /// <param name="getSegment">A delegate which returns a segment from an
@@ -119,29 +211,38 @@ namespace Elements.Search
             // Use a line sweep algorithm to identify intersection events.
             // https://www.geeksforgeeks.org/given-a-set-of-line-segments-find-if-any-two-segments-intersect/
 
-            // Sort left-most points left to right according 
-            // to their X coordinate.
+            // Order the line sweep events from top to bottom then left to right.
+            // The practical result of this is that the sweep line is not exactly
+            // horizontal but moves as if at a slight incline. This solves for
+            // all perpendicular cases.
             var events = items.SelectMany((item, i) =>
             {
                 var segment = getSegment(item);
-                var leftMost = segment.Start.X < segment.End.X ? segment.Start : segment.End;
+                var leftMost = segment.Start;
+                if (segment.Start.X > segment.End.X)
+                {
+                    leftMost = segment.End;
+                }
+                else if (segment.Start.X.ApproximatelyEquals(segment.End.X))
+                {
+                    leftMost = segment.Start.Y > segment.End.Y ? segment.End : segment.Start;
+                }
                 return new (Vector3 location, int index, bool isLeftMost, T item)[]{
                     (segment.Start, i, segment.Start == leftMost, item),
                     (segment.End, i, segment.End == leftMost, item)
                 };
-            }).GroupBy(x => x.Item1).Select(g =>
+            }).GroupBy(x => x.location).Select(g =>
             {
                 // TODO: Is there a way to make this faster?
-                // We're grouping by coordinate which is SLOW and is 
-                // only neccessary in the case where we have coincident points.
+                // We're grouping by coordinate which is SLOW and is
+                // only necessary in the case where we have coincident points.
 
-                // Group by the event coordinate as lines may share start 
+                // Group by the event coordinate as lines may share start
                 // or end points.
-                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)).ToList());
-            }).ToList();
+                return new LineSweepEvent<T>(g.Key, g.Select(e => (e.index, e.isLeftMost, e.item)));
+            });
 
-            events.Sort();
-
+            events = events.OrderBy(e => -e.Point.Y).OrderBy(e => e.Point, new XEqualityWithFallbackToYEqualityComparer());
             var segments = items.Select(item => { return getSegment(item); }).ToArray();
 
             // Create a binary tree to contain all segments ordered by their
@@ -161,28 +262,34 @@ namespace Elements.Search
 
             foreach (var e in events)
             {
-                foreach (var sd in e.Segments)
+                foreach (var (segmentId, isLeftMostPoint, data) in e.Segments)
                 {
-                    var s = segments[sd.segmentId];
+                    var s = segments[segmentId];
 
-                    if (sd.isLeftMostPoint)
+                    if (isLeftMostPoint)
                     {
-                        segmentIntersections[sd.data].Add(e.Point);
+                        segmentIntersections[data].Add(e.Point);
 
-                        if (tree.Add(sd.data))
+                        if (tree.Add(data))
                         {
-                            tree.FindPredecessorSuccessors(sd.data, out List<BinaryTreeNode<T>> pres, out List<BinaryTreeNode<T>> sucs);
+                            tree.FindPredecessorSuccessors(data, out List<BinaryTreeNode<T>> pres, out List<BinaryTreeNode<T>> sucs);
 
                             foreach (var pre in pres)
                             {
                                 if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[sd.data].Add(result);
-                                    segmentIntersections[pre.Data].Add(result);
+                                    if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                    {
+                                        segmentIntersections[data].Add(result);
+                                    }
+                                    if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                    {
+                                        segmentIntersections[pre.Data].Add(result);
+                                    }
 
                                     // TODO: Come up with a better solution for
                                     // storing only the intersection points without
-                                    // needing Contains(). 
+                                    // needing Contains().
                                     if (!allIntersectionLocations.Contains(result))
                                     {
                                         allIntersectionLocations.Add(result);
@@ -194,8 +301,14 @@ namespace Elements.Search
                             {
                                 if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                                 {
-                                    segmentIntersections[sd.data].Add(result);
-                                    segmentIntersections[suc.Data].Add(result);
+                                    if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                    {
+                                        segmentIntersections[data].Add(result);
+                                    }
+                                    if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                    {
+                                        segmentIntersections[suc.Data].Add(result);
+                                    }
 
                                     if (!allIntersectionLocations.Contains(result))
                                     {
@@ -207,30 +320,89 @@ namespace Elements.Search
                     }
                     else
                     {
-                        tree.FindPredecessorSuccessor(sd.data, out BinaryTreeNode<T> pre, out BinaryTreeNode<T> suc);
+                        tree.FindPredecessorSuccessor(data, out BinaryTreeNode<T> pre, out BinaryTreeNode<T> suc);
+
                         if (pre != null && suc != null)
                         {
                             if (getSegment(pre.Data).Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
                             {
-                                segmentIntersections[pre.Data].Add(result);
-                                segmentIntersections[suc.Data].Add(result);
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
+                                    segmentIntersections[data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                {
+                                    segmentIntersections[suc.Data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                {
+                                    segmentIntersections[pre.Data].Add(result);
+                                }
                                 if (!allIntersectionLocations.Contains(result))
                                 {
                                     allIntersectionLocations.Add(result);
                                 }
                             }
                         }
-                        tree.Remove(sd.data);
-                        segmentIntersections[sd.data].Add(e.Point);
+
+                        if (pre != null)
+                        {
+                            if (s.Intersects(getSegment(pre.Data), out Vector3 result, includeEnds: true))
+                            {
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
+                                    segmentIntersections[data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(pre.Data), segmentIntersections[pre.Data]))
+                                {
+                                    segmentIntersections[pre.Data].Add(result);
+                                }
+                                if (!allIntersectionLocations.Contains(result))
+                                {
+                                    allIntersectionLocations.Add(result);
+                                }
+                            }
+                        }
+
+                        if (suc != null)
+                        {
+                            if (s.Intersects(getSegment(suc.Data), out Vector3 result, includeEnds: true))
+                            {
+                                if (PointIsUniqueIntersectionAlongLine(result, s, segmentIntersections[data]))
+                                {
+                                    segmentIntersections[data].Add(result);
+                                }
+                                if (PointIsUniqueIntersectionAlongLine(result, getSegment(suc.Data), segmentIntersections[suc.Data]))
+                                {
+                                    segmentIntersections[suc.Data].Add(result);
+                                }
+                                if (!allIntersectionLocations.Contains(result))
+                                {
+                                    allIntersectionLocations.Add(result);
+                                }
+                            }
+                        }
+
+                        //NOTE: Custom data comparer is used inside Find method. Sometimes it fails to compare elements and
+                        // as result the wrong element can be deleted. It shouldn't be the case after changes inside LeftMostPointComparer,
+                        // but I left this code here as a precaution
+                        if (tree.Find(data) != null && tree.Find(data).Data.Equals(data))
+                        {
+                            tree.Remove(data);
+                        }
+
+                        if (!segmentIntersections[data].Any(p => p.IsAlmostEqualTo(e.Point)))
+                            segmentIntersections[data].Add(e.Point);
                     }
                 }
+                Debug.WriteLine(tree.ToString());
             }
 
             // A collection containing all intersection points, which
             // will be used to find an existing point if one exists.
             allNodeLocations = new List<Vector3>();
 
-            // Loop over all segment intersection data, sorting the 
+            // Loop over all segment intersection data, sorting the
             // data by distance from the segment's start point, and
             // creating new vertices and edges as necessary.
             var adjacencyList = new AdjacencyList<T>();
@@ -245,7 +417,7 @@ namespace Elements.Search
                     var x = segmentIntersections[segmentData.Key][i];
 
                     // We only add points as intersections if they're not at
-                    // the start or end 
+                    // the start or end
                     prevIndex = AddVertexAtEvent(x,
                                                  allNodeLocations,
                                                  adjacencyList,
@@ -258,6 +430,131 @@ namespace Elements.Search
             return new Network<T>(adjacencyList);
         }
 
+        /// <summary>
+        /// Find all the closed regions in the network.
+        /// This method uses the Traverse method internally with a traversal
+        /// function that uses the maximal plane angle to determine the direction
+        /// of traversal.
+        /// </summary>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <returns>A collection of integers representing the indices of the nodes
+        /// forming closed regions in the network.</returns>
+        public List<List<int>> FindAllClosedRegions(List<Vector3> allNodeLocations)
+        {
+            var cycleCoverage = NetworkCycleCoverage.FromNetwork(this, allNodeLocations);
+            return cycleCoverage.CyclesIndices;
+        }
+
+        /// <summary>
+        /// Traverse a network following the smallest plane angle between the current
+        /// edge and the next candidate edge.
+        /// </summary>
+        /// <param name="traversalData">Data about the current step of the traversal.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of previously visited edges.</param>
+        /// <returns>The next index to traverse.</returns>
+        public static int TraverseSmallestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+                                               List<Vector3> allNodeLocations,
+                                               List<LocalEdge> visitedEdges)
+        {
+            var minAngle = double.MaxValue;
+            var minIndex = -1;
+            var baseEdge = traversalData.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[traversalData.currentIndex] - allNodeLocations[traversalData.previousIndex]).Unitized();
+            var edgeIndices = traversalData.edgeIndices.Distinct().ToList();
+            foreach (var e in edgeIndices)
+            {
+                if (e == traversalData.previousIndex)
+                {
+                    Debug.WriteLine($"Skipping index {e} as previous.");
+                    continue;
+                }
+
+                var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
+                if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
+                {
+                    Debug.WriteLine($"Skipping index {e} as visited.");
+                    continue;
+                }
+
+                var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
+                var angle = localEdge.PlaneAngleTo(baseEdge);
+
+                // The angle of traversal is not actually zero here,
+                // it's 180 (unless the path is invalid). We want to
+                // ensure that traversal happens along the straight
+                // edge if possible.
+                if (angle == 0)
+                {
+                    angle = 180.0;
+                }
+
+                Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
+
+                if (angle < minAngle)
+                {
+                    Debug.WriteLine("Found minimum.");
+                    minAngle = angle;
+                    minIndex = e;
+                }
+            }
+            return minIndex;
+        }
+
+        /// <summary>
+        /// Traverse a network following the smallest plane angle between the current
+        /// edge and the next candidate edge.
+        /// </summary>
+        /// <param name="traversalData">Data about the current step of the traversal.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of previously visited edges.</param>
+        /// <returns>The next index to traverse.</returns>
+        public static int TraverseLargestPlaneAngle((int currentIndex, int previousIndex, IEnumerable<int> edgeIndices) traversalData,
+                                               List<Vector3> allNodeLocations,
+                                               List<LocalEdge> visitedEdges)
+        {
+            var maxAngle = double.MinValue;
+            var maxIndex = -1;
+            var baseEdge = traversalData.previousIndex == -1 ? Vector3.XAxis : (allNodeLocations[traversalData.currentIndex] - allNodeLocations[traversalData.previousIndex]).Unitized();
+            var edgeIndices = traversalData.edgeIndices.Distinct().ToList();
+            foreach (var e in edgeIndices)
+            {
+                if (e == traversalData.previousIndex)
+                {
+                    Debug.WriteLine($"Skipping index {e} as previous.");
+                    continue;
+                }
+
+                var visitedEdge = visitedEdges.FirstOrDefault(edge => edge.IsBetweenVertices(e, traversalData.currentIndex));
+                if (visitedEdge?.IsVisitedFromVertex(traversalData.currentIndex) == true)
+                {
+                    Debug.WriteLine($"Skipping index {e} as visited.");
+                    continue;
+                }
+
+                var localEdge = (allNodeLocations[e] - allNodeLocations[traversalData.currentIndex]).Unitized();
+                var angle = localEdge.PlaneAngleTo(baseEdge);
+
+                // The angle of traversal is not actually zero here,
+                // it's 180 (unless the path is invalid). We want to
+                // ensure that traversal happens along the straight
+                // edge if possible.
+                if (angle == 0)
+                {
+                    angle = 180.0;
+                }
+
+                Debug.WriteLine($"{traversalData.currentIndex}:{e}:{angle}");
+
+                if (angle > maxAngle)
+                {
+                    Debug.WriteLine("Found maximum.");
+                    maxAngle = angle;
+                    maxIndex = e;
+                }
+            }
+            return maxIndex;
+        }
+
         private static int AddVertexAtEvent(Vector3 location,
                                             List<Vector3> allNodeLocations,
                                             AdjacencyList<T> adj,
@@ -265,7 +562,7 @@ namespace Elements.Search
                                             int previousIndex,
                                             bool twoWayEdges)
         {
-            // Find an existing intersection location, 
+            // Find an existing intersection location,
             // or create a new one.
             var newIndex = allNodeLocations.IndexOf(location);
             if (newIndex == -1)
@@ -352,7 +649,7 @@ namespace Elements.Search
                 var indexStr = $"{i}: {string.Join(",", EdgesAt(i).Select(e => e.Item1.ToString()))}";
                 textData.Add((nodeLocations[i], Vector3.ZAxis, Vector3.XAxis, indexStr, color));
 
-                // Break up text data objects to avoid overflowing maximum 
+                // Break up text data objects to avoid overflowing maximum
                 // texture and geometry buffer sizes.
                 if (textData.Count > 100 || i == count - 1)
                 {
@@ -365,29 +662,77 @@ namespace Elements.Search
         }
 
         /// <summary>
+        /// Draw bounded areas of the network as panels.
+        /// </summary>
+        /// <param name="allNodeLocations">All node locations in the network.</param>
+        public List<Panel> ToBoundedAreaPanels(List<Vector3> allNodeLocations)
+        {
+            var regions = FindAllClosedRegions(allNodeLocations);
+            var r = new Random();
+            var panels = new List<Panel>();
+
+            foreach (var region in regions)
+            {
+                var vertices = region.Select(i => allNodeLocations[i]).ToList();
+                Polygon poly = null;
+                try
+                {
+                    poly = new Polygon(vertices);
+                }
+                catch
+                {
+                    // This will happen for traversals of
+                    // straight edges.
+                    continue;
+                }
+                panels.Add(new Panel(poly, r.NextMaterial()));
+            }
+
+            return panels;
+        }
+
+        /// <summary>
         /// Traverse the network from the specified node index.
-        /// Traversal concludes when there are no more 
+        /// Traversal concludes when there are no more
         /// available nodes to traverse.
         /// </summary>
         /// <param name="start">The starting point of the traversal.</param>
         /// <param name="next">The traversal step delegate.</param>
+        /// <param name="allNodeLocations">A collection of all node locations in the network.</param>
+        /// <param name="visitedEdges">A collection of all visited edges.</param>
         /// <param name="visited">A collection of visited node indices.</param>
+        /// <param name="prevIndex">The previous index found during the traversal</param>
         /// <returns>A list of indices of the traversed nodes.</returns>
         public List<int> Traverse(int start,
-                                  System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next,
-                                  out List<int> visited)
+                                  Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
+                                  List<Vector3> allNodeLocations,
+                                  List<LocalEdge> visitedEdges,
+                                  out List<int> visited,
+                                  int prevIndex = -1)
         {
             var path = new List<int>();
             visited = new List<int>();
             var currentIndex = start;
-            var prevIndex = -1;
+
+            // Track the trailing edge from a specific index.
+            // This will be used to compare traversal to avoid passing
+            // over where the path has previously traveled.
+            var lastIndexMap = new Dictionary<int, (int start, int end)>();
+
+            if (prevIndex != -1)
+            {
+                // If a previous index has been supplied, we're starting from
+                // an edge. Add the starting point of that edge to the path.
+                path.Add(prevIndex);
+                visited.Add(prevIndex);
+            }
 
             while (currentIndex != -1)
             {
                 path.Add(currentIndex);
                 visited.Add(currentIndex);
                 var oldIndex = currentIndex;
-                currentIndex = Traverse(prevIndex, currentIndex, next);
+                currentIndex = Traverse(prevIndex, currentIndex, next, allNodeLocations, visitedEdges);
                 prevIndex = oldIndex;
 
                 // After at least one traversal step, if the current index
@@ -397,13 +742,30 @@ namespace Elements.Search
                     break;
                 }
 
-                if (path.Contains(currentIndex))
+                if (lastIndexMap.ContainsKey(currentIndex))
                 {
-                    // if we have already passed two elements in the same order, we've achieved a loop
-                    if (path.IndexOf(path[path.Count - 1]) == path.IndexOf(currentIndex) - 1)
+                    var firstSegmentStart = lastIndexMap[currentIndex].start;
+                    var firstSegmentEnd = lastIndexMap[currentIndex].end;
+
+                    var secondSegmentStart = oldIndex;
+                    var secondSegmentEnd = currentIndex;
+
+                    // Check if the segments are the same.
+                    if (firstSegmentStart == secondSegmentStart && firstSegmentEnd == secondSegmentEnd)
                     {
+                        // Snip the "tail" by taking only everything up to the last segment.
+                        path = path.Take(path.LastIndexOf(firstSegmentEnd)).ToList();
                         break;
                     }
+                }
+
+                if (lastIndexMap.ContainsKey(currentIndex))
+                {
+                    lastIndexMap[currentIndex] = (oldIndex, currentIndex);
+                }
+                else
+                {
+                    lastIndexMap.Add(currentIndex, (oldIndex, currentIndex));
                 }
             }
 
@@ -418,7 +780,9 @@ namespace Elements.Search
 
         private int Traverse(int prevIndex,
                              int currentIndex,
-                             System.Func<(int currentNodeIndex, int previousNodeIndex, List<int> connectedNodes), int> next)
+                             Func<(int, int, IEnumerable<int>), List<Vector3>, List<LocalEdge>, int> next,
+                             List<Vector3> allNodeLocations,
+                             List<LocalEdge> visitedEdges)
         {
             var edges = _adjacencyList[currentIndex];
 
@@ -437,13 +801,18 @@ namespace Elements.Search
 
                 if (edges.First.Value.Item1 != currentIndex)
                 {
-                    // If there's only one connected vertex and 
+                    // If there's only one connected vertex and
                     // it's not the current vertex, return it.
                     return edges.First.Value.Item1;
                 }
             }
 
-            return next((currentIndex, prevIndex, edges.Select(e => e.Item1).ToList()));
+            return next((currentIndex, prevIndex, edges.Select(e => e.Item1)), allNodeLocations, visitedEdges);
+        }
+
+        private static bool PointIsUniqueIntersectionAlongLine(Vector3 point, Line line, List<Vector3> intersections)
+        {
+            return !intersections.Any(p => p.IsAlmostEqualTo(point)) && line.PointOnLine(point);
         }
     }
 }

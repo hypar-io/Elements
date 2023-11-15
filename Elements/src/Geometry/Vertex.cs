@@ -9,26 +9,32 @@ namespace Elements.Geometry
     public class Vertex
     {
         /// <summary>The vertex's position.</summary>
-        [Newtonsoft.Json.JsonProperty("Position", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Position", Required = Required.AllowNull)]
         public Vector3 Position { get; set; }
 
         /// <summary>The vertex's normal.</summary>
-        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Normal", Required = Required.AllowNull)]
         public Vector3 Normal { get; set; }
 
         /// <summary>The vertex's color.</summary>
-        [Newtonsoft.Json.JsonProperty("Color", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Color", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
 
         /// <summary>The index of the vertex within a mesh.</summary>
-        [Newtonsoft.Json.JsonProperty("Index", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Index", Required = Required.Always)]
         public int Index { get; set; }
 
         /// <summary>The vertex's texture coordinate.</summary>
-        [Newtonsoft.Json.JsonProperty("UV", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("UV", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public UV UV { get; set; } = new UV();
+
+        /// <summary>
+        /// A tag used to map a mesh vertex to a vertex of a CSG or a solid.
+        /// </summary>
+        [JsonIgnore]
+        public int Tag { get; set; }
 
         /// <summary>
         /// Construct a vertex.
@@ -38,7 +44,7 @@ namespace Elements.Geometry
         /// <param name="color">The color of the vertex.</param>
         /// <param name="index">The index of the vertex.</param>
         /// <param name="uv">The uv coordinate of the vertex.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Vertex(Vector3 @position, Vector3 @normal, Color @color, int @index, UV @uv)
         {
             this.Position = @position;
@@ -53,7 +59,7 @@ namespace Elements.Geometry
         // during serialization.
 
         /// <summary>The triangles associated with this vertex.</summary>
-        [Newtonsoft.Json.JsonProperty("Triangles", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Triangles", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [JsonIgnore]
         public IList<Triangle> Triangles { get; set; } = new List<Triangle>();

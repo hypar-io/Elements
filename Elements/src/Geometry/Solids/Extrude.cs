@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Elements.Validators;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry.Solids
 {
@@ -11,9 +13,10 @@ namespace Elements.Geometry.Solids
         private Profile _profile;
         private double _height;
         private Vector3 _direction;
+        private bool _reverseWinding;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [Newtonsoft.Json.JsonProperty("Profile", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Profile", Required = Required.AllowNull)]
         public Profile Profile
         {
             get { return _profile; }
@@ -28,7 +31,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The height of the extrusion.</summary>
-        [Newtonsoft.Json.JsonProperty("Height", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Height", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Height
         {
@@ -44,7 +47,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [Newtonsoft.Json.JsonProperty("Direction", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Direction", Required = Required.AllowNull)]
         public Vector3 Direction
         {
             get { return _direction; }
@@ -58,15 +61,35 @@ namespace Elements.Geometry.Solids
             }
         }
 
+        /// <summary>Is the extrusion's profile reversed relative to its extrusion vector, resulting in inward-facing face normals?</summary>
+        [JsonProperty("Reverse Winding")]
+        public bool ReverseWinding
+        {
+            get { return _reverseWinding; }
+            set
+            {
+                if (_reverseWinding != value)
+                {
+                    _reverseWinding = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
         /// <summary>
         /// Construct an extrusion.
         /// </summary>
-        /// <param name="profile"></param>
-        /// <param name="height"></param>
-        /// <param name="direction"></param>
-        /// <param name="isVoid"></param>
-        [Newtonsoft.Json.JsonConstructor]
-        public Extrude(Profile @profile, double @height, Vector3 @direction, bool @isVoid)
+        /// <param name="profile">The profile to extrude.</param>
+        /// <param name="height">The height/length of the extrusion.</param>
+        /// <param name="direction">The direction of the extrusion.</param>
+        /// <param name="isVoid">If true, the extrusion is a "void" in a group
+        /// of solid operations, subtracted from other solids.</param>
+        /// <param name="reverseWinding">True if the extrusion should be flipped inside
+        /// out, with face normals facing in instead of out. Use with caution if
+        /// using with other solid operations in a representation — boolean
+        /// results may be unexpected.</param>
+        [JsonConstructor]
+        public Extrude(Profile profile, double height, Vector3 direction, bool isVoid = false, bool reverseWinding = false)
             : base(isVoid)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -77,17 +100,49 @@ namespace Elements.Geometry.Solids
                 }
             }
 
-            this._profile = @profile;
-            this._height = @height;
-            this._direction = @direction;
+            this._profile = profile;
+            this._height = height;
+            this._direction = direction;
+            this._reverseWinding = reverseWinding;
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();
         }
 
+        internal override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var result = new List<SnappingPoints>();
+            var localTransform = new Transform(Direction * Height);
+            var bottomVertices = new List<Vector3>();
+            // add perimeter bottom points
+            result.Add(new SnappingPoints(Profile.Perimeter.Vertices, SnappingEdgeMode.LineLoop));
+            bottomVertices.AddRange(Profile.Perimeter.Vertices);
+            // add perimeter top points
+            result.Add(new SnappingPoints(Profile.Perimeter.TransformedPolygon(localTransform).Vertices, SnappingEdgeMode.LineLoop));
+
+            // add each void
+            foreach (var item in Profile.Voids)
+            {
+                result.Add(new SnappingPoints(item.Vertices, SnappingEdgeMode.LineLoop));
+                bottomVertices.AddRange(item.Vertices);
+                result.Add(new SnappingPoints(item.TransformedPolygon(localTransform).Vertices, SnappingEdgeMode.LineLoop));
+            }
+
+            // connect top and bottom points
+            var edges = new List<Vector3>();
+            foreach (var item in bottomVertices)
+            {
+                edges.Add(item);
+                edges.Add(localTransform.OfPoint(item));
+            }
+            result.Add(new SnappingPoints(edges, SnappingEdgeMode.Lines));
+
+            return result;
+        }
+
         private void UpdateGeometry()
         {
-            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction);
+            this._solid = Kernel.Instance.CreateExtrude(this._profile, this._height, this._direction, this._reverseWinding);
         }
     }
 }

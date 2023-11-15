@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <AssemblyName>Hypar.Elements.Serialization.SVG</AssemblyName>
+        <PackageTitle>Hypar Elements Serialization SVG</PackageTitle>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <Title>Hypar Elements Serialization SVG</Title>
+        <PackageId>Hypar.Elements.Serialization.SVG</PackageId>
+        <PackageDescription>SVG serialization for Elements.</PackageDescription>
+        <Summary>The Elements library provides object types for generating the built environment.</Summary>
+        <PackageProjectUrl>https://github.com/hypar-io/elements</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/hypar-io/elements</RepositoryUrl>
+        <Version>$(Version)</Version>
+        <Nullable>enable</Nullable>
+        <NoWarn>NU5104</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Svg.Skia" Version="0.6.0-preview2" />
+        <PackageReference Include="SkiaSharp" Version="2.88.3" />
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Elements\src\Elements.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="libSkiaSharp.so" Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+</Project>

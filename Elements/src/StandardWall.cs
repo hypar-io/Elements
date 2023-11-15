@@ -92,7 +92,7 @@ namespace Elements
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, openingTransform);
+            var o = new Opening(Polygon.Rectangle(width, height), Vector3.ZAxis, depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }
@@ -109,7 +109,7 @@ namespace Elements
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(perimeter, depthFront, depthBack, openingTransform);
+            var o = new Opening(perimeter, Vector3.ZAxis, depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }
@@ -117,10 +117,7 @@ namespace Elements
         private Transform GetOpeningTransform(double x, double y)
         {
             var xAxis = this.CenterLine.Direction();
-            var wallTransform = new Transform(this.CenterLine.Start, xAxis, Vector3.ZAxis);
-
-            var m = wallTransform.OfPoint(new Vector3(x, 0, y));
-            var openingTransform = new Transform(m, xAxis, xAxis.Cross(Vector3.ZAxis));
+            var openingTransform = new Transform(this.CenterLine.Start + xAxis * x + Vector3.ZAxis * y, xAxis, xAxis.Cross(Vector3.ZAxis));
             return openingTransform;
         }
 

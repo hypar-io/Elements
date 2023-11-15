@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Elements.Serialization.JSON
 {
-    public class JsonInheritanceConverter : Newtonsoft.Json.JsonConverter
+    public class JsonInheritanceConverter : JsonConverter
     {
         internal static readonly string DefaultDiscriminatorName = "discriminator";
 
@@ -62,11 +62,23 @@ namespace Elements.Serialization.JSON
             _discriminator = discriminator;
         }
 
+        private static readonly List<string> TypePrefixesExcludedFromTypeCache = new List<string> { "System", "SixLabors", "Newtonsoft" };
+
+        /// <summary>
+        /// When we build up the element type cache, we iterate over all types in the app domain.
+        /// Excluding other types can speed up the process and reduce deserialization issues.
+        /// </summary>
+        /// <param name="prefixes"></param>
+        public static void ExcludeTypePrefixesFromTypeCache(params string[] prefixes)
+        {
+            TypePrefixesExcludedFromTypeCache.AddRange(prefixes);
+        }
+
         /// <summary>
         /// The type cache needs to contains all types that will have a discriminator.
         /// This includes base types, like elements, and all derived types like Wall.
         /// We use reflection to find all public types available in the app domain
-        /// that have a Newtonsoft.Json.JsonConverterAttribute whose converter type is the
+        /// that have a JsonConverterAttribute whose converter type is the
         /// Elements.Serialization.JSON.JsonInheritanceConverter.
         /// </summary>
         /// <returns>A dictionary containing all found types keyed by their full name.</returns>
@@ -76,11 +88,10 @@ namespace Elements.Serialization.JSON
 
             failedAssemblyErrors = new List<string>();
 
-            var skipAssembliesPrefices = new[] { "System", "SixLabors", "Newtonsoft" };
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(a =>
             {
                 var name = a.GetName().Name;
-                return !skipAssembliesPrefices.Any(p => name.StartsWith(p));
+                return !TypePrefixesExcludedFromTypeCache.Any(p => name.StartsWith(p));
             }))
             {
                 var types = Array.Empty<Type>();
@@ -146,7 +157,7 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
-                if (value is Element element && writer.Path.Split('.').Length == 1 && !ElementwiseSerialization)
+                if (value is Element element && !WritingTopLevelElement(writer.Path) && !ElementwiseSerialization)
                 {
                     var ident = element;
                     writer.WriteValue(ident.Id);
@@ -169,6 +180,16 @@ namespace Elements.Serialization.JSON
             {
                 _isWriting = false;
             }
+        }
+
+        private static bool WritingTopLevelElement(string path)
+        {
+            var parts = path.Split('.');
+            if (parts.Length == 2 && parts[0] == "Elements" && Guid.TryParse(parts[1], out var _))
+            {
+                return true;
+            }
+            return false;
         }
 
         private static string GetDiscriminatorName(object value)
@@ -226,7 +247,7 @@ namespace Elements.Serialization.JSON
         {
             // The serialized value is an identifier, so the expectation is
             // that the element with that id has already been deserialized.
-            if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length == 1 && reader.Value != null)
+            if (typeof(Element).IsAssignableFrom(objectType) && !WritingTopLevelElement(reader.Path) && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
                 if (!Elements.ContainsKey(id))
@@ -270,7 +291,7 @@ namespace Elements.Serialization.JSON
 
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
-                if (typeof(Element).IsAssignableFrom(objectType) && reader.Path.Split('.').Length > 1)
+                if (typeof(Element).IsAssignableFrom(objectType) && WritingTopLevelElement(reader.Path))
                 {
                     var ident = (Element)obj;
                     if (!Elements.ContainsKey(ident.Id))

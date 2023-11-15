@@ -42,7 +42,7 @@ namespace Elements.Spatial
         {
             var phi = Units.DegreesToRadians(relativeToOrigin.Latitude);
             var locationX = location.X / Math.Cos(phi);
-            var locationY = location.Y / Math.Cos(phi);
+            var locationY = location.Y; // it's not entirely clear why the Y is not scaled by cos(phi) here — perhaps YToLat already takes this scaling into account?
             var lon = XToLon(locationX) + relativeToOrigin.Longitude;
             var lat = YToLat(locationY) + relativeToOrigin.Latitude;
             return new Position(lat, lon);

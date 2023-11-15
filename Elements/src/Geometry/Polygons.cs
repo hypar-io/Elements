@@ -13,15 +13,36 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="width">The width of the rectangle.</param>
         /// <param name="height">The height of the rectangle.</param>
+        /// <param name="plane">The plane to draw the rectangle on.</param>
         /// <returns>A rectangular Polygon centered around origin.</returns>
-        public static Polygon Rectangle(double width, double height)
+        public static Polygon Rectangle(double width, double height, Plane plane = null)
         {
-            var a = new Vector3(-width / 2, -height / 2);
-            var b = new Vector3(width / 2, -height / 2);
-            var c = new Vector3(width / 2, height / 2);
-            var d = new Vector3(-width / 2, height / 2);
+            Vector3 a, b, c, d;
+            // Confirm the provided plane is valid and is not either Z-Normal or would produce a valid rect from U or V
+            // any abs less than 1-Epsilon would be a valid normal
+            if (plane != null && Math.Abs(plane.Normal.Dot(Vector3.ZAxis)) < (1 - Vector3.EPSILON))
+            {
+                // calculate Vector3 for each component based on plane normal
+                Vector3 u = plane.Normal.Cross(Vector3.ZAxis).Unitized() * width / 2;
+                Vector3 v = plane.Normal.Cross(u).Unitized() * height / 2;
 
-            return new Polygon(new[] { a, b, c, d });
+                // Vector addition to determine 4 vertices starting from origin and adding
+                // rect U,V components
+                a = plane.Origin - u - v;
+                b = plane.Origin + u - v;
+                c = plane.Origin + u + v;
+                d = plane.Origin - u + v;
+            }
+            else
+            {
+                // default: draw rectangle on XY plane
+                a = new Vector3(-width / 2, -height / 2);
+                b = new Vector3(width / 2, -height / 2);
+                c = new Vector3(width / 2, height / 2);
+                d = new Vector3(-width / 2, height / 2);
+
+            }
+            return new Polygon(true, a, b, c, d);
         }
 
         /// <summary>
@@ -29,15 +50,34 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="min">The minimum coordinate.</param>
         /// <param name="max">The maximum coordinate.</param>
-        /// <returns>A rectangular Polygon with its lower left corner at min and its upper right corner at max.</returns>
-        public static Polygon Rectangle(Vector3 min, Vector3 max)
+        /// <param name="transform">The transform reference to construct the rectangle from.</param>
+        /// <returns>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a transform.</returns>
+        public static Polygon Rectangle(Vector3 min, Vector3 max, Transform transform = null)
         {
-            var a = min;
-            var b = new Vector3(max.X, min.Y);
-            var c = max;
-            var d = new Vector3(min.X, max.Y);
+            transform = transform != null ? transform : new Transform();
+            var inverse = transform.Inverted();
+            var a = inverse.OfPoint(min);
+            a.Z = 0;
+            var c = inverse.OfPoint(max);
+            c.Z = 0;
+            var b = (c.X, a.Y);
+            var d = (a.X, c.Y);
+            return new Polygon(new[] { a, b, c, d }).TransformedPolygon(transform);
+        }
 
-            return new Polygon(new[] { a, b, c, d });
+        /// <summary>
+        /// Create a rectangle.
+        /// </summary>
+        /// <param name="min">The minimum coordinate.</param>
+        /// <param name="max">The maximum coordinate.</param>
+        /// <param name="plane">The plane to project the rectangle on.</param>
+        /// <param name="alignment">The alignment reference to construct the rectangle from.</param>
+        /// <returns>A rectangular Polygon with its lower left corner projected from min and its upper right corner projected from max onto a plane with a sided alignment.</returns>
+        public static Polygon Rectangle(Vector3 min, Vector3 max, Plane plane, Vector3? alignment = null)
+        {
+            alignment = alignment != null ? alignment : (plane.Normal.IsParallelTo(Vector3.ZAxis) ? Vector3.XAxis : Vector3.ZAxis);
+            var transform = new Transform(plane.Origin, alignment.Value, plane.Normal);
+            return Rectangle(min, max, transform);
         }
 
         /// <summary>
@@ -55,7 +95,7 @@ namespace Elements.Geometry
                 var t = i * (Math.PI * 2 / divisions);
                 verts[i] = new Vector3(radius * Math.Cos(t), radius * Math.Sin(t));
             }
-            return new Polygon(verts);
+            return new Polygon(verts, true);
         }
 
         /// <summary>
@@ -84,7 +124,7 @@ namespace Elements.Geometry
                 var t = i * (Math.PI * 2 / sides);
                 verts[i] = new Vector3(radius * Math.Cos(t), radius * Math.Sin(t));
             }
-            return new Polygon(verts);
+            return new Polygon(verts, true);
         }
 
         /// <summary>
@@ -93,7 +133,8 @@ namespace Elements.Geometry
         /// <param name="width">The width of the L.</param>
         /// <param name="length">The length of the L.</param>
         /// <param name="thickness">The thickness of the L.</param>
-        /// <returns></returns>
+        /// <returns>An L shaped polygon with the origin at the outer corner
+        /// of the bend in the L.</returns>
         public static Polygon L(double width, double length, double thickness)
         {
             if (thickness > length)
@@ -111,7 +152,34 @@ namespace Elements.Geometry
             var d = new Vector3(thickness, thickness, 0);
             var e = new Vector3(thickness, length, 0);
             var f = new Vector3(0, length, 0);
-            return new Polygon(new[] { a, b, c, d, e, f });
+            return new Polygon(true, a, b, c, d, e, f);
+        }
+
+        /// <summary>
+        /// Create a U.
+        /// </summary>
+        /// <param name="width">The width of the U.</param>
+        /// <param name="length">The length of the U.</param>
+        /// <param name="thickness">The thickness of the U.</param>
+        /// <returns>A U shaped polygon with the origin at the center of
+        /// the inside bend of the U.</returns>
+        public static Polygon U(double width, double length, double thickness)
+        {
+            if (thickness >= width / 2)
+            {
+                throw new ArgumentOutOfRangeException("The thickness cannot be greater that the width.");
+            }
+
+            var a = new Vector3(0, 0, 0);
+            var b = new Vector3(width / 2 - thickness, 0);
+            var c = new Vector3(width / 2 - thickness, length - thickness);
+            var d = new Vector3(width / 2, length - thickness);
+            var e = new Vector3(width / 2, -thickness);
+            var f = new Vector3(-width / 2, -thickness);
+            var g = new Vector3(-width / 2, length - thickness);
+            var h = new Vector3(-width / 2 + thickness, length - thickness);
+            var i = new Vector3(-width / 2 + thickness, 0);
+            return new Polygon(true, a, b, c, d, e, f, g, h, i);
         }
 
         /// <summary>
@@ -120,7 +188,8 @@ namespace Elements.Geometry
         /// <param name="outerRadius">The outer radius.</param>
         /// <param name="innerRadius">The inner radius.</param>
         /// <param name="points">The number of points.</param>
-        /// <returns></returns>
+        /// <returns>A star shaped polygon with the specified number of points
+        /// along the outer radius and their compliment along the inner radius.</returns>
         public static Polygon Star(double outerRadius, double innerRadius, int points)
         {
             var c1 = new Circle(Vector3.Origin, innerRadius);
@@ -129,7 +198,7 @@ namespace Elements.Geometry
             var count = points * 2;
             for (var i = 0; i < count; i++)
             {
-                var t = i * 1.0 / count;
+                var t = i * (Math.PI * 2) / count;
                 if (i % 2 == 0)
                 {
                     verts.Add(c2.PointAt(t));
@@ -139,7 +208,7 @@ namespace Elements.Geometry
                     verts.Add(c1.PointAt(t));
                 }
             }
-            return new Polygon(verts);
+            return new Polygon(verts, true);
         }
     }
 }

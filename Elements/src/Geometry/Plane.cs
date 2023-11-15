@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Elements.Validators;
+using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -10,11 +11,11 @@ namespace Elements.Geometry
     public partial class Plane : IEquatable<Plane>
     {
         /// <summary>The origin of the plane.</summary>
-        [Newtonsoft.Json.JsonProperty("Origin", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Origin", Required = Required.AllowNull)]
         public Vector3 Origin { get; set; }
 
         /// <summary>The normal of the plane.</summary>
-        [Newtonsoft.Json.JsonProperty("Normal", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Normal", Required = Required.AllowNull)]
         public Vector3 Normal { get; set; }
 
         /// <summary>
@@ -22,7 +23,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="origin">The origin of the plane.</param>
         /// <param name="normal">The normal of the plane.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Plane(Vector3 @origin, Vector3 @normal)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -159,5 +160,62 @@ namespace Elements.Geometry
             result = num / denom;
             return true;
         }
+
+        /// <summary>
+        /// Does this plane intersect the provided edge?
+        /// </summary>
+        /// <param name="edge">The edge to intersect.</param>
+        /// <param name="result">The intersection.</param>
+        /// <returns>True if an intersection occurs, otherwise false.</returns>
+        public bool Intersects((Vector3 from, Vector3 to) edge, out Vector3 result)
+        {
+            if (Line.Intersects(this, edge.from, edge.to, out result))
+            {
+                return true;
+            }
+            result = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Does this plane intersect the other plane?
+        /// </summary>
+        /// <param name="other">The other plane.</param>
+        /// <param name="result">The line of intersection.</param>
+        /// <returns>True if an intersection exists, otherwise false.</returns>
+        public bool Intersects(Plane other, out InfiniteLine result)
+        {
+            var cross = this.Normal.Cross(other.Normal);
+            if (cross.IsZero())
+            {
+                result = default;
+                return false;
+            }
+
+            var dir = other.Normal.Cross(cross);
+            var distance = this.Normal.Dot(dir);
+            Vector3 planeDelta = Origin - other.Origin;
+            var t = Normal.Dot(planeDelta) / distance;
+            var p = other.Origin + t * dir;
+
+            result = new InfiniteLine(p, cross);
+            return true;
+        }
+
+        /// <summary>
+        /// The world XY Plane.
+        /// </summary>
+        public static Plane XY => new Plane(Vector3.Origin, Vector3.ZAxis);
+
+        /// <summary>
+        /// The world YZ Plane.
+        /// </summary>
+        public static Plane YZ => new Plane(Vector3.Origin, Vector3.XAxis);
+
+        /// <summary>
+        /// The world XZ Plane.
+        /// </summary>
+        public static Plane XZ => new Plane(Vector3.Origin, Vector3.YAxis);
+
     }
 }

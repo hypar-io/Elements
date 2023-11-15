@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Bezier
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,7 +86,8 @@
   
   <h1 id="Elements_Geometry_Bezier" data-uid="Elements.Geometry.Bezier" class="text-break">Class Bezier
   </h1>
-  <div class="markdown level0 summary"><p>A Bezier curve.</p>
+  <div class="markdown level0 summary"><p>A Bezier curve.
+Parameterization of the curve is 0 -&gt; 1.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div id="model"></div>
@@ -203,7 +204,7 @@ var c = new Vector3(5, 5, 2);
 var d = new Vector3(0, 5, 3);
 var e = new Vector3(0, 0, 4);
 var f = new Vector3(5, 0, 5);
-var ctrlPts = new List&lt;Vector3&gt;{a,b,c,d,e,f};
+var ctrlPts = new List&lt;Vector3&gt; { a, b, c, d, e, f };
 
 var bezier = new Bezier(ctrlPts);
 </code></pre>
@@ -211,20 +212,43 @@ var bezier = new Bezier(ctrlPts);
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></div>
-    <div class="level2"><span class="xref">Bezier</span></div>
+    <div class="level2"><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></div>
+    <div class="level3"><span class="xref">Bezier</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ICurve.html">ICurve</a></div>
     <div><a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable</a>&lt;<a class="xref" href="Elements.Geometry.Curve.html">Curve</a>&gt;</div>
+    <div><a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_MinimumChordLength">Curve.MinimumChordLength</a>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_DefaultMinimumChordLength">BoundedCurve.DefaultMinimumChordLength</a>
     </div>
     <div>
-      <a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ToPolyline_System_Int32_">Curve.ToPolyline(Int32)</a>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Start">BoundedCurve.Start</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_End">BoundedCurve.End</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Mid">BoundedCurve.Mid()</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_IsClosedForRendering">BoundedCurve.IsClosedForRendering</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Frames_System_Double_System_Double_System_Double_">BoundedCurve.Frames(Double, Double, Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ToPolyline_System_Int32_">BoundedCurve.ToPolyline(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_PointAtNormalized_System_Double_">BoundedCurve.PointAtNormalized(Double)</a>
+    </div>
+    <div>
+      <a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_TransformAtNormalized_System_Double_">BoundedCurve.TransformAtNormalized(Double)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -252,7 +276,7 @@ var bezier = new Bezier(ctrlPts);
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_Bezier_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Bezier : Curve, ICurve, ITransformable&lt;Curve&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Bezier : BoundedCurve, ICurve, ITransformable&lt;Curve&gt;, IBoundedCurve</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -316,6 +340,33 @@ var bezier = new Bezier(ctrlPts);
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Bezier_Domain_" data-uid="Elements.Geometry.Bezier.Domain*"></a>
+  <h4 id="Elements_Geometry_Bezier_Domain" data-uid="Elements.Geometry.Bezier.Domain">Domain</h4>
+  <div class="markdown level1 summary"><p>The domain of the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public override Domain1d Domain { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Domain1d.html">Domain1d</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Domain">BoundedCurve.Domain</a></div>
   <a id="Elements_Geometry_Bezier_FrameType_" data-uid="Elements.Geometry.Bezier.FrameType*"></a>
   <h4 id="Elements_Geometry_Bezier_FrameType" data-uid="Elements.Geometry.Bezier.FrameType">FrameType</h4>
   <div class="markdown level1 summary"><p>The frame type to use when calculating transforms along the curve.</p>
@@ -384,6 +435,55 @@ var bezier = new Bezier(ctrlPts);
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Bezier_ArcLength_" data-uid="Elements.Geometry.Bezier.ArcLength*"></a>
+  <h4 id="Elements_Geometry_Bezier_ArcLength_System_Double_System_Double_" data-uid="Elements.Geometry.Bezier.ArcLength(System.Double,System.Double)">ArcLength(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Calculate the length of the bezier between start and end parameters.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ArcLength(double start, double end)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">end</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><p>The length of the bezier between start and end.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_ArcLength_System_Double_System_Double_">BoundedCurve.ArcLength(Double, Double)</a></div>
   <a id="Elements_Geometry_Bezier_BinormalAt_" data-uid="Elements.Geometry.Bezier.BinormalAt*"></a>
   <h4 id="Elements_Geometry_Bezier_BinormalAt_System_Double_" data-uid="Elements.Geometry.Bezier.BinormalAt(System.Double)">BinormalAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get the binormal to the curve at parameter u.</p>
@@ -451,15 +551,15 @@ var bezier = new Bezier(ctrlPts);
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Bounds">Curve.Bounds()</a></div>
-  <a id="Elements_Geometry_Bezier_Frames_" data-uid="Elements.Geometry.Bezier.Frames*"></a>
-  <h4 id="Elements_Geometry_Bezier_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Bezier.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Get a collection of transforms along the curve.</p>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Bounds">BoundedCurve.Bounds()</a></div>
+  <a id="Elements_Geometry_Bezier_GetSubdivisionParameters_" data-uid="Elements.Geometry.Bezier.GetSubdivisionParameters*"></a>
+  <h4 id="Elements_Geometry_Bezier_GetSubdivisionParameters_System_Double_System_Double_" data-uid="Elements.Geometry.Bezier.GetSubdivisionParameters(System.Double,System.Double)">GetSubdivisionParameters(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get parameters to be used to find points along the curve for visualization.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override Transform[] Frames(double startSetback = 0, double endSetback = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">public override double[] GetSubdivisionParameters(double startSetbackDistance = 0, double endSetbackDistance = 0)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -473,13 +573,15 @@ var bezier = new Bezier(ctrlPts);
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">startSetback</span></td>
-        <td></td>
+        <td><span class="parametername">startSetbackDistance</span></td>
+        <td><p>An optional setback from the start of the curve.</p>
+</td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">endSetback</span></td>
-        <td></td>
+        <td><span class="parametername">endSetbackDistance</span></td>
+        <td><p>An optional setback from the end of the curve.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -493,13 +595,14 @@ var bezier = new Bezier(ctrlPts);
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
-        <td></td>
+        <td><span class="xref">System.Double</span>[]</td>
+        <td><p>A collection of parameter values.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Frames_System_Double_System_Double_">Curve.Frames(Double, Double)</a></div>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_GetSubdivisionParameters_System_Double_System_Double_">BoundedCurve.GetSubdivisionParameters(Double, Double)</a></div>
   <a id="Elements_Geometry_Bezier_Length_" data-uid="Elements.Geometry.Bezier.Length*"></a>
   <h4 id="Elements_Geometry_Bezier_Length" data-uid="Elements.Geometry.Bezier.Length">Length()</h4>
   <div class="markdown level1 summary"><p>Get a piecewise linear approximation of the length of the curve.
@@ -526,7 +629,7 @@ var bezier = new Bezier(ctrlPts);
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_Length">Curve.Length()</a></div>
+  <div><a class="xref" href="Elements.Geometry.BoundedCurve.html#Elements_Geometry_BoundedCurve_Length">BoundedCurve.Length()</a></div>
   <a id="Elements_Geometry_Bezier_NormalAt_" data-uid="Elements.Geometry.Bezier.NormalAt*"></a>
   <h4 id="Elements_Geometry_Bezier_NormalAt_System_Double_" data-uid="Elements.Geometry.Bezier.NormalAt(System.Double)">NormalAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get the normal of the curve at parameter u.</p>
@@ -569,6 +672,56 @@ var bezier = new Bezier(ctrlPts);
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_Bezier_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.Bezier.ParameterAtDistanceFromParameter*"></a>
+  <h4 id="Elements_Geometry_Bezier_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.Bezier.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the parameter at a distance from the start parameter along the curve.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override double ParameterAtDistanceFromParameter(double distance, double start)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance from the start parameter.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">start</span></td>
+        <td><p>The parameter from which to measure the distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Elements.Geometry.Curve.html#Elements_Geometry_Curve_ParameterAtDistanceFromParameter_System_Double_System_Double_">Curve.ParameterAtDistanceFromParameter(Double, Double)</a></div>
   <a id="Elements_Geometry_Bezier_PointAt_" data-uid="Elements.Geometry.Bezier.PointAt*"></a>
   <h4 id="Elements_Geometry_Bezier_PointAt_System_Double_" data-uid="Elements.Geometry.Bezier.PointAt(System.Double)">PointAt(Double)</h4>
   <div class="markdown level1 summary"><p>Get the point on the curve at parameter u.</p>
@@ -833,6 +986,9 @@ var bezier = new Bezier(ctrlPts);
   </div>
   <div>
       <a class="xref" href="Elements.Geometry.Interfaces.ITransformable-1.html">ITransformable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="Elements.Geometry.Interfaces.IBoundedCurve.html">IBoundedCurve</a>
   </div>
 </article>
           </div>

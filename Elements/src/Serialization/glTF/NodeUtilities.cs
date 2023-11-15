@@ -7,7 +7,7 @@ using glTFLoader.Schema;
 
 namespace Elements.Serialization.glTF
 {
-    internal class NodeUtilities
+    internal static class NodeUtilities
     {
         internal static int[] AddNodes(List<Node> nodes, IEnumerable<Node> newNodes, int? parent)
         {
@@ -39,12 +39,22 @@ namespace Elements.Serialization.glTF
             return newIds;
         }
 
+        internal static int[] AddNodes(List<Node> nodes, List<int> meshIds, int? parentId)
+        {
+            var newNodes = meshIds.Select(meshId =>
+                        {
+                            return new Node() { Mesh = meshId };
+                        });
+
+            return AddNodes(nodes, newNodes, parentId);
+        }
+
         internal static int AddNode(List<Node> nodes, Node newNode, int? parentId)
         {
             return NodeUtilities.AddNodes(nodes, new[] { newNode }, parentId).First();
         }
 
-        internal static int CreateAndAddTransformNode(List<Node> nodes, Transform transform, int parentId)
+        internal static int CreateAndAddTransformNode(List<Node> nodes, Transform transform, int parentId, Guid? elementId = null)
         {
             if (transform != null)
             {
@@ -53,6 +63,10 @@ namespace Elements.Serialization.glTF
                 var c = transform.ZAxis;
 
                 var transNode = new Node();
+                if (elementId.HasValue)
+                {
+                    transNode.SetElementInfo(elementId.Value);
+                }
 
                 transNode.Matrix = new[]{
                     (float)a.X, (float)a.Y, (float)a.Z, 0.0f,
@@ -67,7 +81,7 @@ namespace Elements.Serialization.glTF
             return parentId;
         }
 
-        internal static void AddInstanceAsCopyOfNode(
+        internal static Node AddInstanceAsCopyOfNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             ProtoNode nodeToCopy,
                                             Transform transform,
@@ -76,23 +90,26 @@ namespace Elements.Serialization.glTF
             // Two new nodes are created: a top-level node, which has the
             // element's Transform, and one just below that, which handles
             // flipping the orientation of the glb to have Z up. That node has
-            // the node to copy as its only child. 
+            // the node to copy as its only child.
             // We use the node to copy exactly as is, with an unmodified
             // transform.
             // We need the outermost node to be "purely" the element's
             // transform, so that the transform can be modified in explore at
             // runtime (e.g. by a transform override) and have the expected effect.
             float[] elementTransform = TransformToMatrix(transform);
-            var newNode = new glTFLoader.Schema.Node();
-            newNode.Name = $"{instanceElementId}";
-            newNode.Matrix = elementTransform;
+            var newNode = new glTFLoader.Schema.Node
+            {
+                Name = $"{instanceElementId}",
+                Matrix = elementTransform
+            };
+            newNode.SetElementInfo(instanceElementId);
             nodes.Add(newNode);
             newNode.Children = new[] { nodes.Count };
 
             var rootTransform = new Transform();
             // glb has Y up. transform it to have Z up so we
             // can create instances of it in a Z up world. It will get switched
-            // back to Y up further up in the node hierarchy. 
+            // back to Y up further up in the node hierarchy.
             rootTransform.Rotate(new Vector3(1, 0, 0), 90.0);
             float[] glbOrientationTransform = TransformToMatrix(rootTransform);
             var elementOrientationNode = new glTFLoader.Schema.Node();
@@ -103,6 +120,7 @@ namespace Elements.Serialization.glTF
             nodes[0].Children = (nodes[0].Children ?? Array.Empty<int>()).Concat(new[] { nodes.Count - 2 }).ToArray();
 
             RecursivelyCopyNode(nodes, nodeToCopy);
+            return newNode;
         }
 
         private static int RecursivelyCopyNode(List<Node> nodes, ProtoNode nodeToCopy)
@@ -130,13 +148,32 @@ namespace Elements.Serialization.glTF
             return nodeIndex;
         }
 
+        internal static int AddInstanceNode(List<glTFLoader.Schema.Node> nodes, Transform transform, Guid elementId)
+        {
+            float[] matrix = TransformToMatrix(transform);
+            var newNode = new Node() { Matrix = matrix, Name = elementId.ToString() };
+            newNode.SetElementInfo(elementId);
+            return AddNode(nodes, newNode, 0);
+        }
+
+        internal static int AddEmptyNode(List<glTFLoader.Schema.Node> nodes, int parentId)
+        {
+            return AddNode(nodes, new Node(), parentId);
+        }
+
         internal static int[] AddInstanceNode(
                                             List<glTFLoader.Schema.Node> nodes,
                                             List<int> meshIds,
-                                            Transform transform)
+                                            Transform transform,
+                                            Guid elementId)
         {
             float[] matrix = TransformToMatrix(transform);
-            var newNodes = meshIds.Select(meshId => new Node() { Matrix = matrix, Mesh = meshId });
+            var newNodes = meshIds.Select(meshId =>
+            {
+                var node = new Node() { Matrix = matrix, Mesh = meshId };
+                node.SetElementInfo(elementId);
+                return node;
+            });
             return AddNodes(nodes, newNodes, 0);
         }
 
@@ -155,22 +192,60 @@ namespace Elements.Serialization.glTF
             return matrix;
         }
 
-        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Transform transform = null)
+        internal static int CreateNodeForMesh(int meshId, List<glTFLoader.Schema.Node> nodes, Guid? elementId = null, Transform transform = null)
         {
             var parentId = 0;
 
-            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId);
+            parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, parentId, elementId);
 
             // Add mesh node to gltf nodes
-            var node = new Node();
-            node.Mesh = meshId;
+            var node = new Node
+            {
+                Mesh = meshId
+            };
+
             var nodeId = AddNode(nodes, node, parentId);
             return nodeId;
         }
 
-        internal static void CreateNodeFromNode(List<glTFLoader.Schema.Node> nodes, Node parentNode, Transform transform)
+        public static void SetElementInfo(this Node node, Guid elementId, bool? selectable = null)
         {
-            var parentId = NodeUtilities.CreateAndAddTransformNode(nodes, transform, 0);
+            if (node.Extensions == null)
+            {
+                node.Extensions = new Dictionary<string, object>();
+            }
+
+            var extensionDict = new Dictionary<string, object>
+                {
+                    {"id", elementId},
+                };
+
+            if (selectable.HasValue)
+            {
+                extensionDict["selectable"] = selectable.Value;
+            }
+            node.Extensions["HYPAR_info"] = extensionDict;
+        }
+
+        public static void SetRepresentationInfo(this Node node, RepresentationInstance representationInstance)
+        {
+            if (node.Extensions == null)
+            {
+                node.Extensions = new Dictionary<string, object>();
+            }
+
+            var extensionDict = new Dictionary<string, object>
+                {
+                    {"isDefault", representationInstance.IsDefault},
+                    {"representationType", representationInstance.RepresentationTypes},
+                };
+
+            if (node.Mesh.HasValue)
+            {
+                extensionDict.Add("mesh", node.Mesh.Value);
+            }
+
+            node.Extensions["HYPAR_representation_info"] = extensionDict;
         }
     }
 }

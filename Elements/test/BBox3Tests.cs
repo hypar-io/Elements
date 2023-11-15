@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Elements.Geometry.Profiles;
-using Elements.Geometry.Solids;
 using Newtonsoft.Json;
 using Xunit;
 
@@ -212,7 +210,7 @@ namespace Elements.Tests
                 }
             }
             mesh.ComputeNormals();
-            var meshElement = new MeshElement(mesh, new Material("Lime", Colors.Lime), new Transform(new Vector3(-7, -8, 0), new Vector3(-5, 3, 2)));
+            var meshElement = new MeshElement(mesh, new Transform(new Vector3(-7, -8, 0), new Vector3(-5, 3, 2)), new Material("Lime", Colors.Lime));
             return meshElement;
         }
 
@@ -269,6 +267,113 @@ namespace Elements.Tests
             // Coincident at face
             b2 = new BBox3(new Vector3(0, -5, 0), new Vector3(5, 0, 5));
             Assert.True(b1.Intersects(b2));
+        }
+
+        [Fact]
+        public void BoundingBoxOffset()
+        {
+            BBox3 box = new BBox3(new Vector3(5, 5, 0), new Vector3(10, 10, 5));
+
+            // Zero offset
+            var offsetBox = box.Offset(0);
+            Assert.Equal(offsetBox.Min, new Vector3(5, 5, 0));
+            Assert.Equal(offsetBox.Max, new Vector3(10, 10, 5));
+
+            // Positive offset
+            offsetBox = box.Offset(0.5);
+            Assert.Equal(offsetBox.Min, new Vector3(4.5, 4.5, -0.5));
+            Assert.Equal(offsetBox.Max, new Vector3(10.5, 10.5, 5.5));
+
+            // Negative offset
+            offsetBox = box.Offset(-1);
+            Assert.Equal(offsetBox.Min, new Vector3(6, 6, 1));
+            Assert.Equal(offsetBox.Max, new Vector3(9, 9, 4));
+        }
+
+        [Fact]
+        public void PlaneNoIntersectionAbove()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(0, 0, 6), Vector3.ZAxis);
+            var intersects = b.Intersects(plane, out var relation);
+            Assert.False(intersects);
+            Assert.Equal(RelationToPlane.Below, relation);
+        }
+
+        [Fact]
+        public void PlaneNoIntersectionBelow()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(0, 0, -1), Vector3.ZAxis);
+            var intersects = b.Intersects(plane, out var relation);
+            Assert.False(intersects);
+            Assert.Equal(RelationToPlane.Above, relation);
+        }
+
+        [Fact]
+        public void PlaneIntersection()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(0, 0, 2.5), Vector3.ZAxis);
+            var intersects = b.Intersects(plane, out var relation);
+            Assert.True(intersects);
+            Assert.Equal(RelationToPlane.Intersects, relation);
+        }
+
+        [Fact]
+        public void PlaneIntersectsCorner()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(2.5, 2.5), new Vector3(1, 1));
+            var intersects = b.Intersects(plane, out var relation);
+            Assert.True(intersects);
+            Assert.Equal(RelationToPlane.Intersects, relation);
+        }
+
+        [Fact]
+        public void PlaneIntersectsCoincident()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(0, 0), Vector3.ZAxis);
+
+            var intersects = b.Intersects(plane, out var relation);
+            Assert.True(intersects);
+            Assert.Equal(RelationToPlane.Intersects, relation);
+
+            plane = new Plane(new Vector3(0, 0, 5), Vector3.ZAxis);
+            intersects = b.Intersects(plane, out relation);
+            Assert.True(intersects);
+            Assert.Equal(RelationToPlane.Intersects, relation);
+        }
+
+        [Fact]
+        public void IsBehind()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(0, 0, 6), Vector3.ZAxis);
+            var intersect = b.Intersects(plane, out var relation);
+            Assert.False(intersect);
+            Assert.Equal(RelationToPlane.Below, relation);
+
+            plane = new Plane(new Vector3(0, 0, 2), Vector3.ZAxis);
+            intersect = b.Intersects(plane, out relation);
+            Assert.True(intersect);
+            Assert.Equal(RelationToPlane.Intersects, relation);
+        }
+
+        [Fact]
+        public void IsInFront()
+        {
+            var b = new BBox3(Vector3.Origin, new Vector3(5, 5, 5));
+            var plane = new Plane(new Vector3(0, 0, -1), Vector3.ZAxis);
+            var intersect = b.Intersects(plane, out var relation);
+            Assert.False(intersect);
+            Assert.Equal(RelationToPlane.Above, relation);
+
+            plane = new Plane(new Vector3(0, 0, 2), Vector3.ZAxis);
+            intersect = b.Intersects(plane, out relation);
+            Assert.True(intersect);
+            Assert.Equal(RelationToPlane.Intersects, relation);
         }
     }
 }

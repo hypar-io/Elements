@@ -2,6 +2,7 @@ using Elements.Validators;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -11,42 +12,70 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/ArcTests.cs?name=example)]
     /// </example>
-    public partial class Arc : Curve, IEquatable<Arc>
+    public partial class Arc : TrimmedCurve<Circle>, IEquatable<Arc>
     {
-        /// <summary>The center of the arc.</summary>
-        [Newtonsoft.Json.JsonProperty("Center", Required = Newtonsoft.Json.Required.AllowNull)]
-        public Vector3 Center { get; set; }
-
-        /// <summary>The radius of the arc.</summary>
-        [Newtonsoft.Json.JsonProperty("Radius", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
-        public double Radius { get; set; }
+        /// <summary>
+        /// The domain of the curve.
+        /// </summary>
+        [JsonIgnore]
+        public override Domain1d Domain => new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
 
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
-        [Newtonsoft.Json.JsonProperty("StartAngle", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
-        public double StartAngle { get; set; }
+        [JsonProperty("StartAngle", Required = Required.Always)]
+        public double StartAngle { get; protected set; }
 
         /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
-        [Newtonsoft.Json.JsonProperty("EndAngle", Required = Newtonsoft.Json.Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, 360.0D)]
-        public double EndAngle { get; set; }
+        [JsonProperty("EndAngle", Required = Required.Always)]
+        public double EndAngle { get; protected set; }
 
         /// <summary>
-        /// Create an arc.
+        /// The radius of the arc.
         /// </summary>
-        /// <param name="center">The center of the arc.</param>
-        /// <param name="radius">The radius of the arc.</param>
-        /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
-        /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
-        [Newtonsoft.Json.JsonConstructor]
-        public Arc(Vector3 @center, double @radius, double @startAngle, double @endAngle) : base()
+        public double Radius
+        {
+            get
+            {
+                return this.BasisCurve.Radius;
+            }
+        }
+
+        /// <summary>
+        /// The center of the arc.
+        /// </summary>
+        public Vector3 Center
+        {
+            get
+            {
+                return this.BasisCurve.Transform.Origin;
+            }
+        }
+
+        /// <summary>
+        /// The start point of the arc.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 Start
+        {
+            get { return PointAt(this.Domain.Min); }
+        }
+
+        /// <summary>
+        /// The end point of the arc.
+        /// </summary>
+        [JsonIgnore]
+        public override Vector3 End
+        {
+            get { return PointAt(this.Domain.Max); }
+        }
+
+        private void Validate(double startAngle, double endAngle, double radius)
         {
             if (!Validator.DisableValidationOnConstruction)
             {
-                if (endAngle > 360.0 || startAngle > 360.00)
+                var span = Math.Abs(endAngle - startAngle);
+                if (span > 360)
                 {
-                    throw new ArgumentOutOfRangeException("The arc could not be created. The start and end angles must be greater than -360.0");
+                    throw new ArgumentOutOfRangeException($"The total span of the arc, {span} degrees, is greater than 360.0. The arc cannot be created.");
                 }
 
                 if (endAngle == startAngle)
@@ -59,26 +88,228 @@ namespace Elements.Geometry
                     throw new ArgumentOutOfRangeException($"The arc could not be created. The provided radius ({radius}) must be greater than 0.0.");
                 }
             }
+        }
 
-            this.Center = @center;
-            this.Radius = @radius;
-            this.StartAngle = @startAngle;
-            this.EndAngle = @endAngle;
+        /// <summary>
+        /// If a user supplies a decreasing angle domain, we want to swap the
+        /// start and end angles to force it to be increasing, and do a
+        /// corresponding transform of the underlying circle to preserve the
+        /// user's intuition about which direction the curve is going.
+        /// </summary>
+        private static (double startAngle, double endAngle) EnsureIncreasingAngleDomain(double startAngle, double endAngle, out Transform circleTransform)
+        {
+            circleTransform = new Transform();
+            if (endAngle < startAngle)
+            {
+                // flip the circle's direction
+                circleTransform.Rotate(Vector3.XAxis, 180);
+                // rotate the resulting circle back so that the previous start angle is now aligned with the new start angle
+                circleTransform.Rotate(Vector3.ZAxis, startAngle + endAngle);
+                // swap the start and end angles
+                (endAngle, startAngle) = (startAngle, endAngle);
+            }
+            return (startAngle, endAngle);
+        }
+
+        /// <summary>
+        /// Create a circular arc.
+        /// </summary>
+        public Arc(double radius)
+        {
+            this.BasisCurve = new Circle();
+            this.StartAngle = 0;
+            this.EndAngle = 360;
         }
 
         /// <summary>
         /// Create an arc.
         /// </summary>
+        /// <param name="center">The center of the arc.</param>
         /// <param name="radius">The radius of the arc.</param>
         /// <param name="startAngle">The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
         /// <param name="endAngle">The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
+        /// <remarks>If the end angle is smaller than the start angle, they will be flipped and the underlying circle reversed to preserve a positive parameter domain.</remarks>
+        [JsonConstructor]
+        public Arc(Vector3 center, double radius, double startAngle, double endAngle) : base()
+        {
+            Validate(startAngle, endAngle, radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            circleTransform.Move(center);
+            this.BasisCurve = new Circle(circleTransform, radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// Constructs a circular basis curve internally with a default transform.
+        /// </summary>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startAngle">The CCW angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</param>
+        /// <param name="endAngle">The CCW angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</param>
         public Arc(double radius, double startAngle, double endAngle)
             : base()
         {
-            this.Center = Vector3.Origin;
-            this.Radius = radius;
+            Validate(startAngle, endAngle, radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            this.BasisCurve = new Circle(circleTransform, radius);
             this.StartAngle = startAngle;
             this.EndAngle = endAngle;
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// </summary>
+        /// <param name="circle">The circle on which this arc is based.</param>
+        /// <param name="startParameter">The parameter, from 0.0->2PI, of the start of the arc.</param>
+        /// <param name="endParameter">The parameter, from 0.0->2PI, of the end of the arc.</param>
+        public Arc(Circle circle, double startParameter, double endParameter)
+        {
+            var startAngle = Units.RadiansToDegrees(startParameter);
+            var endAngle = Units.RadiansToDegrees(endParameter);
+            Validate(startAngle, endAngle, circle.Radius);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            this.BasisCurve = new Circle(circleTransform.Concatenated(circle.Transform), circle.Radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
+        }
+
+        /// <summary>
+        /// Create an arc.
+        /// Constructs a circular basis curve internally with the provided transform.
+        /// </summary>
+        /// <param name="transform">The transform for the basis curve of the arc.</param>
+        /// <param name="radius">The radius of the arc.</param>
+        /// <param name="startParameter">The parameter, from 0.0->2PI, of the start of the arc.</param>
+        /// <param name="endParameter">The parameter, from 0.0->2PI, of the end of the arc.</param>
+        public Arc(Transform transform,
+                   double radius = 1.0,
+                   double startParameter = 0.0,
+                   double endParameter = Math.PI * 2)
+        {
+            Validate(Units.RadiansToDegrees(startParameter), Units.RadiansToDegrees(endParameter), radius);
+            var startAngle = Units.RadiansToDegrees(startParameter);
+            var endAngle = Units.RadiansToDegrees(endParameter);
+            (startAngle, endAngle) = EnsureIncreasingAngleDomain(startAngle, endAngle, out var circleTransform);
+            this.BasisCurve = new Circle(circleTransform.Concatenated(transform), radius);
+            this.StartAngle = startAngle;
+            this.EndAngle = endAngle;
+        }
+
+        /// <summary>
+        /// Create an arc by three points.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <returns>An arc through the three points.</returns>
+        public static Arc ByThreePoints(Vector3 a, Vector3 b, Vector3 c)
+        {
+            var p = new Plane(a, b, c);
+
+            // Create two lines, the perpendiculars of
+            // which will intersect at the center of the circle.
+            var mab = a.Average(b);
+            var mac = a.Average(c);
+            var vab = (b - a).Unitized().Cross(p.Normal);
+            var vac = (c - a).Unitized().Cross(p.Normal);
+            var r1 = new Ray(mab, vab);
+            var r2 = new Ray(mac, vac);
+            if (r1.Intersects(r2, out var result, out var xsectResult, true))
+            {
+                var r = result.DistanceTo(a);
+                var circle = new Circle(new Transform(result, p.Normal), r);
+                var a1 = (a - circle.Center).Unitized();
+                var b1 = (b - circle.Center).Unitized();
+                var c1 = (c - circle.Center).Unitized();
+                var angle1 = circle.Transform.XAxis.PlaneAngleTo(a1, circle.Transform.ZAxis);
+                var angle2 = circle.Transform.XAxis.PlaneAngleTo(b1, circle.Transform.ZAxis);
+                var angle3 = circle.Transform.XAxis.PlaneAngleTo(c1, circle.Transform.ZAxis);
+                var angles = new List<double> { angle1, angle2, angle3 };
+                angles.Sort();
+                var arc = new Arc(circle, Units.DegreesToRadians(angles[0]), Units.DegreesToRadians(angles[2]));
+                return arc;
+            }
+            if (xsectResult == RayIntersectionResult.Parallel)
+            {
+                throw new ArgumentException("The arc can't be created. The provided points are coincident or colinear.");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Create a fillet arc between two lines.
+        /// </summary>
+        /// <param name="a">The first line.</param>
+        /// <param name="b">The second line.</param>
+        /// <param name="radius">The radiuse of the fillet arc.</param>
+        /// <returns>A fillet arc between the two lines.</returns>
+        public static Arc Fillet(Line a, Line b, double radius)
+        {
+            // The direction of the two lines
+            var d1 = a.Direction();
+            var d2 = b.Direction();
+            if (d1.IsParallelTo(d2))
+            {
+                throw new Exception("The fillet could not be created. The lines are parallel");
+            }
+
+            // Find the intersection of the two lines.
+            // this will be the "corner" reference.
+            var r1 = new Ray(a.Start, d1);
+            var r2 = new Ray(b.Start, d2);
+            if (!r1.Intersects(r2, out Vector3 intersection, true))
+            {
+                return null;
+            }
+
+            // Construct new vectors that both
+            // point away from the projected intersection.
+            // Use an arbitrary point on the line that
+            // isn't the start or the end. This ensures
+            // that the vectors will point in the correct direction,
+            // regardless of the original lines' original orientation
+            var dd1 = (a.Mid() - intersection).Unitized();
+            var dd2 = (b.Mid() - intersection).Unitized();
+
+            // Find the bisector vector.
+            var bisectVector = dd1.Average(dd2).Unitized();
+
+            // Find the normal of the plane in which the
+            // fillet arc will be created.
+            var up = dd1.Cross(dd2).Unitized();
+            // up = up.Dot(Vector3.ZAxis) < 0 ? up.Negate() : up;
+            var left = up.Cross(bisectVector).Unitized();
+
+            // Find the "height" of the triangle whose
+            // base is perpendicular to one of the sides.
+            // var theta = dd1.AngleToInternal(dd2);
+            var theta = dd1.AngleToInternal(dd2);
+            var halfTheta = theta / 2.0;
+            var h = radius / Math.Sin(halfTheta);
+
+            // The point along the bisection vector of
+            // distance "h" will be the center of the new arc.
+            var arcCenter = intersection + bisectVector * h;
+
+            // Find the closest points from the arc
+            // center to the adjacent curves, treated as infinite.
+            // This will be the start and end of the arc.
+            var p1 = arcCenter.ClosestPointOn(a, true);
+            var p2 = arcCenter.ClosestPointOn(b, true);
+
+            // Find the angle, in the plane, from the "left" vector
+            // to the a curve and the b curve. These will be the
+            // start and end parameters of the arc.
+            var angle1 = left.PlaneAngleToInternal((p1 - arcCenter).Unitized(), up);
+            var angle2 = left.PlaneAngleToInternal((p2 - arcCenter).Unitized(), up);
+
+            var arc = new Arc(new Transform(arcCenter, left, up),
+                           radius,
+                           Math.Min(angle1, angle2),
+                           Math.Max(angle1, angle2));
+
+            return arc;
         }
 
         /// <summary>
@@ -86,57 +317,34 @@ namespace Elements.Geometry
         /// </summary>
         public override double Length()
         {
-            return 2 * Math.PI * this.Radius * (Math.Abs(this.EndAngle - this.StartAngle)) / 360.0;
+            // Arc length = theta * radius
+            var theta = Units.DegreesToRadians(Math.Abs(this.EndAngle - this.StartAngle));
+            return this.BasisCurve.Radius * theta;
         }
 
         /// <summary>
-        /// The start point of the arc.
+        /// Calculate the length of the arc between start and end parameters.
         /// </summary>
-        [JsonIgnore]
-        public Vector3 Start
+        public override double ArcLength(double start, double end)
         {
-            get { return PointAt(0.0); }
-        }
-
-        /// <summary>
-        /// The end point of the arc.
-        /// </summary>
-        [JsonIgnore]
-        public Vector3 End
-        {
-            get { return PointAt(1.0); }
-        }
-
-        /// <summary>
-        /// Return the point at parameter u on the arc.
-        /// </summary>
-        /// <param name="u">A parameter between 0.0 and 1.0.</param>
-        /// <returns>A Vector3 representing the point along the arc.</returns>
-        public override Vector3 PointAt(double u)
-        {
-            if (u > 1.0 || u < 0.0)
+            if (!Domain.Includes(start, true))
             {
-                throw new ArgumentOutOfRangeException($"The value provided for parameter u, {u}, must be between 0.0 and 1.0.");
+                throw new ArgumentOutOfRangeException("start", $"The start parameter {start} must be between {Domain.Min} and {Domain.Max}.");
+            }
+            if (!Domain.Includes(end, true))
+            {
+                throw new ArgumentOutOfRangeException("end", $"The end parameter {end} must be between {Domain.Min} and {Domain.Max}.");
             }
 
-            var angle = this.StartAngle + (this.EndAngle - this.StartAngle) * u;
-            var theta = DegToRad(angle);
-            var x = this.Center.X + this.Radius * Math.Cos(theta);
-            var y = this.Center.Y + this.Radius * Math.Sin(theta);
-            return new Vector3(x, y);
+            // Arc length = theta * radius
+            var theta = Math.Abs(end - start);
+            return this.BasisCurve.Radius * theta;
         }
 
-        /// <summary>
-        /// Return transform on the arc at parameter u.
-        /// </summary>
-        /// <param name="u">A parameter between 0.0 and 1.0 on the arc.</param>
-        /// <returns>A transform with its origin at u along the curve and its Z axis tangent to the curve.</returns>
-        public override Transform TransformAt(double u)
+        /// <inheritdoc/>
+        public override Vector3 Mid()
         {
-            var p = PointAt(u);
-            var x = (p - this.Center).Unitized();
-            var y = Vector3.ZAxis;
-            return new Transform(p, x, x.Cross(y));
+            return PointAt(this.Domain.Min + this.Domain.Length / 2);
         }
 
         /// <summary>
@@ -144,12 +352,7 @@ namespace Elements.Geometry
         /// </summary>
         public Arc Reversed()
         {
-            return new Arc(this.Center, this.Radius, this.EndAngle, this.StartAngle);
-        }
-
-        private double DegToRad(double degrees)
-        {
-            return degrees * Math.PI / 180.0;
+            return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, this.EndAngle, this.StartAngle);
         }
 
         /// <summary>
@@ -158,9 +361,9 @@ namespace Elements.Geometry
         /// <returns>A bounding box for this arc.</returns>
         public override BBox3 Bounds()
         {
-            var delta = new Vector3(this.Radius, this.Radius, this.Radius);
-            var min = new Vector3(this.Center - delta);
-            var max = new Vector3(this.Center + delta);
+            var delta = new Vector3(this.BasisCurve.Radius, this.BasisCurve.Radius, this.BasisCurve.Radius);
+            var min = new Vector3(this.BasisCurve.Transform.Origin - delta);
+            var max = new Vector3(this.BasisCurve.Transform.Origin + delta);
             return new BBox3(min, max);
         }
 
@@ -170,53 +373,45 @@ namespace Elements.Geometry
         /// <returns>The plane in which the arc lies.</returns>
         public Plane Plane()
         {
-            return new Plane(this.PointAt(0.0), this.PointAt(1.0), this.Center);
+            return BasisCurve.Transform.XY();
         }
 
-        internal override double[] GetSampleParameters(double startSetback = 0.0, double endSetback = 0.0)
+        /// <inheritdoc/>
+        public override double[] GetSubdivisionParameters(double startSetbackDistance = 0.0,
+                                                          double endSetbackDistance = 0.0)
         {
-            // Arc length calculations.
-            // var l = this.Length();
-            // var arcLength = l - startSetback - endSetback;
-            // al = (alpha * PI * r) / 180
-            // alpha = (al * 180)/(PI * r)
-            // var arcAngle = (arcLength * 360) / (2 * Math.PI * this.Radius);
-            // var parameterSpan = 1.0 - startSetback/l - endSetback/l;
+            var min = this.Domain.Min;
+            var max = this.Domain.Max;
+
+            var flip = max < min;
+
+            if (flip)
+            {
+                max = this.Domain.Min;
+                min = this.Domain.Max;
+            }
+
+            var startParam = ParameterAtDistanceFromParameter(startSetbackDistance, min);
+            var endParam = ParameterAtDistanceFromParameter(this.Length() - endSetbackDistance, min);
 
             // Parameter calculations.
-            var angleSpan = this.EndAngle - this.StartAngle;
-            var partialAngleSpan = Math.Abs(angleSpan - angleSpan * startSetback - angleSpan * endSetback);
-            var parameterSpan = 1.0 - 1.0 * startSetback - 1.0 * endSetback;
+            var angleSpan = endParam - startParam;
 
             // Angle span: t
             // d = 2 * r * sin(t/2)
-            var r = this.Radius;
+            var r = this.BasisCurve.Radius;
             var two_r = 2 * r;
-            var d = Math.Min(MinimumChordLength, two_r);
+            var d = Math.Min(DefaultMinimumChordLength, two_r);
             var t = 2 * Math.Asin(d / two_r);
-            var div = (int)Math.Ceiling((DegToRad(partialAngleSpan)) / t);
+            var div = (int)Math.Ceiling(angleSpan / t);
 
             var parameters = new double[div + 1];
+            var step = angleSpan / div;
             for (var i = 0; i <= div; i++)
             {
-                var u = startSetback + i * (parameterSpan / div);
-                parameters[i] = u;
+                parameters[i] = startParam + i * step;
             }
             return parameters;
-        }
-
-        /// <summary>
-        /// A list of vertices describing the arc for rendering.
-        /// </summary>
-        internal override IList<Vector3> RenderVertices()
-        {
-            var parameters = GetSampleParameters();
-            var vertices = new List<Vector3>();
-            foreach (var p in parameters)
-            {
-                vertices.Add(PointAt(p));
-            }
-            return vertices;
         }
 
         /// <summary>
@@ -230,7 +425,7 @@ namespace Elements.Geometry
             {
                 return false;
             }
-            return this.Center.Equals(other.Center) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
+            return this.BasisCurve.Transform.Origin.Equals(other.BasisCurve.Transform.Origin) && this.StartAngle == other.StartAngle && this.EndAngle == other.EndAngle;
         }
 
         /// <summary>
@@ -245,13 +440,10 @@ namespace Elements.Geometry
             {
                 newStart = newStart - 360.0;
             }
-            return new Arc(this.Center, this.Radius, newStart, newEnd);
+            return new Arc(this.BasisCurve.Transform.Origin, this.BasisCurve.Radius, newStart, newEnd);
         }
 
-        /// <summary>
-        /// Construct a transformed copy of this Curve.
-        /// </summary>
-        /// <param name="transform">The transform to apply.</param>
+        /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
             return TransformedArc(transform);
@@ -263,7 +455,66 @@ namespace Elements.Geometry
         /// <param name="transform">The transform to apply.</param>
         public Arc TransformedArc(Transform transform)
         {
-            return new Arc(transform.OfPoint(Center), Radius, StartAngle, EndAngle);
+            return new Arc(BasisCurve.Transform.Concatenated(transform), this.BasisCurve.Radius, Units.DegreesToRadians(StartAngle), Units.DegreesToRadians(EndAngle));
+        }
+
+        /// <summary>
+        /// Get the point at parameter u.
+        /// </summary>
+        /// <returns>The point at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
+        public override Vector3 PointAt(double u)
+        {
+            if (!this.Domain.Includes(u, true))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+            return this.BasisCurve.PointAt(u);
+        }
+
+        /// <summary>
+        /// Get the transform at parameter u.
+        /// </summary>
+        /// <returns>The transform at parameter u if us is within the trim, otherwise an exception is thrown.</returns>
+        public override Transform TransformAt(double u)
+        {
+            if (!this.Domain.Includes(u, true))
+            {
+                throw new Exception($"The parameter {u} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+            return this.BasisCurve.TransformAt(u);
+        }
+
+        /// <summary>
+        /// Get the parameter at a distance from the start parameter along the curve.
+        /// </summary>
+        /// <param name="distance">The distance from the start parameter.</param>
+        /// <param name="start">The parameter from which to measure the distance.</param>
+        public override double ParameterAtDistanceFromParameter(double distance, double start)
+        {
+            if (!Domain.Includes(start, true))
+            {
+                throw new Exception($"The parameter {start} is not on the trimmed portion of the basis curve. The parameter must be between {Domain.Min} and {Domain.Max}.");
+            }
+
+            if (distance == 0.0)
+            {
+                return start;
+            }
+
+            return this.BasisCurve.ParameterAtDistanceFromParameter(distance, start);
+        }
+
+        /// <inheritdoc/>
+        public override bool PointOnDomain(Vector3 point)
+        {
+            if (!BasisCurve.ParameterAt(point, out var parameter))
+            {
+                return false;
+            }
+
+            parameter = Units.AdjustRadian(parameter, Domain.Min);
+            return parameter - Domain.Min > -Vector3.EPSILON * Vector3.EPSILON &&
+                   parameter - Domain.Max < Vector3.EPSILON * Vector3.EPSILON;
         }
     }
 }

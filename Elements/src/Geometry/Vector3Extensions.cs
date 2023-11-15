@@ -10,31 +10,81 @@ namespace Elements.Geometry
     public static class Vector3Extensions
     {
         /// <summary>
-        /// Are the provided points on the same plane?
+        /// Check if a collection of points has at least three non-collinear
+        /// points. Returns true if it does, false otherwise. The first two
+        /// points which form a valid triangle with the first point are
+        /// returned via out parameters.
         /// </summary>
-        /// <param name="points"></param>
-        public static bool AreCoplanar(this IList<Vector3> points)
+        /// <param name="points">The list of points to search.</param>
+        /// <param name="p1Index">The index of the first non-collinear point
+        /// after index 0.</param>
+        /// <param name="p2Index">The index of the second non-collinear point
+        /// after index 0.</param>
+        /// <returns>True if there are three non-collinear points.</returns>
+        public static bool TryGetThreeNonCollinearPoints(this IList<Vector3> points, out int p1Index, out int p2Index)
         {
-            if (points.Count < 3) return true;
-
-            //TODO: https://github.com/hypar-io/sdk/issues/54
-            // Ensure that all triple products are equal to 0.
-            // a.Dot(b.Cross(c));
-            var a = points[0];
-            var b = points[1];
-            var c = points[2];
-            var ab = b - a;
-            var ac = c - a;
-            for (var i = 3; i < points.Count; i++)
+            // Choose the first three non-collinear points
+            var p0 = points[0];
+            p1Index = -1;
+            p2Index = -1;
+            for (int i = 1; i < points.Count; i++)
             {
-                var d = points[i];
-                var cd = d - a;
-                var tp = ab.Dot(ac.Cross(cd));
-                if (Math.Abs(tp) > Vector3.EPSILON)
+                if (p1Index == -1 && (points[i] - p0).Length() > Vector3.EPSILON)
+                {
+                    p1Index = i;
+                }
+                else if (p1Index != -1 && (points[p1Index] - p0).Cross(points[i] - p0).Length() > Vector3.EPSILON)
+                {
+                    p2Index = i;
+                    break;
+                }
+            }
+            return p2Index != -1;
+        }
+
+        /// <summary>
+        /// Are the provided points on the same plane, within tolerance?
+        /// </summary>
+        /// <remarks>
+        /// This method uses the first three non-collinear points to define the
+        /// plane, rather than a best-fit plane. We may return a false negative
+        /// in the case that there is a different best-fit plane that is within
+        /// tolerance of all points.
+        /// </remarks>
+        /// <param name="points">The points to test.</param>
+        /// <param name="tolerance">Acceptable deviation from the plane while still being considered coplanar.</param>
+        public static bool AreCoplanar(this IList<Vector3> points, double tolerance = Vector3.EPSILON)
+        {
+            if (points.Count < 4) return true; // all sets of less than four points are coplanar
+
+            // Choose the first three non-collinear points
+            if (!points.TryGetThreeNonCollinearPoints(out var p1Index, out var p2Index))
+            {
+                // all points are collinear or coincident, so must be coplanar.
+                return true;
+            }
+
+            var p0 = points[0];
+
+            if (p2Index == points.Count - 1)
+            {
+                // p2 is the last point, which means all the other points are
+                // collinear. Any set of collinear points + another point make a
+                // triangle, so must be coplanar.
+                return true;
+            }
+            var normal = (points[p1Index] - p0).Cross(points[p2Index] - p0).Unitized();
+
+            for (int i = p2Index + 1; i < points.Count; i++)
+            {
+                var pi = points[i];
+                var dot = normal.Dot(pi - p0);
+                if (Math.Abs(dot) > tolerance)
                 {
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -42,40 +92,56 @@ namespace Elements.Geometry
         /// Are the provided points along the same line?
         /// </summary>
         /// <param name="points"></param>
+        [Obsolete("Use AreCollinearByDistance instead")]
         public static bool AreCollinear(this IList<Vector3> points)
+        {
+            return AreCollinearByDistance(points);
+        }
+
+        /// <summary>
+        /// Check whether three points are on the same line withing certain distance.
+        /// </summary>
+        /// <param name="points">List of points to check. Order is not important.</param>
+        /// <param name="tolerance">Distance tolerance.</param>
+        public static bool AreCollinearByDistance(this IList<Vector3> points, double tolerance = Vector3.EPSILON)
         {
             if (points == null || points.Count == 0)
             {
                 throw new ArgumentException("Cannot test collinearity of an empty list");
             }
-            if (points.Distinct(new Vector3Comparer()).Count() < 3)
-            {
-                return true;
-            }
 
             var fitLine = points.FitLine(out var directions);
+            if (fitLine == null)
+            {
+                // this will happen if all points are within tolerance of their average — if they're all basically coincident.
+                return true;
+            }
             var fitDir = fitLine.Direction();
-            var epsilonSquared = Vector3.EPSILON * Vector3.EPSILON;
+            var toleranceSquared = tolerance * tolerance;
             return directions.All(d =>
             {
+                // Since fitDir is Unitized - dot give the length of projection d onto fitDir.
                 var dot = d.Dot(fitDir);
                 var lengthSquared = d.LengthSquared();
-                return lengthSquared - (dot * dot) < epsilonSquared;
+                // By Pythagoras' theorem d.Length()^2 = dot^2 + distance^2.
+                // If it's less than tolerance squared then the point is close enough to the fit line.
+                return lengthSquared - (dot * dot) < toleranceSquared;
             });
         }
 
         /// <summary>
-        /// Return an approximate fit line through a set of points. 
-        /// Not intended for statistical regression purposes. 
+        /// Return an approximate fit line through a set of points.
+        /// Not intended for statistical regression purposes.
         /// Note that the line is unit length: it shouldn't be expected
         /// to span the length of the points.
         /// </summary>
         /// <param name="points">The points to fit.</param>
-        /// <returns>A line roughly running through the set of points.</returns>
+        /// <returns>A line roughly running through the set of points, or null if the points are nearly coincident.</returns>
         public static Line FitLine(this IList<Vector3> points)
         {
             return FitLine(points, out _);
         }
+
         private static Line FitLine(this IList<Vector3> points, out IEnumerable<Vector3> directionsFromMean)
         {
             // get the mean point, presumably near the center of the pts
@@ -84,7 +150,13 @@ namespace Elements.Geometry
             var ptsMinusMean = points.Select(pt => pt - meanPt);
             // pick any non-zero vector as an alignment guide, so that a set of directions
             // that's perfectly symmetrical about the mean doesn't average out to zero
-            var alignmentVector = ptsMinusMean.First(p => !p.IsZero());
+            var nonZeroPts = ptsMinusMean.Where(pt => !pt.IsZero());
+            if (nonZeroPts.Count() == 0)
+            {
+                directionsFromMean = new List<Vector3>();
+                return null;
+            }
+            var alignmentVector = nonZeroPts.First();
             // flip the directions so they're all pointing in the same direction as the alignment vector
             var ptsMinusMeanAligned = ptsMinusMean.Select(p => p.Dot(alignmentVector) < 0 ? p * -1 : p);
             // get average direction
@@ -92,6 +164,17 @@ namespace Elements.Geometry
 
             directionsFromMean = ptsMinusMean;
             return new Line(meanPt, meanPt + averageDirFromMean.Unitized());
+        }
+
+        /// <summary>
+        /// Return an approximate fit line through a set of points using the least squares method.
+        /// </summary>
+        /// <param name="points">The points to fit. Should have at least 2 distinct points.</param>
+        /// <returns>An approximate fit line through a set of points using the least squares method.
+        /// If there is less than 2 distinct points, returns null.</returns>
+        public static Line BestFitLine(this IList<Vector3> points)
+        {
+            return Line.BestFit(points);
         }
 
         /// <summary>
@@ -182,21 +265,20 @@ namespace Elements.Geometry
             return arr;
         }
 
-        internal static GraphicsBuffers ToGraphicsBuffers(this IList<Vector3> vertices, bool lineLoop)
+        /// <summary>
+        /// Convert a list of vertices to a GraphicsBuffers object.
+        /// </summary>
+        /// <param name="vertices">The vertices to convert.</param>
+        /// <returns></returns>
+        public static GraphicsBuffers ToGraphicsBuffers(this IList<Vector3> vertices)
         {
             var gb = new GraphicsBuffers();
 
             for (var i = 0; i < vertices.Count; i++)
             {
                 var v = vertices[i];
-                gb.AddVertex(v, default(Vector3), default(UV), null);
-
-                var write = lineLoop ? (i < vertices.Count - 1) : (i % 2 == 0 && i < vertices.Count - 1);
-                if (write)
-                {
-                    gb.AddIndex((ushort)i);
-                    gb.AddIndex((ushort)(i + 1));
-                }
+                gb.AddVertex(v, default, default, null);
+                gb.AddIndex((ushort)i);
             }
             return gb;
         }
@@ -219,8 +301,63 @@ namespace Elements.Geometry
             }
             return normal.Unitized();
         }
+
+        /// <summary>
+        /// De-duplicate a collection of Vectors, such that no two vectors in the result are within tolerance of each other.
+        /// </summary>
+        /// <param name="vectors">List of vectors</param>
+        /// <param name="tolerance">Distance tolerance</param>
+        /// <returns>A new collection of vectors with duplicates removed.</returns>
+        public static IEnumerable<Vector3> UniqueWithinTolerance(
+            this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        {
+            var output = new List<Vector3>();
+            foreach (var vector in vectors)
+            {
+                if (output.Any(x => x.IsAlmostEqualTo(vector, tolerance)))
+                {
+                    continue;
+                }
+                output.Add(vector);
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// De-duplicate a collection of Vectors, averaging vectors within tolerance of each other.
+        /// Points that are further than tolerance away can still be in one group if they are connected by other points.
+        /// </summary>
+        /// <param name="vectors">List of vectors</param>
+        /// <param name="tolerance">Distance tolerance</param>
+        /// <returns>A new collection of vectors with only averaged vectors.</returns>
+        public static IEnumerable<Vector3> UniqueAverageWithinTolerance(
+            this IEnumerable<Vector3> vectors, double tolerance = Vector3.EPSILON)
+        {
+            List<List<Vector3>> groups = new List<List<Vector3>>();
+            foreach (var v in vectors)
+            {
+                var group = groups.FirstOrDefault(g => g.Any(p => p.IsAlmostEqualTo(v, tolerance)));
+                if (group != null)
+                {
+                    group.Add(v);
+                }
+                else
+                {
+                    groups.Add(new List<Vector3>() { v });
+                }
+            }
+
+            return groups.Select(g => g.Average());
+        }
     }
 
+    /// <summary>
+    /// WARNING! do not use this Comparer in `Distinct()` or similar methods if you care about "equality within tolerance."
+    /// These methods will use `GetHashCode` rather than `Equals` to determine equality, which must necessarily
+    /// ignore tolerance. It is *impossible* to create a hashing algorithm that consistently returns identical values for
+    /// any two points within tolerance of each other.
+    /// </summary>
     internal class Vector3Comparer : EqualityComparer<Vector3>
     {
         public override bool Equals(Vector3 x, Vector3 y)

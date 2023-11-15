@@ -15,7 +15,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - name: Set env
         run: echo "NUGET_VERSION=$(echo ${GITHUB_REF:10})" >> $GITHUB_ENV
       - run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
@@ -26,3 +26,4 @@ jobs:
           dotnet nuget push ./nupkg/Hypar.Elements.Serialization.DXF.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.Components.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+          dotnet nuget push ./nupkg/Hypar.Elements.MEP.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}

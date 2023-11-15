@@ -8,14 +8,20 @@ namespace Elements.Geometry.Tessellation
     internal class CsgPolygonTessAdapter : ITessAdapter
     {
         private readonly Csg.Polygon polygon;
+        private readonly uint faceId;
+        private readonly uint solidId;
 
         /// <summary>
         /// Construct a CsgPolygonTessAdaptor.
         /// </summary>
         /// <param name="polygon"></param>
-        public CsgPolygonTessAdapter(Csg.Polygon polygon)
+        /// <param name="faceId"></param>
+        /// <param name="solidId"></param>
+        public CsgPolygonTessAdapter(Csg.Polygon polygon, uint faceId, uint solidId)
         {
             this.polygon = polygon;
+            this.faceId = faceId;
+            this.solidId = solidId;
         }
 
         /// <summary>
@@ -27,18 +33,10 @@ namespace Elements.Geometry.Tessellation
             {
                 NoEmptyPolygons = true
             };
-            tess.AddContour(polygon.Vertices.ToContourVertices());
+            tess.AddContour(polygon.Vertices.ToContourVertexArray(faceId, solidId));
 
             tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
             return tess;
-        }
-
-        /// <summary>
-        /// Does this target require tessellation?
-        /// </summary>
-        public bool RequiresTessellation()
-        {
-            return polygon.Vertices.Count > 3;
         }
     }
 }

@@ -2,11 +2,11 @@
 /// <summary>{{ Description | csharpdocs }}</summary>
 {% endif -%}
 {% if HasDiscriminator -%}
-[Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "{{ Discriminator }}")]
+[JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "{{ Discriminator }}")]
 {% endif -%}
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "{{ ToolchainVersion }}")]
 {% if InheritsExceptionSchema -%}
-[Newtonsoft.Json.JsonObjectAttribute]
+[JsonObjectAttribute]
 {% endif -%}
 {% template Class.Annotations %}
 {{ TypeAccessModifier }} {% if IsAbstract %}abstract {% endif %}partial class {{ClassName}} {% template Class.Inheritance %}
@@ -30,7 +30,7 @@
 {%   if property.HasDescription -%}
     /// <summary>{{ property.Description | csharpdocs }}</summary>
 {%   endif -%}
-    [Newtonsoft.Json.JsonProperty("{{ property.Name }}", Required = {{ property.JsonPropertyRequiredCode }}{% if property.IsStringEnumArray %}, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter){% endif %})]
+    [JsonProperty("{{ property.Name }}", Required = {{ property.JsonPropertyRequiredCode }}{% if property.IsStringEnumArray %}, ItemConverterType = typeof(Newtonsoft.Json.Converters.StringEnumConverter){% endif %})]
 {%   if property.RenderRequiredAttribute -%}
     [System.ComponentModel.DataAnnotations.Required{% if property.AllowEmptyStrings %}(AllowEmptyStrings = true){% endif %}]
 {%   endif -%}
@@ -50,10 +50,10 @@
     [System.ComponentModel.DataAnnotations.RegularExpression(@"{{ property.RegularExpressionValue }}")]
 {%   endif -%}
 {%   if property.IsStringEnum -%}
-    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+    [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
 {%   endif -%}
 {%   if property.IsDate and UseDateFormatConverter -%}
-    [Newtonsoft.Json.JsonConverter(typeof(DateFormatConverter))]
+    [JsonConverter(typeof(DateFormatConverter))]
 {%   endif -%}
     {% template Class.Property.Annotations %}
     public {{ property.Type }} {{ property.PropertyName }}{% if RenderInpc == false and RenderPrism == false %} { get; {% if property.HasSetter and RenderRecord == false %}set; {% endif %}}{% if property.HasDefaultValue and RenderRecord == false %} = {{ property.DefaultValue }};{% endif %}
@@ -81,7 +81,7 @@
 {% if HasAdditionalPropertiesType -%}
     private System.Collections.Generic.IDictionary<string, {{ AdditionalPropertiesType }}> _additionalProperties = new System.Collections.Generic.Dictionary<string, {{ AdditionalPropertiesType }}>();
 
-    [Newtonsoft.Json.JsonExtensionData]
+    [JsonExtensionData]
     public System.Collections.Generic.IDictionary<string, {{ AdditionalPropertiesType }}> AdditionalProperties
     {
         get { return _additionalProperties; }

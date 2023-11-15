@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct BBox3
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -105,7 +105,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Geometry_BBox3_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct BBox3</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public struct BBox3</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -171,7 +172,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BBox3(Vector3 min, Vector3 max)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public BBox3(Vector3 min, Vector3 max)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -259,7 +261,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Max { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Max&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public Vector3 Max { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -283,7 +286,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Vector3 Min { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Min&quot;, Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+public Vector3 Min { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -307,7 +311,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double Volume { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double Volume { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -331,7 +336,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Domain1d XDomain { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly Domain1d XDomain { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -355,7 +361,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double XSize { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double XSize { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -379,7 +386,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Domain1d YDomain { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly Domain1d YDomain { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -403,7 +411,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double YSize { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double YSize { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -427,7 +436,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Domain1d ZDomain { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly Domain1d ZDomain { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -451,7 +461,8 @@ Properties of the element that are themselves elements will not be considered.</
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public double ZSize { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonIgnore]
+public readonly double ZSize { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -610,6 +621,60 @@ equal to this bounding box within Epsilon?</p>
   </table>
   <h5 class="overrides">Overrides</h5>
   <div><span class="xref">System.ValueType.Equals(System.Object)</span></div>
+  <a id="Elements_Geometry_BBox3_Extend_" data-uid="Elements.Geometry.BBox3.Extend*"></a>
+  <h4 id="Elements_Geometry_BBox3_Extend_Elements_Geometry_Vector3_" data-uid="Elements.Geometry.BBox3.Extend(Elements.Geometry.Vector3)">Extend(Vector3)</h4>
+  <div class="markdown level1 summary"><p>Extend this bounding box to contain the specified point.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Extend(Vector3 point)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point to include in the bounding box.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Extend_" data-uid="Elements.Geometry.BBox3.Extend*"></a>
+  <h4 id="Elements_Geometry_BBox3_Extend_Elements_Geometry_Vector3___" data-uid="Elements.Geometry.BBox3.Extend(Elements.Geometry.Vector3[])">Extend(Vector3[])</h4>
+  <div class="markdown level1 summary"><p>Extend this bound box to contain the specified points.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Extend(params Vector3[] points)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Vector3.html">Vector3</a>[]</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>The points to include in the bounding box.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_BBox3_GetHashCode_" data-uid="Elements.Geometry.BBox3.GetHashCode*"></a>
   <h4 id="Elements_Geometry_BBox3_GetHashCode" data-uid="Elements.Geometry.BBox3.GetHashCode">GetHashCode()</h4>
   <div class="markdown level1 summary"><p>Get the hash code for the bounding box.</p>
@@ -679,6 +744,61 @@ equal to this bounding box within Epsilon?</p>
       </tr>
     </tbody>
   </table>
+  <a id="Elements_Geometry_BBox3_Intersects_" data-uid="Elements.Geometry.BBox3.Intersects*"></a>
+  <h4 id="Elements_Geometry_BBox3_Intersects_Elements_Geometry_Plane_Elements_Geometry_RelationToPlane__Elements_Geometry_Transform_" data-uid="Elements.Geometry.BBox3.Intersects(Elements.Geometry.Plane,Elements.Geometry.RelationToPlane@,Elements.Geometry.Transform)">Intersects(Plane, out RelationToPlane, Transform)</h4>
+  <div class="markdown level1 summary"><p>Does the bounding box intersect the provided plane?</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Intersects(Plane plane, out RelationToPlane relationToPlane, Transform transform = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Plane.html">Plane</a></td>
+        <td><span class="parametername">plane</span></td>
+        <td><p>The plane.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.RelationToPlane.html">RelationToPlane</a></td>
+        <td><span class="parametername">relationToPlane</span></td>
+        <td><p>The relation of the bounding box to the plane.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>An optional transform of the bounding box to apply before intersection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the bounding box intersects, otherwise false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Geometry_BBox3_IsDegenerate_" data-uid="Elements.Geometry.BBox3.IsDegenerate*"></a>
   <h4 id="Elements_Geometry_BBox3_IsDegenerate" data-uid="Elements.Geometry.BBox3.IsDegenerate">IsDegenerate()</h4>
   <div class="markdown level1 summary"><p>Does this bounding box have a dimension of 0 along any axis?</p>
@@ -723,6 +843,48 @@ equal to this bounding box within Epsilon?</p>
     <tbody>
       <tr>
         <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Geometry_BBox3_Offset_" data-uid="Elements.Geometry.BBox3.Offset*"></a>
+  <h4 id="Elements_Geometry_BBox3_Offset_System_Double_" data-uid="Elements.Geometry.BBox3.Offset(System.Double)">Offset(Double)</h4>
+  <div class="markdown level1 summary"><p>Offset a box in each coordinate by a given amount.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BBox3 Offset(double amount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Double</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>Offset distance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
         <td></td>
       </tr>
     </tbody>

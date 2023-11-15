@@ -1,12 +1,17 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Serialization.JSON;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace Elements.Tests
 {
-    public class MeshTests
+    public class MeshTests : ModelTest
     {
         [Fact]
         public void Volume()
@@ -31,7 +36,8 @@ namespace Elements.Tests
             l1Extrude.Solid.Tessellate(ref l1Mesh);
             var a = l.Area();
             var a1 = l1.Area();
-            Assert.Equal((l.Area() + l1.Area()) * 5, l1Mesh.Volume(), 5);
+            var v = l1Mesh.Volume();
+            Assert.Equal((l.Area() - l1.Area()) * 5, l1Mesh.Volume(), 5);
         }
         [Fact]
         public void ReadMeshSerializedAsNull()
@@ -44,15 +50,75 @@ namespace Elements.Tests
             Newtonsoft.Json.JsonConvert.DeserializeObject<InputsWithMesh>(json, new[] { new MeshConverter() });
         }
 
+        [Fact]
+        public void IntersectsRays()
+        {
+            Name = nameof(IntersectsRays);
+            var random = new Random(10);
+            var _mesh = new Mesh();
+            var _rays = new List<Ray>();
+            var xCount = 100;
+            var yCount = 100;
+            for (int i = 0; i < xCount; i++)
+            {
+                for (int j = 0; j < yCount; j++)
+                {
+                    var point = new Vector3(i, j, random.NextDouble() * 2);
+                    var c = _mesh.AddVertex(point);
+                    if (i != 0 && j != 0)
+                    {
+                        // add faces
+                        var d = _mesh.Vertices[i * yCount + j - 1];
+                        var a = _mesh.Vertices[(i - 1) * yCount + j - 1];
+                        var b = _mesh.Vertices[(i - 1) * yCount + j];
+                        _mesh.AddTriangle(a, b, c);
+                        _mesh.AddTriangle(c, d, a);
+                    }
+                }
+            }
+
+            // create 1000 random rays
+            for (int i = 0; i < 1000; i++)
+            {
+                var ray = new Ray(new Vector3(random.NextDouble() * (xCount - 1), random.NextDouble() * (yCount - 1), 5), new Vector3(0, 0, -1));
+                _rays.Add(ray);
+                Model.AddElement(new ModelCurve(new Line(ray.Origin, ray.Origin + ray.Direction * 0.1), BuiltInMaterials.XAxis));
+            }
+            _mesh.ComputeNormals();
+            Model.AddElement(new MeshElement(_mesh) { Material = new Material("b") { Color = (0.6, 0.6, 0.6, 1), DoubleSided = true } });
+
+            var pts = new List<Vector3>();
+
+            foreach (var ray in _rays)
+            {
+                if (ray.Intersects(_mesh, out var p))
+                {
+                    pts.Add(p);
+                    var l = new Line(p, ray.Origin);
+                    Model.AddElement(l);
+                }
+            }
+
+            Assert.Equal(_rays.Count, pts.Count);
+        }
+
+        [Fact]
+        public void MergeOnFirstVertexAdd()
+        {
+            var mesh = new Mesh();
+            mesh.AddVertex(new Vector3(0, 0, 0), merge: true);
+            // no execptions
+        }
+
         public class InputsWithMesh
         {
-            [Newtonsoft.Json.JsonConstructor]
+            [JsonConstructor]
             public InputsWithMesh(Mesh @mesh, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey)
             {
                 this.Mesh = @mesh;
             }
 
-            [Newtonsoft.Json.JsonProperty("Mesh", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+            [JsonProperty("Mesh", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
             public Mesh Mesh { get; set; }
         }
     }

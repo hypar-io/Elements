@@ -16,7 +16,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.x
+          dotnet-version: 6.0.x
       - name: Get previous tag.
         id: version
         run: |
@@ -28,21 +28,21 @@ jobs:
         with:
           result-encoding: string
           script: |
-                const incoming = "${{steps.version.outputs.tag}}"
-                console.log("Incoming Tag: " + incoming)
-                if(incoming.includes('alpha')) {
-                  const oldNum = incoming.match(/alpha[.]*(\d+)/)[1]
-                  const newNum = parseInt(oldNum)+1
-                  const newTag = incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
-                  console.log("New Tag: " + newTag)
-                  return newTag
-                }
-                else {
-                  const splitLast = incoming.match(/(.*\.)(\d*)/)
-                  const newTag =splitLast[1] + (parseInt(splitLast[2])+1)+'-alpha.0'
-                  console.log("New Tag: " + newTag)
-                  return newTag
-                }
+            const incoming = "${{steps.version.outputs.tag}}"
+            console.log("Incoming Tag: " + incoming)
+            if(incoming.includes('alpha')) {
+              const oldNum = incoming.match(/alpha[.]*(\d+)/)[1]
+              const newNum = parseInt(oldNum)+1
+              const newTag = incoming.replace(/alpha.*\d+/, `alpha.${newNum}`)
+              console.log("New Tag: " + newTag)
+              return newTag
+            }
+            else {
+              const splitLast = incoming.match(/(.*\.)(\d*)/)
+              const newTag =splitLast[1] + (parseInt(splitLast[2])+1)+'-alpha.0'
+              console.log("New Tag: " + newTag)
+              return newTag
+            }
       - name: Set NuGet version from alpha.
         run: echo "NUGET_VERSION=${{steps.bump-with-alpha.outputs.result}}" >> $GITHUB_ENV
       - name: Build Elements
@@ -59,3 +59,4 @@ jobs:
           dotnet nuget push ./nupkg/Hypar.Elements.Serialization.DXF.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
           dotnet nuget push ./nupkg/Hypar.Elements.Components.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+          dotnet nuget push ./nupkg/Hypar.Elements.MEP.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}

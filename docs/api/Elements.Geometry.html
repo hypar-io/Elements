@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace Elements.Geometry
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -95,14 +95,18 @@
       <section><p>An arc defined as a CCW rotation from the +X axis around a center between a start angle and an end angle.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Bezier.html">Bezier</a></h4>
-      <section><p>A Bezier curve.</p>
+      <section><p>A Bezier curve.
+Parameterization of the curve is 0 -&gt; 1.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.BoundedCurve.html">BoundedCurve</a></h4>
+      <section><p>A bounded curve.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Box.html">Box</a></h4>
       <section><p>A geometry type representing an oriented cuboid in space.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Circle.html">Circle</a></h4>
-      <section><p>An arc with a start angle of 0 (+X) and
-an end angle of 360.0.</p>
+      <section><p>A circle.
+Parameterization of the circle is 0 -&gt; 2PI.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Colors.html">Colors</a></h4>
       <section><p>Commonly used colors.</p>
@@ -116,12 +120,31 @@ an end angle of 360.0.</p>
       <h4><a class="xref" href="Elements.Geometry.Curve.html">Curve</a></h4>
       <section><p>The abstract base class for all curves.</p>
 </section>
+      <h4><a class="xref" href="Elements.Geometry.Ellipse.html">Ellipse</a></h4>
+      <section><p>An ellipse.
+Parameterization of the curve is 0 -&gt; 2PI.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.EllipticalArc.html">EllipticalArc</a></h4>
+      <section><p>An elliptical arc.</p>
+</section>
       <h4><a class="xref" href="Elements.Geometry.GraphicsBuffers.html">GraphicsBuffers</a></h4>
       <section><p>A container for graphics data.
-The buffers used in this class align with webgl requirements.</p>
+The buffers used in this class align with webGL requirements.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.IndexedPolycurve.html">IndexedPolycurve</a></h4>
+      <section><p>A curve composed of a collection of line and arc segments.
+Parameterization of the curve is 0-&gt;n where n is the number of curves.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.InfiniteLine.html">InfiniteLine</a></h4>
+      <section><p>An infinite line.
+Parameterization of the line is -infinity -&gt; 0 (Origin) -&gt; +infinity</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Line.html">Line</a></h4>
-      <section><p>A linear curve between two points.</p>
+      <section><p>A line segment.
+Parameterization of the line is  0 (start) -&gt; length (end)</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.LineExtensions.html">LineExtensions</a></h4>
+      <section><p>Line extension methods.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.LineSegmentExtensions.html">LineSegmentExtensions</a></h4>
       <section><p>Line segment extension methods.</p>
@@ -138,10 +161,12 @@ The fourth column represents the translation of the coordinate system.</p>
       <section><p>A cartesian plane.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Polygon.html">Polygon</a></h4>
-      <section><p>A closed planar polygon.</p>
+      <section><p>A closed planar polygon.
+Parameterization of the curve is 0-&gt;n-1 where n is the number of vertices..</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Polyline.html">Polyline</a></h4>
-      <section><p>A continuous set of lines.</p>
+      <section><p>A continuous set of lines.
+Parameterization of the curve is 0-&gt;n-1 where n is the number of vertices.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></h4>
       <section><p>A polygonal perimeter with zero or more polygonal voids.</p>
@@ -157,6 +182,9 @@ The fourth column represents the translation of the coordinate system.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Triangle.html">Triangle</a></h4>
       <section><p>A mesh triangle.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.TrimmedCurve-1.html">TrimmedCurve&lt;TBasis&gt;</a></h4>
+      <section><p>A trimmed curve.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.Vector3Extensions.html">Vector3Extensions</a></h4>
       <section><p>Extension methods for Vector3.</p>
@@ -195,6 +223,15 @@ The fourth column represents the translation of the coordinate system.</p>
       <h4><a class="xref" href="Elements.Geometry.FrameType.html">FrameType</a></h4>
       <section><p>The frame type to be used for operations requiring
 a moving frame around the curve.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.NormalizationType.html">NormalizationType</a></h4>
+      <section><p>Normalization type.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.RayIntersectionResult.html">RayIntersectionResult</a></h4>
+      <section><p>The possible types of ray intersection result.</p>
+</section>
+      <h4><a class="xref" href="Elements.Geometry.RelationToPlane.html">RelationToPlane</a></h4>
+      <section><p>An enumeration of relations to a plane.</p>
 </section>
       <h4><a class="xref" href="Elements.Geometry.VoidTreatment.html">VoidTreatment</a></h4>
       <section><p>Controls the handling of internal regions in a polygon boolean operation.</p>

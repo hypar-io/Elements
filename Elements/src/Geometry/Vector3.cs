@@ -1,6 +1,8 @@
 using Elements.Validators;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Geometry
 {
@@ -14,10 +16,17 @@ namespace Elements.Geometry
         /// </summary>
         public const double EPSILON = 1e-5;
 
+        /// <summary>
+        /// A tolerance for angle comparison operation of cos of 0.001 degrees.
+        /// </summary>
+        public const double COS_ANGLE_EPSILON = 0.99999999984769128;
+
         private static Vector3 _xAxis = new Vector3(1, 0, 0);
         private static Vector3 _yAxis = new Vector3(0, 1, 0);
         private static Vector3 _zAxis = new Vector3(0, 0, 1);
         private static Vector3 _origin = new Vector3();
+        private static readonly Vector3 _min = new Vector3(double.MinValue, double.MinValue, double.MinValue);
+        private static readonly Vector3 _max = new Vector3(double.MaxValue, double.MaxValue, double.MaxValue);
 
         /// <summary>
         /// Create a vector.
@@ -25,7 +34,7 @@ namespace Elements.Geometry
         /// <param name="x">The x component.</param>
         /// <param name="y">The y component.</param>
         /// <param name="z">The z component.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Vector3(double @x, double @y, double @z)
         {
             if (!Validator.DisableValidationOnConstruction)
@@ -47,15 +56,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>The X component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("X", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("X", Required = Required.Always)]
         public double X { get; set; }
 
         /// <summary>The Y component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("Y", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Y", Required = Required.Always)]
         public double Y { get; set; }
 
         /// <summary>The Z component of the vector.</summary>
-        [Newtonsoft.Json.JsonProperty("Z", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Z", Required = Required.Always)]
         public double Z { get; set; }
 
         /// <summary>
@@ -65,6 +74,22 @@ namespace Elements.Geometry
         public static Vector3 Origin
         {
             get { return _origin; }
+        }
+
+        /// <summary>
+        /// The smallest possible value of a Vector3.
+        /// </summary>
+        public static Vector3 Min
+        {
+            get { return _min; }
+        }
+
+        /// <summary>
+        /// The largest possible value of a Vector3.
+        /// </summary>
+        public static Vector3 Max
+        {
+            get { return _max; }
         }
 
         /// <summary>
@@ -115,13 +140,14 @@ namespace Elements.Geometry
         /// <returns></returns>
         public static IList<Vector3> AtNEqualSpacesAlongLine(Line line, int n, bool includeEnds = false)
         {
-            var div = 1.0 / (double)(n + 1);
+            var l = line.Length();
+            var div = l / (double)(n + 1);
             var pts = new List<Vector3>();
-            for (var t = 0.0; t <= 1.0; t += div)
+            for (var t = 0.0; t <= l; t += div)
             {
                 var pt = line.PointAt(t);
 
-                if ((t == 0.0 && !includeEnds) || (t == 1.0 && !includeEnds))
+                if ((t == 0.0 && !includeEnds) || (t == l && !includeEnds))
                 {
                     continue;
                 }
@@ -263,6 +289,11 @@ namespace Elements.Geometry
         /// <returns>The angle in degrees between 0 and 180. </returns>
         public double AngleTo(Vector3 v)
         {
+            return Units.RadiansToDegrees(AngleToInternal(v));
+        }
+
+        internal double AngleToInternal(Vector3 v)
+        {
             var n = Dot(v);
             var d = Length() * v.Length();
             if (d == 0.0)
@@ -277,11 +308,10 @@ namespace Elements.Geometry
             }
             if (r.ApproximatelyEquals(-1.0))
             {
-                return 180;
+                return Math.PI;
             }
             var rad = Math.Acos(r);
-
-            return rad * 180 / Math.PI;
+            return rad;
         }
 
         /// <summary>
@@ -301,6 +331,11 @@ namespace Elements.Geometry
         /// <param name="normal">The normal of the plane in which you wish to calculate the angle.</param>
         /// <returns>Angle in degrees between 0 and 360, or NaN if the projected input vectors are invalid.</returns>
         public double PlaneAngleTo(Vector3 v, Vector3 normal)
+        {
+            return Units.RadiansToDegrees(PlaneAngleToInternal(v, normal));
+        }
+
+        internal double PlaneAngleToInternal(Vector3 v, Vector3 normal)
         {
             var transformFromPlane = new Transform(Vector3.Origin, normal);
             transformFromPlane.Invert();
@@ -329,23 +364,44 @@ namespace Elements.Geometry
             Vector3 aCrossB = aUnitized.Cross(bUnitized).Unitized();
             if (Vector3.ZAxis.Dot(aCrossB) > 0)
             {
-                return angle * 180 / Math.PI;
+                return angle;
             }
             else
             {
-                return (Math.PI * 2 - angle) * 180 / Math.PI;
+                return Math.PI * 2 - angle;
             }
         }
 
         #region DistanceTo methods
         /// <summary>
-        /// The distance from this point to b.
+        /// The distance from this point to v.
         /// </summary>
         /// <param name="v">The target vector.</param>
         /// <returns>The distance between this vector and the provided vector.</returns>
         public double DistanceTo(Vector3 v)
         {
             return Math.Sqrt(Math.Pow(this.X - v.X, 2) + Math.Pow(this.Y - v.Y, 2) + Math.Pow(this.Z - v.Z, 2));
+        }
+
+        /// <summary>
+        /// The distance from this point to the ray.
+        /// The ray is treated as being infinitely long.
+        /// </summary>
+        /// <param name="ray">The target ray.</param>
+        public double DistanceTo(Ray ray)
+        {
+            var t = ProjectedParameterOn(ray);
+            if (Double.IsNaN(t))
+            {
+                return double.PositiveInfinity;
+            }
+            var closestPointOnRay = ray.Origin + t * ray.Direction;
+            return closestPointOnRay.DistanceTo(this);
+        }
+
+        internal double ProjectedParameterOn(Ray ray)
+        {
+            return ray.Direction.Dot(this - ray.Origin) / ray.Direction.Length(); // t will be [0,1]
         }
 
         /// <summary>
@@ -386,7 +442,10 @@ namespace Elements.Geometry
 
         private double DistanceToEdgeInternal(Vector3 start, Vector3 end, out Vector3 closestPoint)
         {
-            var lambda = (this - start).Dot(end - start) / (end - start).Dot(end - start);
+            var d1 = this - start;
+            var d2 = end - start;
+
+            var lambda = d1.Dot(d2) / d2.Dot(d2);
             if (lambda >= 1)
             {
                 closestPoint = end;
@@ -399,7 +458,7 @@ namespace Elements.Geometry
             }
             else
             {
-                closestPoint = (start + lambda * (end - start));
+                closestPoint = start + lambda * d2;
                 return this.DistanceTo(closestPoint);
             }
         }
@@ -457,7 +516,7 @@ namespace Elements.Geometry
         public double DistanceTo(Polygon polygon, out Vector3 closestPoint)
         {
             var pointOnPolygonPlane = this.Project(polygon.Plane());
-            if (polygon.Contains(pointOnPolygonPlane, out var containment))
+            if (polygon.Contains(pointOnPolygonPlane, out _))
             {
                 closestPoint = pointOnPolygonPlane;
                 return this.DistanceTo(pointOnPolygonPlane);
@@ -497,7 +556,7 @@ namespace Elements.Geometry
         public Vector3 ProjectOnto(Vector3 a)
         {
             var b = this;
-            return (a.Dot(b) / Math.Pow(a.Length(), 2)) * a;
+            return (a.Dot(b) / a.LengthSquared()) * a;
         }
 
         /// <summary>
@@ -699,8 +758,7 @@ namespace Elements.Geometry
         {
             //Ax+By+Cz+d=0
             //p' = p - (n ⋅ (p - o)) * n
-            var d = -p.Origin.X * p.Normal.X - p.Origin.Y * p.Normal.Y - p.Origin.Z * p.Normal.Z;
-            var p1 = this - (p.Normal.Dot(this - p.Origin)) * p.Normal;
+            var p1 = this - p.Normal.Dot(this - p.Origin) * p.Normal;
             return p1;
         }
 
@@ -794,17 +852,34 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Get the closest point on the infinite line from this point.
+        /// </summary>
+        /// <param name="line">The infinite line on which to find the closest point.</param>
+        /// <returns>The closest point on the infinite line from this point.</returns>
+        public Vector3 ClosestPointOn(InfiniteLine line)
+        {
+            var v = this - line.Origin;
+            var d = v.Dot(line.Direction);
+            return line.Origin + line.Direction * d;
+        }
+
+
+        /// <summary>
         /// Get the closest point on the line from this point.
         /// </summary>
         /// <param name="line">The line on which to find the closest point.</param>
+        /// <param name="infinite">If true, line will be treated as infinite. (False by default)</param>
         /// <returns>The closest point on the line from this point.</returns>
-        public Vector3 ClosestPointOn(Line line)
+        public Vector3 ClosestPointOn(Line line, bool infinite = false)
         {
             var dir = line.Direction();
             var v = this - line.Start;
             var d = v.Dot(dir);
-            d = Math.Min(line.Length(), d);
-            d = Math.Max(d, 0);
+            if (!infinite)
+            {
+                d = Math.Min(line.Length(), d);
+                d = Math.Max(d, 0);
+            }
             return line.Start + dir * d;
         }
 
@@ -814,7 +889,7 @@ namespace Elements.Geometry
         /// <param name="a">The first point.</param>
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
-        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are colinear.</returns>
+        /// <returns>Greater than 0 if the points are CCW, less than 0 if they are CW, and 0 if they are collinear.</returns>
         public static double CCW(Vector3 a, Vector3 b, Vector3 c)
         {
             return (b.X - a.X) * (c.Y - a.Y) - (c.X - a.X) * (b.Y - a.Y);
@@ -827,18 +902,65 @@ namespace Elements.Geometry
         /// <param name="b">The second point.</param>
         /// <param name="c">The third point.</param>
         /// <returns>True if the points are on the same line, false otherwise.</returns>
+        [Obsolete("Use AreCollinearByDistance or AreCollinearByAngle instead")]
         public static bool AreCollinear(Vector3 a, Vector3 b, Vector3 c)
         {
-            var ba = b - a;
-            var cb = c - b;
+            return AreCollinearByDistance(a, b, c);
+        }
 
-            if (ba.IsZero() || cb.IsZero())
+        /// <summary>
+        /// Check whether three points are on the same line within certain distance.
+        /// This function is slower than AreCollinearByAngle and less suitable for high complexity code.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <param name="tolerance">Distance tolerance.</param>
+        /// <returns>True if the points are on the same line, false otherwise.</returns>
+        public static bool AreCollinearByDistance(Vector3 a, Vector3 b, Vector3 c, double tolerance = Vector3.EPSILON)
+        {
+            var vectorList = new List<Vector3> { a, b, c };
+            return vectorList.AreCollinearByDistance(tolerance);
+        }
+
+        /// <summary>
+        /// Check whether three points are on the same line within certain angle.
+        /// Order is important since unsigned abc angle is checked.
+        /// This function is much faster than AreCollinearByDistance but angle deviation scales with the distance of points being compared.
+        /// If points are far away from each other they might appear collinear even if there are large distance offsets between them.
+        /// </summary>
+        /// <param name="a">The first point.</param>
+        /// <param name="b">The second point.</param>
+        /// <param name="c">The third point.</param>
+        /// <param name="cosAngleTolerance">Angle tolerance as cos.</param>
+        /// <returns></returns>
+        public static bool AreCollinearByAngle(Vector3 a, Vector3 b, Vector3 c, double cosAngleTolerance = Vector3.COS_ANGLE_EPSILON)
+        {
+            var baX = b.X - a.X;
+            var baY = b.Y - a.Y;
+            var baZ = b.Z - a.Z;
+            var baLength = Math.Sqrt(Math.Pow(baX, 2) + Math.Pow(baY, 2) + Math.Pow(baZ, 2));
+            if (baLength < Vector3.EPSILON)
+            {
                 return true;
+            }
+            baX = baX / baLength;
+            baY = baY / baLength;
+            baZ = baZ / baLength;
 
-            ba = ba.Unitized();
-            cb = cb.Unitized();
+            var cbX = c.X - b.X;
+            var cbY = c.Y - b.Y;
+            var cbZ = c.Z - b.Z;
+            var cbLength = Math.Sqrt(Math.Pow(cbX, 2) + Math.Pow(cbY, 2) + Math.Pow(cbZ, 2));
+            if (cbLength < Vector3.EPSILON)
+            {
+                return true;
+            }
+            cbX = cbX / cbLength;
+            cbY = cbY / cbLength;
+            cbZ = cbZ / cbLength;
 
-            return Math.Abs(cb.Dot(ba)) > (1 - Vector3.EPSILON);
+            return Math.Abs(baX * cbX + baY * cbY + baZ * cbZ) > cosAngleTolerance;
         }
 
         /// <summary>
@@ -851,6 +973,26 @@ namespace Elements.Geometry
             var cd = d - a;
             var tp = ab.TripleProduct(ac, cd);
             return Math.Abs(tp) < EPSILON;
+        }
+
+        /// <summary>
+        /// Are the provided points within tolerance of each other?
+        /// </summary>
+        /// <param name="points">The points to compare.</param>
+        /// <param name="tolerance">The tolerance.</param>
+        /// <returns>True if all points are within tolerance of each other, otherwise false.</returns>
+        public static bool AreApproximatelyEqual(IEnumerable<Vector3> points, double tolerance = Vector3.EPSILON)
+        {
+            if (points.Count() < 2)
+            {
+                return true;
+            }
+            var average = points.Average();
+            // we halve the tolerance to guarantee that all points in the set are
+            // within tolerance of each other. If all points are within
+            // tolerance/2 of some point, then they must all be within tolerance
+            // of each other.
+            return points.All(p => p.IsAlmostEqualTo(average, tolerance / 2.0)); 
         }
 
         /// <summary>
@@ -954,6 +1096,40 @@ namespace Elements.Geometry
         public static implicit operator Vector3((int X, int Y) vector)
         {
             return new Vector3(vector.X, vector.Y);
+        }
+
+        /// <summary>
+        /// Construct X and Y vectors from the provided Z vector.
+        /// Construction is done by projecting the Z vector onto the global XY
+        /// plane and using the resulting vector to find the right (+X) vector,
+        /// then the forward (+Y) vectors.
+        /// </summary>
+        /// <param name="origin">The origin.</param>
+        /// <param name="zAxis">The z vector.</param>
+        /// <returns>A tuple containing the X and Y vectors.</returns>
+        internal static (Vector3 X, Vector3 Y) ConstructBasisVectorsFromZAxis(Vector3 origin, Vector3 zAxis)
+        {
+            Vector3 x = XAxis;
+            Vector3 y = YAxis;
+
+            if (!zAxis.IsParallelTo(ZAxis))
+            {
+                // Project up onto the ortho plane
+                var p = new Plane(origin, zAxis);
+                var test = ZAxis.Project(p);
+                x = test.Cross(zAxis).Unitized();
+                y = x.Cross(zAxis.Negate()).Unitized();
+            }
+            else
+            {
+                // Ensure that we have a right-handed coordinate system.
+                if (zAxis.Dot(ZAxis).ApproximatelyEquals(-1))
+                {
+                    y = YAxis.Negate();
+                }
+            }
+
+            return (x, y);
         }
     }
 }

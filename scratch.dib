@@ -1,0 +1,120 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":"csharp"}]}}
+
+#!csharp
+
+#r "./Elements/src/bin/Debug/netstandard2.0/Hypar.Elements.dll"
+#r "nuget:glTF2Loader, 1.1.3-alpha"
+#r "nuget:Unofficial.LibTessDotNet, 2.0.0"
+#r "nuget:SixLabors.Fonts, 1.0.0-beta19"
+#r "nuget:SixLabors.ImageSharp, 2.1.4"
+#r "nuget:SixLabors.ImageSharp.Drawing, 1.0.0-beta15"
+
+#!csharp
+
+#!import "./Elements/src/extension.dib"
+
+#!csharp
+
+using Elements.Geometry;
+
+private IndexedPolycurve CreateTestPolycurve()
+{
+    var arc = new Arc(new Vector3(0.5, 1), 0.5, 0, 180);
+    var a = new Vector3(1, 0, 0);
+    var b = new Vector3(1, 1, 0);
+    var c = arc.Mid();
+    var d = new Vector3(0, 1, 0);
+    var e = Vector3.Origin;
+    var vertices = new[] { a, b, c, d, e };
+    var indices = new[]{
+        new[]{0,1},
+        new[]{1,2,3},
+        new[]{3,4}
+    };
+
+    return new IndexedPolycurve(vertices, indices);
+}
+
+#!csharp
+
+using Elements.Geometry.Profiles;
+
+var model = new Model();
+var textData = new List<(Vector3 location, Vector3 facingDirection, Vector3 lineDirection, string text, Color? color)>();
+
+// Line
+var line = new Line(Vector3.Origin, new Vector3(1,1));
+var lineMc = new ModelCurve(line, BuiltInMaterials.XAxis);
+textData.Add((line.Start, Vector3.ZAxis, Vector3.XAxis, $"{line.Domain.Min:f2}", Colors.White));
+textData.Add((line.End, Vector3.ZAxis, Vector3.XAxis, $"{line.Domain.Max:f2}", Colors.White));
+model.AddElement(lineMc);
+
+// Polyline
+var pline = new Polyline(new Vector3(2,0), new Vector3(3,1), new Vector3(4, 0));
+var plineMc = new ModelCurve(pline, BuiltInMaterials.YAxis);
+foreach(var v in pline.Vertices)
+{
+    textData.Add((v, Vector3.ZAxis, Vector3.XAxis, $"{pline.GetParameterAt(v):f2}", Colors.White));
+}
+model.AddElement(plineMc);
+
+// Polygon
+var pgon = Polygon.Star(1,0.5,5).TransformedPolygon(new Transform(new Vector3(6,0,0)));
+var pgonMc = new ModelCurve(pgon, BuiltInMaterials.ZAxis);
+foreach(var v in pgon.Vertices)
+{
+    textData.Add((v, Vector3.ZAxis, Vector3.XAxis, $"{pgon.GetParameterAt(v):f1}", Colors.White));
+}
+model.AddElement(pgon);
+
+// Indexed polycurve
+var ipc = CreateTestPolycurve().TransformedPolycurve(new Transform(new Vector3(8,0,0)));
+var ipcMc = new ModelCurve(ipc, BuiltInMaterials.XAxis);
+textData.Add((ipc.PointAt(0), Vector3.ZAxis, Vector3.XAxis, "0", Colors.White));
+textData.Add((ipc.PointAt(1), Vector3.ZAxis, Vector3.XAxis, "1", Colors.White));
+textData.Add((ipc.PointAt(1.5), Vector3.ZAxis, Vector3.XAxis, "1.5", Colors.White));
+textData.Add((ipc.PointAt(2), Vector3.ZAxis, Vector3.XAxis, "2", Colors.White));
+textData.Add((ipc.PointAt(3), Vector3.ZAxis, Vector3.XAxis, "3", Colors.White));
+model.AddElement(ipcMc);
+
+// Arc
+var arc = new Arc(Vector3.Origin, 1, 15, 270).TransformedArc(new Transform(new Vector3(0,-2,0)));
+var arcMc = new ModelCurve(arc, BuiltInMaterials.XAxis);
+textData.Add((arc.Start, Vector3.ZAxis, Vector3.XAxis, $"{arc.Domain.Min:f2}", Colors.White));
+textData.Add((arc.End, Vector3.ZAxis, Vector3.XAxis, $"{arc.Domain.Max:f2}", Colors.White));
+model.AddElement(arcMc);
+
+// Ellipse
+var ellipse = (EllipticalArc)(new EllipticalArc(Vector3.Origin, 1, 0.5, 15, 270)).Transformed(new Transform(new Vector3(3,-2,0)));
+var ellipseMc = new ModelCurve(ellipse, BuiltInMaterials.XAxis);
+textData.Add((ellipse.Start, Vector3.ZAxis, Vector3.XAxis, $"{ellipse.Domain.Min:f2}", Colors.White));
+textData.Add((ellipse.End, Vector3.ZAxis, Vector3.XAxis, $"{ellipse.Domain.Max:f2}", Colors.White));
+model.AddElement(ellipseMc);
+
+// Fillets
+var l = Polygon.L(1,1,0.5).TransformedPolygon(new Transform(new Vector3(5,-2.5)));
+var fillet = l.Fillet(0.1);
+var filletMc = new ModelCurve(fillet, BuiltInMaterials.EdgesHighlighted);
+model.AddElement(filletMc);
+
+// Bezier
+var b = new Bezier(new List<Vector3>{
+    Vector3.Origin,
+    new Vector3(1,1,0),
+    new Vector3(2,-1,0),
+    new Vector3(3,1,0)
+});
+var t = new Transform(new Vector3(7, -2));
+
+for(var i=0.0; i<=1.0; i+=0.2)
+{
+    textData.Add((t.OfPoint(b.PointAt(i)), Vector3.ZAxis, Vector3.XAxis, $"{i:f1}", Colors.White));
+}
+var bmc = new ModelCurve(b.TransformedBezier(t), BuiltInMaterials.YAxis);
+model.AddElement(bmc);
+
+var modelText = new ModelText(textData, FontSize.PT36);
+model.AddElement(modelText);
+DisplayModel(model, 1600,800)

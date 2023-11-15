@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Serialization.JSON;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Elements
@@ -8,16 +9,16 @@ namespace Elements
     /// <summary>
     /// A collection of content elements.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class ContentCatalog : Element
     {
         /// <summary>The content elements in this catalog.</summary>
-        [Newtonsoft.Json.JsonProperty("Content", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Content", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<ContentElement> Content { get; set; } = new List<ContentElement>();
 
         /// <summary>An example arrangement of the elements contained in this catalog.</summary>
-        [Newtonsoft.Json.JsonProperty("ReferenceConfiguration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("ReferenceConfiguration", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Element> ReferenceConfiguration { get; set; }
 
         /// <summary>
@@ -27,7 +28,7 @@ namespace Elements
         /// <param name="referenceConfiguration"></param>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public ContentCatalog(IList<ContentElement> @content, IList<Element> @referenceConfiguration, System.Guid @id = default, string @name = null)
             : base(id, name)
         {
@@ -36,7 +37,7 @@ namespace Elements
         }
 
         /// <summary>
-        /// Convert the ContentCatalog into it's JSON representation.
+        /// Convert the ContentCatalog into its JSON representation.
         /// </summary>
         public string ToJson()
         {

@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Elements.Spatial.AdaptiveGrid
 {
@@ -18,14 +18,23 @@ namespace Elements.Spatial.AdaptiveGrid
         public Vector3 Point { get; set; }
 
         /// <summary>
-        /// The AdaptiveGrid that this Vertex belongs to.
-        /// </summary>
-        public AdaptiveGrid AdaptiveGrid { get; private set; }
-
-        /// <summary>
         /// ID of this Vertex.
         /// </summary>
         public ulong Id { get; internal set; }
+
+        /// <summary>
+        /// Find edge between this Vertex and Vertex with given ID.
+        /// </summary>
+        /// <param name="otherId">Id of other vertex.</param>
+        /// <returns>Edge between this and Vertex with given ID. Null if not found.</returns>
+        public Edge GetEdge(ulong otherId)
+        {
+            if (otherId == this.Id)
+            {
+                return null;
+            }
+            return Edges.Where(e => e.StartId == otherId || e.EndId == otherId).FirstOrDefault();
+        }
 
         /// <summary>
         /// All Edges connected to this Vertex.
@@ -33,10 +42,9 @@ namespace Elements.Spatial.AdaptiveGrid
         [JsonIgnore]
         public HashSet<Edge> Edges = new HashSet<Edge>();
 
-        internal Vertex(AdaptiveGrid adaptiveGrid, ulong id, Vector3 point)
+        internal Vertex(ulong id, Vector3 point)
         {
             Id = id;
-            AdaptiveGrid = adaptiveGrid;
             Point = point;
         }
 

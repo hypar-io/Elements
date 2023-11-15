@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface ICurve
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,7 +86,7 @@
   
   <h1 id="Elements_Geometry_Interfaces_ICurve" data-uid="Elements.Geometry.Interfaces.ICurve" class="text-break">Interface ICurve
   </h1>
-  <div class="markdown level0 summary"><p>ICurve is implemented by all curve types.</p>
+  <div class="markdown level0 summary"><p>An infinite curve.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Elements.Geometry.Interfaces.html">Elements.Geometry.Interfaces</a></h6>
@@ -97,38 +97,14 @@
   </div>
   <h3 id="methods">Methods
   </h3>
-  <a id="Elements_Geometry_Interfaces_ICurve_Bounds_" data-uid="Elements.Geometry.Interfaces.ICurve.Bounds*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Bounds" data-uid="Elements.Geometry.Interfaces.ICurve.Bounds">Bounds()</h4>
-  <div class="markdown level1 summary"><p>Get the bounding box of this curve.</p>
+  <a id="Elements_Geometry_Interfaces_ICurve_ParameterAtDistanceFromParameter_" data-uid="Elements.Geometry.Interfaces.ICurve.ParameterAtDistanceFromParameter*"></a>
+  <h4 id="Elements_Geometry_Interfaces_ICurve_ParameterAtDistanceFromParameter_System_Double_System_Double_" data-uid="Elements.Geometry.Interfaces.ICurve.ParameterAtDistanceFromParameter(System.Double,System.Double)">ParameterAtDistanceFromParameter(Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Get the parameter at a distance from the specified parameter along the curve.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">BBox3 Bounds()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.BBox3.html">BBox3</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Interfaces_ICurve_Frames_" data-uid="Elements.Geometry.Interfaces.ICurve.Frames*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Frames_System_Double_System_Double_" data-uid="Elements.Geometry.Interfaces.ICurve.Frames(System.Double,System.Double)">Frames(Double, Double)</h4>
-  <div class="markdown level1 summary"><p>Get a collection of Transforms which represent frames along this ICurve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Transform[] Frames(double startSetback = 0, double endSetback = 0)</code></pre>
+    <pre><code class="lang-csharp hljs">double ParameterAtDistanceFromParameter(double distance, double parameter)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -142,43 +118,18 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">startSetback</span></td>
-        <td><p>The offset from the start of the ICurve.</p>
+        <td><span class="parametername">distance</span></td>
+        <td><p>The distance from the start parameter.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">System.Double</span></td>
-        <td><span class="parametername">endSetback</span></td>
-        <td><p>The offset from the end of the ICurve.</p>
+        <td><span class="parametername">parameter</span></td>
+        <td><p>The parameter from which to measure the distance.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Elements.Geometry.Transform.html">Transform</a>[]</td>
-        <td><p>A collection of Transforms.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <a id="Elements_Geometry_Interfaces_ICurve_Length_" data-uid="Elements.Geometry.Interfaces.ICurve.Length*"></a>
-  <h4 id="Elements_Geometry_Interfaces_ICurve_Length" data-uid="Elements.Geometry.Interfaces.ICurve.Length">Length()</h4>
-  <div class="markdown level1 summary"><p>Calculate the length of the curve.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">double Length()</code></pre>
-  </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -216,7 +167,7 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>A parameter on the curve between 0.0 and 1.0.</p>
+        <td><p>A parameter on the curve.</p>
 </td>
       </tr>
     </tbody>
@@ -259,7 +210,7 @@
       <tr>
         <td><span class="xref">System.Double</span></td>
         <td><span class="parametername">u</span></td>
-        <td><p>A parameter on the curve between 0.0 and 1.0.</p>
+        <td><p>A parameter on the curve.</p>
 </td>
       </tr>
     </tbody>

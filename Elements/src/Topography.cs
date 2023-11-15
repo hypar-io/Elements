@@ -220,6 +220,27 @@ namespace Elements
             this.Mesh = newMesh;
         }
 
+        /// <summary>
+        /// Construct a new Topography by duplicating another one.
+        /// </summary>
+        public Topography(Topography topography)
+        {
+            this._mesh = new Mesh(topography.Mesh);
+            this._minElevation = topography.MinElevation;
+            this._maxElevation = topography.MaxElevation;
+            this._baseVerts = new List<Vertex>(topography._baseVerts);
+            this.Origin = topography.Origin;
+            this.RowWidth = topography.RowWidth;
+            this.CellWidth = topography.CellWidth;
+            this.CellHeight = topography.CellHeight;
+            this.Elevations = topography.Elevations?.ToArray();
+            this._depthBelowMinimumElevation = topography._depthBelowMinimumElevation;
+            this._absoluteMinimumElevation = topography._absoluteMinimumElevation;
+            this._minElevation = topography._minElevation;
+            this._maxElevation = topography._maxElevation;
+            this._baseVerts = topography._baseVerts;
+        }
+
         internal void RegisterPropertyChangeHandlers()
         {
             this.PropertyChanged += (sender, args) =>
@@ -261,7 +282,6 @@ namespace Elements
             var minElevation = double.MaxValue;
             var maxElevation = double.MinValue;
             var mesh = new Mesh();
-            var triangles = (Math.Sqrt(elevations.Length) - 1) * rowWidth * 2;
 
             var r = new Random();
 
@@ -301,19 +321,40 @@ namespace Elements
                         var a = mesh.Vertices[i];
                         var b = mesh.Vertices[i - 1];
                         var c = mesh.Vertices[i - rowWidth];
-                        var tt = mesh.AddTriangle(a, b, c);
+                        mesh.AddTriangle(a, b, c);
 
                         // Bottom triangle
                         var d = mesh.Vertices[i - 1];
                         var e = mesh.Vertices[i - 1 - rowWidth];
                         var f = mesh.Vertices[i - rowWidth];
-                        var tb = mesh.AddTriangle(d, e, f);
+                        mesh.AddTriangle(d, e, f);
                     }
                 }
             }
 
             mesh.ComputeNormals();
             return (mesh, maxElevation, minElevation);
+        }
+
+        /// <summary>
+        /// Returns a new mesh that represents the top surface of this topography.
+        /// </summary>
+        public Mesh TopMesh()
+        {
+            var topMesh = new Mesh(this._mesh);
+            var facesToRemove = new List<Triangle>();
+            foreach (var face in topMesh.Triangles)
+            {
+                if (face.Normal.Dot(Vector3.ZAxis) <= Vector3.EPSILON)
+                {
+                    facesToRemove.Add(face);
+                }
+            }
+            foreach (var face in facesToRemove)
+            {
+                topMesh.RemoveTriangle(face);
+            }
+            return topMesh;
         }
 
         private void CreateSidesAndBottomMesh(Mesh mesh,
@@ -330,25 +371,13 @@ namespace Elements
             Vertex lastR = null;
             Vertex lastT = null;
             Vertex lastB = null;
-            (Vector3 U, Vector3 V) basisLeft = (default(Vector3), default(Vector3));
-            (Vector3 U, Vector3 V) basisRight = (default(Vector3), default(Vector3));
-            (Vector3 U, Vector3 V) basisTop = (default(Vector3), default(Vector3));
-            (Vector3 U, Vector3 V) basisBottom = (default(Vector3), default(Vector3));
 
             this._baseVerts.Clear();
 
             for (var u = 0; u < rowWidth - 1; u++)
             {
-                if (u == 0)
-                {
-                    basisLeft = Vector3.XAxis.Negate().ComputeDefaultBasisVectors();
-                    basisRight = Vector3.XAxis.ComputeDefaultBasisVectors();
-                    basisTop = Vector3.YAxis.ComputeDefaultBasisVectors();
-                    basisBottom = Vector3.YAxis.Negate().ComputeDefaultBasisVectors();
-                }
-
                 // Left side
-                Vertex l1 = null;
+                Vertex l1;
                 var i1 = u * rowWidth;
                 var v1Existing = mesh.Vertices[i1];
                 var v1 = mesh.AddVertex(v1Existing.Position, normal: Vector3.XAxis.Negate());
@@ -376,7 +405,7 @@ namespace Elements
                 mesh.AddTriangle(l2, l1, v2);
 
                 // Right side
-                Vertex l3 = null;
+                Vertex l3;
                 var i3 = u * (rowWidth) + (rowWidth - 1);
                 var v3Existing = mesh.Vertices[i3];
                 var v3 = mesh.AddVertex(v3Existing.Position, normal: Vector3.XAxis);
@@ -404,7 +433,7 @@ namespace Elements
                 mesh.AddTriangle(l3, l4, v4);
 
                 // Top side
-                Vertex l5 = null;
+                Vertex l5;
                 var i5 = u;
                 var v5Existing = mesh.Vertices[i5];
                 var v5 = mesh.AddVertex(v5Existing.Position, normal: Vector3.YAxis);
@@ -431,7 +460,7 @@ namespace Elements
                 mesh.AddTriangle(l5, l6, v6);
 
                 // Bottom side
-                Vertex l7 = null;
+                Vertex l7;
                 var i7 = rowWidth * rowWidth - u - 1;
                 var v7Existing = mesh.Vertices[i7];
                 var v7 = mesh.AddVertex(v7Existing.Position, normal: Vector3.YAxis.Negate());
@@ -471,13 +500,6 @@ namespace Elements
             mesh.AddTriangle(bb1, bb4, bb3);
 
             mesh.ComputeNormals();
-        }
-
-        private static UV ComputeUVForBasisAndPosition((Vector3 U, Vector3 V) basis, Vector3 p)
-        {
-            var u = basis.U.Dot(p);
-            var v = basis.V.Dot(p);
-            return new UV(u, v);
         }
 
         /// <summary>
@@ -564,7 +586,7 @@ namespace Elements
         /// Trim the topography with the specified perimeter.
         /// </summary>
         /// <param name="perimeter">The perimeter of the trimmed topography.</param>
-        public void Trim(Polygon perimeter)
+        public void Trim(Profile perimeter)
         {
             // This creates a tall trimming object which is extruded
             // from the zero plane but then transformed in -Z by half its
@@ -586,11 +608,22 @@ namespace Elements
         }
 
         /// <summary>
+        /// Returns a new Topography that is a trimmed version of the current Topography.
+        /// </summary>
+        /// <param name="perimeter">The perimeter of the trimmed topography.</param>
+        public Topography Trimmed(Profile perimeter)
+        {
+            var newTopo = new Topography(this);
+            newTopo.Trim(perimeter);
+            return newTopo;
+        }
+
+        /// <summary>
         /// Cut a tunnel through a topography.
         /// </summary>
         /// <param name="path">The path of the tunnel.</param>
         /// <param name="diameter">The diameter of the tunnel.</param>
-        public void Tunnel(Curve path, double diameter)
+        public void Tunnel(BoundedCurve path, double diameter)
         {
             if (diameter < 0.0)
             {
@@ -647,6 +680,7 @@ namespace Elements
             var mesh = new Mesh();
             topoCsg.Tessellate(ref mesh);
             this.Mesh = mesh;
+            mesh.MapUVsToBounds();
 
             return (cuts.Sum(c => c.Volume()), fills.Sum(f => f.Volume()));
         }

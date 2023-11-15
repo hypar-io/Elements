@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Elements.Geometry
 {
     /// <summary>
@@ -6,11 +8,11 @@ namespace Elements.Geometry
     public struct UV
     {
         /// <summary>The U coordinate.</summary>
-        [Newtonsoft.Json.JsonProperty("U", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("U", Required = Required.Always)]
         public double U { get; set; }
 
         /// <summary>The V coordinate.</summary>
-        [Newtonsoft.Json.JsonProperty("V", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("V", Required = Required.Always)]
         public double V { get; set; }
 
         /// <summary>
@@ -18,7 +20,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="u">The U coordinate.</param>
         /// <param name="v">The V coordinate.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public UV(double @u, double @v)
         {
             this.U = @u;

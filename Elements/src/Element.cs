@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Elements
 {
     /// <summary>
     /// An object which is identified with a unique identifier and a name.
     /// </summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public abstract class Element : System.ComponentModel.INotifyPropertyChanged
     {
         private System.Guid _id;
@@ -16,7 +18,7 @@ namespace Elements
         /// </summary>
         /// <param name="id">The unique id of the element.</param>
         /// <param name="name">The name of the element.</param>
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public Element(System.Guid @id = default(Guid), string @name = null)
         {
             this._id = @id;
@@ -29,7 +31,7 @@ namespace Elements
         }
 
         /// <summary>A unique id.</summary>
-        [Newtonsoft.Json.JsonProperty("Id", Required = Newtonsoft.Json.Required.Always)]
+        [JsonProperty("Id", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id
         {
@@ -45,7 +47,7 @@ namespace Elements
         }
 
         /// <summary>A name.</summary>
-        [Newtonsoft.Json.JsonProperty("Name", Required = Newtonsoft.Json.Required.AllowNull)]
+        [JsonProperty("Name", Required = Required.Default)]
         public string Name
         {
             get { return _name; }
@@ -87,5 +89,53 @@ namespace Elements
                 handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// An optional dictionary of mappings.
+        /// </summary>
+        [JsonProperty("Mappings", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        internal Dictionary<string, MappingBase> Mappings { get; set; } = null;
+
+        /// <summary>
+        /// The method used to set a mapping for a given context.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="mapping"></param>
+        public void SetMapping(string context, MappingBase mapping)
+        {
+            if (this.Mappings == null)
+            {
+                this.Mappings = new Dictionary<string, MappingBase>();
+            }
+            this.Mappings[context] = mapping;
+        }
+
+        /// <summary>
+        /// Retrieve a mapping for a given context.
+        /// </summary>
+        /// <param name="context">The context of the mapping being requested.</param>
+        /// <returns>The mapping if it exists, null if not.</returns>
+        public MappingBase GetMapping(string context)
+        {
+            if (this.Mappings == null)
+            {
+                return null;
+            }
+            if (this.Mappings.ContainsKey(context))
+            {
+                return this.Mappings[context];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieve a mapping for a given context.
+        /// </summary>
+        /// <typeparam name="T">The Type of mapping expected.</typeparam>
+        /// <param name="context">The context of the mapping being requested.</param>
+        /// <returns></returns>
+        public T GetMapping<T>(string context) where T : MappingBase
+        {
+            return this.GetMapping(context) as T;
+        }
     }
 }

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class Element
    | Hypar Docs ">
-    <meta name="generator" content="docfx 2.56.6.0">
+    <meta name="generator" content="docfx 2.59.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -93,12 +93,14 @@
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
     <div class="level1"><span class="xref">Element</span></div>
+      <div class="level2"><a class="xref" href="Elements.Annotations.Annotation.html">Annotation</a></div>
       <div class="level2"><a class="xref" href="Elements.ContentCatalog.html">ContentCatalog</a></div>
       <div class="level2"><a class="xref" href="Elements.ElementInstance.html">ElementInstance</a></div>
       <div class="level2"><a class="xref" href="Elements.ElementProxy-1.html">ElementProxy&lt;T&gt;</a></div>
       <div class="level2"><a class="xref" href="Elements.GeometricElement.html">GeometricElement</a></div>
       <div class="level2"><a class="xref" href="Elements.Geometry.Profile.html">Profile</a></div>
       <div class="level2"><a class="xref" href="Elements.Light.html">Light</a></div>
+      <div class="level2"><a class="xref" href="Elements.MappingBase.html">MappingBase</a></div>
       <div class="level2"><a class="xref" href="Elements.Material.html">Material</a></div>
       <div class="level2"><a class="xref" href="Elements.Spatial.CellComplex.CellComplex.html">CellComplex</a></div>
   </div>
@@ -134,7 +136,8 @@
   <h6><strong>Assembly</strong>: Hypar.Elements.dll</h6>
   <h5 id="Elements_Element_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class Element : INotifyPropertyChanged</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConverter(typeof(JsonInheritanceConverter), new object[]{&quot;discriminator&quot;})]
+public abstract class Element : INotifyPropertyChanged</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -145,7 +148,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Element(Guid id = default(Guid), string name = null)</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonConstructor]
+public Element(Guid id = default(Guid), string name = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -180,7 +184,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonExtensionData]
+public IDictionary&lt;string, object&gt; AdditionalProperties { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -204,7 +209,9 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Guid Id { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Id&quot;, Required = Required.Always)]
+[Required(AllowEmptyStrings = true)]
+public Guid Id { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -228,7 +235,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[JsonProperty(&quot;Name&quot;, Required = Required.Default)]
+public string Name { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -247,6 +255,108 @@
   </table>
   <h3 id="methods">Methods
   </h3>
+  <a id="Elements_Element_GetMapping_" data-uid="Elements.Element.GetMapping*"></a>
+  <h4 id="Elements_Element_GetMapping_System_String_" data-uid="Elements.Element.GetMapping(System.String)">GetMapping(String)</h4>
+  <div class="markdown level1 summary"><p>Retrieve a mapping for a given context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MappingBase GetMapping(string context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context of the mapping being requested.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Elements.MappingBase.html">MappingBase</a></td>
+        <td><p>The mapping if it exists, null if not.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Element_GetMapping_" data-uid="Elements.Element.GetMapping*"></a>
+  <h4 id="Elements_Element_GetMapping__1_System_String_" data-uid="Elements.Element.GetMapping``1(System.String)">GetMapping&lt;T&gt;(String)</h4>
+  <div class="markdown level1 summary"><p>Retrieve a mapping for a given context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T GetMapping&lt;T&gt;(string context)
+    where T : MappingBase</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context of the mapping being requested.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The Type of mapping expected.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <a id="Elements_Element_RaisePropertyChanged_" data-uid="Elements.Element.RaisePropertyChanged*"></a>
   <h4 id="Elements_Element_RaisePropertyChanged_System_String_" data-uid="Elements.Element.RaisePropertyChanged(System.String)">RaisePropertyChanged(String)</h4>
   <div class="markdown level1 summary"><p>Raise a property change event.</p>
@@ -271,6 +381,37 @@
         <td><span class="parametername">propertyName</span></td>
         <td><p>The name of the property.</p>
 </td>
+      </tr>
+    </tbody>
+  </table>
+  <a id="Elements_Element_SetMapping_" data-uid="Elements.Element.SetMapping*"></a>
+  <h4 id="Elements_Element_SetMapping_System_String_Elements_MappingBase_" data-uid="Elements.Element.SetMapping(System.String,Elements.MappingBase)">SetMapping(String, MappingBase)</h4>
+  <div class="markdown level1 summary"><p>The method used to set a mapping for a given context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetMapping(string context, MappingBase mapping)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">context</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Elements.MappingBase.html">MappingBase</a></td>
+        <td><span class="parametername">mapping</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>

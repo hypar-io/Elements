@@ -17,7 +17,7 @@ namespace Elements.Benchmarks
         {
             var line = new Line(new Vector3(0, 0, 0), new Vector3(10, 0, 5));
             var profile = Polygon.Rectangle(Units.InchesToMeters(10), Units.InchesToMeters(20));
-            _beam = new Beam(line, profile, BuiltInMaterials.Steel);
+            _beam = new Beam(line, profile, material: BuiltInMaterials.Steel);
             for (var i = 0.0; i <= 1.0; i += 1.0 / (double)NumberOfHoles)
             {
                 var t = line.TransformAt(i);
