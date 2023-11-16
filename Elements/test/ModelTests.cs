@@ -11,7 +11,6 @@ using System.Linq;
 using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Elements.Tests
 {
