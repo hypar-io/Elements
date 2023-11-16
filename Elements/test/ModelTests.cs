@@ -85,6 +85,8 @@ namespace Elements.Tests
             // We expect three geometric elements,
             // and one base element (Elements.Baz)
             Assert.Equal(4, model.Elements.Count);
+            bool containsBaz = model.Elements.Select(x => x.Value.AdditionalProperties["discriminator"]).Contains("Elements.Baz");
+            Assert.True(containsBaz);
             Assert.Single(errors);
         }
 
@@ -254,7 +256,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void DeserializationTurnsNullIntoBaseElement()
+        public void DeserializationSkipsNullProperties()
         {
             var material = BuiltInMaterials.Mass;
             var model = new Model();
@@ -273,7 +275,6 @@ namespace Elements.Tests
                 this._output.WriteLine(e);
             }
             Assert.Empty(newModel.AllElementsOfType<Material>());
-            Assert.NotEmpty(newModel.AllElementsOfType<Element>());
         }
 
         [Fact]

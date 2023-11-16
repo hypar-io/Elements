@@ -310,27 +310,7 @@ namespace Elements.Serialization.JSON
                 if (discriminator != null)
                 {
                     _deserializationWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
-
-                    // Copy the object to the Element base class with the additional properties.
-                    Element element = new Element();
-
-                    foreach (var prop in jObject.Properties())
-                    {
-                        switch (prop.Name)
-                        {
-                            case "Name":
-                                element.Name = prop.Value.ToString();
-                                break;
-                            case "Id":
-                                element.Id = Guid.Parse(prop.Value.ToString());
-                                break;
-                            default:
-                                element.AdditionalProperties.Add(prop.Name, prop.Value);
-                                break;
-                        }
-                    }
-
-                    return element;
+                    return null;
 
                 }
                 else
@@ -367,6 +347,11 @@ namespace Elements.Serialization.JSON
             if (jObject.TryGetValue("Representation", out _))
             {
                 return typeof(GeometricElement);
+            }
+            // If nothing else has worked, see if it has an ID and treat it as a generic element
+            if (jObject.TryGetValue("Id", out _))
+            {
+                return typeof(Element);
             }
 
             // The default behavior for this converter, as provided by nJSONSchema
