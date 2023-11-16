@@ -445,16 +445,6 @@ namespace Elements
             deserializationErrors.AddRange(JsonInheritanceConverter.GetAndClearDeserializationWarnings());
             errors = deserializationErrors;
             JsonInheritanceConverter.Elements.Clear();
-            // Don't leave null elements in the model.
-            var goodElements = new Dictionary<Guid, Element>(model.Elements.Count());
-            foreach (var e in model.Elements)
-            {
-                if (e.Value != null)
-                {
-                    goodElements.Add(e.Key, e.Value);
-                }
-            }
-            model.Elements = goodElements;
             return model;
         }
 
