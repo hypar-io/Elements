@@ -4,6 +4,7 @@ using System.Linq;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
+using Elements.BIM;
 using IFC;
 
 namespace Elements.Serialization.IFC.IFCToHypar
@@ -131,7 +132,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
             }
             else if (profile is IfcCircleProfileDef ifcCircle)
             {
-                var circle = new Circle((IfcLengthMeasure) ifcCircle.Radius);
+                var circle = new Circle((IfcLengthMeasure)ifcCircle.Radius);
                 return circle.Transformed(transform);
             }
             else

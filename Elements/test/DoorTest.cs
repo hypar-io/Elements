@@ -1,10 +1,6 @@
 ﻿using Elements.Geometry;
 using Elements.Tests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Elements.BIM;
 using Xunit;
 
 namespace Elements

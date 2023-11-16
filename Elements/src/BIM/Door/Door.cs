@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Elements.Geometry.Solids;
 
-namespace Elements
+namespace Elements.BIM
 {
         /// <summary>Definition of a door</summary>
         public class Door : GeometricElement
@@ -375,27 +375,5 @@ namespace Elements
 
                         return points;
                 }
-        }
-
-        public enum DoorOpeningSide
-        {
-                [System.Runtime.Serialization.EnumMember(Value = @"Undefined")]
-                Undefined,
-                [System.Runtime.Serialization.EnumMember(Value = @"Left Hand")]
-                LeftHand,
-                [System.Runtime.Serialization.EnumMember(Value = @"Right Hand")]
-                RightHand,
-                [System.Runtime.Serialization.EnumMember(Value = @"Double Door")]
-                DoubleDoor
-        }
-
-        public enum DoorOpeningType
-        {
-                [System.Runtime.Serialization.EnumMember(Value = @"Undefined")]
-                Undefined,
-                [System.Runtime.Serialization.EnumMember(Value = @"Single Swing")]
-                SingleSwing,
-                [System.Runtime.Serialization.EnumMember(Value = @"Double Swing")]
-                DoubleSwing
         }
 }
