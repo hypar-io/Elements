@@ -1,1 +1,265 @@
-{"discriminator":"Elements.Spatial.Grid2d","FromGrid":{"Matrix":{"Components":[-0.26277037539523906,-0.9648583988413248,0.0,0.0,0.9648583988413248,-0.26277037539523906,0.0,0.0,0.0,0.0,1.0,0.0]}},"ToGrid":{"Matrix":{"Components":[-0.26277037539523906,0.9648583988413248,0.0,-0.0,-0.9648583988413248,-0.26277037539523906,0.0,-0.0,0.0,0.0,1.0,-0.0]}},"UDomainInternal":{"Min":6.763936254060541,"Max":32.482851280540096},"VDomainInternal":{"Min":7.128886694943899,"Max":44.324041808344404},"BoundariesInGridSpace":[{"discriminator":"Elements.Geometry.Polygon","Vertices":[{"X":6.763936254060541,"Y":7.128888487296281,"Z":0.0},{"X":14.773940145101843,"Y":7.128886694943899,"Z":0.0},{"X":14.77394221503998,"Y":13.128885723851797,"Z":0.0},{"X":14.763940245403873,"Y":13.128883880385407,"Z":0.0},{"X":14.763946043780386,"Y":16.726456830495856,"Z":0.0},{"X":14.623397486350168,"Y":16.726458900433993,"Z":0.0},{"X":14.623394047580597,"Y":34.726458614861436,"Z":0.0},{"X":14.763952253594802,"Y":34.726453917219544,"Z":0.0},{"X":14.763949465210452,"Y":36.32403625112043,"Z":0.0},{"X":12.763946572713156,"Y":36.32403781700106,"Z":0.0},{"X":12.763948138593786,"Y":38.32404070949837,"Z":0.0},{"X":14.763951031091082,"Y":38.32403914361774,"Z":0.0},{"X":14.763949465210452,"Y":36.32403625112043,"Z":0.0},{"X":26.48285040816581,"Y":36.32403625112044,"Z":0.0},{"X":26.482852251632202,"Y":36.31403428148433,"Z":0.0},{"X":32.482851280540096,"Y":36.31403221154619,"Z":0.0},{"X":32.482850445188724,"Y":44.3240264540035,"Z":0.0},{"X":6.763951179624028,"Y":44.324041808344404,"Z":0.0}]}],"U":{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":25.718915026479557},"Type":null,"Cells":[{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":25.718915026479557},"Type":null,"Domain":{"Min":0.0,"Max":5.143783005295912},"IsSingleCell":true},{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":25.718915026479557},"Type":null,"Domain":{"Min":5.143783005295912,"Max":10.287566010591824},"IsSingleCell":true},{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":25.718915026479557},"Type":null,"Domain":{"Min":10.287566010591824,"Max":15.431349015887736},"IsSingleCell":true},{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":25.718915026479557},"Type":null,"Domain":{"Min":15.431349015887736,"Max":20.57513202118365},"IsSingleCell":true},{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":25.718915026479557},"Type":null,"Domain":{"Min":20.57513202118365,"Max":25.718915026479557},"IsSingleCell":true}],"Domain":{"Min":0.0,"Max":25.718915026479557},"IsSingleCell":false,"TopLevelParentCurve":{"discriminator":"Elements.Geometry.Line","Start":{"X":6.763936254060541,"Y":0.0,"Z":0.0},"End":{"X":32.482851280540096,"Y":0.0,"Z":0.0}}},"V":{"discriminator":"Elements.Spatial.Grid1d","CurveDomain":{"Min":0.0,"Max":37.1951551134005},"Type":null,"Domain":{"Min":0.0,"Max":37.1951551134005},"IsSingleCell":true,"TopLevelParentCurve":{"discriminator":"Elements.Geometry.Line","Start":{"X":0.0,"Y":7.128886694943899,"Z":0.0},"End":{"X":0.0,"Y":44.324041808344404,"Z":0.0}}},"Type":null,"ModifiedChildCells":[]}
+{
+    "discriminator": "Elements.Spatial.Grid2d",
+    "FromGrid": {
+        "Matrix": {
+            "Components": [
+                -0.26277037539523906,
+                -0.9648583988413248,
+                0.0,
+                0.0,
+                0.9648583988413248,
+                -0.26277037539523906,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ]
+        }
+    },
+    "ToGrid": {
+        "Matrix": {
+            "Components": [
+                -0.26277037539523906,
+                0.9648583988413248,
+                0.0,
+                -0.0,
+                -0.9648583988413248,
+                -0.26277037539523906,
+                0.0,
+                -0.0,
+                0.0,
+                0.0,
+                1.0,
+                -0.0
+            ]
+        }
+    },
+    "UDomainInternal": {
+        "Min": 6.763936254060541,
+        "Max": 32.482851280540096
+    },
+    "VDomainInternal": {
+        "Min": 7.128886694943899,
+        "Max": 44.324041808344404
+    },
+    "BoundariesInGridSpace": [
+        {
+            "discriminator": "Elements.Geometry.Polygon",
+            "Vertices": [
+                {
+                    "X": 6.763936254060541,
+                    "Y": 7.128888487296281,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.773940145101843,
+                    "Y": 7.128886694943899,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.77394221503998,
+                    "Y": 13.128885723851797,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.763940245403873,
+                    "Y": 13.128883880385407,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.763946043780386,
+                    "Y": 16.726456830495856,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.623397486350168,
+                    "Y": 16.726458900433993,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.623394047580597,
+                    "Y": 34.726458614861436,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.763952253594802,
+                    "Y": 34.726453917219544,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.763949465210452,
+                    "Y": 36.32403625112043,
+                    "Z": 0.0
+                },
+                {
+                    "X": 12.763946572713156,
+                    "Y": 36.32403781700106,
+                    "Z": 0.0
+                },
+                {
+                    "X": 12.763948138593786,
+                    "Y": 38.32404070949837,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.763951031091082,
+                    "Y": 38.32403914361774,
+                    "Z": 0.0
+                },
+                {
+                    "X": 14.763949465210452,
+                    "Y": 36.32403625112043,
+                    "Z": 0.0
+                },
+                {
+                    "X": 26.48285040816581,
+                    "Y": 36.32403625112044,
+                    "Z": 0.0
+                },
+                {
+                    "X": 26.482852251632202,
+                    "Y": 36.31403428148433,
+                    "Z": 0.0
+                },
+                {
+                    "X": 32.482851280540096,
+                    "Y": 36.31403221154619,
+                    "Z": 0.0
+                },
+                {
+                    "X": 32.482850445188724,
+                    "Y": 44.3240264540035,
+                    "Z": 0.0
+                },
+                {
+                    "X": 6.763951179624028,
+                    "Y": 44.324041808344404,
+                    "Z": 0.0
+                }
+            ]
+        }
+    ],
+    "U": {
+        "discriminator": "Elements.Spatial.Grid1d",
+        "CurveDomain": {
+            "Min": 0.0,
+            "Max": 25.718915026479557
+        },
+        "Type": null,
+        "Cells": [
+            {
+                "discriminator": "Elements.Spatial.Grid1d",
+                "CurveDomain": {
+                    "Min": 0.0,
+                    "Max": 25.718915026479557
+                },
+                "Type": null,
+                "Domain": {
+                    "Min": 0.0,
+                    "Max": 5.143783005295912
+                },
+                "IsSingleCell": true
+            },
+            {
+                "discriminator": "Elements.Spatial.Grid1d",
+                "CurveDomain": {
+                    "Min": 0.0,
+                    "Max": 25.718915026479557
+                },
+                "Type": null,
+                "Domain": {
+                    "Min": 5.143783005295912,
+                    "Max": 10.287566010591824
+                },
+                "IsSingleCell": true
+            },
+            {
+                "discriminator": "Elements.Spatial.Grid1d",
+                "CurveDomain": {
+                    "Min": 0.0,
+                    "Max": 25.718915026479557
+                },
+                "Type": null,
+                "Domain": {
+                    "Min": 10.287566010591824,
+                    "Max": 15.431349015887736
+                },
+                "IsSingleCell": true
+            },
+            {
+                "discriminator": "Elements.Spatial.Grid1d",
+                "CurveDomain": {
+                    "Min": 0.0,
+                    "Max": 25.718915026479557
+                },
+                "Type": null,
+                "Domain": {
+                    "Min": 15.431349015887736,
+                    "Max": 20.57513202118365
+                },
+                "IsSingleCell": true
+            },
+            {
+                "discriminator": "Elements.Spatial.Grid1d",
+                "CurveDomain": {
+                    "Min": 0.0,
+                    "Max": 25.718915026479557
+                },
+                "Type": null,
+                "Domain": {
+                    "Min": 20.57513202118365,
+                    "Max": 25.718915026479557
+                },
+                "IsSingleCell": true
+            }
+        ],
+        "Domain": {
+            "Min": 0.0,
+            "Max": 25.718915026479557
+        },
+        "IsSingleCell": false,
+        "TopLevelParentCurve": {
+            "discriminator": "Elements.Geometry.Line",
+            "Start": {
+                "X": 6.763936254060541,
+                "Y": 0.0,
+                "Z": 0.0
+            },
+            "End": {
+                "X": 32.482851280540096,
+                "Y": 0.0,
+                "Z": 0.0
+            }
+        }
+    },
+    "V": {
+        "discriminator": "Elements.Spatial.Grid1d",
+        "CurveDomain": {
+            "Min": 0.0,
+            "Max": 37.1951551134005
+        },
+        "Type": null,
+        "Domain": {
+            "Min": 0.0,
+            "Max": 37.1951551134005
+        },
+        "IsSingleCell": true,
+        "TopLevelParentCurve": {
+            "discriminator": "Elements.Geometry.Line",
+            "Start": {
+                "X": 0.0,
+                "Y": 7.128886694943899,
+                "Z": 0.0
+            },
+            "End": {
+                "X": 0.0,
+                "Y": 44.324041808344404,
+                "Z": 0.0
+            }
+        }
+    },
+    "Type": null,
+    "ModifiedChildCells": []
+}

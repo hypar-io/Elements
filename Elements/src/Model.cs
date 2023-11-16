@@ -228,7 +228,7 @@ namespace Elements
         /// is an interface.
         /// </summary>
         /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
-        /// <returns>A collection of elements derived from the specified type.</returns>
+        /// <returns>A collection of elements derived from the specified type.</returns>1
         public IEnumerable<T> AllElementsAssignableFromType<T>() where T : Element
         {
             return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();

@@ -165,13 +165,22 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
+
+                    var discriminatorName = GetDiscriminatorName(value);
+
                     if (jObject.TryGetValue(_discriminator, out JToken token))
                     {
-                        ((JValue)token).Value = GetDiscriminatorName(value);
+                        // Don't update the discriminator value if it is a base class of `GeometricElement` or `Element`.
+                        // This means that the type was likely set due to fallback when a type wasn't found when deserializing.
+                        // So, we should keep the discriminator value until another serializer can handle it.
+                        if (discriminatorName != "Elements.GeometricElement" && discriminatorName != "Elements.Element")
+                        {
+                            ((JValue)token).Value = discriminatorName;
+                        }
                     }
                     else
                     {
-                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetDiscriminatorName(value)));
+                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, discriminatorName));
                     }
                     writer.WriteToken(jObject.CreateReader());
                 }

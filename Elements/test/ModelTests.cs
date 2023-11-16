@@ -215,6 +215,22 @@ namespace Elements.Tests
             Assert.Equal(wall.Transform, newWall.Transform);
         }
 
+
+        [Fact]
+        public void SerializationKeepsDiscriminatorOnFallbackBaseElementTypes()
+        {
+            var json = File.ReadAllText("../../../models/Elements/spaceinputs.json");
+            var model = Model.FromJson(json);
+
+            Assert.True(model.Elements.First().Value.GetType() == typeof(GeometricElement));
+
+            var newModel = model.ToJson();
+
+            Assert.Contains("Elements.SpaceBoundary", newModel);
+
+            double tt = 0.0;
+        }
+
         [Fact]
         public void DeserializationSkipsUnknownProperties()
         {
