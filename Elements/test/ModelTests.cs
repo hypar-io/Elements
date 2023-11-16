@@ -11,6 +11,7 @@ using System.Linq;
 using Xunit.Abstractions;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Elements.Tests
 {
@@ -219,16 +220,17 @@ namespace Elements.Tests
         [Fact]
         public void SerializationKeepsDiscriminatorOnFallbackBaseElementTypes()
         {
+            // Reading in a model with a SpaceBoundary input
             var json = File.ReadAllText("../../../models/Elements/spaceinputs.json");
             var model = Model.FromJson(json);
 
+            // Since SpaceBoundary isn't in Elements, it will be deserialized as a `GeometricElement`
             Assert.True(model.Elements.First().Value.GetType() == typeof(GeometricElement));
 
             var newModel = model.ToJson();
 
+            // When we serialize again, we should still have the discriminator of `Elements.SpaceBoundary`
             Assert.Contains("Elements.SpaceBoundary", newModel);
-
-            double tt = 0.0;
         }
 
         [Fact]
