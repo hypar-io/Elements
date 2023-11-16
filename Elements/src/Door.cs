@@ -169,11 +169,11 @@ namespace Elements
                 public List<RepresentationInstance> GetInstances(Door door)
                 {
                         var representationInstances = new List<RepresentationInstance>()
-            {
-                this.CreateDoorSolidRepresentation(),
-                this.CreateDoorFrameRepresentation(),
-                this.CreateDoorCurveRepresentation()
-            };
+                        {
+                                this.CreateDoorSolidRepresentation(),
+                                this.CreateDoorFrameRepresentation(),
+                                this.CreateDoorCurveRepresentation()
+                        };
 
                         return representationInstances;
                 }

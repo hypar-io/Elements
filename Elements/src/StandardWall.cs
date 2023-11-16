@@ -117,9 +117,7 @@ namespace Elements
         private Transform GetOpeningTransform(double x, double y)
         {
             var xAxis = this.CenterLine.Direction();
-            // Opening transform is still off... `outOfPlane` added because transform is not working correctly
             var outOfPlane = xAxis.Cross(Vector3.ZAxis);
-            // Opening transform is still off?
             var openingTransform = new Transform(this.CenterLine.Start + xAxis * x + Vector3.ZAxis * y - outOfPlane, xAxis, xAxis.Cross(Vector3.ZAxis));
             return openingTransform;
         }
