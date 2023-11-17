@@ -72,7 +72,7 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void SkipsUnknownTypesDuringDeserialization()
+        public void UnknownTypesConvertToBaseElementDuringDeserialization()
         {
             // We've changed an Elements.Beam to Elements.Foo
             var modelStr = "{'Transform':{'Matrix':{'Components':[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},'Elements':{'c6d1dc68-f800-47c1-9190-745b525ad569':{'discriminator':'Elements.Baz'}, '37f161d6-a892-4588-ad65-457b04b97236':{'discriminator':'Elements.Geometry.Profiles.WideFlangeProfile','d':1.1176,'tw':0.025908,'bf':0.4064,'tf':0.044958,'Perimeter':{'discriminator':'Elements.Geometry.Polygon','Vertices':[{'X':-0.2032,'Y':0.5588,'Z':0.0},{'X':-0.2032,'Y':0.51384199999999991,'Z':0.0},{'X':-0.012954,'Y':0.51384199999999991,'Z':0.0},{'X':-0.012954,'Y':-0.51384199999999991,'Z':0.0},{'X':-0.2032,'Y':-0.51384199999999991,'Z':0.0},{'X':-0.2032,'Y':-0.5588,'Z':0.0},{'X':0.2032,'Y':-0.5588,'Z':0.0},{'X':0.2032,'Y':-0.51384199999999991,'Z':0.0},{'X':0.012954,'Y':-0.51384199999999991,'Z':0.0},{'X':0.012954,'Y':0.51384199999999991,'Z':0.0},{'X':0.2032,'Y':0.51384199999999991,'Z':0.0},{'X':0.2032,'Y':0.5588,'Z':0.0}]},'Voids':null,'Id':'37f161d6-a892-4588-ad65-457b04b97236','Name':'W44x335'},'6b77d69a-204e-40f9-bc1f-ed84683e64c6':{'discriminator':'Elements.Material','Color':{'Red':0.60000002384185791,'Green':0.5,'Blue':0.5,'Alpha':1.0},'SpecularFactor':0.0,'GlossinessFactor':0.0,'Id':'6b77d69a-204e-40f9-bc1f-ed84683e64c6','Name':'steel'},'fd35bd2c-0108-47df-8e6d-42cc43e4eed0':{'discriminator':'Elements.Foo','Curve':{'discriminator':'Elements.Geometry.Arc','Center':{'X':0.0,'Y':0.0,'Z':0.0},'Radius':2.0,'StartAngle':0.0,'EndAngle':90.0},'StartSetback':0.25,'EndSetback':0.25,'Profile':'37f161d6-a892-4588-ad65-457b04b97236','Transform':{'Matrix':{'Components':[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},'Material':'6b77d69a-204e-40f9-bc1f-ed84683e64c6','Representation':{'SolidOperations':[{'discriminator':'Elements.Geometry.Solids.Sweep','Profile':'37f161d6-a892-4588-ad65-457b04b97236','Curve':{'discriminator':'Elements.Geometry.Arc','Center':{'X':0.0,'Y':0.0,'Z':0.0},'Radius':2.0,'StartAngle':0.0,'EndAngle':90.0},'StartSetback':0.25,'EndSetback':0.25,'Rotation':0.0,'IsVoid':false}]},'Id':'fd35bd2c-0108-47df-8e6d-42cc43e4eed0','Name':null}}}";
@@ -83,9 +83,11 @@ namespace Elements.Tests
             }
 
             // We expect three geometric elements,
-            // but the baz will not deserialize.
-            Assert.Equal(3, model.Elements.Count);
-            Assert.Equal(2, errors.Count);
+            // and one base element (Elements.Baz)
+            Assert.Equal(4, model.Elements.Count);
+            bool containsBaz = model.Elements.Select(x => x.Value.AdditionalProperties["discriminator"]).Contains("Elements.Baz");
+            Assert.True(containsBaz);
+            Assert.Single(errors);
         }
 
         /// <summary>
@@ -211,6 +213,23 @@ namespace Elements.Tests
 
             var newWall = newModel.AllElementsOfType<StandardWall>().First();
             Assert.Equal(wall.Transform, newWall.Transform);
+        }
+
+
+        [Fact]
+        public void SerializationKeepsDiscriminatorOnFallbackBaseElementTypes()
+        {
+            // Reading in a model with a SpaceBoundary input
+            var json = File.ReadAllText("../../../models/Elements/spaceinputs.json");
+            var model = Model.FromJson(json);
+
+            // Since SpaceBoundary isn't in Elements, it will be deserialized as a `GeometricElement`
+            Assert.True(model.Elements.First().Value.GetType() == typeof(GeometricElement));
+
+            var newModel = model.ToJson();
+
+            // When we serialize again, we should still have the discriminator of `Elements.SpaceBoundary`
+            Assert.Contains("Elements.SpaceBoundary", newModel);
         }
 
         [Fact]

@@ -228,7 +228,7 @@ namespace Elements
         /// is an interface.
         /// </summary>
         /// <typeparam name="T">The type of the element from which returned elements derive.</typeparam>
-        /// <returns>A collection of elements derived from the specified type.</returns>
+        /// <returns>A collection of elements derived from the specified type.</returns>1
         public IEnumerable<T> AllElementsAssignableFromType<T>() where T : Element
         {
             return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
@@ -421,7 +421,7 @@ namespace Elements
         /// </summary>
         /// <param name="json">The JSON representing the model.</param>
         /// <param name="errors">A collection of deserialization errors.</param>
-        /// <param name="forceTypeReload">Option to force reloading the inernal type cache. Use if you add types dynamically in your code.</param>
+        /// <param name="forceTypeReload">Option to force reloading the internal type cache. Use if you add types dynamically in your code.</param>
         public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
         {
             // When user elements have been loaded into the app domain, they haven't always been
@@ -442,6 +442,7 @@ namespace Elements
                     args.ErrorContext.Handled = true;
                 }
             });
+            deserializationErrors.AddRange(JsonInheritanceConverter.GetAndClearDeserializationWarnings());
             errors = deserializationErrors;
             JsonInheritanceConverter.Elements.Clear();
             return model;
