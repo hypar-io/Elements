@@ -10,8 +10,13 @@ namespace Elements.BIM
         /// <summary>Definition of a door</summary>
         public class Door : GeometricElement
         {
+                private const double HANDLE_HEIGHT_POSITION = 42 * 0.0254;
+                private const double HANDLE_CIRCLE_RADIUS = 0.02;
+                private const double HANDLE_CYLINDER_RADIUS = 0.5 * HANDLE_CIRCLE_RADIUS;
+                private const double HANDLE_LENGTH = 6 * 0.0254;
+                private const double HANDLE_CYLINDER_HEIGHT = 0.05;
                 private readonly Material DEFAULT_MATERIAL = BuiltInMaterials.Wood;
-                private readonly Material FRAME_MATERIAL = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
+                private readonly Material SILVER_MATERIAL = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
 
                 /// <summary>Default thickness of a door.</summary>
                 public const double DOOR_THICKNESS = 1.375 * 0.0254;
@@ -34,7 +39,6 @@ namespace Elements.BIM
 
                 [JsonIgnore]
                 private double fullDoorWidthWithoutFrame => GetDoorFullWidthWithoutFrame(ClearWidth, OpeningSide);
-
                 /// <summary>
                 /// Create a door.
                 /// </summary>
@@ -163,16 +167,28 @@ namespace Elements.BIM
                 /// </summary>
                 public override void UpdateRepresentations()
                 {
-                        RepresentationInstances = this.GetInstances(this);
+                        if (RepresentationInstances.Count == 0)
+                        {
+                                DoorRepresentationStorage.SetDoorRepresentation(this);
+                        }
                 }
 
-                public List<RepresentationInstance> GetInstances(Door door)
+                /// <summary>
+                /// Get Hash for representation storage dictionary
+                /// </summary>
+                public string GetRepresentationHash()
+                {
+                        return $"{this.GetType().Name}-{this.ClearWidth}-{this.ClearHeight}-{this.Thickness}-{this.OpeningType}-{this.OpeningSide}-{this.Material.Name}";
+                }
+
+                public List<RepresentationInstance> GetInstances()
                 {
                         var representationInstances = new List<RepresentationInstance>()
                         {
                                 this.CreateDoorSolidRepresentation(),
                                 this.CreateDoorFrameRepresentation(),
-                                this.CreateDoorCurveRepresentation()
+                                this.CreateDoorCurveRepresentation(),
+                                this.CreateDoorHandleRepresentation()
                         };
 
                         return representationInstances;
@@ -231,7 +247,7 @@ namespace Elements.BIM
                         var doorFrameExtrude = new Extrude(new Profile(doorFramePolygon), Door.DOOR_FRAME_THICKNESS * 2, Vector3.YAxis);
 
                         var solidRep = new SolidRepresentation(doorFrameExtrude);
-                        var repInstance = new RepresentationInstance(solidRep, FRAME_MATERIAL, true);
+                        var repInstance = new RepresentationInstance(solidRep, SILVER_MATERIAL, true);
                         return repInstance;
                 }
 
@@ -374,6 +390,69 @@ namespace Elements.BIM
                         }
 
                         return points;
+                }
+
+                private RepresentationInstance CreateDoorHandleRepresentation()
+                {
+                        var solidOperationsList = new List<SolidOperation>();
+
+                        if (OpeningSide == DoorOpeningSide.DoubleDoor)
+                        {
+                                var handlePair1 = CreateHandlePair(-0.05, false);
+                                solidOperationsList.AddRange(handlePair1);
+
+                                var handlePair2 = CreateHandlePair(0.05, true);
+                                solidOperationsList.AddRange(handlePair2);
+                        }
+                        else if (OpeningSide != DoorOpeningSide.Undefined)
+                        {
+                                var xPos = OpeningSide == DoorOpeningSide.LeftHand ? -0.45 : 0.45;
+                                var handle = CreateHandlePair(xPos, OpeningSide == DoorOpeningSide.LeftHand);
+                                solidOperationsList.AddRange(handle);
+                        }
+
+                        var solidRep = new SolidRepresentation(solidOperationsList);
+                        var repInst = new RepresentationInstance(solidRep, SILVER_MATERIAL);
+                        return repInst;
+                }
+
+                private List<SolidOperation> CreateHandlePair(double xRelPos, bool isCodirectionalToX)
+                {
+                        var xOffset = xRelPos * ClearWidth * Vector3.XAxis;
+                        var yOffset = Thickness * Vector3.YAxis;
+                        var zOffset = HANDLE_HEIGHT_POSITION * Vector3.ZAxis;
+
+                        var solidOperationsList = new List<SolidOperation>();
+                        var handleDir = isCodirectionalToX ? Vector3.XAxis : Vector3.XAxis.Negate();
+
+                        var handleOrigin1 = xOffset + yOffset + zOffset;
+                        var handle1Ops = CreateHandle(handleOrigin1, handleDir, Vector3.YAxis);
+                        solidOperationsList.AddRange(handle1Ops);
+
+                        var handleOrigin2 = xOffset - yOffset + zOffset;
+                        var handle2Ops = CreateHandle(handleOrigin2, handleDir, Vector3.YAxis.Negate());
+                        solidOperationsList.AddRange(handle2Ops);
+
+                        return solidOperationsList;
+                }
+
+                private List<SolidOperation> CreateHandle(Vector3 origin, Vector3 handleDir, Vector3 yDir)
+                {
+                        var circleTransform = new Transform(origin, handleDir, yDir);
+                        var circle = new Circle(circleTransform, HANDLE_CIRCLE_RADIUS).ToPolygon();
+                        var circleOperation = new Extrude(circle, 0.1 * HANDLE_CYLINDER_HEIGHT, yDir);
+
+                        var cyl1Transform = new Transform(origin + 0.1 * HANDLE_CYLINDER_HEIGHT * yDir, handleDir, yDir);
+                        var cyl1Circle = new Circle(cyl1Transform, HANDLE_CYLINDER_RADIUS).ToPolygon();
+                        var cyl1Operation = new Extrude(cyl1Circle, 0.9 * HANDLE_CYLINDER_HEIGHT, yDir);
+
+                        var cyl2Origin = cyl1Transform.Origin + cyl1Operation.Height * yDir + handleDir.Negate() * HANDLE_CYLINDER_RADIUS;
+                        var cyl2Transform = new Transform(cyl2Origin, handleDir);
+                        var cyl2Circle = new Circle(cyl2Transform, HANDLE_CYLINDER_RADIUS).ToPolygon();
+                        var cyl2Operation = new Extrude(cyl2Circle, HANDLE_LENGTH, handleDir);
+
+                        var handleSolids = new List<SolidOperation>() { circleOperation, cyl1Operation, cyl2Operation };
+                        return handleSolids;
                 }
         }
 }
