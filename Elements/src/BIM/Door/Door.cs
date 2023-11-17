@@ -11,10 +11,10 @@ namespace Elements
         public class Door : GeometricElement
         {
                 private const double HANDLE_HEIGHT_POSITION = 42 * 0.0254;
-                private const double HANDLE_CIRCLE_RADIUS = 0.02;
-                private const double HANDLE_CYLINDER_RADIUS = 0.5 * HANDLE_CIRCLE_RADIUS;
-                private const double HANDLE_LENGTH = 6 * 0.0254;
-                private const double HANDLE_CYLINDER_HEIGHT = 0.05;
+                private const double HANDLE_CIRCLE_RADIUS = 1.35 * 0.0254;
+                private const double HANDLE_CYLINDER_RADIUS = 0.45 * 0.0254;
+                private const double HANDLE_LENGTH = 5 * 0.0254;
+                private const double HANDLE_CYLINDER_HEIGHT = 2 * 0.0254;
                 private readonly Material DEFAULT_MATERIAL = BuiltInMaterials.Wood;
                 private readonly Material SILVER_MATERIAL = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
 
@@ -399,15 +399,15 @@ namespace Elements
 
                         if (OpeningSide == DoorOpeningSide.DoubleDoor)
                         {
-                                var handlePair1 = CreateHandlePair(-0.05, false);
+                                var handlePair1 = CreateHandlePair(-3 * 0.0254, false);
                                 solidOperationsList.AddRange(handlePair1);
 
-                                var handlePair2 = CreateHandlePair(0.05, true);
+                                var handlePair2 = CreateHandlePair(3 * 0.0254, true);
                                 solidOperationsList.AddRange(handlePair2);
                         }
                         else if (OpeningSide != DoorOpeningSide.Undefined)
                         {
-                                var xPos = OpeningSide == DoorOpeningSide.LeftHand ? -0.45 : 0.45;
+                                var xPos = OpeningSide == DoorOpeningSide.LeftHand ? -(fullDoorWidthWithoutFrame / 2 - 2 * 0.0254) : (fullDoorWidthWithoutFrame / 2 - 2 * 0.0254);
                                 var handle = CreateHandlePair(xPos, OpeningSide == DoorOpeningSide.LeftHand);
                                 solidOperationsList.AddRange(handle);
                         }
