@@ -1,4 +1,4 @@
-namespace Elements.BIM
+namespace Elements
 {
     public enum DoorOpeningType
     {

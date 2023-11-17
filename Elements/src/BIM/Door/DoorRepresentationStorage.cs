@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry.Solids;
 
-namespace Elements.BIM
+namespace Elements
 {
     static class DoorRepresentationStorage
     {

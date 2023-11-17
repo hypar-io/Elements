@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Elements.Geometry.Solids;
 
-namespace Elements.BIM
+namespace Elements
 {
         /// <summary>Definition of a door</summary>
         public class Door : GeometricElement
@@ -224,6 +224,7 @@ namespace Elements.BIM
                         var curve = new IndexedPolycurve(points);
                         var curveRep = new CurveRepresentation(curve, false);
                         var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
+
                         return repInstance;
                 }
 
@@ -257,10 +258,10 @@ namespace Elements.BIM
                         Vector3 right = Vector3.XAxis.Negate() * (fullDoorWidthWithoutFrame / 2);
 
                         var doorPolygon = new Polygon(new List<Vector3>() {
-                left + Vector3.YAxis * this.Thickness,
-                left - Vector3.YAxis * this.Thickness,
-                right - Vector3.YAxis * this.Thickness,
-                right + Vector3.YAxis * this.Thickness});
+                                left + Vector3.YAxis * this.Thickness,
+                                left - Vector3.YAxis * this.Thickness,
+                                right - Vector3.YAxis * this.Thickness,
+                                right + Vector3.YAxis * this.Thickness});
 
                         var doorPolygons = new List<Polygon>();
 
