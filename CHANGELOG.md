@@ -51,6 +51,7 @@
 - `GeometricElement.RepresentationInstances`
 - `ContentRepresentation`
 - `Elements.Door`
+- `ComponentBase.UseRepresentationInstances` - an option flag to make generating fitting models faster/smaller.
 
 ### Fixed
 
@@ -64,6 +65,7 @@
 - `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
 
 ### Changed
+
 - `GltfExtensions.UseReferencedContentExtension` is now true by default.
 - `GeometricElement.Intersects` method now supports multiple representations.
 - `GltfExtensions.ToGlTF` creates parent node for element and child nodes for representation instances.

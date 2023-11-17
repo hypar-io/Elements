@@ -29,7 +29,7 @@ namespace Elements.Fittings
 
         public override void UpdateRepresentations()
         {
-            var profile = new Circle(Vector3.Origin, this.Start.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
+            var profile = new Circle(Vector3.Origin, Start.Diameter / 2).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
 
             var oneSweep = new Sweep(profile,
                                      GetSweepLine(),
@@ -38,8 +38,19 @@ namespace Elements.Fittings
                                      0,
                                      false);
 
-            var arrows = this.Start.GetArrow(this.Transform.Origin).Concat(this.End.GetArrow(this.Transform.Origin));
-            this.Representation = new Representation(new List<SolidOperation> { oneSweep }.Concat(arrows).Concat(GetExtensions()).ToList());
+            var arrows = new List<SolidOperation>();
+            arrows.AddRange(Start.GetArrow(Transform.Origin, fittingRotationTransform: GetRotatedTransform()));
+            arrows.AddRange(End.GetArrow(Transform.Origin, fittingRotationTransform: GetRotatedTransform()));
+            var solidOperations = new List<SolidOperation> { oneSweep }.Concat(arrows).Concat(GetExtensions()).ToList();
+
+            if (UseRepresentationInstances)
+            {
+                FittingRepresentationStorage.SetFittingRepresentation(this, () => solidOperations);
+            }
+            else
+            {
+                Representation = new Representation(solidOperations);
+            }
         }
 
         public override Port[] GetPorts()
@@ -64,23 +75,25 @@ namespace Elements.Fittings
 
         private Polyline GetSweepLine()
         {
-            var sweepLine = new List<Vector3>();
-            sweepLine.Add(this.Start.Position - this.Transform.Origin);
+            var sweepLine = new List<Vector3>
+            {
+                Start.Position - Transform.Origin
+            };
 
-            if (this.BendRadius != 0)
+            if (BendRadius != 0)
             {
                 var startDirection = Vector3.XAxis;
-                var startPoint = startDirection * this.BendRadius;
+                var startPoint = startDirection * BendRadius;
                 var startNormal = startDirection.Cross(Vector3.ZAxis).Unitized();
 
-                var originalPlane = new Polygon(Vector3.Origin, (this.Start.Position - this.Transform.Origin).Unitized(), (this.End.Position - this.Transform.Origin).Unitized());
+                var originalPlane = new Polygon(Vector3.Origin, (Start.Position - Transform.Origin).Unitized(), (End.Position - Transform.Origin).Unitized());
                 var transform = originalPlane.ToTransform();
                 var inverted = transform.Inverted();
                 originalPlane.Transform(inverted);
 
                 var angleBetweenOriginalVectors = originalPlane.Vertices[1].PlaneAngleTo(originalPlane.Vertices[2]) * Math.PI / 180;
                 var endDirection = new Vector3(Math.Cos(angleBetweenOriginalVectors), Math.Sin(angleBetweenOriginalVectors));
-                var endPoint = endDirection * this.BendRadius;
+                var endPoint = endDirection * BendRadius;
                 var endNormal = endDirection.Cross(Vector3.ZAxis).Unitized();
 
                 new Ray(startPoint, startNormal).Intersects(new Ray(endPoint, endNormal), out var intersectionPoint, true);
@@ -103,9 +116,17 @@ namespace Elements.Fittings
                 sweepLine.Add(Vector3.Origin);
             }
 
-            sweepLine.Add(this.End.Position - this.Transform.Origin);
+            sweepLine.Add(End.Position - Transform.Origin);
 
-            return new Polyline(sweepLine);
+            if (UseRepresentationInstances)
+            {
+                var t = GetRotatedTransform().Inverted();
+                return new Polyline(sweepLine.Select(v => t.OfPoint(v)).ToList());
+            }
+            else
+            {
+                return new Polyline(sweepLine);
+            }
         }
 
         public override Transform GetRotatedTransform()
@@ -113,6 +134,12 @@ namespace Elements.Fittings
             var zAxis = End.Direction.Cross(Start.Direction).Unitized();
             var t = new Transform(Vector3.Origin, End.Direction, zAxis);
             return t;
+        }
+
+        /// <inheritdoc/>
+        public override string GetRepresentationHash()
+        {
+            return $"{this.GetType().Name}-{this.Diameter}-{this.BendRadius}-{this.Angle}";
         }
     }
 }
