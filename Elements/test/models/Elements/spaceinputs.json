@@ -1,0 +1,119 @@
+{
+  "Elements": {
+    "5e2f9c73-1d6a-4861-97e1-fbba56e90c55": {
+      "discriminator": "Elements.SpaceBoundary",
+      "Level Add Id": "dummy-level-volume",
+      "Relative Position": {
+        "X": 2,
+        "Y": 2,
+        "Z": 0
+      },
+      "ProgramName": "Open Office",
+      "Boundary": {
+        "Perimeter": {
+          "discriminator": "Elements.Geometry.Polygon",
+          "Vertices": [
+            {
+              "X": 0,
+              "Y": 0,
+              "Z": 0
+            },
+            {
+              "X": 4,
+              "Y": 0,
+              "Z": 0
+            },
+            {
+              "X": 4,
+              "Y": 4,
+              "Z": 0
+            },
+            {
+              "X": 0,
+              "Y": 4,
+              "Z": 0
+            }
+          ]
+        },
+        "Voids": [],
+        "EdgeThickness": [
+          [
+            0.0762,
+            0.0762
+          ],
+          [
+            0.0762,
+            0.0762
+          ],
+          [
+            0.0762,
+            0.0762
+          ],
+          [
+            0.0762,
+            0.0762
+          ]
+        ],
+        "Id": "0bb37606-1110-4a6d-801c-1b4f5de83127",
+        "discriminator": "Elements.Geometry.Profile"
+      },
+      "Area": 16,
+      "Height": 1,
+      "Program Type": "Open Office",
+      "Level": "603042dd-0336-43ea-b31b-13794fb410ad",
+      "Level Layout": {
+        "discriminator": "Elements.LevelLayout",
+        "Profiles": [],
+        "Add Id": "dummy-level-volume-layout",
+        "Levels": [
+          "603042dd-0336-43ea-b31b-13794fb410ad"
+        ],
+        "Id": "19794924-e0f1-4335-8b27-5c03f3ddfdd0",
+        "Name": " Layout"
+      },
+      "Hypar Space Type": "Open Office",
+      "Transform": {
+        "Matrix": {
+          "Components": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0
+          ]
+        }
+      },
+      "Material": {
+        "discriminator": "Elements.Material",
+        "Color": {
+          "Red": 0.435,
+          "Green": 0.627,
+          "Blue": 0.745,
+          "Alpha": 0.5
+        },
+        "SpecularFactor": 0.1,
+        "GlossinessFactor": 0.1,
+        "Unlit": false,
+        "DoubleSided": false,
+        "RepeatTexture": true,
+        "InterpolateTexture": true,
+        "EmissiveFactor": 0,
+        "Draw In Front": false,
+        "EdgeDisplaySettings": null,
+        "Id": "3086c9b7-db48-4604-a59f-d4d0630fccd7",
+        "Name": "Open Office"
+      },
+      "Representation": null,
+      "IsElementDefinition": false,
+      "Id": "5e2f9c73-1d6a-4861-97e1-fbba56e90c55",
+      "Name": "Space"
+    }
+  }
+}
