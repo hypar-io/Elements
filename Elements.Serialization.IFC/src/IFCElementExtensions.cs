@@ -5,7 +5,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
-using Elements.BIM;
+using Elements;
 using IFC;
 
 namespace Elements.Serialization.IFC

@@ -1,6 +1,6 @@
 ﻿using Elements.Geometry;
 using Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction;
-using Elements.BIM;
+using Elements;
 using IFC;
 using System;
 using System.Collections.Generic;

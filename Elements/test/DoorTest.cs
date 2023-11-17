@@ -1,6 +1,6 @@
 ﻿using Elements.Geometry;
 using Elements.Tests;
-using Elements.BIM;
+using Elements;
 using Xunit;
 
 namespace Elements

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Elements.BIM;
+using Elements;
 
 namespace Elements
 {
