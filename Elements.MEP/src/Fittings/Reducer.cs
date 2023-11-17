@@ -163,10 +163,5 @@ namespace Elements.Fittings
             var t = new Transform(Vector3.Origin, xAxis, zAxis);
             return t;
         }
-
-        public override string GetRepresentationHash()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

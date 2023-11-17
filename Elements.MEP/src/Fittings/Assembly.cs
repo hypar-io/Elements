@@ -331,11 +331,5 @@ namespace Elements.Fittings
         {
             throw new NotImplementedException();
         }
-
-        /// <inheritdoc/>
-        public override string GetRepresentationHash()
-        {
-            return Id.ToString();
-        }
     }
 }

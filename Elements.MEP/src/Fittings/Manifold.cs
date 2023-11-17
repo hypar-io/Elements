@@ -64,10 +64,5 @@ namespace Elements.Fittings
         {
             throw new NotImplementedException();
         }
-
-        public override string GetRepresentationHash()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
