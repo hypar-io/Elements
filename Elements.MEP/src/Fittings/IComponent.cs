@@ -44,8 +44,6 @@ namespace Elements.Fittings
 
         public abstract void ClearAdditionalTransform();
 
-        public abstract string GetRepresentationHash();
-
         /// <summary>
         /// Checks if transformation should be applied and propagated to the next connections.
         /// It's intended to "pull" the supplied transform into the current component,

@@ -164,7 +164,7 @@ namespace Elements.Fittings
             var solidOps = new List<SolidOperation> { trunk, main, branch }.Concat(arrows).Concat(GetExtensions()).ToList();
             if (UseRepresentationInstances)
             {
-                FittingRepresentationStorageClass.SetFittingRepresentation(this, () => solidOps);
+                FittingRepresentationStorage.SetFittingRepresentation(this, () => solidOps);
             }
             else
             {

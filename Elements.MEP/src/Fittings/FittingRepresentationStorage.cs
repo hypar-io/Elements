@@ -6,7 +6,7 @@ using Elements.Geometry.Solids;
 
 namespace Elements.Fittings
 {
-    static class FittingRepresentationStorageClass
+    static class FittingRepresentationStorage
     {
         private static readonly Dictionary<string, List<RepresentationInstance>> _fittings = new Dictionary<string, List<RepresentationInstance>>();
         public static Dictionary<string, List<RepresentationInstance>> Fittings => _fittings;

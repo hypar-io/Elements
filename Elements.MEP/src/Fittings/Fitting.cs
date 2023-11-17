@@ -15,6 +15,11 @@ namespace Elements.Fittings
             return GetPorts();
         }
 
+        public virtual string GetRepresentationHash()
+        {
+            return this.GetHashCode().ToString();
+        }
+
         abstract public Port[] GetPorts();
 
         public abstract Transform GetRotatedTransform();

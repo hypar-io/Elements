@@ -45,7 +45,7 @@ namespace Elements.Fittings
 
             if (UseRepresentationInstances)
             {
-                FittingRepresentationStorageClass.SetFittingRepresentation(this, () => solidOperations);
+                FittingRepresentationStorage.SetFittingRepresentation(this, () => solidOperations);
             }
             else
             {
