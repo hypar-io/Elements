@@ -182,7 +182,6 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="model">The model to convert to an IFC document.</param>
         /// <param name="stream">The stream in which to write the IFC document.</param>
-        /// <param name="path">The path to the generated IFC STEP file.</param>
         /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
 
         public static void ToIFC(this Model model,
@@ -190,9 +189,9 @@ namespace Elements.Serialization.IFC
                                  bool updateElementsRepresentation = true)
         {
             var ifc = CreateIfcDocument(model, updateElementsRepresentation);
-            using (var writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream, leaveOpen: true))
             {
-                writer.Write(ifc);
+                writer.Write(ifc.ToSTEP());
             }
         }
     }
