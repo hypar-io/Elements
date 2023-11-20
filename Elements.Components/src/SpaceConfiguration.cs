@@ -137,7 +137,7 @@ namespace Elements.Components
         /// <summary>
         /// Allow rotation of the configuration
         /// </summary>
-        public bool AllowRotatation { get; set; }
+        public bool AllowRotation { get; set; }
 
         /// <summary>
         /// Create a set of element instances from this configuration.
