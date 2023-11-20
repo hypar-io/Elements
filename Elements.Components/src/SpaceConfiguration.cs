@@ -135,6 +135,11 @@ namespace Elements.Components
         public double Depth => this.CellBoundary.Depth;
 
         /// <summary>
+        /// Allow rotation of the configuration
+        /// </summary>
+        public bool AllowRotatation { get; set; }
+
+        /// <summary>
         /// Create a set of element instances from this configuration.
         /// </summary>
         /// <param name="t">The transform to apply to the configuration.</param>
