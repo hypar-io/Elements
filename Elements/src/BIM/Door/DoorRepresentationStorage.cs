@@ -6,17 +6,17 @@ namespace Elements
 {
     static class DoorRepresentationStorage
     {
-        private static readonly Dictionary<string, List<RepresentationInstance>> _fittings = new Dictionary<string, List<RepresentationInstance>>();
-        public static Dictionary<string, List<RepresentationInstance>> Fittings => _fittings;
+        private static readonly Dictionary<string, List<RepresentationInstance>> _doors = new Dictionary<string, List<RepresentationInstance>>();
+        public static Dictionary<string, List<RepresentationInstance>> Doors => _doors;
 
         public static void SetDoorRepresentation(Door door)
         {
             var hash = door.GetRepresentationHash();
-            if (!_fittings.ContainsKey(hash))
+            if (!_doors.ContainsKey(hash))
             {
-                _fittings.Add(hash, door.GetInstances());
+                _doors.Add(hash, door.GetInstances());
             }
-            door.RepresentationInstances = _fittings[hash];
+            door.RepresentationInstances = _doors[hash];
         }
     }
 
