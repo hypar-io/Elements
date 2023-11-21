@@ -236,7 +236,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this ray intersect the provided topography?
+        /// Does this ray intersect the provided topography? Note that the Topography's transform is not considered. 
         /// </summary>
         /// <param name="topo">The topography.</param>
         /// <param name="result">The location of intersection.</param>

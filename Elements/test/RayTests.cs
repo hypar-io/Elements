@@ -63,43 +63,34 @@ namespace Elements.Tests
         {
             this.Name = "RayIntersectTopo";
 
-            var elevations = new double[25];
+            var elevations = new double[100];
 
             int e = 0;
-            for (var x = 0; x < 5; x++)
+            for (var x = 0; x < 10; x++)
             {
-                for (var y = 0; y < 5; y++)
+                for (var y = 0; y < 10; y++)
                 {
-                    elevations[e] = Math.Sin(((double)x / 5.0) * Math.PI) * 10;
+                    elevations[e] = Math.Sin(((double)x / 10.0) * Math.PI) * 5;
                     e++;
                 }
             }
-            var topo = new Topography(Vector3.Origin, 4, elevations);
+            var topo = new Topography(Vector3.Origin, 10, elevations);
+            topo.Material = new Material("topo", new Color(0.5, 0.5, 0.5, 0.5));
             this.Model.AddElement(topo);
 
-            var modelPoints = new ModelPoints(new List<Vector3>(), new Material("begin", Colors.Blue));
-            this.Model.AddElement(modelPoints);
-            foreach (var t in topo.Mesh.Triangles)
+            var ray = new Ray(Vector3.Origin, Vector3.ZAxis);
+            this.Model.AddElement(ModelCurveFromRay(ray));
+            Assert.True(ray.Intersects(topo.Mesh, out var result));
+            for (int i = 1; i < 9; i++)
             {
-                var c = Center(t);
-                var o = new Vector3(c.X, c.Y);
-                modelPoints.Locations.Add(o);
-
-                var ray = new Ray(o, Vector3.ZAxis);
-
-                Vector3 xsect;
-                if (ray.Intersects(t, out xsect))
+                for (int j = 1; j < 9; j++)
                 {
-                    try
-                    {
-                        var l = new Line(o, xsect);
-                        var ml = new ModelCurve(l);
-                        this.Model.AddElement(ml);
-                    }
-                    catch
-                    {
-                        continue;
-                    }
+                    var newRay = new Ray(new Vector3(i, j, 40), Vector3.ZAxis.Negate());
+                    var intersect = newRay.Intersects(topo.Mesh, out var result2);
+                    Assert.True(intersect);
+                    var line = new Line(result2, newRay.Origin);
+                    Model.AddElement(new ModelCurve(line, BuiltInMaterials.XAxis));
+                    Assert.True(result2.Z > 0 && result2.Z < 40);
                 }
             }
         }
