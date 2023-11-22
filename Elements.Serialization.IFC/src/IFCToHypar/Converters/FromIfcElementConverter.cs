@@ -22,18 +22,19 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            if (repData.SolidOperations.Count == 0)
+            if (repData.RepresentationInstances.Count == 0)
             {
-                constructionErrors.Add($"#{ifcProduct.StepId}: {ifcProduct.GetType().Name} did not have any solid operations in it's representation.");
+                constructionErrors.Add($"#{ifcProduct.StepId}: {ifcProduct.GetType().Name} did not have any representation items that could be converted to RepresentationInstance.");
                 return null;
             }
 
-            var geom = new GeometricElement(repData.Transform,
-                                            repData.Material ?? BuiltInMaterials.Default,
-                                            new Representation(repData.SolidOperations),
-                                            false,
-                                            IfcGuid.FromIfcGUID(ifcProduct.GlobalId),
-                                            ifcProduct.Name);
+            var geom = new GeometricElement(transform: repData.Transform,
+                                            isElementDefinition: false,
+                                            id: IfcGuid.FromIfcGUID(ifcProduct.GlobalId),
+                                            name: ifcProduct.Name)
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
 
             // geom.Representation.SkipCSGUnion = true;
             return geom;

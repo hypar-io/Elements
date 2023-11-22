@@ -27,12 +27,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             var result = new Wall(repData.Extrude.Profile,
                                   repData.Extrude.Height,
-                                  repData.Material,
-                                  repData.Transform,
-                                  new Representation(repData.SolidOperations),
-                                  false,
-                                  IfcGuid.FromIfcGUID(wall.GlobalId),
-                                  wall.Name);
+                                  transform: repData.Transform,
+                                  isElementDefinition: false,
+                                  id: IfcGuid.FromIfcGUID(wall.GlobalId),
+                                  name: wall.Name)
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
             return result;
         }
 

@@ -1,5 +1,4 @@
-﻿using Elements;
-using Elements.Geometry;
+﻿using Elements.Geometry;
 using Elements.Geometry.Solids;
 using IFC;
 using System;
@@ -8,14 +7,18 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
-    internal class IfcExtrudedAreaSolidParser : IIfcRepresentationParser
+    internal class IfcExtrudedAreaSolidParser : FromIfcElementRepresentationExtractor
     {
-        public bool CanParse(IfcRepresentationItem ifcRepresentationItem)
+        public IfcExtrudedAreaSolidParser(MaterialExtractor materialExtractor) : base(materialExtractor)
+        {
+        }
+
+        public override bool CanParse(IfcRepresentationItem ifcRepresentationItem)
         {
             return ifcRepresentationItem is IfcExtrudedAreaSolid;
         }
 
-        public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
+        protected override ElementRepresentation ExtractElementRepresentation(IfcRepresentationItem ifcRepresentationItem)
         {
             if (!(ifcRepresentationItem is IfcExtrudedAreaSolid ifcSolid))
             {
@@ -38,7 +41,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
                                         solidTransform.OfVector(direction).Unitized(),
                                         false);
 
-            return new RepresentationData(extrude, solidTransform);
+            return new SolidRepresentation(extrude);
         }
     }
 }

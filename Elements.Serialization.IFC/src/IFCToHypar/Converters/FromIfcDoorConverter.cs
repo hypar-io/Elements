@@ -43,13 +43,14 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                   Door.DOOR_THICKNESS,
                                   openingSide,
                                   openingType,
-                                  repData.Transform,
-                                  repData.Material,
-                                  new Representation(repData.SolidOperations),
-                                  false,
-                                  IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
-                                  ifcDoor.Name
-                                  );
+                                  transform: repData.Transform,
+                                  isElementDefinition: false,
+                                  id: IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
+                                  name: ifcDoor.Name
+                                  )
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
 
             return result;
         }

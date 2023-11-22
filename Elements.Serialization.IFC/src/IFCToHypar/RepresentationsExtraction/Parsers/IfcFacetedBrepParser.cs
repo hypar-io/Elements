@@ -8,14 +8,18 @@ using System.Text;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
-    internal class IfcFacetedBrepParser : IIfcRepresentationParser
+    internal class IfcFacetedBrepParser : FromIfcElementRepresentationExtractor
     {
-        public bool CanParse(IfcRepresentationItem ifcRepresentationItem)
+        public IfcFacetedBrepParser(MaterialExtractor materialExtractor) : base(materialExtractor)
+        {
+        }
+
+        public override bool CanParse(IfcRepresentationItem ifcRepresentationItem)
         {
             return ifcRepresentationItem is IfcFacetedBrep;
         }
 
-        public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
+        protected override ElementRepresentation ExtractElementRepresentation(IfcRepresentationItem ifcRepresentationItem)
         {
             if (!(ifcRepresentationItem is IfcFacetedBrep ifcSolid))
             {
@@ -36,7 +40,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             }
 
             var solidOperation = new ConstructedSolid(newSolid);
-            return new RepresentationData(new List<SolidOperation>() { solidOperation });
+            return new SolidRepresentation(solidOperation);
         }
     }
 }

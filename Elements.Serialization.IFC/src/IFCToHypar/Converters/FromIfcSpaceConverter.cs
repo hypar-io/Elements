@@ -11,8 +11,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 {
     internal class FromIfcSpaceConverter : IFromIfcProductConverter
     {
-        private static readonly Material DEFAULT_MATERIAL = new Material("space", new Color(1.0f, 0.0f, 1.0f, 0.5f), 0.0f, 0.0f);
-
         public GeometricElement ConvertToElement(IfcProduct product, RepresentationData repData, List<string> constructionErrors)
         {
             if (!(product is IfcSpace ifcSpace))
@@ -20,25 +18,25 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var elementMaterial = repData.Material ?? DEFAULT_MATERIAL;
-
             var extrude = repData.Extrude;
 
             if (extrude != null)
             {
-
                 var result = new Space(extrude.Profile,
                                        extrude.Height,
-                                       elementMaterial,
-                                       repData.Transform,
-                                       new Representation(repData.SolidOperations),
-                                       false,
-                                       Guid.NewGuid(),
-                                       ifcSpace.Name);
+                                       transform: repData.Transform,
+                                       isElementDefinition: false,
+                                       id: Guid.NewGuid(),
+                                       name: ifcSpace.Name)
+                {
+                    RepresentationInstances = repData.RepresentationInstances
+                };
+
                 return result;
             }
 
-            var solid = repData.SolidOperations.FirstOrDefault()?.Solid;
+            var solidOperations = repData.GetSolidOperations();
+            var solid = solidOperations.FirstOrDefault()?.Solid;
 
             if (solid == null)
             {
@@ -46,7 +44,12 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            return new Space(solid, repData.Transform, elementMaterial, false, Guid.NewGuid(), ifcSpace.Name);
+            var space = new Space(solid, transform: repData.Transform, isElementDefinition: false, id: Guid.NewGuid(), name: ifcSpace.Name)
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
+
+            return space;
         }
 
         public bool CanConvert(IfcProduct ifcProduct)

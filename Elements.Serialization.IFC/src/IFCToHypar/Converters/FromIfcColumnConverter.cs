@@ -18,8 +18,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var elementTransform = repData.Transform;
-
             if (repData.Extrude == null)
             {
                 constructionErrors.Add($"#{ifcProduct.StepId}: Conversion of IfcColumn without extrude or mapped item representation to Column is not supported.");
@@ -33,12 +31,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                     0,
                                     0,
                                     0,
-                                    elementTransform,
-                                    repData.Material,
-                                    new Representation(repData.SolidOperations),
-                                    false,
-                                    IfcGuid.FromIfcGUID(ifcColumn.GlobalId),
-                                    ifcColumn.Name);
+                                    transform: repData.Transform,
+                                    isElementDefinition: false,
+                                    id: IfcGuid.FromIfcGUID(ifcColumn.GlobalId),
+                                    name: ifcColumn.Name)
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
             return result;
         }
 

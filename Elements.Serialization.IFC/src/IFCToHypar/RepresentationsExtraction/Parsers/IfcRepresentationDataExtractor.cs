@@ -9,18 +9,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
     internal class IfcRepresentationDataExtractor
     {
         private readonly List<IIfcRepresentationParser> _ifcRepresentationParsers;
-        private readonly MaterialExtractor _materialExtractor;
 
         /// <summary>
         /// Create an IfcRepresentationDataExtractor.
         /// </summary>
-        /// <param name="materialExtractor">
-        /// Parses materials from IFC and contains information about them.
-        /// </param>
-        public IfcRepresentationDataExtractor(MaterialExtractor materialExtractor)
+        public IfcRepresentationDataExtractor()
         {
             _ifcRepresentationParsers = new List<IIfcRepresentationParser>();
-            _materialExtractor = materialExtractor;
         }
 
         public void AddRepresentationParser(IIfcRepresentationParser ifcRepresentationParser)
@@ -56,7 +51,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
         /// <param name="repItem">IfcRepresentationItem that will be parsed.</param>
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem repItem)
         {
-            var material = _materialExtractor.ExtractMaterial(repItem);
             var matchingParsers = _ifcRepresentationParsers.Where(parser => parser.CanParse(repItem));
 
             if (!matchingParsers.Any())
@@ -67,13 +61,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
             var repParser = matchingParsers.First();
             var parsedItem = repParser.ParseRepresentationItem(repItem);
-
-            if (parsedItem == null)
-            {
-                return null;
-            }
-
-            parsedItem.Material = material ?? parsedItem.Material;
             return parsedItem;
         }
 
@@ -109,7 +96,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             var transform = new Transform();
             transform.Concatenate(ifcProduct.ObjectPlacement.ToTransform());
 
-            if (!(ifcProduct is IfcBuildingElement ifcBuildingElement))
+            if (ifcProduct is not IfcBuildingElement ifcBuildingElement)
             {
                 return transform;
             }

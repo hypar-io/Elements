@@ -26,11 +26,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
             var floor = new Floor(repData.Extrude.Profile,
                                   repData.Extrude.Height,
-                                  repData.Transform,
-                                  repData.Material,
-                                  new Representation(repData.SolidOperations),
-                                  false,
-                                  IfcGuid.FromIfcGUID(slab.GlobalId));
+                                  transform: repData.Transform,
+                                  isElementDefinition: false,
+                                  id: IfcGuid.FromIfcGUID(slab.GlobalId),
+                                  name: slab.Name)
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
 
             return floor;
         }

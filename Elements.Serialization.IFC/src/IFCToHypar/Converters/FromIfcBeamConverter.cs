@@ -17,8 +17,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             {
                 return null;
             }
-            
-            var elementTransform = repData.Transform;
 
             if (repData.Extrude == null)
             {
@@ -26,22 +24,21 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var representation = new Representation(repData.SolidOperations);
-
             var centerLine = new Line(Vector3.Origin, repData.Extrude.Direction, repData.Extrude.Height);
             var transformedLine = centerLine.TransformedLine(repData.ExtrudeTransform);
+
             var result = new Beam(transformedLine,
                                     repData.Extrude.Profile,
                                     0,
                                     0,
                                     0,
-                                    elementTransform,
-                                    repData.Material,
-                                    representation,
-                                    false,
-                                    IfcGuid.FromIfcGUID(ifcBeam.GlobalId),
-                                    ifcBeam.Name);
-
+                                    transform: repData.Transform,
+                                    isElementDefinition: false,
+                                    id: IfcGuid.FromIfcGUID(ifcBeam.GlobalId),
+                                    name: ifcBeam.Name)
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
             return result;
         }
 

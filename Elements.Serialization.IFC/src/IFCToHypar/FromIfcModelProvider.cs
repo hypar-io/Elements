@@ -224,10 +224,10 @@ namespace Elements.Serialization.IFC.IFCToHypar
         /// </summary>
         private static IfcRepresentationDataExtractor GetDefaultRepresentationDataExtractor(MaterialExtractor materialExtractor)
         {
-            IfcRepresentationDataExtractor extractor = new IfcRepresentationDataExtractor(materialExtractor);
+            IfcRepresentationDataExtractor extractor = new IfcRepresentationDataExtractor();
 
-            extractor.AddRepresentationParser(new IfcFacetedBrepParser());
-            extractor.AddRepresentationParser(new IfcExtrudedAreaSolidParser());
+            extractor.AddRepresentationParser(new IfcFacetedBrepParser(materialExtractor));
+            extractor.AddRepresentationParser(new IfcExtrudedAreaSolidParser(materialExtractor));
             extractor.AddRepresentationParser(new IfcMappedItemParser(extractor));
             extractor.AddRepresentationParser(new IfcBooleanClippingResultParser(extractor));
 
