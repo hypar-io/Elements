@@ -236,7 +236,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Does this ray intersect the provided topography? Note that the Topography's transform is not considered. 
+        /// Does this ray intersect the provided topography?
         /// </summary>
         /// <param name="topo">The topography.</param>
         /// <param name="result">The location of intersection.</param>
@@ -244,7 +244,15 @@ namespace Elements.Geometry
         /// False if no intersection occurs.</returns>
         public bool Intersects(Topography topo, out Vector3 result)
         {
-            return Intersects(topo.Mesh, out result);
+            var transform = topo.Transform;
+            var inverse = transform.Inverted();
+            var transformedRay = new Ray(inverse.OfPoint(Origin), Direction);
+            var intersects = transformedRay.Intersects(topo.Mesh, out result);
+            if (intersects)
+            {
+                result = transform.OfPoint(result);
+            }
+            return intersects;
         }
 
         /// <summary>

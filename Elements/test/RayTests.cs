@@ -7,6 +7,8 @@ using Xunit;
 using Xunit.Abstractions;
 using System.Diagnostics;
 using Vertex = Elements.Geometry.Vertex;
+using Xunit.Sdk;
+using System.Linq;
 
 namespace Elements.Tests
 {
@@ -74,23 +76,23 @@ namespace Elements.Tests
                     e++;
                 }
             }
-            var topo = new Topography(Vector3.Origin, 10, elevations);
-            topo.Material = new Material("topo", new Color(0.5, 0.5, 0.5, 0.5));
+            var topo = new Topography(Vector3.Origin, 10, elevations)
+            {
+                Material = new Material("topo", new Color(0.5, 0.5, 0.5, 0.5)),
+                Transform = new Transform(0, 0, 2)
+            };
             this.Model.AddElement(topo);
-
-            var ray = new Ray(Vector3.Origin, Vector3.ZAxis);
-            this.Model.AddElement(ModelCurveFromRay(ray));
-            Assert.True(ray.Intersects(topo.Mesh, out var result));
+            this.Model.AddElements(new Transform().ToModelCurves());
             for (int i = 1; i < 9; i++)
             {
                 for (int j = 1; j < 9; j++)
                 {
                     var newRay = new Ray(new Vector3(i, j, 40), Vector3.ZAxis.Negate());
-                    var intersect = newRay.Intersects(topo.Mesh, out var result2);
+                    var intersect = newRay.Intersects(topo, out var result2);
                     Assert.True(intersect);
                     var line = new Line(result2, newRay.Origin);
                     Model.AddElement(new ModelCurve(line, BuiltInMaterials.XAxis));
-                    Assert.True(result2.Z > 0 && result2.Z < 40);
+                    Assert.True(result2.Z > elevations.Min() + 2 && result2.Z < elevations.Max() + 2);
                 }
             }
         }
