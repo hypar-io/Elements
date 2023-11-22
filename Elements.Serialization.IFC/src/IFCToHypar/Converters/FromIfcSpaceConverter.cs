@@ -13,7 +13,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         public GeometricElement ConvertToElement(IfcProduct product, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(product is IfcSpace ifcSpace))
+            if (product is not IfcSpace ifcSpace)
             {
                 return null;
             }

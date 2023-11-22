@@ -21,7 +21,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
         protected override ElementRepresentation ExtractElementRepresentation(IfcRepresentationItem ifcRepresentationItem)
         {
-            if (!(ifcRepresentationItem is IfcFacetedBrep ifcSolid))
+            if (ifcRepresentationItem is not IfcFacetedBrep ifcSolid)
             {
                 return null;
             }

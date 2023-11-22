@@ -36,7 +36,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
         /// </param>
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
         {
-            if (!(ifcRepresentationItem is IfcMappedItem mappedItem))
+            if (ifcRepresentationItem is not IfcMappedItem mappedItem)
             {
                 return null;
             }
@@ -49,6 +49,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             else
             {
                 var parsedData = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
+
                 var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
                 var repData = new RepresentationData(mappedItem.MappingSource.MappedRepresentation.Id, mappingTransform, parsedData);
 

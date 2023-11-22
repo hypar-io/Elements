@@ -20,15 +20,12 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
         protected override ElementRepresentation ExtractElementRepresentation(IfcRepresentationItem ifcRepresentationItem)
         {
-            if (!(ifcRepresentationItem is IfcExtrudedAreaSolid ifcSolid))
+            if (ifcRepresentationItem is not IfcExtrudedAreaSolid ifcSolid)
             {
                 return null;
             }
 
             var profile = ifcSolid.SweptArea.ToProfile();
-            var solidTransform = ifcSolid.Position.ToTransform();
-            var direction = ifcSolid.ExtrudedDirection.ToVector3();
-
             if (profile == null)
             {
                 throw new NotImplementedException($"{profile.GetType().Name} is not supported for IfcExtrudedAreaSolid.");
@@ -36,6 +33,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
             double height = (IfcLengthMeasure)ifcSolid.Depth;
 
+            var solidTransform = ifcSolid.Position.ToTransform();
+            var direction = ifcSolid.ExtrudedDirection.ToVector3();
             var extrude = new Extrude(solidTransform.OfProfile(profile),
                                         height,
                                         solidTransform.OfVector(direction).Unitized(),

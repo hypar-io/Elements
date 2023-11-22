@@ -42,27 +42,14 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
 
         public bool CanConvert(IfcProduct ifcProduct)
         {
-            if (ifcProduct is IfcBuildingElement)
+            return ifcProduct switch
             {
-                return true;
-            }
-
-            if (ifcProduct is IfcFurnishingElement)
-            {
-                return true;
-            }
-
-            if (ifcProduct is IfcSpace)
-            {
-                return true;
-            }
-
-            if (ifcProduct is IfcSite)
-            {
-                return true;
-            }
-
-            return false;
+                IfcBuildingElement => true,
+                IfcFurnishingElement => true,
+                IfcSpace => true,
+                IfcSite => true,
+                _ => false
+            };
         }
     }
 }
