@@ -4,7 +4,7 @@ using Elements.Geometry.Solids;
 
 namespace Elements
 {
-    static class DoorRepresentationStorage
+    public static class DoorRepresentationStorage
     {
         private static readonly Dictionary<string, List<RepresentationInstance>> _doors = new Dictionary<string, List<RepresentationInstance>>();
         public static Dictionary<string, List<RepresentationInstance>> Doors => _doors;
