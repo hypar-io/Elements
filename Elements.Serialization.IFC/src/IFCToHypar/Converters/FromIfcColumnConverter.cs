@@ -24,7 +24,9 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var result = new Column(repData.ExtrudeTransform.Origin,
+            var originTransform = repData.Extrude.LocalTransform ?? new Transform();
+
+            var result = new Column(originTransform.Origin,
                                     repData.Extrude.Height,
                                     null,
                                     repData.Extrude.Profile,

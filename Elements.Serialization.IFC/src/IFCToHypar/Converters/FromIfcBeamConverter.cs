@@ -25,7 +25,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             }
 
             var centerLine = new Line(Vector3.Origin, repData.Extrude.Direction, repData.Extrude.Height);
-            var transformedLine = centerLine.TransformedLine(repData.ExtrudeTransform);
+            var transformedLine = repData.Extrude.LocalTransform == null ? centerLine : centerLine.TransformedLine(repData.Extrude.LocalTransform);
 
             var result = new Beam(transformedLine,
                                     repData.Extrude.Profile,

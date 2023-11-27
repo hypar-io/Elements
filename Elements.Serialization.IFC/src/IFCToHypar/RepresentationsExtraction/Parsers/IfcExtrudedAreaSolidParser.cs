@@ -35,10 +35,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
             var solidTransform = ifcSolid.Position.ToTransform();
             var direction = ifcSolid.ExtrudedDirection.ToVector3();
-            var extrude = new Extrude(solidTransform.OfProfile(profile),
+            var extrude = new Extrude(profile,
                                         height,
-                                        solidTransform.OfVector(direction).Unitized(),
-                                        false);
+                                        direction.Unitized(),
+                                        false)
+            { 
+                LocalTransform = solidTransform 
+            };
 
             return new SolidRepresentation(extrude);
         }

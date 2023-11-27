@@ -25,10 +25,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         /// An extrude that is used for the Element defining properties extraction.
         /// </summary>
         public Extrude Extrude { get; private set; }
-        /// <summary>
-        /// The transform of the Extrude.
-        /// </summary>
-        public Transform ExtrudeTransform { get; private set; }
 
         /// <summary>
         /// Information about mapping that can be used for ElementInstance creation.
@@ -47,11 +43,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
             // from an extrude representation. The first found extrude is
             // used for this purpose.
             Extrude = GetSolidOperations().OfType<Extrude>().FirstOrDefault();
-            
-            if (Extrude != null)
-            {
-                ExtrudeTransform = Extrude.LocalTransform;
-            }
         }
 
         /// <summary>
@@ -72,7 +63,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         {
             RepresentationInstances = mappedRepresentation.RepresentationInstances;
             Extrude = mappedRepresentation.Extrude;
-            ExtrudeTransform = mappedRepresentation.ExtrudeTransform;
             MappingInfo = new MappingInfo(mappedId, mappedTransform);
         }
 
@@ -103,7 +93,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
             {
                 var extrudeRep = extrudeReps.First();
                 Extrude = extrudeRep.Extrude;
-                ExtrudeTransform = extrudeRep.ExtrudeTransform;
             }
         }
 
