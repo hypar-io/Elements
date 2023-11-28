@@ -23,8 +23,10 @@ namespace Elements
                 public double DoorWidth { get; set; }
                 /// <summary>Height of a door without a frame.</summary>
                 public double DoorHeight { get; set; }
+                /// <summary>Default door thickness.</summary>
+                public static double DEFAULT_DOOR_THICKNESS = 2 * 0.0254;
                 /// <summary>Door thickness.</summary>
-                public double DoorThickness { get; set; }
+                public double DoorThickness { get; set; } = DEFAULT_DOOR_THICKNESS;
                 /// <summary>Default thickness of a door frame.</summary>
                 public double FrameDepth { get; set; } = 4 * 0.0254;
                 /// <summary>Default width of a door frame.</summary>
@@ -84,7 +86,7 @@ namespace Elements
                         DoorHeight = clearHeight;
                         DoorWidth = clearWidth;
                         DoorThickness = thickness;
-                        Material = material;
+                        Material = material ?? BuiltInMaterials.Default;
                 }
 
                 /// <summary>
@@ -126,7 +128,7 @@ namespace Elements
                         DoorWidth = clearWidth;
                         DoorHeight = clearHeight;
                         DoorThickness = thickness;
-                        Material = material;
+                        Material = material ?? BuiltInMaterials.Default;
                         Transform = GetDoorTransform(line.PointAtNormalized(tPos), line);
                 }
 
@@ -175,7 +177,7 @@ namespace Elements
                 /// </summary>
                 public string GetRepresentationHash()
                 {
-                        return $"{this.GetType().Name}-{this.DoorWidth}-{this.DoorHeight}-{this.DoorThickness}-{this.FrameDepth}-{this.FrameWidth}{this.FrameMaterial}-{this.OpeningType}-{this.OpeningSide}-{this.Material.Name}";
+                        return $"{this.GetType().Name}-{this.DoorWidth}-{this.DoorHeight}-{this.DoorThickness}-{this.FrameDepth}-{this.FrameWidth}{this.FrameMaterial.Name}-{this.OpeningType}-{this.OpeningSide}-{this.Material.Name}";
                 }
 
                 public List<RepresentationInstance> GetInstances()

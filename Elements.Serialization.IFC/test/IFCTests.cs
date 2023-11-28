@@ -138,8 +138,8 @@ namespace Elements.IFC.Tests
             var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "Wall1");
             var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "Wall2");
 
-            var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, 2 * 0.0254, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-            var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, 2 * 0.0254, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
 
             wall1.AddDoorOpening(door1);
             wall2.AddDoorOpening(door2);
