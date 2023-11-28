@@ -765,6 +765,42 @@ namespace Elements.Spatial.AdaptiveGrid
             }
         }
 
+        /// <summary>
+        /// Perform deep cloning of the AdaptiveGrid.
+        /// New grid will have the same ids but can be edited independently.
+        /// </summary>
+        /// <returns>Cloned AdaptiveGrid</returns>
+        public AdaptiveGrid Clone()
+        {
+            AdaptiveGrid clone = new AdaptiveGrid(new Transform(Transform));
+            clone._edgeId = _edgeId;
+            clone._vertexId = _vertexId;
+
+            clone._edges = _edges.ToDictionary(
+                e => e.Key,
+                e => new Edge(e.Value.Id, e.Value.StartId, e.Value.EndId));
+
+            clone._vertices = _vertices.ToDictionary(
+                e => e.Key,
+                e => {
+                    var v = new Vertex(e.Value.Id, e.Value.Point);
+                    foreach (var edge in e.Value.Edges)
+                    {
+                        v.Edges.Add(clone._edges[edge.Id]);
+                    }
+                    return v;
+                });
+
+            clone._edgesLookup = _edgesLookup.ToDictionary(e => e.Key, e => e.Value);
+
+            clone._xyzLookup = _xyzLookup.ToDictionary(
+                xyz => xyz.Key, xyz => xyz.Value.ToDictionary(
+                yz => yz.Key, yz => yz.Value.ToDictionary(
+                z => z.Key, z => z.Value)));
+
+            return clone;
+        }
+
         #endregion
 
         #region Private logic
@@ -799,7 +835,7 @@ namespace Elements.Spatial.AdaptiveGrid
                     throw new ArgumentException("Can't create edge. End vertex id is not present in the grid.", $"{vertexId2}");
                 }
 
-                var edge = new Edge(this, this._edgeId, vertexId1, vertexId2);
+                var edge = new Edge(this._edgeId, vertexId1, vertexId2);
                 edgeId = edge.Id;
 
                 this._edgesLookup[hash] = edgeId;

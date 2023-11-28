@@ -1146,6 +1146,37 @@ namespace Elements.Tests
             Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
         }
 
+        [Fact]
+        public void AdaptiveGridClone()
+        {
+            var grid = SampleGrid();
+            var clone = grid.Clone();
+
+            grid.GetVertex(4).Point.IsAlmostEqualTo(new Vector3(5, 5));
+            clone.GetVertex(4).Point.IsAlmostEqualTo(new Vector3(5, 5));
+
+            grid.AddVertex(new Vector3(5, -5),
+                new ConnectVertexStrategy(grid.GetVertex(1), grid.GetVertex(3)), cut: false);
+            clone.RemoveVertex(clone.GetVertex(5));
+            clone.AddEdge(grid.GetVertex(2), grid.GetVertex(4));
+
+            Assert.True(grid.TryGetVertexIndex((5, 2), out var index));
+            Assert.False(clone.TryGetVertexIndex((5, 2), out index));
+
+            Assert.True(grid.TryGetVertexIndex((5, -5), out index));
+            Assert.False(clone.TryGetVertexIndex((5, 2), out index));
+
+            var v = grid.GetVertex(4);
+            Assert.Equal(2, grid.GetVertex(4).Edges.Count);
+            Assert.Null(v.GetEdge(2));
+
+            Assert.True(clone.TryGetVertexIndex((5, 5), out index));
+            Assert.Equal(4u, index);
+            v = clone.GetVertex(index);
+            Assert.Equal(3, v.Edges.Count);
+            Assert.NotNull(v.GetEdge(2));
+        }
+
         //          (4)
         //         /   \
         //        /     \
