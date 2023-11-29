@@ -244,7 +244,15 @@ namespace Elements.Geometry
         /// False if no intersection occurs.</returns>
         public bool Intersects(Topography topo, out Vector3 result)
         {
-            return Intersects(topo.Mesh, out result);
+            var transform = topo.Transform;
+            var inverse = transform.Inverted();
+            var transformedRay = new Ray(inverse.OfPoint(Origin), Direction);
+            var intersects = transformedRay.Intersects(topo.Mesh, out result);
+            if (intersects)
+            {
+                result = transform.OfPoint(result);
+            }
+            return intersects;
         }
 
         /// <summary>

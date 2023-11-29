@@ -64,6 +64,8 @@
 - `Polyline.TransformAt` returns correct transformations when parameter on domain is provided.
 - `IndexedPolycurve` constructor that takes list of `BoundedCurve` now produces `CurveIndices` that share vertices and are withing index range. This means `IndexedPolyline.TransformedPolyline` preserves `CurveIndicies` on new `IndexedPolyline`.
 - `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
+- `Ray.Intersects(Topography)` and `Ray.Intersects(Mesh)` would sometimes return a different intersection than the closest one.
+- `Ray.Intersects(Topography)` now considers the topography's transform.
 
 ### Changed
 
