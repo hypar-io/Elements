@@ -221,6 +221,7 @@ namespace Elements
                         var points = CollectPointsForSchematicVisualization();
                         var curve = new IndexedPolycurve(points);
                         var curveRep = new CurveRepresentation(curve, false);
+                        curveRep.SetSnappingPoints(new List<SnappingPoints>());
                         var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
 
                         return repInstance;
@@ -251,6 +252,7 @@ namespace Elements
                         var doorFrameExtrude = new Extrude(new Profile(doorFramePolygon), this.FrameDepth, Vector3.YAxis);
 
                         var solidRep = new SolidRepresentation(doorFrameExtrude);
+                        solidRep.SetSnappingPoints(new List<SnappingPoints>());
                         var repInstance = new RepresentationInstance(solidRep, FrameMaterial, true);
                         return repInstance;
                 }
@@ -286,6 +288,7 @@ namespace Elements
                         }
 
                         var solidRep = new SolidRepresentation(doorExtrusions);
+                        solidRep.SetSnappingPoints(new List<SnappingPoints>(new SnappingPoints[] { new SnappingPoints(new[] { left, Vector3.Origin, right }, SnappingEdgeMode.LineStrip) }));
                         var repInstance = new RepresentationInstance(solidRep, this.Material, true);
                         return repInstance;
                 }
@@ -416,6 +419,7 @@ namespace Elements
                         }
 
                         var solidRep = new SolidRepresentation(solidOperationsList);
+                        solidRep.SetSnappingPoints(new List<SnappingPoints>());
                         var repInst = new RepresentationInstance(solidRep, FrameMaterial);
                         return repInst;
                 }
