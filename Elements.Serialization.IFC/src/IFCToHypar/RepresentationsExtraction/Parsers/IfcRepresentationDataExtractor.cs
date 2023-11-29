@@ -114,7 +114,28 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
                 transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
             }
 
+            // Origins of some IfcProducts (like doors and windows) are placed in the corner
+            // when in Hypar they are in the center.
+            if (ifcProduct is IfcDoor ifcDoor)
+            {
+                transform = GetTransformWithCorrectedOffset(transform, (IfcLengthMeasure) ifcDoor.OverallWidth);
+            } 
+            else if (ifcProduct is IfcWindow ifcWindow)
+            {
+                transform = GetTransformWithCorrectedOffset(transform, (IfcLengthMeasure) ifcWindow.OverallWidth);
+            }
+
             return transform;
+        }
+
+        private static Transform GetTransformWithCorrectedOffset(Transform transform, double width)
+        {
+            var correctedOrigin = transform.Origin + 0.5 * width * transform.XAxis;
+            var correctedTransform = new Transform(correctedOrigin,
+                                                   transform.XAxis,
+                                                   transform.YAxis,
+                                                   transform.ZAxis);
+            return correctedTransform;
         }
     }
 }
