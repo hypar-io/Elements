@@ -24,7 +24,8 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var floor = new Floor(repData.Extrude.Profile,
+            var localTransform = repData.Extrude.LocalTransform ?? new Transform();
+            var floor = new Floor(repData.Extrude.Profile.Transformed(localTransform),
                                   repData.Extrude.Height,
                                   transform: repData.Transform,
                                   isElementDefinition: false,
