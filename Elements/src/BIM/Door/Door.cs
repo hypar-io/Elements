@@ -11,18 +11,25 @@ namespace Elements
         /// <summary>Definition of a door</summary>
         public class Door : GeometricElement
         {
+                /// <summary>The material to be used on the door frame</summary>
                 public Material FrameMaterial { get; set; } = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
-
                 /// <summary>The opening type of the door that should be placed</summary>
                 [JsonProperty("Door Opening Type")]
+                [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
                 public DoorOpeningType OpeningType { get; private set; }
                 /// <summary>The opening side of the door that should be placed</summary>
                 [JsonProperty("Door Opening Side")]
+                [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
                 public DoorOpeningSide OpeningSide { get; private set; }
                 /// <summary>Width of a door without a frame.</summary>
+                [JsonProperty("Door Width")]
                 public double DoorWidth { get; set; }
                 /// <summary>Height of a door without a frame.</summary>
+                [JsonProperty("Door Height")]
                 public double DoorHeight { get; set; }
+                /// <summary>Type of door (Glass or Solid).</summary>
+                [JsonProperty("Door Type")]
+                public string DoorType { get; set; }
                 /// <summary>Default door thickness.</summary>
                 public static double DEFAULT_DOOR_THICKNESS = 2 * 0.0254;
                 /// <summary>Door thickness.</summary>
@@ -31,7 +38,6 @@ namespace Elements
                 public double FrameDepth { get; set; } = 4 * 0.0254;
                 /// <summary>Default width of a door frame.</summary>
                 public double FrameWidth { get; set; } = 2 * 0.0254; //2 inches
-
                 /// <summary>Height of the door handle from the ground</summary>
                 public double HandleHeight { get; set; } = 42 * 0.0254;
                 /// <summary>Radius of the fixture against the door</summary>
@@ -186,9 +192,10 @@ namespace Elements
                         {
                                 this.CreateDoorSolidRepresentation(),
                                 this.CreateDoorFrameRepresentation(),
-                                this.CreateDoorCurveRepresentation(),
                                 this.CreateDoorHandleRepresentation()
                         };
+
+                        representationInstances.AddRange(this.CreateDoorCurveRepresentation());
 
                         return representationInstances.Where(instance => instance != null).ToList();
                 }
@@ -216,15 +223,11 @@ namespace Elements
                         return 0;
                 }
 
-                private RepresentationInstance CreateDoorCurveRepresentation()
+                private List<RepresentationInstance> CreateDoorCurveRepresentation()
                 {
-                        var points = CollectPointsForSchematicVisualization();
-                        var curve = new IndexedPolycurve(points);
-                        var curveRep = new CurveRepresentation(curve, false);
-                        curveRep.SetSnappingPoints(new List<SnappingPoints>());
-                        var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
+                        var repInstances = CollectPointsForSchematicVisualization();
 
-                        return repInstance;
+                        return repInstances;
                 }
 
                 private RepresentationInstance CreateDoorFrameRepresentation()
@@ -293,41 +296,64 @@ namespace Elements
                         return repInstance;
                 }
 
-                private List<Vector3> CollectPointsForSchematicVisualization()
+                private List<RepresentationInstance> CollectPointsForSchematicVisualization()
                 {
-                        var points = new List<Vector3>();
+                        var representationInstances = new List<RepresentationInstance>();
 
                         if (this.OpeningSide == DoorOpeningSide.Undefined || this.OpeningType == DoorOpeningType.Undefined)
                         {
-                                return points;
+                                return representationInstances;
                         }
 
                         if (this.OpeningSide != DoorOpeningSide.LeftHand)
                         {
-                                points.AddRange(CollectSchematicVisualizationLines(this, false, false, 90));
+                                var points = CollectSchematicVisualizationLines(this, false, false, 90);
+                                points.Add(points[0]);
+                                var curve = new IndexedPolycurve(points);
+                                var curveRep = new CurveRepresentation(curve, false);
+                                curveRep.SetSnappingPoints(new List<SnappingPoints>());
+                                var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
+                                representationInstances.Add(repInstance);
                         }
 
                         if (this.OpeningSide != DoorOpeningSide.RightHand)
                         {
-                                points.AddRange(CollectSchematicVisualizationLines(this, true, false, 90));
+                                var points = CollectSchematicVisualizationLines(this, true, false, 90);
+                                points.Add(points[0]);
+                                var curve = new IndexedPolycurve(points);
+                                var curveRep = new CurveRepresentation(curve, false);
+                                curveRep.SetSnappingPoints(new List<SnappingPoints>());
+                                var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
+                                representationInstances.Add(repInstance);
                         }
 
-                        if (this.OpeningType == DoorOpeningType.SingleSwing)
+                        if (this.OpeningType == DoorOpeningType.DoubleSwing)
                         {
-                                return points;
+
+                                if (this.OpeningSide != DoorOpeningSide.LeftHand)
+                                {
+                                        var points = CollectSchematicVisualizationLines(this, false, true, 90);
+                                        points.Add(points[0]);
+                                        var curve = new IndexedPolycurve(points);
+                                        var curveRep = new CurveRepresentation(curve, false);
+                                        curveRep.SetSnappingPoints(new List<SnappingPoints>());
+                                        var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
+                                        representationInstances.Add(repInstance);
+                                }
+
+                                if (this.OpeningSide != DoorOpeningSide.RightHand)
+                                {
+                                        var points = CollectSchematicVisualizationLines(this, true, true, 90);
+                                        points.Add(points[0]);
+                                        var curve = new IndexedPolycurve(points);
+                                        var curveRep = new CurveRepresentation(curve, false);
+                                        curveRep.SetSnappingPoints(new List<SnappingPoints>());
+                                        var repInstance = new RepresentationInstance(curveRep, BuiltInMaterials.Black);
+                                        representationInstances.Add(repInstance);
+                                }
                         }
 
-                        if (this.OpeningSide != DoorOpeningSide.LeftHand)
-                        {
-                                points.AddRange(CollectSchematicVisualizationLines(this, false, true, 90));
-                        }
-
-                        if (this.OpeningSide != DoorOpeningSide.RightHand)
-                        {
-                                points.AddRange(CollectSchematicVisualizationLines(this, true, true, 90));
-                        }
-
-                        return points;
+                        return representationInstances;
                 }
 
                 private List<Vector3> CollectSchematicVisualizationLines(Door door, bool leftSide, bool inside, double angle)
