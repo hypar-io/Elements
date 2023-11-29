@@ -27,11 +27,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         public Extrude Extrude { get; private set; }
 
         /// <summary>
-        /// Information about mapping that can be used for ElementInstance creation.
-        /// </summary>
-        public MappingInfo MappingInfo { get; private set; }
-
-        /// <summary>
         /// Construct a RepresentationData from a list of RepresentationInstances.
         /// </summary>
         /// <param name="representationInstances">The representation instances composing this RepresentationData.</param>
@@ -54,19 +49,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         }
 
         /// <summary>
-        /// Create a RepresentationData for IfcMappedItem.
-        /// </summary>
-        /// <param name="mappedId">Guid of MappingSource.MappedRepresentation of IfcMappedItem.</param>
-        /// <param name="mappedTransform">The transform of the MappingSource of IfcMappedItem.</param>
-        /// <param name="mappedRepresentation">The representation data of the definition.</param>
-        public RepresentationData(Guid mappedId, Transform mappedTransform, RepresentationData mappedRepresentation)
-        {
-            RepresentationInstances = mappedRepresentation.RepresentationInstances;
-            Extrude = mappedRepresentation.Extrude;
-            MappingInfo = new MappingInfo(mappedId, mappedTransform);
-        }
-
-        /// <summary>
         /// Merge multiple representations into a single one.
         /// </summary>
         /// <param name="representations">Multiple representations that should be merged into a single one.</param>
@@ -74,15 +56,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         {
             // Combine solid operations of all representations.
             RepresentationInstances = representations.SelectMany(x => x.RepresentationInstances).ToList();
-
-            // TODO: IfcProduct can have several differend IfcMappedItem representations.
-            // Each of them should be handled separately. Now just the first IfcMappedItem
-            // is used.
-            var mappedReps = representations.Where(rep => rep.MappingInfo != null);
-            if (mappedReps.Any())
-            {
-                MappingInfo = mappedReps.First().MappingInfo;
-            }
 
             // TODO: IfcProducts can include several extrudes. Now single extrude
             // is supported. Moreover, most of the representation parsers work

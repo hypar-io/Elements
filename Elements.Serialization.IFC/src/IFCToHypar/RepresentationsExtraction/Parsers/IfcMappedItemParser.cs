@@ -1,6 +1,7 @@
 ﻿using IFC;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
@@ -50,11 +51,16 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             {
                 var parsedData = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
 
-                var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
-                var repData = new RepresentationData(mappedItem.MappingSource.MappedRepresentation.Id, mappingTransform, parsedData);
+                if (parsedData is null)
+                {
+                    return null;
+                }
 
-                _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, repData);
-                return repData;
+                var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
+                parsedData.Transform = mappingTransform;
+
+                _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, parsedData);
+                return parsedData;
             }
         }
     }

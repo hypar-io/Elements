@@ -41,7 +41,14 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
             var repItems = rep.Representations.SelectMany(r => r.Items);
             var representation = ParseRepresentationItems(repItems);
-            representation.Transform = GetTransformFromIfcProduct(ifcProduct);
+            var productTransform = GetTransformFromIfcProduct(ifcProduct);
+
+            if (representation.Transform is not null)
+            {
+                productTransform.Concatenate(representation.Transform);
+            }
+
+            representation.Transform = productTransform;
             return representation;
         }
 
