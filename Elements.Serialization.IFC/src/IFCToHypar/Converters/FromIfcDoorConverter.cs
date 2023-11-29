@@ -46,7 +46,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                   transform: repData.Transform,
                                   isElementDefinition: false,
                                   id: IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
-                                  name: ifcDoor.Name
+                                  name: ifcDoor.Name ?? ""
                                   )
             {
                 RepresentationInstances = repData.RepresentationInstances

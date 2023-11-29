@@ -30,7 +30,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                   transform: repData.Transform,
                                   isElementDefinition: false,
                                   id: IfcGuid.FromIfcGUID(slab.GlobalId),
-                                  name: slab.Name)
+                                  name: slab.Name ?? "")
             {
                 RepresentationInstances = repData.RepresentationInstances
             };

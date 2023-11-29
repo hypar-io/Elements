@@ -27,10 +27,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                        transform: repData.Transform,
                                        isElementDefinition: false,
                                        id: Guid.NewGuid(),
-                                       name: ifcSpace.Name)
-                {
-                    RepresentationInstances = repData.RepresentationInstances
-                };
+                                       name: ifcSpace.Name ?? "");
 
                 return result;
             }

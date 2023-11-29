@@ -31,7 +31,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             var geom = new GeometricElement(transform: repData.Transform,
                                             isElementDefinition: false,
                                             id: IfcGuid.FromIfcGUID(ifcProduct.GlobalId),
-                                            name: ifcProduct.Name)
+                                            name: ifcProduct.Name ?? "")
             {
                 RepresentationInstances = repData.RepresentationInstances
             };

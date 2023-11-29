@@ -35,7 +35,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                     transform: repData.Transform,
                                     isElementDefinition: false,
                                     id: IfcGuid.FromIfcGUID(ifcBeam.GlobalId),
-                                    name: ifcBeam.Name)
+                                    name: ifcBeam.Name ?? "")
             {
                 RepresentationInstances = repData.RepresentationInstances
             };
