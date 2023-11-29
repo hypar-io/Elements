@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 namespace Elements
 {
     /// <summary>
-    /// 
+    /// A solid representation of an element.
     /// </summary>
     public class SolidRepresentation : ElementRepresentation
     {
@@ -193,7 +193,7 @@ namespace Elements
         }
 
         /// <inheritdoc/>
-        public override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        protected override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
         {
             var snappingPoints = new List<SnappingPoints>();
 

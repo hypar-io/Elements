@@ -1341,8 +1341,9 @@ namespace Elements.Serialization.glTF
                                         var meshIdList = new List<int> { meshId };
                                         representationsMap.Add(combinedId, meshIdList);
                                         addedNodes.AddRange(NodeUtilities.AddNodes(nodes, meshIdList, elementNodeId));
-                                        var snappingPoints = representation.Representation.CreateSnappingPoints(element);
-                                        if (snappingPoints.Any())
+                                        var snappingPoints = representation.Representation.GetSnappingPoints(element);
+
+                                        if (snappingPoints != null)
                                         {
                                             AddExtension(gltf, meshes[meshId], "HYPAR_snapping_points", new Dictionary<string, object>() { { "points", snappingPoints } });
                                         }
