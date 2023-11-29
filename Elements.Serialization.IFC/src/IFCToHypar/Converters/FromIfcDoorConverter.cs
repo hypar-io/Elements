@@ -37,10 +37,11 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
             //var wall = GetWallFromDoor(ifcDoor, allWalls);
             var doorWidth = (IfcLengthMeasure)ifcDoor.OverallWidth;
             var doorHeight = (IfcLengthMeasure)ifcDoor.OverallHeight;
+            var doorThickness = Door.DEFAULT_DOOR_THICKNESS;
 
             var result = new Door(doorWidth,
                                   doorHeight,
-                                  Door.DOOR_THICKNESS,
+                                  doorThickness,
                                   openingSide,
                                   openingType,
                                   repData.Transform,
