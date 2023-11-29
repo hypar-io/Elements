@@ -27,6 +27,8 @@ namespace Elements
                 /// <summary>Height of a door without a frame.</summary>
                 [JsonProperty("Door Height")]
                 public double DoorHeight { get; set; }
+                [JsonProperty("Door Type")]
+                public string DoorType { get; set; }
                 /// <summary>Default door thickness.</summary>
                 public static double DEFAULT_DOOR_THICKNESS = 2 * 0.0254;
                 /// <summary>Door thickness.</summary>
