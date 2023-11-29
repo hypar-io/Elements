@@ -69,6 +69,14 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
             }
         }
 
+        public RepresentationData(RepresentationData repData, Transform transform)
+        {
+            // Combine solid operations of all representations.
+            RepresentationInstances = new List<RepresentationInstance>(repData.RepresentationInstances);
+            Extrude = repData.Extrude;
+            Transform = Transform is null ? transform : transform.Concatenated(Transform);
+        }
+
         public IEnumerable<SolidOperation> GetSolidOperations()
         {
             var solids = RepresentationInstances

@@ -42,26 +42,22 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
                 return null;
             }
 
-            if (_representationsMap.ContainsKey(mappedItem.MappingSource.MappedRepresentation.Id))
+            if (!_representationsMap.TryGetValue(mappedItem.MappingSource.MappedRepresentation.Id, out var definition))
             {
-                var ops = _representationsMap[mappedItem.MappingSource.MappedRepresentation.Id];
-                return ops;
-            }
-            else
-            {
-                var parsedData = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
+                definition = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
 
-                if (parsedData is null)
+                if (definition is null)
                 {
                     return null;
                 }
 
-                var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
-                parsedData.Transform = mappingTransform;
-
-                _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, parsedData);
-                return parsedData;
+                _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, definition);
             }
+
+            var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
+            var representationData = new RepresentationData(definition, mappingTransform);
+
+            return representationData;
         }
     }
 }
