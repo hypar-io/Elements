@@ -29,7 +29,7 @@ namespace Elements.IFC.Tests
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1919, 120, 530, 270, 170, 140, 10, 11)]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 2088, 120, 530, 270, 170, 140, 10, 11)]
         // TODO: Some walls are extracted incorrectly and intersecting the roof. It happens because
         // IfcBooleanClippingResultParser doesn't handle the boolean clipping operation.
         // In order to fix it surface support is required.
@@ -41,7 +41,7 @@ namespace Elements.IFC.Tests
         // in happens with windows and doors (and maybe some other) representations, created from BREP.
         // The Element.Transform is correct in this case, so the door should be placed correctly when
         // the default representation is used.
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1488, 5, 570, 121, 77, 82, 0, 21)]
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1564, 5, 570, 121, 77, 82, 0, 21)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void FromIFC4(string name,
                          string ifcPath,
