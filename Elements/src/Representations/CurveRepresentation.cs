@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using glTFLoader.Schema;
 
@@ -47,7 +48,7 @@ namespace Elements
         }
 
         /// <inheritdoc/>
-        public override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        protected override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
         {
             var snappingPoints = new List<SnappingPoints>();
             var curvePoints = _curve.RenderVertices();

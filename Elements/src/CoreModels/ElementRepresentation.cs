@@ -9,6 +9,8 @@ using Elements.Serialization.glTF;
 /// </summary>
 public abstract class ElementRepresentation : SharedObject
 {
+    protected List<SnappingPoints> _snapPoints;
+
     /// <summary>
     /// Get graphics buffers and other metadata required to modify a GLB.
     /// </summary>
@@ -29,11 +31,29 @@ public abstract class ElementRepresentation : SharedObject
     }
 
     /// <summary>
+    /// Set the snapping points for this representation.
+    /// </summary>
+    public void SetSnappingPoints(List<SnappingPoints> snapPoints)
+    {
+        _snapPoints = snapPoints;
+    }
+
+    /// <summary>
+    /// Get the snapping points for this representation. Uses CreateSnappingPoints if _snapPoints is null.
+    /// </summary>
+    public List<SnappingPoints> GetSnappingPoints(GeometricElement element)
+    {
+        if (_snapPoints == null) return CreateSnappingPoints(element);
+        return _snapPoints;
+    }
+
+
+    /// <summary>
     ///Creates the set of snapping points
     /// </summary>
     /// <param name="element">The element with this representation.</param>
     /// <returns></returns>
-    public virtual List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+    protected virtual List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
     {
         return new List<SnappingPoints>();
     }
