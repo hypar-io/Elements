@@ -1164,7 +1164,7 @@ namespace Elements.Tests
             Assert.False(clone.TryGetVertexIndex((5, 2), out index));
 
             Assert.True(grid.TryGetVertexIndex((5, -5), out index));
-            Assert.False(clone.TryGetVertexIndex((5, 2), out index));
+            Assert.False(clone.TryGetVertexIndex((5, -5), out index));
 
             var v = grid.GetVertex(4);
             Assert.Equal(2, grid.GetVertex(4).Edges.Count);
