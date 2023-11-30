@@ -43,7 +43,7 @@ namespace Elements
               Representation representation = null,
               bool isElementDefinition = false,
               Guid id = default,
-              string name = null) : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material, 0, 0, 0, transform, representation, isElementDefinition, id, name)
+              string name = null) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, 0, 0, 0, transform, representation, isElementDefinition, id, name)
         {
             this.Location = location;
             this.Height = height;
@@ -77,7 +77,7 @@ namespace Elements
               Representation representation = null,
               bool isElementDefinition = false,
               Guid id = default,
-              string name = null) : base(new Line(new Vector3(location.X, location.Y, location.Z + height), location), profile, material, startSetback, endSetback, rotation, transform, representation, isElementDefinition, id, name)
+              string name = null) : base(new Line(location, new Vector3(location.X, location.Y, location.Z + height)), profile, material, startSetback, endSetback, rotation, transform, representation, isElementDefinition, id, name)
         {
             this.Location = location;
             this.Height = height;
