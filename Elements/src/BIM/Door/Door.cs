@@ -31,23 +31,23 @@ namespace Elements
                 [JsonProperty("Door Type")]
                 public string DoorType { get; set; }
                 /// <summary>Default door thickness.</summary>
-                public static double DEFAULT_DOOR_THICKNESS = 2 * 0.0254;
+                public static double DEFAULT_DOOR_THICKNESS = Units.InchesToMeters(2.0);
                 /// <summary>Door thickness.</summary>
                 public double DoorThickness { get; set; } = DEFAULT_DOOR_THICKNESS;
                 /// <summary>Default thickness of a door frame.</summary>
-                public double FrameDepth { get; set; } = 4 * 0.0254;
+                public double FrameDepth { get; set; } = Units.InchesToMeters(4.0);
                 /// <summary>Default width of a door frame.</summary>
-                public double FrameWidth { get; set; } = 2 * 0.0254; //2 inches
+                public double FrameWidth { get; set; } = Units.InchesToMeters(2.0); //2 inches
                 /// <summary>Height of the door handle from the ground</summary>
-                public double HandleHeight { get; set; } = 42 * 0.0254;
+                public double HandleHeight { get; set; } = Units.InchesToMeters(42.0);
                 /// <summary>Radius of the fixture against the door</summary>
-                public double HandleBaseRadius { get; set; } = 1.35 * 0.0254;
+                public double HandleBaseRadius { get; set; } = Units.InchesToMeters(1.35);
                 /// <summary>Radius of the handle</summary>
-                public double HandleRadius { get; set; } = 0.45 * 0.0254;
+                public double HandleRadius { get; set; } = Units.InchesToMeters(0.45);
                 /// <summary>Length of the handle</summary>
-                public double HandleLength { get; set; } = 5 * 0.0254;
+                public double HandleLength { get; set; } = Units.InchesToMeters(5.0);
                 /// <summary>Depth of the handle from the face of the door</summary>
-                public double HandleDepth { get; set; } = 2 * 0.0254;
+                public double HandleDepth { get; set; } = Units.InchesToMeters(2.0);
                 /// <summary>Original position of the door used for override identity</summary>
                 public Vector3 OriginalPosition { get; set; }
 
@@ -431,15 +431,15 @@ namespace Elements
 
                         if (OpeningSide == DoorOpeningSide.DoubleDoor)
                         {
-                                var handlePair1 = CreateHandlePair(-3 * 0.0254, false);
+                                var handlePair1 = CreateHandlePair(DoorWidth / 2 + Units.InchesToMeters(3.0), false);
                                 solidOperationsList.AddRange(handlePair1);
 
-                                var handlePair2 = CreateHandlePair(3 * 0.0254, true);
+                                var handlePair2 = CreateHandlePair(DoorWidth / 2 + Units.InchesToMeters(3.0), true);
                                 solidOperationsList.AddRange(handlePair2);
                         }
                         else if (OpeningSide != DoorOpeningSide.Undefined)
                         {
-                                var xPos = OpeningSide == DoorOpeningSide.LeftHand ? -(FullDoorWidthWithoutFrame / 2 - 2 * 0.0254) : (FullDoorWidthWithoutFrame / 2 - 2 * 0.0254);
+                                var xPos = OpeningSide == DoorOpeningSide.LeftHand ? Units.InchesToMeters(3.0) : Units.InchesToMeters(3.0);
                                 var handle = CreateHandlePair(xPos, OpeningSide == DoorOpeningSide.LeftHand);
                                 solidOperationsList.AddRange(handle);
                         }
@@ -450,14 +450,15 @@ namespace Elements
                         return repInst;
                 }
 
-                private List<SolidOperation> CreateHandlePair(double xRelPos, bool isCodirectionalToX)
+                private List<SolidOperation> CreateHandlePair(double handleOffset, bool isCodirectionalToX)
                 {
-                        var xOffset = xRelPos * DoorWidth * Vector3.XAxis;
-                        var yOffset = DoorThickness * Vector3.YAxis;
+                        var handleDir = isCodirectionalToX ? Vector3.XAxis : Vector3.XAxis.Negate();
+
+                        var xOffset = (-DoorWidth / 2 + handleOffset) * handleDir;
+                        var yOffset = DoorThickness / 2 * Vector3.YAxis;
                         var zOffset = HandleHeight * Vector3.ZAxis;
 
                         var solidOperationsList = new List<SolidOperation>();
-                        var handleDir = isCodirectionalToX ? Vector3.XAxis : Vector3.XAxis.Negate();
 
                         var handleOrigin1 = xOffset + yOffset + zOffset;
                         var handle1Ops = CreateHandle(handleOrigin1, handleDir, Vector3.YAxis);
@@ -474,9 +475,9 @@ namespace Elements
                 {
                         var circleTransform = new Transform(origin, handleDir, yDir);
                         var circle = new Circle(circleTransform, HandleBaseRadius).ToPolygon();
-                        var circleOperation = new Extrude(circle, 0.1 * HandleDepth, yDir);
+                        var circleOperation = new Extrude(circle, 0.1 * HandleDepth, yDir.Negate());
 
-                        var cyl1Transform = new Transform(origin + 0.1 * HandleDepth * yDir, handleDir, yDir);
+                        var cyl1Transform = new Transform(origin, handleDir, yDir);
                         var cyl1Circle = new Circle(cyl1Transform, HandleRadius).ToPolygon();
                         var cyl1Operation = new Extrude(cyl1Circle, 0.9 * HandleDepth, yDir);
 
