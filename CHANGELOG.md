@@ -53,6 +53,7 @@
 - `Elements.Door`
 - `ComponentBase.UseRepresentationInstances` - an option flag to make generating fitting models faster/smaller.
 - `ContentConfiguration.AllowRotatation`
+- `AdaptiveGrid.Clone`
 
 ### Fixed
 

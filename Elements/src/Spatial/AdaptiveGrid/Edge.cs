@@ -27,7 +27,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// </summary>
         public ulong Id { get; internal set; }
 
-        internal Edge(AdaptiveGrid adaptiveGrid, ulong id, ulong vertexId1, ulong vertexId2)
+        internal Edge(ulong id, ulong vertexId1, ulong vertexId2)
         {
             Id = id;
             this.SetVerticesFromIds(vertexId1, vertexId2);
