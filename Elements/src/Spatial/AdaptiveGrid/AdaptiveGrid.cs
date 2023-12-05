@@ -936,12 +936,14 @@ namespace Elements.Spatial.AdaptiveGrid
                             AddEdgeOverlappingExisting(edgeV0, edgeV1, startVertex, endVertex, true))
                         {
                             edgesToRemove.Add(edge);
+                            intersectionPoints.Add(oldEdgeLine.End);
                         }
 
                         if (isOldEdgeStartOnNewEdge &&
                             AddEdgeOverlappingExisting(edgeV0, edgeV1, startVertex, endVertex, false))
                         {
                             edgesToRemove.Add(edge);
+                            intersectionPoints.Add(oldEdgeLine.Start);
                         }
                     }
                     // old edge is inside new edge
