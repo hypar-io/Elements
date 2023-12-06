@@ -6,7 +6,6 @@ namespace Elements
     /// <summary>
     /// An object with a unique identifier which is shared by one or more elements, and excluded from element serialization.
     /// </summary>
-    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class SharedObject
     {
         private Guid _id;
@@ -14,7 +13,7 @@ namespace Elements
         /// <summary>
         /// Initializes a new instance of SharedObject.
         /// </summary>
-        /// <param name="id">The unique id of the object.</param> 
+        /// <param name="id">The unique id of the object.</param>
         [JsonConstructor]
         public SharedObject(Guid id = default)
         {

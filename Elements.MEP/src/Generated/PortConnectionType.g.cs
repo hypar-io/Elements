@@ -19,33 +19,33 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Connection specification of a port </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
-    public partial class PortConnectionType 
+    public partial class PortConnectionType
     {
         [JsonConstructor]
         public PortConnectionType(PortConnectionTypeConnectivty @connectivty, PortConnectionTypeEndType @endType)
         {
             this.Connectivty = @connectivty;
             this.EndType = @endType;
-            }
-        
+        }
+
         // Empty constructor
         public PortConnectionType()
         {
         }
-    
+
         [JsonProperty("Connectivty", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public PortConnectionTypeConnectivty Connectivty { get; set; }
-    
+
         [JsonProperty("EndType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public PortConnectionTypeEndType EndType { get; set; }
-    
-    
+
+
     }
 }

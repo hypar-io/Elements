@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A single drainable roof section.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class DrainableRoofSection : GeometricElement
     {
@@ -36,36 +36,36 @@ namespace Elements
             this.Index = @index;
             this.Configuration = @configuration;
             this.Parent = @parent;
-            }
-        
+        }
+
         // Empty constructor
         public DrainableRoofSection()
             : base()
         {
         }
-    
+
         /// <summary>The boundary of the space.</summary>
         [JsonProperty("Boundary", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polygon Boundary { get; set; }
-    
+
         /// <summary>Low Lines that lie on the perimeter of the roof.</summary>
         [JsonProperty("Perimeter Low Lines", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Line> PerimeterLowLines { get; set; }
-    
+
         /// <summary>Low lines that lie within the roof's boundary.</summary>
         [JsonProperty("Interior Low Lines", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Line> InteriorLowLines { get; set; }
-    
+
         /// <summary>(temporary) Indicates the order of this section within the building.</summary>
         [JsonProperty("index", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int Index { get; set; }
-    
+
         [JsonProperty("Configuration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public DrainableRoofSectionConfiguration Configuration { get; set; }
-    
+
         [JsonProperty("Parent", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public DrainableRoofSection Parent { get; set; }
-    
-    
+
+
     }
 }

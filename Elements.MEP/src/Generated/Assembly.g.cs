@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A connectable collection of pipes and connections</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Assembly : Fitting
     {
@@ -33,25 +33,25 @@ namespace Elements.Fittings
             this.ExternalPorts = @externalPorts;
             this.InternalFittings = @internalFittings;
             this.InternalSegments = @internalSegments;
-            }
-        
+        }
+
         // Empty constructor
         public Assembly()
             : base()
         {
         }
-    
+
         /// <summary>The external facing Ports</summary>
         [JsonProperty("ExternalPorts", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Port> ExternalPorts { get; set; }
-    
+
         [JsonProperty("InternalFittings", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Fitting> InternalFittings { get; set; }
-    
+
         /// <summary>The internal segments in the assembly.</summary>
         [JsonProperty("InternalSegments", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<StraightSegment> InternalSegments { get; set; }
-    
-    
+
+
     }
 }

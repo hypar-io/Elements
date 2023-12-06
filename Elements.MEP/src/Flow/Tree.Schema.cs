@@ -20,7 +20,7 @@ using Polygon = Elements.Geometry.Polygon;
 namespace Elements.Flow
 {
     /// <summary>A many to one tree network.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v12.0.0.0)")]
     public partial class Tree : GeometricElement
     {

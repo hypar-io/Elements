@@ -19,12 +19,12 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Flow properties for a connector</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
-    public partial class Flow 
+    public partial class Flow
     {
         [JsonConstructor]
         public Flow(double @staticPressure, double @flowRate, double @fluidVelocity, double @dynamicPressure)
@@ -33,29 +33,29 @@ namespace Elements.Fittings
             this.FlowRate = @flowRate;
             this.FluidVelocity = @fluidVelocity;
             this.DynamicPressure = @dynamicPressure;
-            }
-        
+        }
+
         // Empty constructor
         public Flow()
         {
         }
-    
+
         /// <summary>The local static pressure of the fluid, relative to atmosphere.</summary>
         [JsonProperty("StaticPressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double StaticPressure { get; set; }
-    
+
         /// <summary>The flow rate of the fluid.</summary>
         [JsonProperty("FlowRate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FlowRate { get; set; }
-    
+
         /// <summary>The velocity of the fluid.</summary>
         [JsonProperty("FluidVelocity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FluidVelocity { get; set; }
-    
+
         /// <summary>The local dynamic pressure of the fluid due to fluid velocity.</summary>
         [JsonProperty("DynamicPressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DynamicPressure { get; set; }
-    
-    
+
+
     }
 }

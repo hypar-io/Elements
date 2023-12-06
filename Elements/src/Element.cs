@@ -94,7 +94,7 @@ namespace Elements
         /// <summary>
         /// An optional dictionary of mappings.
         /// </summary>
-        [JsonProperty("Mappings", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("Mappings")]
         internal Dictionary<string, MappingBase> Mappings { get; set; } = null;
 
         /// <summary>

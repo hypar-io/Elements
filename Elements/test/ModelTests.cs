@@ -76,19 +76,19 @@ namespace Elements.Tests
         {
             // We've put in an Elements.Baz with nothing but a discriminator.
             var modelStr = "{\"Transform\":{\"Matrix\":{\"Components\":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},\"Elements\":{\"c6d1dc68-f800-47c1-9190-745b525ad569\":{\"discriminator\":\"Elements.Baz\"}, \"37f161d6-a892-4588-ad65-457b04b97236\":{\"discriminator\":\"Elements.Geometry.Profiles.WideFlangeProfile\",\"d\":1.1176,\"tw\":0.025908,\"bf\":0.4064,\"tf\":0.044958,\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-0.2032,\"Y\":0.5588,\"Z\":0.0},{\"X\":-0.2032,\"Y\":0.51384199999999991,\"Z\":0.0},{\"X\":-0.012954,\"Y\":0.51384199999999991,\"Z\":0.0},{\"X\":-0.012954,\"Y\":-0.51384199999999991,\"Z\":0.0},{\"X\":-0.2032,\"Y\":-0.51384199999999991,\"Z\":0.0},{\"X\":-0.2032,\"Y\":-0.5588,\"Z\":0.0},{\"X\":0.2032,\"Y\":-0.5588,\"Z\":0.0},{\"X\":0.2032,\"Y\":-0.51384199999999991,\"Z\":0.0},{\"X\":0.012954,\"Y\":-0.51384199999999991,\"Z\":0.0},{\"X\":0.012954,\"Y\":0.51384199999999991,\"Z\":0.0},{\"X\":0.2032,\"Y\":0.51384199999999991,\"Z\":0.0},{\"X\":0.2032,\"Y\":0.5588,\"Z\":0.0}]},\"Voids\":null,\"Id\":\"37f161d6-a892-4588-ad65-457b04b97236\",\"Name\":\"W44x335\"},\"6b77d69a-204e-40f9-bc1f-ed84683e64c6\":{\"discriminator\":\"Elements.Material\",\"Color\":{\"Red\":0.60000002384185791,\"Green\":0.5,\"Blue\":0.5,\"Alpha\":1.0},\"SpecularFactor\":0.0,\"GlossinessFactor\":0.0,\"Id\":\"6b77d69a-204e-40f9-bc1f-ed84683e64c6\",\"Name\":\"steel\"},\"fd35bd2c-0108-47df-8e6d-42cc43e4eed0\":{\"discriminator\":\"Elements.Foo\",\"Curve\":{\"discriminator\":\"Elements.Geometry.Arc\",\"Center\":{\"X\":0.0,\"Y\":0.0,\"Z\":0.0},\"Radius\":2.0,\"StartAngle\":0.0,\"EndAngle\":90.0},\"StartSetback\":0.25,\"EndSetback\":0.25,\"Profile\":\"37f161d6-a892-4588-ad65-457b04b97236\",\"Transform\":{\"Matrix\":{\"Components\":[1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0]}},\"Material\":\"6b77d69a-204e-40f9-bc1f-ed84683e64c6\",\"Representation\":{\"SolidOperations\":[{\"discriminator\":\"Elements.Geometry.Solids.Sweep\",\"Profile\":\"37f161d6-a892-4588-ad65-457b04b97236\",\"Curve\":{\"discriminator\":\"Elements.Geometry.Arc\",\"Center\":{\"X\":0.0,\"Y\":0.0,\"Z\":0.0},\"Radius\":2.0,\"StartAngle\":0.0,\"EndAngle\":90.0},\"StartSetback\":0.25,\"EndSetback\":0.25,\"Rotation\":0.0,\"IsVoid\":false}]},\"Id\":\"fd35bd2c-0108-47df-8e6d-42cc43e4eed0\",\"Name\":null}}}";
-            var model = Model.FromJson(modelStr, out var errors);
+            var model = Model.FromJson(modelStr);
 
-            foreach (var e in errors)
-            {
-                this._output.WriteLine(e);
-            }
+            // foreach (var e in errors)
+            // {
+            //     this._output.WriteLine(e);
+            // }
 
             // We expect three geometric elements,
             // and one base element (Elements.Baz)
             Assert.Equal(4, model.Elements.Count);
             bool containsBaz = model.Elements.Select(x => x.Value.AdditionalProperties["discriminator"]).Contains("Elements.Baz");
             Assert.True(containsBaz);
-            Assert.Single(errors);
+            // Assert.Single(errors);
         }
 
         /// <summary>
@@ -171,8 +171,8 @@ namespace Elements.Tests
 
             var model = new Model(new List<Element> { inst1, inst2 });
             var json = model.ToJson(true);
-            var newModel = Model.FromJson(json, out var errors);
-            Assert.Empty(errors);
+            var newModel = Model.FromJson(json);
+            // Assert.Empty(errors);
 
             //Check that only a single mapping was serialized.
             var m = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.Tests.TestMapping""");

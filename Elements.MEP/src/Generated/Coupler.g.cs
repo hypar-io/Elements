@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A Fitting that does not change a pipe size.  This may not be used ...?</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Coupler : Fitting
     {
@@ -35,32 +35,32 @@ namespace Elements.Fittings
             this.Diameter = @diameter;
             this.PressureCalculations = @pressureCalculations;
             this.CouplerType = @couplerType;
-            }
-        
+        }
+
         // Empty constructor
         public Coupler()
             : base()
         {
         }
-    
+
         /// <summary>The Start of this coupler</summary>
         [JsonProperty("Start", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Start { get; set; }
-    
+
         /// <summary>The End of this coupler.</summary>
         [JsonProperty("End", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port End { get; set; }
-    
+
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
+
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationCoupler PressureCalculations { get; set; }
-    
+
         /// <summary>A  string that can be used to tag what kind of coupler this is.</summary>
         [JsonProperty("CouplerType", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string CouplerType { get; set; }
-    
-    
+
+
     }
 }

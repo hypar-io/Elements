@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A cross fitting where three flows join to one.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Cross : Fitting
     {
@@ -35,34 +35,34 @@ namespace Elements.Fittings
             this.BranchB = @branchB;
             this.BranchC = @branchC;
             this.PressureCalculations = @pressureCalculations;
-            }
-        
+        }
+
         // Empty constructor
         public Cross()
             : base()
         {
         }
-    
+
         /// <summary>The port at the trunk.</summary>
         [JsonProperty("Trunk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Trunk { get; set; }
-    
+
         /// <summary>First of three branch ports</summary>
         [JsonProperty("BranchA", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port BranchA { get; set; }
-    
+
         /// <summary>Second of three branch ports</summary>
         [JsonProperty("BranchB", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port BranchB { get; set; }
-    
+
         /// <summary>Third of three branch ports</summary>
         [JsonProperty("BranchC", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port BranchC { get; set; }
-    
+
         /// <summary>The pressure calculation data for this fitting.</summary>
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationCross PressureCalculations { get; set; }
-    
-    
+
+
     }
 }

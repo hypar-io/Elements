@@ -20,10 +20,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A termination point of a piping system. Has a single connection.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Terminal : Fitting
     {
@@ -35,30 +35,30 @@ namespace Elements.Fittings
             this.FlowNode = @flowNode;
             this.PressureCalculations = @pressureCalculations;
             this.StaticPressure = @staticPressure;
-            }
-        
+        }
+
         // Empty constructor
         public Terminal()
             : base()
         {
         }
-    
+
         /// <summary>The connector for this terminal.</summary>
         [JsonProperty("Port", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Port { get; set; }
-    
+
         /// <summary>The Node served by this Terminal, if any.</summary>
         [JsonProperty("FlowNode", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Node FlowNode { get; set; }
-    
+
         /// <summary>The Pressure calculations</summary>
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationTerminal PressureCalculations { get; set; }
-    
+
         /// <summary>The static pressure at the final termination.</summary>
         [JsonProperty("Static Pressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double StaticPressure { get; set; }
-    
-    
+
+
     }
 }

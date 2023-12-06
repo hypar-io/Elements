@@ -19,12 +19,12 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A specific location where a fitting makes a connection.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
-    public partial class Port 
+    public partial class Port
     {
         [JsonConstructor]
         public Port(Vector3 @position, Vector3 @direction, double @diameter, Flow @flow, IList<string> @tags, PortConnectionType @connectionType, PortDimensions @dimensions)
@@ -36,38 +36,38 @@ namespace Elements.Fittings
             this.Tags = @tags;
             this.ConnectionType = @connectionType;
             this.Dimensions = @dimensions;
-            }
-        
+        }
+
         // Empty constructor
         public Port()
         {
         }
-    
+
         /// <summary>The location of the connector.</summary>
         [JsonProperty("Position", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Position { get; set; }
-    
+
         /// <summary>The direction the connector faces. This is "out" from the connector, or away from the element being connected.</summary>
         [JsonProperty("Direction", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Direction { get; set; }
-    
+
         /// <summary>The diameter of the connector.</summary>
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
+
         /// <summary>The flow properties of the connector.</summary>
         [JsonProperty("Flow", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Flow Flow { get; set; }
-    
+
         [JsonProperty("Tags", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<string> Tags { get; set; }
-    
+
         [JsonProperty("Connection Type", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PortConnectionType ConnectionType { get; set; }
-    
+
         [JsonProperty("Dimensions", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PortDimensions Dimensions { get; set; }
-    
-    
+
+
     }
 }

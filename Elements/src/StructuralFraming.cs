@@ -82,11 +82,6 @@ namespace Elements
             this.UpdateRepresentations();
         }
 
-        /// <summary>
-        /// Construct a framing element.
-        /// </summary>
-        public StructuralFraming() { }
-
         private void SetProperties(BoundedCurve curve,
                                    Profile profile,
                                    double startSetback,

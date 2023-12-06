@@ -19,9 +19,9 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class DrainableRoofCharacteristics : Element
     {
@@ -41,57 +41,57 @@ namespace Elements
             this.GreenRoofSubstrateDiameter = @greenRoofSubstrateDiameter;
             this.ReductionFactor = @reductionFactor;
             this.RoofSection = @roofSection;
-            }
-        
+        }
+
         // Empty constructor
         public DrainableRoofCharacteristics()
             : base()
         {
         }
-    
+
         [JsonProperty("Base Roof Type", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DrainableRoofCharacteristicsBaseRoofType? BaseRoofType { get; set; } = Elements.DrainableRoofCharacteristicsBaseRoofType.Concrete;
-    
+
         [JsonProperty("Flat Roof or Gutter", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DrainableRoofCharacteristicsFlatRoofOrGutter? FlatRoofOrGutter { get; set; } = Elements.DrainableRoofCharacteristicsFlatRoofOrGutter.Flat_Roof;
-    
+
         [JsonProperty("Roof membrane", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DrainableRoofCharacteristicsRoofMembrane? RoofMembrane { get; set; } = Elements.DrainableRoofCharacteristicsRoofMembrane.PVC;
-    
+
         [JsonProperty("Heated", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool Heated { get; set; }
-    
+
         [JsonProperty("Angle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Angle { get; set; } = 0D;
-    
+
         [JsonProperty("Maximum Water Load", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MaximumWaterLoad { get; set; } = 0D;
-    
+
         [JsonProperty("Gravel Ballast Load", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DrainableRoofCharacteristicsGravelBallastLoad GravelBallastLoad { get; set; }
-    
+
         [JsonProperty("Green Roof", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
         public DrainableRoofCharacteristicsGreenRoof GreenRoof { get; set; }
-    
+
         [JsonProperty("Green Roof Thickness", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double GreenRoofThickness { get; set; }
-    
+
         [JsonProperty("Green Roof Substrate Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(4D, 50D)]
         public double GreenRoofSubstrateDiameter { get; set; } = 5D;
-    
+
         [JsonProperty("Reduction Factor", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double ReductionFactor { get; set; }
-    
+
         /// <summary>The ID of the associated DrainableRoofSection</summary>
         [JsonProperty("Roof Section", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string RoofSection { get; set; }
-    
-    
+
+
     }
 }

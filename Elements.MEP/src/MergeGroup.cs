@@ -6,7 +6,6 @@ using Polygon = Elements.Geometry.Polygon;
 namespace Elements
 {
     /// <summary>A list of elements that are grouped together.</summary>
-    [Newtonsoft.Json.JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public partial class MergeGroup : GeometricElement
     {
         [Newtonsoft.Json.JsonConstructor]

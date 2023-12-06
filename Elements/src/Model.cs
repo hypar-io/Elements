@@ -235,36 +235,38 @@ namespace Elements
             return Elements.Values.Where(e => typeof(T).IsAssignableFrom(e.GetType())).Cast<T>();
         }
 
-        /// <summary>
-        /// Serialize the model to JSON.
-        /// </summary>
-        /// <param name="indent">Should the JSON be indented?</param>
-        /// <param name="gatherSubElements">Should sub-elements of elements be processed?</param>
-        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
-        public string ToJson(bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
-        {
-            var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
+        // TODO: REMOVE CODE BEFORE SYSTEM.TEXT.JSON UPDATE
+        // /// <summary>
+        // /// Serialize the model to JSON.
+        // /// </summary>
+        // /// <param name="indent">Should the JSON be indented?</param>
+        // /// <param name="gatherSubElements">Should sub-elements of elements be processed?</param>
+        // /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        // public string ToJson(bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
+        // {
+        //     var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
-            return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
-        }
+        //     return JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+        // }
 
-        /// <summary>
-        /// Serialize the model to JSON and write to a stream.
-        /// </summary>
-        /// <param name="stream">The stream into which the JSON will be written.</param>
-        /// <param name="indent">Should the JSON be indented?</param>
-        /// <param name="gatherSubElements">Should sub-elements of elements be processed?</param>
-        /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
-        public void ToJson(MemoryStream stream, bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
-        {
-            var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
+        // TODO: REMOVE CODE BEFORE SYSTEM.TEXT.JSON UPDATE
+        // /// <summary>
+        // /// Serialize the model to JSON and write to a stream.
+        // /// </summary>
+        // /// <param name="stream">The stream into which the JSON will be written.</param>
+        // /// <param name="indent">Should the JSON be indented?</param>
+        // /// <param name="gatherSubElements">Should sub-elements of elements be processed?</param>
+        // /// <param name="updateElementsRepresentations">Indicates whether UpdateRepresentation should be called for all elements.</param>
+        // public void ToJson(MemoryStream stream, bool indent = false, bool gatherSubElements = true, bool updateElementsRepresentations = true)
+        // {
+        //     var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
-            var json = JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
-            using (var writer = new StreamWriter(stream))
-            {
-                writer.Write(json);
-            }
-        }
+        //     var json = JsonConvert.SerializeObject(exportModel, indent ? Formatting.Indented : Formatting.None);
+        //     using (var writer = new StreamWriter(stream))
+        //     {
+        //         writer.Write(json);
+        //     }
+        // }
 
         /// <summary>
         /// Serialize the model to JSON using default arguments.
@@ -297,7 +299,7 @@ namespace Elements
             // TODO: Remove this excess model creation when the JSON serializer
             // supports recursive write out and all receivers are capable of
             // receiving updated JSON.
-            var exportModel = CreateExportModel(gatherSubElements);
+            var exportModel = CreateExportModel(gatherSubElements, updateElementsRepresentations);
 
             var serializerOptions = new JsonSerializerOptions
             {
@@ -585,37 +587,38 @@ namespace Elements
             }
         }
 
-        /// <summary>
-        /// Deserialize a model from JSON.
-        /// </summary>
-        /// <param name="json">The JSON representing the model.</param>
-        /// <param name="errors">A collection of deserialization errors.</param>
-        /// <param name="forceTypeReload">Option to force reloading the internal type cache. Use if you add types dynamically in your code.</param>
-        public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
-        {
-            // When user elements have been loaded into the app domain, they haven't always been
-            // loaded into the InheritanceConverter's Cache.  This does have some overhead,
-            // but is useful here, at the Model level, to ensure user types are available.
-            var deserializationErrors = new List<string>();
-            if (forceTypeReload)
-            {
-                JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
-                deserializationErrors.AddRange(typeLoadErrors);
-            }
+        // TODO: REMOVE CODE BEFORE SYSTEM.TEXT.JSON UPDATE
+        // /// <summary>
+        // /// Deserialize a model from JSON.
+        // /// </summary>
+        // /// <param name="json">The JSON representing the model.</param>
+        // /// <param name="errors">A collection of deserialization errors.</param>
+        // /// <param name="forceTypeReload">Option to force reloading the internal type cache. Use if you add types dynamically in your code.</param>
+        // public static Model FromJson(string json, out List<string> errors, bool forceTypeReload = false)
+        // {
+        //     // When user elements have been loaded into the app domain, they haven't always been
+        //     // loaded into the InheritanceConverter's Cache.  This does have some overhead,
+        //     // but is useful here, at the Model level, to ensure user types are available.
+        //     var deserializationErrors = new List<string>();
+        //     if (forceTypeReload)
+        //     {
+        //         JsonInheritanceConverter.RefreshAppDomainTypeCache(out var typeLoadErrors);
+        //         deserializationErrors.AddRange(typeLoadErrors);
+        //     }
 
-            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
-            {
-                Error = (sender, args) =>
-                {
-                    deserializationErrors.Add(args.ErrorContext.Error.Message);
-                    args.ErrorContext.Handled = true;
-                }
-            });
-            deserializationErrors.AddRange(JsonInheritanceConverter.GetAndClearDeserializationWarnings());
-            errors = deserializationErrors;
-            JsonInheritanceConverter.Elements.Clear();
-            return model;
-        }
+        //     var model = Newtonsoft.Json.JsonConvert.DeserializeObject<Model>(json, new JsonSerializerSettings()
+        //     {
+        //         Error = (sender, args) =>
+        //         {
+        //             deserializationErrors.Add(args.ErrorContext.Error.Message);
+        //             args.ErrorContext.Handled = true;
+        //         }
+        //     });
+        //     deserializationErrors.AddRange(JsonInheritanceConverter.GetAndClearDeserializationWarnings());
+        //     errors = deserializationErrors;
+        //     JsonInheritanceConverter.Elements.Clear();
+        //     return model;
+        // }
 
 
         /// <summary>
@@ -892,7 +895,7 @@ namespace Elements
                || typeof(RepresentationInstance).IsAssignableFrom(t);
         }
 
-        private static Curve DeserializeCurve(JsonElement jsonCurve)
+        private static BoundedCurve DeserializeCurve(JsonElement jsonCurve)
         {
             var discriminator = jsonCurve.GetProperty("discriminator").GetString();
             switch (discriminator)

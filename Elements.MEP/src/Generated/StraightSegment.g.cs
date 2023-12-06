@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>An element representing a pipe between two PipeConnections.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class StraightSegment : ComponentBase
     {
@@ -36,38 +36,38 @@ namespace Elements.Fittings
             this.Start = @start;
             this.Path = @path;
             this.PressureCalculations = @pressureCalculations;
-            }
-        
+        }
+
         // Empty constructor
         public StraightSegment()
             : base()
         {
         }
-    
+
         /// <summary>The design diameter of the pipe(not the flow diameter).</summary>
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
+
         /// <summary>The thickness of the wall of the pipe. The available diameter for flow is the Diameter minus 2X the Wall Thickness</summary>
         [JsonProperty("Wall Thickness", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double WallThickness { get; set; }
-    
+
         /// <summary>The end of the pipe. Fluid travels from start -&gt; end in a pipe.</summary>
         [JsonProperty("End", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port End { get; set; }
-    
+
         /// <summary>The start of the pipe. Fluid travels from start -&gt; end in a pipe.</summary>
         [JsonProperty("Start", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Start { get; set; }
-    
+
         /// <summary>The path of the pipe segment. This polyline will normally have exactly two points except when a new path is being suggested as an override.</summary>
         [JsonProperty("Path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polyline Path { get; set; }
-    
+
         /// <summary>The pressure calculation data for this pipe segment.</summary>
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationSegment PressureCalculations { get; set; }
-    
-    
+
+
     }
 }

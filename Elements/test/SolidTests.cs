@@ -519,7 +519,7 @@ namespace Elements.Tests
         {
             Name = nameof(SweepWithSetbacksRegressionTest);
             Polygon crossSection = Polygon.Rectangle(0.25, 0.25);
-            
+
             Polyline curve = new(new List<Vector3>
             {
                     new Vector3(x: 20.0, y: 15.0, z:0.0),
@@ -528,7 +528,7 @@ namespace Elements.Tests
                     new Vector3(x: 19.5, y: 14.5, z:1.5),
             }
             );
-            
+
             var sweep = new Sweep(
                 new Profile(crossSection),
                 curve,
@@ -780,7 +780,7 @@ namespace Elements.Tests
         [Fact]
         public void TesselationOfModelThatProducesEmptyTrianles()
         {
-            var model = Model.FromJson(File.ReadAllText("../../../models/Geometry/WallFromBasicModel.json"), out var errors);
+            var model = Model.FromJson(File.ReadAllText("../../../models/Geometry/WallFromBasicModel.json"));
             var wall = model.AllElementsOfType<WallByProfile>().First();
             wall.UpdateRepresentations();
             wall.UpdateBoundsAndComputeSolid();

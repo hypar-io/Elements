@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>The pressure calculation data for a manifold</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class PressureCalculationManifold : PressureCalculationBase
     {
@@ -39,41 +39,41 @@ namespace Elements.Fittings
             this.PipeLosses = @pipeLosses;
             this.Flow = @flow;
             this.Diameter = @diameter;
-            }
-        
+        }
+
         // Empty constructor
         public PressureCalculationManifold()
             : base()
         {
         }
-    
+
         [JsonProperty("ZLosses", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> ZLosses { get; set; }
-    
+
         [JsonProperty("Flows", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> Flows { get; set; }
-    
+
         [JsonProperty("Diameters", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> Diameters { get; set; }
-    
+
         [JsonProperty("HeightDeltas", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> HeightDeltas { get; set; }
-    
+
         [JsonProperty("StaticGains", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> StaticGains { get; set; }
-    
+
         [JsonProperty("Lengths", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> Lengths { get; set; }
-    
+
         [JsonProperty("PipeLosses", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<double> PipeLosses { get; set; }
-    
+
         [JsonProperty("Flow", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Flow { get; set; }
-    
+
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
-    
+
+
     }
 }

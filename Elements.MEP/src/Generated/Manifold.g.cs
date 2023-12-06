@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A fitting that is generically one trunk to many branches.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Manifold : Fitting
     {
@@ -33,23 +33,23 @@ namespace Elements.Fittings
             this.Trunk = @trunk;
             this.Branches = @branches;
             this.PressureCalculations = @pressureCalculations;
-            }
-        
+        }
+
         // Empty constructor
         public Manifold()
             : base()
         {
         }
-    
+
         [JsonProperty("Trunk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Trunk { get; set; }
-    
+
         [JsonProperty("Branches", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Port> Branches { get; set; }
-    
+
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationManifold PressureCalculations { get; set; }
-    
-    
+
+
     }
 }

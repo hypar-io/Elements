@@ -24,7 +24,7 @@ namespace Elements.Geometry
         /// first double is the inner thickness, and the second double is the outer thickness.
         /// This is not guaranteed to have a value, and the thickness values may be 0.
         /// </summary>
-        [JsonProperty("EdgeThickness", Required = Required.Default)]
+        [JsonPropertyName("EdgeThickness")]
         private List<double[]> _edgeThickness { get; set; }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace Elements.Geometry
         /// Set a uniform edge thickness for this profile.
         /// </summary>
         /// <param name="innerWidth">The inner thickness.</param>
-        /// <param name="outerWidth">The outer thickness.</param> 
+        /// <param name="outerWidth">The outer thickness.</param>
         public void SetEdgeThickness(double innerWidth, double outerWidth = 0)
         {
             var newThickness = new List<double[]>();

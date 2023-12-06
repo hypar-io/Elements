@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Pressure calculation data.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class PressureCalculationSegment : PressureCalculationBase
     {
@@ -44,58 +44,58 @@ namespace Elements.Fittings
             this.MaxUnderPressure = @maxUnderPressure;
             this.TotalPressure = @totalPressure;
             this.FrictionLossCoefficient = @frictionLossCoefficient;
-            }
-        
+        }
+
         // Empty constructor
         public PressureCalculationSegment()
             : base()
         {
         }
-    
+
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
+
         [JsonProperty("DiameterInner", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DiameterInner { get; set; }
-    
+
         [JsonProperty("Flow", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Flow { get; set; }
-    
+
         [JsonProperty("HeightDelta", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double HeightDelta { get; set; }
-    
+
         [JsonProperty("Length", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Length { get; set; }
-    
+
         [JsonProperty("PipeLoss", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double PipeLoss { get; set; }
-    
+
         [JsonProperty("StaticGain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double StaticGain { get; set; }
-    
+
         [JsonProperty("FrictionFactor", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FrictionFactor { get; set; }
-    
+
         [JsonProperty("ReynoldsNumber", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double ReynoldsNumber { get; set; }
-    
+
         [JsonProperty("FluidVelocity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FluidVelocity { get; set; }
-    
+
         [JsonProperty("DynamicPressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DynamicPressure { get; set; }
-    
+
         /// <summary>The maximum underpressure this pipe can structurally sustain.</summary>
         [JsonProperty("MaxUnderPressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MaxUnderPressure { get; set; }
-    
+
         /// <summary>The sum of Dynamic and Static pressures at the start of the pipe.</summary>
         [JsonProperty("TotalPressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double TotalPressure { get; set; }
-    
+
         [JsonProperty("FrictionLossCoefficient", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FrictionLossCoefficient { get; set; }
-    
-    
+
+
     }
 }

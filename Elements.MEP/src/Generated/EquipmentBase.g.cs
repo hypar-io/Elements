@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Base class for all equipment that has ports.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class EquipmentBase : GeometricElement
     {
@@ -31,18 +31,18 @@ namespace Elements.Fittings
             : base(transform, material, representation, isElementDefinition, id, name)
         {
             this.Ports = @ports;
-            }
-        
+        }
+
         // Empty constructor
         public EquipmentBase()
             : base()
         {
         }
-    
+
         /// <summary>The ports on this equipment</summary>
         [JsonProperty("Ports", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Port> Ports { get; set; }
-    
-    
+
+
     }
 }

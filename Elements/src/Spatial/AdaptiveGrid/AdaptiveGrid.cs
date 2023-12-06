@@ -773,18 +773,18 @@ namespace Elements.Spatial.AdaptiveGrid
             clone._edgeId = _edgeId;
             clone._vertexId = _vertexId;
 
-            clone._edges = _edges.ToDictionary(
+            clone.Edges = Edges.ToDictionary(
                 e => e.Key,
                 e => new Edge(e.Value.Id, e.Value.StartId, e.Value.EndId));
 
-            clone._vertices = _vertices.ToDictionary(
+            clone.Vertices = Vertices.ToDictionary(
                 e => e.Key,
                 e =>
                 {
                     var v = new Vertex(e.Value.Id, e.Value.Point);
                     foreach (var edge in e.Value.Edges)
                     {
-                        v.Edges.Add(clone._edges[edge.Id]);
+                        v.Edges.Add(clone.Edges[edge.Id]);
                     }
                     return v;
                 });

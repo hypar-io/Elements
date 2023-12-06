@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Flow
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A non branching portion between two nodes in a Tree network</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Section : GeometricElement
     {
@@ -37,42 +37,42 @@ namespace Elements.Flow
             this.Tree = @tree;
             this.SectionKey = @sectionKey;
             this.HintPath = @hintPath;
-            }
-        
+        }
+
         // Empty constructor
         public Section()
             : base()
         {
         }
-    
+
         /// <summary>The polyline path of this Section.</summary>
         [JsonProperty("Path", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polyline Path { get; set; }
-    
+
         /// <summary>One end of the section.</summary>
         [JsonProperty("End", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Node End { get; set; }
-    
+
         /// <summary>The flow of this section.</summary>
         [JsonProperty("Flow", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Flow { get; set; }
-    
+
         /// <summary>The start node of the section.</summary>
         [JsonProperty("Start", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Node Start { get; set; }
-    
+
         /// <summary>The tree this section belongs to.</summary>
         [JsonProperty("Tree", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Tree Tree { get; set; }
-    
+
         /// <summary>The key to identify this section in a network.</summary>
         [JsonProperty("SectionKey", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string SectionKey { get; set; }
-    
+
         /// <summary>The suggested route for flow.</summary>
         [JsonProperty("HintPath", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Polyline HintPath { get; set; }
-    
-    
+
+
     }
 }

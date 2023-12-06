@@ -81,7 +81,7 @@ namespace Elements.Serialization.JSON
 
                 foreach (var vobj in root.GetProperty("vertices").EnumerateArray())
                 {
-                    var id = vobj.GetProperty("id").GetInt64();
+                    var id = (uint)vobj.GetProperty("id").GetInt64();
                     var x = vobj.GetProperty("x").GetDouble();
                     var y = vobj.GetProperty("y").GetDouble();
                     var z = vobj.GetProperty("z").GetDouble();
@@ -90,7 +90,7 @@ namespace Elements.Serialization.JSON
 
                 foreach (var face in root.GetProperty("faces").EnumerateArray())
                 {
-                    var id = face.GetProperty("id").GetInt64();
+                    var id = (uint)face.GetProperty("id").GetInt64();
 
                     var outer = new Loop();
 

@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A Fitting that can reduce the diameter of the pipe passing through.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Reducer : Fitting
     {
@@ -33,26 +33,26 @@ namespace Elements.Fittings
             this.Start = @start;
             this.End = @end;
             this.PressureCalculations = @pressureCalculations;
-            }
-        
+        }
+
         // Empty constructor
         public Reducer()
             : base()
         {
         }
-    
+
         /// <summary>One end connector of the coupling.</summary>
         [JsonProperty("Start", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Start { get; set; }
-    
+
         /// <summary>The other end of the reducer.</summary>
         [JsonProperty("End", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port End { get; set; }
-    
+
         /// <summary>Pressure calcs</summary>
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationReducer PressureCalculations { get; set; }
-    
-    
+
+
     }
 }
