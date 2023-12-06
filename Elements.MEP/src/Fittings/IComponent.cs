@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements.Fittings
 {
@@ -34,7 +34,7 @@ namespace Elements.Fittings
         /// <summary>
         /// The pressure calculation data for this component.
         /// </summary>
-        [Newtonsoft.Json.JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Pressure Calculations")]
         public PressureCalculationBase PressureCalculations { get; set; }
 
         /// <summary>

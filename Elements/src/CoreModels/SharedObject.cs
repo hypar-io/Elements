@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {
@@ -28,7 +28,8 @@ namespace Elements
         /// <summary>
         /// A unique object id.
         /// </summary>
-        [JsonProperty("Id", Required = Required.Always)]
+        [JsonPropertyName("Id")]
+        [JsonInclude]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public Guid Id
         {

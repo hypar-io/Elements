@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Elements.Interfaces;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -43,7 +43,7 @@ namespace Elements
         /// <summary>
         /// The representation's material.
         /// </summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonPropertyName("Material")]
         public Material Material { get; set; }
 
         /// <summary>

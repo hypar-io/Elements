@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
 
 namespace Elements.Fittings
 {
@@ -40,10 +40,10 @@ namespace Elements.Fittings
 
     public partial class Cross
     {
-        [JsonProperty]
+        [JsonPropertyName("AngleTolerance")]
         public double AngleTolerance { get; set; }
 
-        [JsonProperty]
+        [JsonPropertyName("PositionTolerance")]
         public double PositionTolerance { get; set; }
 
         public Cross(Vector3 position, Vector3 trunkDirection, Vector3 directionA, Vector3 directionB, Vector3 directionC, CrossSettings crossSettings, Material material = null) :

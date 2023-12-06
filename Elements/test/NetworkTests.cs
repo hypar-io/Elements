@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -295,7 +295,7 @@ namespace Elements.Tests
         {
             this.Name = nameof(FindAllClosedRegionsDoesNotLoopInfinitely);
             var json = File.ReadAllText("../../../models/Geometry/BadNetwork.json");
-            var lines = JsonConvert.DeserializeObject<List<Line>>(json);
+            var lines = JsonSerializer.Deserialize<List<Line>>(json);
             var network = Network<Line>.FromSegmentableItems(lines, (l) => { return l; }, out var allNodeLocations, out var _);
             Model.AddElements(network.ToModelText(allNodeLocations, Colors.Black));
             Model.AddElements(network.ToModelArrows(allNodeLocations, Colors.Blue));
@@ -397,16 +397,16 @@ namespace Elements.Tests
         [Fact]
         public void FindClosedRegionWithOuterSegments()
         {
-            // An intersecting path that ends at the edge 
+            // An intersecting path that ends at the edge
             // of a closed region.
             //
-            //        /      
-            //       |      
+            //        /
+            //       |
             // ---------------
             // |             |
             // |             |
             // |             |
-            // |             | 
+            // |             |
             // |             |
             // ---------------
 
@@ -438,7 +438,7 @@ namespace Elements.Tests
             // |             |
             // |-------------|
             // |             |
-            // |       /     | 
+            // |       /     |
             // |      |      |
             // ---------------
             //        |
@@ -501,7 +501,7 @@ namespace Elements.Tests
             // |         8   |
             // |          ---| 1
             // |    7   9/   |
-            // |     \6      | 
+            // |     \6      |
             // |      |      |
             // ---------------
             // 4      5       0

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 using Elements.Flow;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 [assembly: InternalsVisibleTo("Elements.MEP.Tests")]
 namespace Elements.Fittings

@@ -147,8 +147,8 @@ namespace Elements.Geometry.Tests
 
             var polygon = new Polygon(new Vector3[]{
                 (0, 3), (6, 3), (4, 1), (-2, 1)
-            }); 
-            
+            });
+
             Assert.True(bezier.Intersects(polygon, out var results));
             Assert.Equal(4, results.Count);
             Assert.Contains(new Vector3(0.93475, 3), results);

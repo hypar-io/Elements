@@ -21,7 +21,7 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
     <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
-    <PackageReference Include="System.Text.Json" Version="6.0.2"/>
+    <PackageReference Include="System.Text.Json" Version="8.0.0"/>
     <PackageReference Include="Unofficial.LibTessDotNet" Version="2.0.0"/>
     <PackageReference Include="Macross.Json.Extensions" Version="3.0.0"/>
   </ItemGroup>

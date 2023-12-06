@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
@@ -11,7 +11,7 @@ namespace Elements.Geometry
     // http://webhome.cs.uvic.ca/~blob/courses/305/notes/pdf/ref-frames.pdf
 
     /// <summary>
-    /// The frame type to be used for operations requiring 
+    /// The frame type to be used for operations requiring
     /// a moving frame around the curve.
     /// </summary>
     public enum FrameType
@@ -459,7 +459,7 @@ namespace Elements.Geometry
             // Bezier curve always inside it's bounding box.
             // Rough check if curve is too far away.
             var boxCenter = box.Center();
-            if (ellipse.Center.DistanceTo(boxCenter) > 
+            if (ellipse.Center.DistanceTo(boxCenter) >
                 Math.Max(ellipse.MajorAxis, ellipse.MinorAxis) + (box.Max - boxCenter).Length())
             {
                 results = new List<Vector3>();
@@ -509,7 +509,7 @@ namespace Elements.Geometry
 
             Intersects(other,
                        (box, Domain),
-                       (otherBox, other.Domain), 
+                       (otherBox, other.Domain),
                        leftCache,
                        rightCache,
                        ref results);
@@ -566,7 +566,7 @@ namespace Elements.Geometry
                 Intersects(other, left, loRight, leftCache, rightCache, ref results);
                 Intersects(other, left, hiRight, leftCache, rightCache, ref results);
             }
-            else if (!rightSplit) 
+            else if (!rightSplit)
             {
                 Intersects(other, loLeft, right, leftCache, rightCache, ref results);
                 Intersects(other, hiLeft, right, leftCache, rightCache, ref results);
@@ -589,7 +589,7 @@ namespace Elements.Geometry
             high = (default, default);
 
             // If curve bounding box is tolerance size - it's considered as intersection.
-            // Otherwise calculate new boxes of two halves of the curve. 
+            // Otherwise calculate new boxes of two halves of the curve.
             var epsilon2 = Vector3.EPSILON * Vector3.EPSILON;
             var leftConvergent = (def.Box.Max - def.Box.Min).LengthSquared() < epsilon2 * 2;
             if (leftConvergent)
@@ -598,7 +598,7 @@ namespace Elements.Geometry
             }
 
             // If curve bounding box is tolerance size - it's considered as intersection.
-            // Otherwise calculate new boxes of two halves of the curve. 
+            // Otherwise calculate new boxes of two halves of the curve.
             low = CurveBoxHalf(def, cache, true);
             high = CurveBoxHalf(def, cache, false);
             return true;

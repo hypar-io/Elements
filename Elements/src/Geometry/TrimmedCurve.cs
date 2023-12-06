@@ -1,15 +1,15 @@
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A trimmed curve.
     /// </summary>
-    public abstract class TrimmedCurve<TBasis> : BoundedCurve, ITrimmedCurve<TBasis> where TBasis: ICurve
+    public abstract class TrimmedCurve<TBasis> : BoundedCurve, ITrimmedCurve<TBasis> where TBasis : ICurve
     {
         /// <summary>
         /// The basis curve for this bounded curve.

@@ -4,7 +4,8 @@ using System.Linq;
 using Elements.Flow;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Fittings
 {
@@ -13,7 +14,7 @@ namespace Elements.Fittings
         private PositionComparer _positionComparer;
         private double _positionTolerance;
 
-        [JsonProperty]
+        [JsonPropertyName("PositionTolerance")]
         public double PositionTolerance
         {
             get => _positionTolerance;
@@ -51,7 +52,7 @@ namespace Elements.Fittings
         /// <summary>
         ///
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public IEnumerable<ComponentBase> AllComponents
         {
             get

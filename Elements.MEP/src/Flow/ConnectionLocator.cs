@@ -1,12 +1,12 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
-using Newtonsoft.Json;
 
 namespace Elements.Flow
 {
     public partial class ConnectionLocator
     {
-        [JsonProperty("Network Reference", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonPropertyName("Network Reference")]
         public string NetworkReference { get; set; }
 
         public Line Line { get; set; }
@@ -33,7 +33,7 @@ namespace Elements.Flow
             return NetworkReference == other.NetworkReference
                    && Line.Direction().IsParallelTo(other.Line.Direction())
                    && Line.IsAlmostEqualTo(other.Line, true, tolerance)
-                   && Purpose== other.Purpose;
+                   && Purpose == other.Purpose;
         }
 
         public override string ToString()

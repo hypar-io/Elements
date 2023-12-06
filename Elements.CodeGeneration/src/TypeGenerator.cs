@@ -628,7 +628,7 @@ namespace Elements.Generate
 
             var assemblyPath = frameworkBuild ? @"C:\Windows\Microsoft.NET\Framework64\v4.0.30319" : Path.GetDirectoryName(typeof(object).Assembly.Location);
             var elementsAssemblyPath = Path.GetDirectoryName(typeof(Model).Assembly.Location);
-            var newtonSoftPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
+            var jsonConverterPath = Path.GetDirectoryName(typeof(JsonConverter).Assembly.Location);
 
             IEnumerable<MetadataReference> defaultReferences = new[]
             {
@@ -638,7 +638,7 @@ namespace Elements.Generate
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.Serialization.Primitives.dll")),
                 MetadataReference.CreateFromFile(Path.Combine(elementsAssemblyPath, "Hypar.Elements.dll")),
-                MetadataReference.CreateFromFile(Path.Combine(newtonSoftPath, "Newtonsoft.Json.dll"))
+                MetadataReference.CreateFromFile(Path.Combine(jsonConverterPath, "System.Text.Json.dll"))
             };
 
             // If we're building in a .net framework context, we need a different set of reference DLLs

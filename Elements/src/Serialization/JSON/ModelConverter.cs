@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Elements.GeoJSON;
 using Elements.Geometry;
 
 namespace Elements.Serialization.JSON
@@ -22,7 +23,7 @@ namespace Elements.Serialization.JSON
                     // TODO: This try/catch is only here to protect against
                     // situations like null property values when the serializer
                     // expects a value, or validation errors. Unlike json.net, system.text.json doesn't
-                    // have null value handling on read. 
+                    // have null value handling on read.
                     try
                     {
                         var id = Guid.Parse(element.Name);

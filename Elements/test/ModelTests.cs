@@ -8,9 +8,9 @@ using Elements.Generate;
 using Elements.Geometry.Solids;
 using System.Linq;
 using Xunit.Abstractions;
-using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Text.Json;
+using System.Text;
 
 namespace Elements.Tests
 {
@@ -240,14 +240,23 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
-            // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
-            var obj = JObject.Parse(json);
-            var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2);
 
-            // Inject an unknown property.
-            c.Property("Curve").AddAfterSelf(new JProperty("Foo", "Bar"));
-            var newModel = Model.FromJson(obj.ToString());
+            // Parse the JSON and convert the specific part to a Dictionary
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement.Clone();
+            var elements = root.GetProperty("Elements").EnumerateObject().ToDictionary(p => p.Name, p => p.Value.Clone());
+
+            // Modify the specific element in the dictionary
+            var c = elements.Values.ElementAt(2);
+            var cDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(c.GetRawText());
+            cDict.Add("Foo", JsonDocument.Parse("\"Bar\"").RootElement); // Add new property
+            elements[elements.Keys.ElementAt(2)] = JsonSerializer.Deserialize<JsonElement>(JsonSerializer.Serialize(cDict));
+
+            // Serialize the modified dictionary back to JSON
+            var modifiedJson = JsonSerializer.Serialize(new { Elements = elements }, new JsonSerializerOptions { WriteIndented = true });
+
+            // Deserialize the modified JSON
+            var newModel = Model.FromJson(modifiedJson);
             Assert.Single(newModel.AllElementsOfType<Column>());
             var newColumn = newModel.AllElementsOfType<Column>().First();
             Assert.Equal(column.Curve, newColumn.Curve);
@@ -261,14 +270,25 @@ namespace Elements.Tests
             var model = new Model();
             model.AddElement(column);
             var json = model.ToJson(true);
-            // https://www.newtonsoft.com/json/help/html/ModifyJson.htm
-            var obj = JObject.Parse(json);
-            var elements = obj["Elements"];
-            var c = (JObject)elements.Values().ElementAt(2); // the column
+
+            // Parse the JSON, convert to a dictionary, remove the property, and re-serialize
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement.Clone();
+            var rootDict = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(root.GetRawText());
+
+            var elements = rootDict["Elements"].EnumerateObject().ToDictionary(p => p.Name, p => p.Value.Clone());
+            var c = elements.Values.ElementAt(2).EnumerateObject().ToDictionary(p => p.Name, p => p.Value.Clone());
 
             // Remove the Location property
-            c.Property("Location").Remove();
-            var newModel = Model.FromJson(obj.ToString());
+            c.Remove("Location");
+            elements[elements.Keys.ElementAt(2)] = JsonSerializer.Deserialize<JsonElement>(JsonSerializer.Serialize(c));
+            rootDict["Elements"] = JsonSerializer.Deserialize<JsonElement>(JsonSerializer.Serialize(elements));
+
+            var modifiedJson = JsonSerializer.Serialize(rootDict, new JsonSerializerOptions { WriteIndented = true });
+
+            // Deserialize the modified JSON
+            var newModel = Model.FromJson(modifiedJson);
+            Assert.Single(newModel.AllElementsOfType<Column>());
             var newColumn = newModel.AllElementsOfType<Column>().First();
             Assert.Equal(Vector3.Origin, newColumn.Location);
         }

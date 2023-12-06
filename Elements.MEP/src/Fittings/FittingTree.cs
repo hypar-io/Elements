@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using Elements.Annotations;
 using Elements.Flow;
 using Elements.Geometry;
@@ -18,7 +19,7 @@ namespace Elements.Fittings
                                    string.Empty,
                                    Guid.NewGuid(),
                                    string.Empty);
-            
+
             fittings._angleTolerance = angleTolerance;
             fittings._portsDistanceTolerance = portsDistanceTolerance;
             fittings._routing = routing ?? new FittingTreeRouting(null);
@@ -57,7 +58,7 @@ namespace Elements.Fittings
                 }
             }
         }
-        
+
         /// <summary>
         /// Propagates flow
         /// </summary>
@@ -833,7 +834,7 @@ namespace Elements.Fittings
             return false;
         }
 
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public IEnumerable<ComponentBase> AllComponents
         {
             get
@@ -845,7 +846,7 @@ namespace Elements.Fittings
         /// <summary>
         /// The components of the system with the assemblies expanded.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         public IEnumerable<ComponentBase> ExpandedComponents
         {
             get
@@ -881,7 +882,7 @@ namespace Elements.Fittings
                 }
                 if (componentGroup.Count() != orderedComponentList.Count())
                 {
-                    labelingErrors.Add(new SectionLabelingError(componentGroup.Key, 
+                    labelingErrors.Add(new SectionLabelingError(componentGroup.Key,
                         Name,
                         "Lost or gained items while ordering the components, " +
                         "previous and next are probably set incorrectly, or a SectionKey is not assigned correctly."));
@@ -1070,7 +1071,7 @@ namespace Elements.Fittings
                 {
                     var leftEndType = left.ConnectionType.EndType;
                     var rightEndType = right.ConnectionType.EndType;
-                    if (leftEndType == PortConnectionTypeEndType.None || 
+                    if (leftEndType == PortConnectionTypeEndType.None ||
                         rightEndType == PortConnectionTypeEndType.None)
                     {
                         if (leftEndType != rightEndType)
@@ -1110,7 +1111,7 @@ namespace Elements.Fittings
 
             if (message.Length > 0)
             {
-                return PortConnectivityMessage(left, right,  message.ToString());
+                return PortConnectivityMessage(left, right, message.ToString());
             }
             return null;
         }
@@ -1338,7 +1339,7 @@ namespace Elements.Fittings
 
             orderedComponentList = new LinkedList<ComponentBase>();
             orderedComponentList.AddFirst(componentGroup.First());
-            
+
             var visited = new HashSet<ComponentBase>();
             while (true)
             {

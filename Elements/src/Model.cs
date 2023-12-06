@@ -641,6 +641,7 @@ namespace Elements
                     AllowTrailingCommas = true,
                     IncludeFields = true // needed for tuples
                 };
+
                 options.Converters.Add(new SolidConverter());
 
                 // Our custom reference handler will cache elements by id as

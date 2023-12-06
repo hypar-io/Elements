@@ -1,10 +1,13 @@
 using Elements.Geometry.Interfaces;
+using Elements.Serialization.JSON;
 using Elements.Validators;
-using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
+using Validator = Elements.Validators.Validator;
 
 namespace Elements.Geometry
 {
@@ -13,7 +16,7 @@ namespace Elements.Geometry
     /// Parameterization of the curve is 0->n where n is the number of curves.
     /// </summary>
     /// [!code-csharp[Main](../../Elements/test/IndexedPolycurveTests.cs?name=example)]
-    [JsonObject]
+    [JsonConverter(typeof(ElementConverter<IndexedPolycurve>))]
     public class IndexedPolycurve : BoundedCurve, IEnumerable<BoundedCurve>, IEquatable<IndexedPolycurve>
     {
         /// <summary>
@@ -62,9 +65,10 @@ namespace Elements.Geometry
         public IList<IList<int>> CurveIndices { get; set; }
 
         /// <summary>The vertices of the polygon.</summary>
-        [JsonProperty("Vertices", Required = Required.Always)]
-        [System.ComponentModel.DataAnnotations.Required]
-        [System.ComponentModel.DataAnnotations.MinLength(2)]
+        [JsonPropertyName("Vertices")]
+        [JsonInclude]
+        [Required]
+        [MinLength(2)]
         public IList<Vector3> Vertices { get; set; } = new List<Vector3>();
 
         /// <summary>
@@ -292,7 +296,7 @@ namespace Elements.Geometry
                 for (var j = 0; j < localParameters.Length; j++)
                 {
                     var localParameter = localParameters[j];
-                    // The curve domain may be 0->2Pi. We need to map that 
+                    // The curve domain may be 0->2Pi. We need to map that
                     // into a domain that is a subsection of the larger domain.
                     var remapped = localParameter.MapBetweenDomains(curve.Domain, localDomain);
 
@@ -394,7 +398,7 @@ namespace Elements.Geometry
                 var curve = _curves[i];
 
                 // The start parameter will either be the partial
-                // parameter, because this is the curve on which 
+                // parameter, because this is the curve on which
                 // the start parameter is located, or it will be 0.0.
                 var normalizedStartParameter = i == startCurveIndex ? start - i : 0.0;
                 var localStartParameter = normalizedStartParameter.MapToDomain(curve.Domain);
@@ -549,7 +553,7 @@ namespace Elements.Geometry
                 {
                     foreach (var item in intersections)
                     {
-                        if (!results.Any() || 
+                        if (!results.Any() ||
                             !results.First().IsAlmostEqualTo(item) && !results.Last().IsAlmostEqualTo(item))
                         {
                             results.Add(item);
