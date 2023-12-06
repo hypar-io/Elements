@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using NJsonSchema;
 using NJsonSchema.CodeGeneration.CSharp;
 using Elements.Generate.StringUtils;

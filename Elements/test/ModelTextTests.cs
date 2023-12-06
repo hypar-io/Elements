@@ -10,7 +10,6 @@ namespace Elements.Tests
         public ModelTextTests()
         {
             this.GenerateIfc = false;
-            this.GenerateJson = false;
         }
 
         [Fact, Trait("Category", "Example")]

@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Elements
 {
     /// <summary>
     /// An object which is identified with a unique identifier and a name.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<Element>))]
     public class Element : System.ComponentModel.INotifyPropertyChanged
     {
         private System.Guid _id;
@@ -31,7 +33,6 @@ namespace Elements
         }
 
         /// <summary>A unique id.</summary>
-        [JsonProperty("Id", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid Id
         {
@@ -47,7 +48,7 @@ namespace Elements
         }
 
         /// <summary>A name.</summary>
-        [JsonProperty("Name", Required = Required.Default)]
+        [JsonPropertyName("Name")]
         public string Name
         {
             get { return _name; }
@@ -66,7 +67,8 @@ namespace Elements
         /// <summary>
         /// A collection of additional properties.
         /// </summary>
-        [Newtonsoft.Json.JsonExtensionData]
+        // [JsonExtensionData]
+        [JsonConverter(typeof(AdditionalPropertiesConverter))]
         public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
         {
             get { return _additionalProperties; }
@@ -136,6 +138,32 @@ namespace Elements
         public T GetMapping<T>(string context) where T : MappingBase
         {
             return this.GetMapping(context) as T;
+        }
+
+        /// Deserialize an element of type T using reference resolution
+        /// and discriminated type construction.
+        /// Do not use this method for the deserialization large numbers of
+        /// elements, as it needs to construct a reference handler and type cache
+        /// for each invocation.
+        /// </summary>
+        /// <param name="json">The JSON of the element.</param>
+        /// <returns>An element of type T.</returns>
+        public static T Deserialize<T>(string json)
+        {
+            using (var doc = JsonDocument.Parse(json))
+            {
+                var root = doc.RootElement;
+                var options = new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true,
+                    AllowTrailingCommas = true,
+                    IncludeFields = true
+                };
+                var typeCache = AppDomainTypeCache.BuildAppDomainTypeCache(out _);
+                var refHandler = new ElementReferenceHandler(typeCache, root);
+                options.ReferenceHandler = refHandler;
+                return JsonSerializer.Deserialize<T>(doc, options);
+            }
         }
     }
 }

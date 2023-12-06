@@ -2,18 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A circle. 
+    /// A circle.
     /// Parameterization of the circle is 0 -> 2PI.
     /// </summary>
     public class Circle : Curve, IConic
     {
         /// <summary>The center of the circle.</summary>
-        [JsonProperty("Center", Required = Required.AllowNull)]
+        [JsonPropertyName("Center")]
         public Vector3 Center
         {
             get
@@ -23,8 +24,9 @@ namespace Elements.Geometry
         }
 
         /// <summary>The radius of the circle.</summary>
-        [JsonProperty("Radius", Required = Required.Always)]
-        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        [JsonPropertyName("Radius")]
+        [JsonInclude]
+        [Range(0.0D, double.MaxValue)]
         public double Radius { get; protected set; }
 
         /// <summary>
@@ -194,7 +196,7 @@ namespace Elements.Geometry
             {
                 case BoundedCurve boundedCurve:
                     return boundedCurve.Intersects(this, out results);
-                case InfiniteLine line :
+                case InfiniteLine line:
                     return Intersects(line, out results);
                 case Circle circle:
                     return Intersects(circle, out results);
@@ -219,7 +221,7 @@ namespace Elements.Geometry
             Plane planeA = new Plane(Center, Normal);
             Plane planeB = new Plane(other.Center, other.Normal);
 
-            // Check if two circles are on the same plane. 
+            // Check if two circles are on the same plane.
             if (Normal.IsParallelTo(other.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {

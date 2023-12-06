@@ -1,5 +1,5 @@
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Globalization;
 
@@ -9,22 +9,18 @@ namespace Elements.Geometry
     public struct Color : IEquatable<Color>
     {
         /// <summary>The red component of the color between 0.0 and 1.0.</summary>
-        [JsonProperty("Red", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Red { get; set; }
 
         /// <summary>The green component of the color between 0.0 and 1.0.</summary>
-        [JsonProperty("Green", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Green { get; set; }
 
         /// <summary>The blue component of the color between 0.0 and 1.0.</summary>
-        [JsonProperty("Blue", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Blue { get; set; }
 
         /// <summary>The alpha component of the color between 0.0 and 1.0.</summary>
-        [JsonProperty("Alpha", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, 1.0D)]
         public double Alpha { get; set; }
 

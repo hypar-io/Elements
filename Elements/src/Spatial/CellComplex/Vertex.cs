@@ -1,6 +1,6 @@
 using Elements.Geometry;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Linq;
 
 namespace Elements.Spatial.CellComplex
@@ -22,19 +22,18 @@ namespace Elements.Spatial.CellComplex
         /// </summary>
         /// <param name="cellComplex">CellComplex that this belongs to</param>
         /// <param name="id"></param>
-        /// <param name="point">Location of the vertex</param>
+        /// <param name="value">Location of the vertex</param>
         /// <param name="name">Optional name</param>
-        internal Vertex(CellComplex cellComplex, ulong id, Vector3 point, string name = null) : base(cellComplex, id, point, name) { }
+        internal Vertex(CellComplex cellComplex, ulong id, Vector3 value, string name = null) : base(cellComplex, id, value, name) { }
 
         /// <summary>
         /// For deserialization only!
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="point"></param>
+        /// <param name="value"></param>
         /// <param name="name"></param>
-        /// <returns></returns>
         [JsonConstructor]
-        internal Vertex(ulong id, Vector3 point, string name = null) : base(id, point, name) { }
+        public Vertex(ulong id, Vector3 value, string name = null) : base(id, value, name) { }
 
         /// <summary>
         /// Get associated Edges.

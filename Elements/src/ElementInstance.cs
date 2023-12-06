@@ -1,6 +1,7 @@
 using System;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -17,6 +18,7 @@ namespace Elements
         /// <summary>
         /// The element from which this instance is derived.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<GeometricElement>))]
         public GeometricElement BaseDefinition { get; }
 
         /// <summary>
@@ -26,13 +28,15 @@ namespace Elements
 
         /// <summary>
         /// Construct an element instance.
+        /// This constructor is only for JSON serialization. You should use
+        /// someElement.CreateInstance(...) to create element instances.
         /// </summary>
         /// <param name="baseDefinition">The definition from which this instance is derived.</param>
         /// <param name="transform">The transform of the instance.</param>
         /// <param name="name">The name of the instance.</param>
         /// <param name="id">The id of the instance.</param>
         [JsonConstructor]
-        internal ElementInstance(GeometricElement baseDefinition,
+        public ElementInstance(GeometricElement baseDefinition,
                                Transform transform,
                                string name = null,
                                Guid id = default(Guid)) : base(id == default(Guid) ? Guid.NewGuid() : id, name)

@@ -6,10 +6,11 @@ using System.Runtime.CompilerServices;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 using Elements.Search;
 using Elements.Spatial;
 using Elements.Utilities;
-using Newtonsoft.Json;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Serialization.SVG.Tests"),
             InternalsVisibleTo("Hypar.Elements.Serialization.SVG")]
@@ -19,7 +20,6 @@ namespace Elements
     /// <summary>
     /// An element with a geometric representation.
     /// </summary>
-    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class GeometricElement : Element
     {
         private BBox3 _bounds;
@@ -39,25 +39,22 @@ namespace Elements
         public BBox3 Bounds => _bounds;
 
         /// <summary>The element's transform.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonConverter(typeof(ElementConverter<Material>))]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [JsonProperty("Representation", Required = Required.AllowNull)]
         public Representation Representation { get; set; }
 
         /// <summary>
-        ///  The list of element representations. 
+        ///  The list of element representations.
         /// </summary>
         [JsonIgnore]
         public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>
@@ -196,7 +193,7 @@ namespace Elements
         /// <param name="plane">The plane of intersection.</param>
         /// <param name="intersectionPolygons">A collection of polygons representing
         /// the intersections of the plane and the element's solid geometry.</param>
-        /// <param name="beyondPolygons">A collection of polygons representing coplanar 
+        /// <param name="beyondPolygons">A collection of polygons representing coplanar
         /// faces beyond the plane of intersection.</param>
         /// <param name="lines">A collection of lines representing intersections
         /// of zero-thickness elements with the plane.</param>

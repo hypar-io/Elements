@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 
 namespace Elements.Spatial
 {
@@ -12,7 +13,6 @@ namespace Elements.Spatial
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/Grid1dTests.cs?name=example)]
     /// </example>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
     public class Grid1d
     {
         #region Properties
@@ -25,11 +25,10 @@ namespace Elements.Spatial
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
-        [JsonProperty("Cells", NullValueHandling = NullValueHandling.Ignore)]
         public List<Grid1d> Cells
         {
             get => cells;
-            private set
+            set
             {
                 //invalidate the 2d grid this belongs to
                 parent?.TryInvalidateGrid();
@@ -84,8 +83,8 @@ namespace Elements.Spatial
         // we have to maintain an internal curve domain because subsequent subdivisions of a grid
         // based on a curve retain the entire curve; this domain allows us to map from the subdivided
         // domain back to the original curve.
-        [JsonProperty("CurveDomain")]
-        internal readonly Domain1d curveDomain;
+        [JsonPropertyName("CurveDomain")]
+        public readonly Domain1d curveDomain;
 
         // if this 1d grid is the axis of a 2d grid, this is where we store that reference. If not, it will be null
         private Grid2d parent;
@@ -94,8 +93,8 @@ namespace Elements.Spatial
         // is useful in serialization so we only store the base curve once.
         private Grid1d topLevelParentGrid;
 
-        [JsonProperty("TopLevelParentCurve", NullValueHandling = NullValueHandling.Ignore)]
-        private Curve topLevelParentCurve
+        [JsonPropertyName("TopLevelParentCurve")]
+        public Curve topLevelParentCurve
         {
             get
             {

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -9,24 +9,19 @@ namespace Elements.Geometry
     public class Vertex
     {
         /// <summary>The vertex's position.</summary>
-        [JsonProperty("Position", Required = Required.AllowNull)]
         public Vector3 Position { get; set; }
 
         /// <summary>The vertex's normal.</summary>
-        [JsonProperty("Normal", Required = Required.AllowNull)]
         public Vector3 Normal { get; set; }
 
         /// <summary>The vertex's color.</summary>
-        [JsonProperty("Color", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Color Color { get; set; } = new Color();
 
         /// <summary>The index of the vertex within a mesh.</summary>
-        [JsonProperty("Index", Required = Required.Always)]
         public int Index { get; set; }
 
         /// <summary>The vertex's texture coordinate.</summary>
-        [JsonProperty("UV", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public UV UV { get; set; } = new UV();
 
@@ -59,7 +54,6 @@ namespace Elements.Geometry
         // during serialization.
 
         /// <summary>The triangles associated with this vertex.</summary>
-        [JsonProperty("Triangles", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [JsonIgnore]
         public IList<Triangle> Triangles { get; set; } = new List<Triangle>();

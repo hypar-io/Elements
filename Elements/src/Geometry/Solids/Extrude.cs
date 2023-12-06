@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Elements.Serialization.JSON;
 using Elements.Validators;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Solids
 {
@@ -16,7 +17,7 @@ namespace Elements.Geometry.Solids
         private bool _reverseWinding;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [JsonProperty("Profile", Required = Required.AllowNull)]
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile
         {
             get { return _profile; }
@@ -31,7 +32,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The height of the extrusion.</summary>
-        [JsonProperty("Height", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Height
         {
@@ -47,7 +47,6 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [JsonProperty("Direction", Required = Required.AllowNull)]
         public Vector3 Direction
         {
             get { return _direction; }
@@ -62,7 +61,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>Is the extrusion's profile reversed relative to its extrusion vector, resulting in inward-facing face normals?</summary>
-        [JsonProperty("Reverse Winding")]
+        [JsonPropertyName("Reverse Winding")]
         public bool ReverseWinding
         {
             get { return _reverseWinding; }

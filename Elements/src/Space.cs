@@ -1,9 +1,10 @@
 using Elements.Geometry;
 using System;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -18,6 +19,7 @@ namespace Elements
         /// <summary>
         /// The profile of the space.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile { get; set; }
 
         /// <summary>

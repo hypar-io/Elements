@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Analysis
 {
@@ -68,6 +68,15 @@ namespace Elements.Analysis
         /// <summary>
         /// Construct an analysis mesh.
         /// </summary>
+        [JsonConstructor]
+        public AnalysisMesh()
+        {
+            Material = new Material($"Analysis_{Guid.NewGuid()}", Colors.White, 0, 0, null, true, true, id: Guid.NewGuid());
+        }
+
+        /// <summary>
+        /// Construct an analysis mesh.
+        /// </summary>
         /// <param name="perimeter">The perimeter of the mesh.</param>
         /// <param name="uLength">The number of divisions in the u direction.</param>
         /// <param name="vLength">The number of divisions in the v direction.</param>
@@ -93,7 +102,7 @@ namespace Elements.Analysis
             this.VLength = vLength;
             this.ColorScale = colorScale;
             this._analyze = analyze;
-            this.Material = new Material($"Analysis_{Guid.NewGuid().ToString()}", Colors.White, 0, 0, null, true, true, id: Guid.NewGuid());
+            this.Material = new Material($"Analysis_{Guid.NewGuid()}", Colors.White, 0, 0, null, true, true, id: Guid.NewGuid());
         }
 
         /// <summary>

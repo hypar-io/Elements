@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -13,11 +13,9 @@ namespace Elements.Geometry
     public class Profile : Element, IEquatable<Profile>
     {
         /// <summary>The perimeter of the profile.</summary>
-        [JsonProperty("Perimeter", Required = Required.AllowNull)]
         public Polygon Perimeter { get; set; }
 
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [JsonProperty("Voids", Required = Required.AllowNull)]
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace Elements.Serialization.SVG.Tests
         public void Plan()
         {
             var json = File.ReadAllText("../../../models/tower.json");
-            var model = Model.FromJson(json, out _);
+            var model = Model.FromJson(json);
 
             model.UpdateRepresentations();
             model.UpdateBoundsAndComputedSolids();

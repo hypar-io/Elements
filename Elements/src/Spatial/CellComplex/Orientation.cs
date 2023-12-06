@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 
 namespace Elements.Spatial.CellComplex
@@ -8,6 +9,16 @@ namespace Elements.Spatial.CellComplex
     public class Orientation : VertexBase<Orientation>
     {
         /// <summary>
+        /// Create an orientation.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        [JsonConstructor]
+        public Orientation(ulong id, Vector3 value, string name = null) : base(id, value, name) { }
+
+        /// <summary>
         /// Represents a unique orientation direction within a CellComplex.
         /// Is not intended to be created or modified outside of the CellComplex class code.
         /// </summary>
@@ -15,8 +26,7 @@ namespace Elements.Spatial.CellComplex
         /// <param name="id"></param>
         /// <param name="orientation">The orientation direction</param>
         /// <param name="name">Optional name</param>
-        /// <returns></returns>
-        internal Orientation(CellComplex cellComplex, ulong id, Vector3 orientation, string name = null) : base(cellComplex, id, orientation, name) { }
+        public Orientation(CellComplex cellComplex, ulong id, Vector3 orientation, string name = null) : base(cellComplex, id, orientation, name) { }
 
         /// <summary>
         /// Do not use this method: it just throws an exception.

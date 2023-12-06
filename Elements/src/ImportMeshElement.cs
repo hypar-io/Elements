@@ -19,6 +19,11 @@ namespace Elements
         public string Path { get; }
 
         /// <summary>
+        /// The length unit used in the provided mesh.
+        /// </summary>
+        public LengthUnit LengthUnit { get; set; }
+
+        /// <summary>
         /// Construct an import mesh element.
         /// </summary>
         /// <param name="path">The path to the element's mesh on disk.</param>
@@ -39,6 +44,7 @@ namespace Elements
                                                     name)
         {
             this.Path = path;
+            this.LengthUnit = lengthUnit;
 
             if (!File.Exists(path))
             {
