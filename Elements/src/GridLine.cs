@@ -38,7 +38,7 @@ namespace Elements
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
         /// </summary>
-        [JsonConverter(typeof(ElementConverter<Curve>))]
+        [JsonConverter(typeof(ElementConverter<BoundedCurve>))]
         public BoundedCurve Curve { get; set; }
 
         /// <summary>

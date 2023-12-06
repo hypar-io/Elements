@@ -10,7 +10,7 @@ namespace Elements.Serialization.JSON
     /// <summary>
     /// Convert elements, lists of elements, and dictionaries of elements,
     /// and elements with generic type parameters.
-    /// 
+    ///
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ElementConverter<T> : JsonConverter<T>
@@ -144,7 +144,7 @@ namespace Elements.Serialization.JSON
                             // where serialization is going berserk, it'll print
                             // the element ids as they serialize. This is useful
                             // when things like stack overflows happen, to identify
-                            // the last element entered before the overflow. Then you 
+                            // the last element entered before the overflow. Then you
                             // can go and look at that element in the JSON and
                             // try to understand what's happening.
                             // if (root.TryGetProperty("Id", out var id))
@@ -263,7 +263,7 @@ namespace Elements.Serialization.JSON
                 prop.ValueKind == JsonValueKind.Null)
                 {
                     // You'll get here when you've got a null reference to an element,
-                    // or you've got no element at all in the json. 
+                    // or you've got no element at all in the json.
                     // Resolve to an empty id, causing the resolver to return null.
                     elementReferenceResolver.ResolveReference(string.Empty);
                     continue;
@@ -372,7 +372,7 @@ namespace Elements.Serialization.JSON
             }
             else
             {
-                // The reference cannot be found. It's either not 
+                // The reference cannot be found. It's either not
                 // a direct reference, as in the case of a cross-model
                 // reference, or it's just broken.
                 resolver.AddReference(referencedId.ToString(), null);

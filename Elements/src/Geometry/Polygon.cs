@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
@@ -19,6 +20,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
     /// </example>
+    [JsonConverter(typeof(ElementConverter<Polygon>))]
     public partial class Polygon : Polyline
     {
         /// <summary>

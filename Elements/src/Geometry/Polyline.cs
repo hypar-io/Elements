@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
 using Elements.Search;
+using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
@@ -14,6 +15,8 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
+    ///
+    [JsonConverter(typeof(ElementConverter<Polyline>))]
     public class Polyline : IndexedPolycurve
     {
         /// <summary>
