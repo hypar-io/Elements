@@ -20,11 +20,13 @@ namespace Elements.Spatial
         /// <summary>
         /// An optional type designation for this cell.
         /// </summary>
+        [JsonPropertyName("Type")]
         public string Type { get; set; }
 
         /// <summary>
         /// Child cells of this Grid. If null, this Grid is a complete cell with no subdivisions.
         /// </summary>
+        [JsonPropertyName("Cells")]
         public List<Grid1d> Cells
         {
             get => cells;
@@ -39,6 +41,7 @@ namespace Elements.Spatial
         /// <summary>
         /// Numerical domain of this Grid
         /// </summary>
+        [JsonPropertyName("Domain")]
         public Domain1d Domain { get; }
 
         /// <summary>
