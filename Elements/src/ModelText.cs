@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using SixLabors.Fonts;
 using SixLabors.ImageSharp;
@@ -71,6 +72,7 @@ namespace Elements
         /// <summary>
         /// The font size of the model text.
         /// </summary>
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public FontSize FontSize { get; set; }
 
         /// <summary>

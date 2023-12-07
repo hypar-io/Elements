@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Flow
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A node in a tree.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Node : Element
     {
@@ -31,18 +31,18 @@ namespace Elements.Flow
             : base(id, name)
         {
             this.Position = @position;
-            }
-        
+        }
+
         // Empty constructor
         public Node()
             : base()
         {
         }
-    
+
         /// <summary>The location of the node.</summary>
         [JsonProperty("Position", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Vector3 Position { get; set; }
-    
-    
+
+
     }
 }

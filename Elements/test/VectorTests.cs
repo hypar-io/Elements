@@ -1,7 +1,7 @@
 using Elements.Geometry;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using Xunit;
 
 namespace Elements.Tests
@@ -637,7 +637,7 @@ namespace Elements.Tests
 
             // Test with a real-world output from Hypar that was failing.
             var ptsSerialized = "[{\"X\":0.0,\"Y\":0.0,\"Z\":0.0},{\"X\":20.0,\"Y\":0.0,\"Z\":-8.43769498715119E-15},{\"X\":19.999999999999996,\"Y\":20.0,\"Z\":-1.021405182655144E-14},{\"X\":9.999999999999995,\"Y\":20.0,\"Z\":-3.096967127191874E-13},{\"X\":10.0,\"Y\":10.0,\"Z\":-4.218847493575595E-15},{\"X\":1.7763568394002505E-15,\"Y\":9.999999999999998,\"Z\":0.0}]";
-            var pts = JsonConvert.DeserializeObject<List<Vector3>>(ptsSerialized);
+            var pts = JsonSerializer.Deserialize<List<Vector3>>(ptsSerialized);
             Assert.True(pts.AreCoplanar());
 
             // Test with a shape that has a lot of coincident and collinear points.

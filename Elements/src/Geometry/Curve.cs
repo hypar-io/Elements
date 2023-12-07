@@ -1,14 +1,15 @@
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// The abstract base class for all curves.
     /// </summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    [JsonConverter(typeof(ElementConverter<Curve>))]
     public abstract partial class Curve : ICurve, ITransformable<Curve>
     {
         /// <summary>

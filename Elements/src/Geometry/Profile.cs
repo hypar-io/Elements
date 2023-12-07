@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
@@ -13,11 +14,11 @@ namespace Elements.Geometry
     public class Profile : Element, IEquatable<Profile>
     {
         /// <summary>The perimeter of the profile.</summary>
-        [JsonProperty("Perimeter", Required = Required.AllowNull)]
+        [JsonPropertyName("Perimeter")]
         public Polygon Perimeter { get; set; }
 
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [JsonProperty("Voids", Required = Required.AllowNull)]
+        [JsonPropertyName("Voids")]
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>
@@ -26,7 +27,7 @@ namespace Elements.Geometry
         /// first double is the inner thickness, and the second double is the outer thickness.
         /// This is not guaranteed to have a value, and the thickness values may be 0.
         /// </summary>
-        [JsonProperty("EdgeThickness", Required = Required.Default)]
+        [JsonPropertyName("EdgeThickness")]
         private List<double[]> _edgeThickness { get; set; }
 
         /// <summary>
@@ -257,7 +258,7 @@ namespace Elements.Geometry
         /// Set a uniform edge thickness for this profile.
         /// </summary>
         /// <param name="innerWidth">The inner thickness.</param>
-        /// <param name="outerWidth">The outer thickness.</param> 
+        /// <param name="outerWidth">The outer thickness.</param>
         public void SetEdgeThickness(double innerWidth, double outerWidth = 0)
         {
             var newThickness = new List<double[]>();

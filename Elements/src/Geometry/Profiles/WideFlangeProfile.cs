@@ -2,7 +2,8 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry.Profiles
 {
@@ -50,15 +51,15 @@ namespace Elements.Geometry.Profiles
     public class WideFlangeProfile : Profile
     {
         [JsonIgnore]
-        public double A { get; internal set; }
+        public double A { get; set; }
 
-        public double d { get; internal set; }
+        public double d { get; set; }
 
-        public double tw { get; internal set; }
+        public double tw { get; set; }
 
-        public double bf { get; internal set; }
+        public double bf { get; set; }
 
-        public double tf { get; internal set; }
+        public double tf { get; set; }
 
         [JsonIgnore]
         public string T { get; internal set; }
@@ -129,28 +130,20 @@ namespace Elements.Geometry.Profiles
         /// <param name="d"></param>
         /// <param name="tf"></param>
         /// <param name="tw"></param>
-        /// <param name="verticalAlignment"></param>
-        /// <param name="horizontalAlignment"></param>
-        /// <param name="verticalOffset"></param>
-        /// <param name="horizontalOffset"></param>
         [JsonConstructor]
         public WideFlangeProfile(string name,
                                  Guid id,
                                  double bf = 0.1,
                                  double d = 0.05,
                                  double tf = 0.005,
-                                 double tw = 0.005,
-                                 VerticalAlignment verticalAlignment = VerticalAlignment.Center,
-                                 HorizontalAlignment horizontalAlignment = HorizontalAlignment.Center,
-                                 double verticalOffset = 0.0,
-                                 double horizontalOffset = 0.0) : base(CreateProfile(bf,
+                                 double tw = 0.005) : base(CreateProfile(bf,
                                                                 d,
                                                                 tf,
                                                                 tw,
-                                                                verticalAlignment,
-                                                                horizontalAlignment,
-                                                                verticalOffset,
-                                                                horizontalOffset), new List<Polygon>(), id, name)
+                                                                VerticalAlignment.Center,
+                                                                HorizontalAlignment.Center,
+                                                                0,
+                                                                0), new List<Polygon>(), id, name)
         {
             this.bf = bf;
             this.d = d;

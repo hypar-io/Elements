@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Flow
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>A port with flow in or out of a tree.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Leaf : Node
     {
@@ -32,23 +32,23 @@ namespace Elements.Flow
         {
             this.Flow = @flow;
             this.TerminalId = @terminalId;
-            }
-        
+        }
+
         // Empty constructor
         public Leaf()
             : base()
         {
         }
-    
+
         /// <summary>The amount of flow in this port.</summary>
         [JsonProperty("Flow", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [System.ComponentModel.DataAnnotations.Range(0D, double.MaxValue)]
         public double Flow { get; set; }
-    
+
         /// <summary>The id of the terminal being served</summary>
         [JsonProperty("TerminalId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? TerminalId { get; set; }
-    
-    
+
+
     }
 }

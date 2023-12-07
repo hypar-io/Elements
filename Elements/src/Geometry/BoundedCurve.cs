@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
+using Elements.Serialization.JSON;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
     /// <summary>
     /// A bounded curve.
     /// </summary>
+    [JsonConverter(typeof(ElementConverter<BoundedCurve>))]
     public abstract class BoundedCurve : Curve, IBoundedCurve
     {
         /// <summary>

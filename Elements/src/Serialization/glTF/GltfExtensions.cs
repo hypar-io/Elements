@@ -17,6 +17,7 @@ using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp;
 using Image = glTFLoader.Schema.Image;
 using System.Reflection;
+using System.Diagnostics;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 [assembly: InternalsVisibleTo("Elements.Benchmarks")]
@@ -129,7 +130,13 @@ namespace Elements.Serialization.glTF
         /// <returns>A byte array representing the model.</returns>
         public static byte[] ToGlTF(this Model model, bool drawEdges = false, bool mergeVertices = false, bool updateElementsRepresentations = true)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             var gltf = InitializeGlTF(model, updateElementsRepresentations, out var buffers, out _, drawEdges, mergeVertices);
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms total for initializing the glTF");
+            sw.Restart();
+
             if (gltf == null)
             {
                 return null;
@@ -138,13 +145,14 @@ namespace Elements.Serialization.glTF
 
             byte[] bytes;
             using (var ms = new MemoryStream())
-            using (var writer = new BinaryWriter(ms))
             {
                 gltf.SaveBinaryModel(mergedBuffer, ms);
                 // Avoid a copy of this array by using GetBuffer() instead
                 // of ToArray()
                 bytes = ms.GetBuffer();
             }
+            Debug.WriteLine($"glTF: {sw.ElapsedMilliseconds}ms for saving the binary model");
+            sw.Restart();
 
             return bytes;
         }
@@ -911,6 +919,7 @@ namespace Elements.Serialization.glTF
             var mergedBuffer = gltf.CombineBufferAndFixRefs(buffers);
 
             gltf.SaveBinaryModel(mergedBuffer, path);
+
             return true;
         }
 
@@ -925,7 +934,9 @@ namespace Elements.Serialization.glTF
 
             // Buffers must be saved first, URIs may be set or modified inside this method.
             gltf.SaveBuffersAndAddUris(path, buffers);
+
             gltf.SaveModel(path);
+
             return true;
         }
 
@@ -942,6 +953,8 @@ namespace Elements.Serialization.glTF
                                             bool drawEdges = false,
                                             bool mergeVertices = false)
         {
+            var sw = new Stopwatch();
+
             errors = new List<BaseError>();
             var schemaBuffer = new glTFLoader.Schema.Buffer();
             var schemaBuffers = new List<glTFLoader.Schema.Buffer> { schemaBuffer };

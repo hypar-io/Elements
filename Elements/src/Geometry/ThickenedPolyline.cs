@@ -1,8 +1,8 @@
 using System;
 using System.Linq;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using Elements.Search;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
@@ -46,15 +46,15 @@ namespace Elements.Geometry
         }
 
         /// <summary>The base polyline to thicken.</summary>
-        [JsonProperty("polyline", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("polyline")]
         public Polyline Polyline { get; set; }
 
         /// <summary>The amount to thicken the polyline on its "left" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the left side extends into the -X quadrant.</summary>
-        [JsonProperty("leftWidth", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("leftWidth")]
         public double LeftWidth { get; set; }
 
         /// <summary>The amount to thicken the polyline on its "right" side, imagining that the polyline is extending away from you. That is, if the polyline starts at (0,0,0) and follows the +Z axis, the right side extends into the +X quadrant.</summary>
-        [JsonProperty("rightWidth", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("rightWidth")]
         public double RightWidth { get; set; }
 
         private struct EdgeInfo
@@ -162,7 +162,7 @@ namespace Elements.Geometry
                 // for each edge, compute all the info we'll need for it: its left
                 // thickness / right thickness, its plane angle to the x axis, and
                 // whether it is pointing towards or away from this point. Sort the
-                // results by the plane angle. 
+                // results by the plane angle.
                 var edgesSorted = edges.Select((edge) =>
                 {
                     var otherPoint = edge.OtherPoint;

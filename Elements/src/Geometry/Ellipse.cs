@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Elements.Geometry.Interfaces;
-using Newtonsoft.Json;
 using System.Linq;
 using SixLabors.ImageSharp.ColorSpaces;
+using System.Text.Json.Serialization;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// An ellipse. 
+    /// An ellipse.
     /// Parameterization of the curve is 0 -> 2PI.
     /// </summary>
     public class Ellipse : Curve, IConic
@@ -139,14 +139,14 @@ namespace Elements.Geometry
                 t = ParameterAtUntransformed(local);
                 return true;
             }
-        
+
             t = 0;
             return false;
         }
-        
+
         private double ParameterAtUntransformed(Vector3 pt)
         {
-            return Math.Atan2(pt.Y / MinorAxis , pt.X / MajorAxis);
+            return Math.Atan2(pt.Y / MinorAxis, pt.X / MajorAxis);
         }
 
         private bool OnEllipseUntransformed(Vector3 pt)
@@ -185,7 +185,7 @@ namespace Elements.Geometry
 
             // Normals will naturally flip when u > pi.
             // To ensure consistent direction, flip the
-            // normal if it's reversed with regards to 
+            // normal if it's reversed with regards to
             if (refVector.Dot(x) < 0)
             {
                 x = x.Negate();
@@ -259,7 +259,7 @@ namespace Elements.Geometry
             bool lineOnPlane = line.Origin.DistanceTo(ellipsePlane).ApproximatelyEquals(0) &&
                 line.Direction.Dot(ellipsePlane.Normal).ApproximatelyEquals(0);
 
-            // If the line is on the plane, just check if it intersects ellipse plane 
+            // If the line is on the plane, just check if it intersects ellipse plane
             // and if the intersection point is on the ellipse.
             if (!lineOnPlane)
             {
@@ -274,7 +274,7 @@ namespace Elements.Geometry
                 }
                 return results.Any();
             }
-            
+
             // When line and ellipse share a plane their intersections can be solved as
             // quadratic equation since ellipse formula quadratic, line formula linear.
             // There are up to two intersections possible with is also aligned with the amount of roots.
@@ -315,7 +315,7 @@ namespace Elements.Geometry
             Plane planeA = new Plane(Center, Normal);
             Plane planeB = new Plane(circle.Center, circle.Normal);
 
-            // Check if circle and ellipse are on the same plane. 
+            // Check if circle and ellipse are on the same plane.
             if (Normal.IsParallelTo(circle.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 circle.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {
@@ -335,7 +335,7 @@ namespace Elements.Geometry
 
                 var div = (int)Math.Round(this.Circumference() / BoundedCurve.DefaultMinimumChordLength);
 
-                // Iteratively, find points in ellipse with distance to circle equal its radius. 
+                // Iteratively, find points in ellipse with distance to circle equal its radius.
                 var localCenter = Transform.Inverted().OfPoint(circle.Center);
                 var roots = Equations.SolveIterative(0, Math.PI * 2, div,
                     new Func<double, double>((t) =>
@@ -380,7 +380,7 @@ namespace Elements.Geometry
             Plane planeA = new Plane(Center, Normal);
             Plane planeB = new Plane(other.Center, other.Normal);
 
-            // Check if circle and ellipse are on the same plane. 
+            // Check if circle and ellipse are on the same plane.
             if (Normal.IsParallelTo(other.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {
@@ -405,7 +405,7 @@ namespace Elements.Geometry
                 }
 
                 // Too far away (rough estimation)
-                if (Center.DistanceTo(other.Center) > 
+                if (Center.DistanceTo(other.Center) >
                     Math.Max(MajorAxis, MinorAxis) + Math.Max(other.MajorAxis, other.MinorAxis))
                 {
                     return false;
@@ -466,7 +466,7 @@ namespace Elements.Geometry
         /// </summary>
         public double Circumference()
         {
-            return Math.PI * (3 * (MajorAxis + MinorAxis) - 
+            return Math.PI * (3 * (MajorAxis + MinorAxis) -
                 Math.Sqrt((3 * MajorAxis + MinorAxis) * (MajorAxis + 3 * MinorAxis)));
         }
 
@@ -511,7 +511,7 @@ namespace Elements.Geometry
                 if (arcLength + sampleLength > distance)
                 {
                     // TODO: This is an approximation.
-                    // This will return the parameter before the 
+                    // This will return the parameter before the
                     // actual value that we want. Implement a more
                     // precise strategy.
                     end = t;

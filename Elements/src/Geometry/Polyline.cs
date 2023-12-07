@@ -1,9 +1,10 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using ClipperLib;
 using Elements.Search;
+using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
@@ -14,6 +15,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
+    [JsonConverter(typeof(PolylineConverter))]
     public class Polyline : IndexedPolycurve
     {
         /// <summary>
@@ -289,7 +291,7 @@ namespace Elements.Geometry
 
             // Calculate number of frames. 2 frames corresponding to end parameters.
             // 1 if startIndex == endIndex.
-            var length =  endIndex - startIndex + 3;
+            var length = endIndex - startIndex + 3;
 
             // startIndex is set to the first distinct vertex after startParam.
             if (startParam.ApproximatelyEquals(startIndex))
@@ -316,7 +318,7 @@ namespace Elements.Geometry
                 result[0] = new Transform(PointAt(startParam), normals[startIndex - 1].Cross(tangent), tangent);
                 index++;
             }
-            
+
             for (var i = startIndex; i <= endIndex; i++, index++)
             {
                 result[index] = CreateOrthogonalTransform(i, Vertices[i], normals[i]);
@@ -817,7 +819,7 @@ namespace Elements.Geometry
                 var b = closed && i == this.Vertices.Count - 1 ? this.Vertices[0] : this.Vertices[i + 1];
                 var edge = (a, b);
 
-                // An edge may have multiple split points. 
+                // An edge may have multiple split points.
                 // We store these in a list and sort it along the
                 // direction of the edge, before inserting the points
                 // into the vertex list and incrementing i by the correct

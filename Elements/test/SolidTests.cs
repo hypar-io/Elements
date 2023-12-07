@@ -2,7 +2,6 @@ using Xunit;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Profiles;
-using Newtonsoft.Json;
 using Xunit.Abstractions;
 using System.Collections.Generic;
 using System;
@@ -10,6 +9,7 @@ using System.IO;
 using Elements.Serialization.glTF;
 using Elements.Serialization.JSON;
 using System.Linq;
+using System.Text.Json;
 using Elements.Geometry.Tessellation;
 
 namespace Elements.Tests
@@ -196,15 +196,16 @@ namespace Elements.Tests
             var materials = new Dictionary<Guid, Material>();
             var defMaterial = BuiltInMaterials.Default;
             materials.Add(defMaterial.Id, defMaterial);
-            var json = JsonConvert.SerializeObject(solid, new JsonSerializerSettings()
+
+            var options = new JsonSerializerOptions()
             {
-                Converters = new[] { new SolidConverter(materials) },
-                Formatting = Formatting.Indented
-            });
-            var newSolid = JsonConvert.DeserializeObject<Solid>(json, new JsonSerializerSettings()
-            {
-                Converters = new[] { new SolidConverter(materials) }
-            });
+                WriteIndented = true
+            };
+            options.Converters.Add(new SolidConverter());
+
+            var json = JsonSerializer.Serialize(solid, options);
+            var newSolid = JsonSerializer.Deserialize<Solid>(json, options);
+
             Assert.Equal(8, newSolid.Vertices.Count);
             Assert.Equal(12, newSolid.Edges.Count);
             Assert.Equal(6, newSolid.Faces.Count);
@@ -271,14 +272,21 @@ namespace Elements.Tests
         public void ConstructedSolidProducesValidGlb()
         {
             Name = nameof(ConstructedSolidProducesValidGlb);
-            var allPolygons = JsonConvert.DeserializeObject<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"));
-            var solid = new Solid();
-            foreach (var face in allPolygons)
+
+            var options = new JsonSerializerOptions()
             {
-                solid.AddFace(face.outerLoop, face.innerLoops, true);
+                IncludeFields = true
+            };
+            var allPolygons = JsonSerializer.Deserialize<List<(Polygon outerLoop, List<Polygon> innerLoops)>>(File.ReadAllText("../../../models/Geometry/ExampleConstructedSolidPolygons.json"), options);
+            var solid = new Solid();
+            foreach (var (outerLoop, innerLoops) in allPolygons)
+            {
+                solid.AddFace(outerLoop, innerLoops, true);
             }
-            var solidOp = new Elements.Geometry.Solids.ConstructedSolid(solid, false);
-            solidOp.LocalTransform = new Transform();
+            var solidOp = new ConstructedSolid(solid, false)
+            {
+                LocalTransform = new Transform()
+            };
             var geoElem = new GeometricElement(new Transform(), BuiltInMaterials.Concrete, new Representation(new[] { solidOp }), false, Guid.NewGuid(), null);
             var model = new Model();
             model.AddElement(geoElem);
@@ -511,7 +519,7 @@ namespace Elements.Tests
         {
             Name = nameof(SweepWithSetbacksRegressionTest);
             Polygon crossSection = Polygon.Rectangle(0.25, 0.25);
-            
+
             Polyline curve = new(new List<Vector3>
             {
                     new Vector3(x: 20.0, y: 15.0, z:0.0),
@@ -520,7 +528,7 @@ namespace Elements.Tests
                     new Vector3(x: 19.5, y: 14.5, z:1.5),
             }
             );
-            
+
             var sweep = new Sweep(
                 new Profile(crossSection),
                 curve,
@@ -543,7 +551,9 @@ namespace Elements.Tests
 
             var r = new Random();
 
-            var di = JsonConvert.DeserializeObject<DebugInfo>(File.ReadAllText(path), new[] { new SolidConverter() });
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new SolidConverter());
+            var di = JsonSerializer.Deserialize<DebugInfo>(File.ReadAllText(path), options);
             foreach (var solid in di.Solid)
             {
                 Assert.True(di.Plane.Normal.IsUnitized());
@@ -770,7 +780,7 @@ namespace Elements.Tests
         [Fact]
         public void TesselationOfModelThatProducesEmptyTrianles()
         {
-            var model = Model.FromJson(File.ReadAllText("../../../models/Geometry/WallFromBasicModel.json"), out var errors);
+            var model = Model.FromJson(File.ReadAllText("../../../models/Geometry/WallFromBasicModel.json"));
             var wall = model.AllElementsOfType<WallByProfile>().First();
             wall.UpdateRepresentations();
             wall.UpdateBoundsAndComputeSolid();

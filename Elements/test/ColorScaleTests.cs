@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Elements.Analysis;
 using Elements.Geometry;
 using Xunit;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -85,13 +86,13 @@ namespace Elements.Tests
         public void DeserializesCorrectly()
         {
             var bandedColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange }, 10);
-            var bandedSerialized = JsonConvert.SerializeObject(bandedColorScale);
-            var bandedDeserialized = JsonConvert.DeserializeObject<ColorScale>(bandedSerialized);
+            var bandedSerialized = JsonSerializer.Serialize(bandedColorScale);
+            var bandedDeserialized = JsonSerializer.Deserialize<ColorScale>(bandedSerialized);
             Assert.Equal(bandedColorScale.GetColor(0.12345), bandedDeserialized.GetColor(0.12345));
 
             var linearColorScale = new ColorScale(new List<Color>() { Colors.Cyan, Colors.Purple, Colors.Orange });
-            var linearSerialized = JsonConvert.SerializeObject(linearColorScale);
-            var linearDeserialized = JsonConvert.DeserializeObject<ColorScale>(linearSerialized);
+            var linearSerialized = JsonSerializer.Serialize(linearColorScale);
+            var linearDeserialized = JsonSerializer.Deserialize<ColorScale>(linearSerialized);
             Assert.Equal(linearColorScale.GetColor(0.12345), linearDeserialized.GetColor(0.12345));
 
             Assert.NotEqual(linearColorScale.GetColor(0.12345), bandedColorScale.GetColor(0.12345));

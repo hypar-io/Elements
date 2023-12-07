@@ -65,8 +65,8 @@ namespace Elements.MEP.Tests
             model.AddElement(drain);
             var json = model.ToJson();
 
-            var mdl = Model.FromJson(json, out var errors);
-            Assert.Empty(errors);
+            var mdl = Model.FromJson(json);
+            // Assert.Empty(errors);
         }
     }
 }

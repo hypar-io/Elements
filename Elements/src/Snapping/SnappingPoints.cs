@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using Elements.Serialization.JSON;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -24,14 +24,14 @@ namespace Elements
         /// <summary>
         /// Snapping points.
         /// </summary>
-        [JsonProperty("points")]
+        [JsonPropertyName("points")]
         [JsonConverter(typeof(VectorListToByteArrayConverter))]
         public List<Vector3> Points { get; } = new List<Vector3>();
 
         /// <summary>
         /// The modes for creating snap edges.
         /// </summary>
-        [JsonProperty("edgeMode")]
+        [JsonPropertyName("edgeMode")]
         public SnappingEdgeMode EdgeMode { get; set; }
     }
 }

@@ -9,7 +9,7 @@ This is a minimal example using .NET 5, Blazor webassembly, and Elements.
 Visit http://localhost:5000.
 
 ### Publishing
-`dotnet public -c release`
+`dotnet publish -c release`
 
 ### Notes about hosting on Github Pages
 - In the site's repo on github

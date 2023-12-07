@@ -1,6 +1,6 @@
 using Elements.Validators;
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,11 +21,15 @@ namespace Elements.Geometry
         public override Domain1d Domain => new Domain1d(Units.DegreesToRadians(this.StartAngle), Units.DegreesToRadians(this.EndAngle));
 
         /// <summary>The angle from 0.0, in degrees, at which the arc will start with respect to the positive X axis.</summary>
-        [JsonProperty("StartAngle", Required = Required.Always)]
+
+        [JsonPropertyName("StartAngle")]
+        [JsonInclude]
         public double StartAngle { get; protected set; }
 
         /// <summary>The angle from 0.0, in degrees, at which the arc will end with respect to the positive X axis.</summary>
-        [JsonProperty("EndAngle", Required = Required.Always)]
+
+        [JsonPropertyName("EndAngle")]
+        [JsonInclude]
         public double EndAngle { get; protected set; }
 
         /// <summary>

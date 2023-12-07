@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Pressure calculation data for a wye fitting</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class PressureCalculationWye : PressureCalculationBase
     {
@@ -60,104 +60,104 @@ namespace Elements.Fittings
             this.Length = @length;
             this.LengthBranch = @lengthBranch;
             this.FrictionLossCoefficient = @frictionLossCoefficient;
-            }
-        
+        }
+
         // Empty constructor
         public PressureCalculationWye()
             : base()
         {
         }
-    
+
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
+
         [JsonProperty("MainDiameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MainDiameter { get; set; }
-    
+
         [JsonProperty("BranchDiameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double BranchDiameter { get; set; }
-    
+
         [JsonProperty("DiameterInner", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DiameterInner { get; set; }
-    
+
         [JsonProperty("MainDiameterInner", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double MainDiameterInner { get; set; }
-    
+
         [JsonProperty("BranchDiameterInner", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double BranchDiameterInner { get; set; }
-    
+
         [JsonProperty("Flow", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Flow { get; set; }
-    
+
         [JsonProperty("FlowMain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FlowMain { get; set; }
-    
+
         [JsonProperty("FlowBranch", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FlowBranch { get; set; }
-    
+
         [JsonProperty("ZLossBranchToTrunk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double ZLossBranchToTrunk { get; set; }
-    
+
         [JsonProperty("ZBranchToTrunk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double ZBranchToTrunk { get; set; }
-    
+
         [JsonProperty("ZLoss", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double ZLoss { get; set; }
-    
+
         [JsonProperty("Z", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Z { get; set; }
-    
+
         [JsonProperty("StaticGainBranchToTrunk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double StaticGainBranchToTrunk { get; set; }
-    
+
         [JsonProperty("StaticGain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double StaticGain { get; set; }
-    
+
         [JsonProperty("FluidVelocityMain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FluidVelocityMain { get; set; }
-    
+
         [JsonProperty("FluidVelocity", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FluidVelocity { get; set; }
-    
+
         [JsonProperty("FluidVelocityBranch", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FluidVelocityBranch { get; set; }
-    
+
         [JsonProperty("HeightDelta", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double HeightDelta { get; set; }
-    
+
         [JsonProperty("HeightDeltaBranchToTrunk", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double HeightDeltaBranchToTrunk { get; set; }
-    
+
         [JsonProperty("PipeLossMain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double PipeLossMain { get; set; }
-    
+
         [JsonProperty("PipeLoss", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double PipeLoss { get; set; }
-    
+
         [JsonProperty("PipeLossBranch", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double PipeLossBranch { get; set; }
-    
+
         [JsonProperty("DynamicPressureMain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DynamicPressureMain { get; set; }
-    
+
         [JsonProperty("DynamicPressure", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DynamicPressure { get; set; }
-    
+
         [JsonProperty("DynamicPressureBranch", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double DynamicPressureBranch { get; set; }
-    
+
         [JsonProperty("LengthMain", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double LengthMain { get; set; }
-    
+
         [JsonProperty("Length", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Length { get; set; }
-    
+
         [JsonProperty("LengthBranch", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double LengthBranch { get; set; }
-    
+
         [JsonProperty("FrictionLossCoefficient", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double FrictionLossCoefficient { get; set; }
-    
-    
+
+
     }
 }

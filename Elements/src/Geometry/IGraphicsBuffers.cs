@@ -40,8 +40,9 @@ namespace Elements
         void AddVertex(double x, double y, double z, double nx, double ny, double nz, double u, double v, Color? color = null);
 
         /// <summary>
-        /// Add vertices to the graphics buffers
+        /// Add vertices to the graphics buffers.
         /// </summary>
+        /// <param name="vertices">The vertices to add.</param>
         void AddVertices(IList<(Vector3 position, Vector3 normal, UV uv, Color? color)> vertices);
 
         /// <summary>

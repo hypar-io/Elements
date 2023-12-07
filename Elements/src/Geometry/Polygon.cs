@@ -2,11 +2,14 @@ using ClipperLib;
 using Elements.Geometry.Profiles;
 using Elements.Search;
 using Elements.Spatial;
-using Newtonsoft.Json;
+using Elements.Validators;
+using LibTessDotNet.Double;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Elements.Serialization.JSON;
 
 namespace Elements.Geometry
 {
@@ -17,6 +20,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
     /// </example>
+    [JsonConverter(typeof(PolygonConverter))]
     public partial class Polygon : Polyline
     {
         /// <summary>

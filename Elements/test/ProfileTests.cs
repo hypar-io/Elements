@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Elements.Spatial;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -422,9 +422,9 @@ namespace Elements.Tests
         {
             // This test used to fail with an exception due to a very small polygon produced from the boolean.
             var aShapeJson = "{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-149.51680916003411,\"Y\":-545.6788101645068,\"Z\":0.0},{\"X\":-181.13449678692302,\"Y\":-508.57118930829984,\"Z\":0.0},{\"X\":-185.00173212061222,\"Y\":-476.0495417216826,\"Z\":0.0},{\"X\":-211.47915563014516,\"Y\":-479.19804234633307,\"Z\":0.0},{\"X\":-213.43484799507593,\"Y\":-627.6323068549372,\"Z\":0.0},{\"X\":-169.59832064900132,\"Y\":-624.8068240421294,\"Z\":0.0},{\"X\":-144.53329588528302,\"Y\":-620.4717620034767,\"Z\":0.0}]},\"Voids\":[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-174.65966226538052,\"Y\":-581.4103523143159,\"Z\":0.0},{\"X\":-174.89675190025594,\"Y\":-599.4087908161704,\"Z\":0.0},{\"X\":-184.89588440128614,\"Y\":-599.2770743523507,\"Z\":0.0},{\"X\":-184.65879476641072,\"Y\":-581.2786358504962,\"Z\":0.0}]}],\"Id\":\"5b65b6a5-b0a4-4373-ba47-76380d379893\",\"Name\":null}";
-            var p1 = Newtonsoft.Json.JsonConvert.DeserializeObject<Profile>(aShapeJson);
+            var p1 = Element.Deserialize<Profile>(aShapeJson);
             var otherPolysJson = "[{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-170.30455,\"Y\":-618.83988,\"Z\":0.0},{\"X\":-150.8792,\"Y\":-615.48022,\"Z\":0.0},{\"X\":-155.37154,\"Y\":-548.05882,\"Z\":0.0},{\"X\":-186.87827,\"Y\":-511.08143,\"Z\":0.0},{\"X\":-190.01511,\"Y\":-484.70206,\"Z\":0.0},{\"X\":-205.57554,\"Y\":-486.55239,\"Z\":0.0},{\"X\":-207.34994,\"Y\":-621.22765,\"Z\":0.0}]},\"Voids\":[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-205.82871,\"Y\":-619.62649,\"Z\":0.0},{\"X\":-204.09299,\"Y\":-487.88667,\"Z\":0.0},{\"X\":-191.3275,\"Y\":-486.36869,\"Z\":0.0},{\"X\":-188.31421,\"Y\":-511.70899,\"Z\":0.0},{\"X\":-156.83522,\"Y\":-548.65382,\"Z\":0.0},{\"X\":-152.46567,\"Y\":-614.23233,\"Z\":0.0},{\"X\":-170.48117,\"Y\":-617.34816,\"Z\":0.0}]}],\"Id\":\"0fbf2cac-126b-45a3-b32e-e53c32c9e05a\",\"Name\":\"Corridor\"},{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-153.1705,\"Y\":-580.19402,\"Z\":0.0},{\"X\":-206.8,\"Y\":-579.48763,\"Z\":0.0},{\"X\":-206.81976,\"Y\":-580.98749,\"Z\":0.0},{\"X\":-184.6588,\"Y\":-581.27939,\"Z\":0.0},{\"X\":-184.65879,\"Y\":-581.27864,\"Z\":0.0},{\"X\":-174.65966,\"Y\":-581.41035,\"Z\":0.0},{\"X\":-174.65967,\"Y\":-581.41109,\"Z\":0.0},{\"X\":-153.19026,\"Y\":-581.69388,\"Z\":0.0}]},\"Voids\":[],\"Id\":\"a02d7813-883b-4bd4-8bd5-47aa0ce8ac05\",\"Name\":null},{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-184.89513,\"Y\":-599.27708,\"Z\":0.0},{\"X\":-184.89588,\"Y\":-599.27707,\"Z\":0.0},{\"X\":-184.65879,\"Y\":-581.27864,\"Z\":0.0},{\"X\":-184.65805,\"Y\":-581.27865,\"Z\":0.0},{\"X\":-183.76997,\"Y\":-513.85917,\"Z\":0.0},{\"X\":-185.26983,\"Y\":-513.83941,\"Z\":0.0},{\"X\":-186.66607,\"Y\":-619.83625,\"Z\":0.0},{\"X\":-185.16621,\"Y\":-619.85601,\"Z\":0.0}]},\"Voids\":[],\"Id\":\"59c1f71d-7c88-4fa3-8b79-6d799f6f80f0\",\"Name\":null},{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-151.87004,\"Y\":-599.71136,\"Z\":0.0},{\"X\":-174.89674,\"Y\":-599.40804,\"Z\":0.0},{\"X\":-174.89675,\"Y\":-599.40879,\"Z\":0.0},{\"X\":-184.89588,\"Y\":-599.27707,\"Z\":0.0},{\"X\":-184.89587,\"Y\":-599.27633,\"Z\":0.0},{\"X\":-207.05688,\"Y\":-598.98441,\"Z\":0.0},{\"X\":-207.07664,\"Y\":-600.48427,\"Z\":0.0},{\"X\":-151.8898,\"Y\":-601.21122,\"Z\":0.0}]},\"Voids\":[],\"Id\":\"b320c3f1-eac5-46a9-9ed5-3bb49a5e38e9\",\"Name\":null},{\"discriminator\":\"Elements.Geometry.Profile\",\"Perimeter\":{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-172.44555,\"Y\":-527.14991,\"Z\":0.0},{\"X\":-173.94541,\"Y\":-527.13015,\"Z\":0.0},{\"X\":-174.66041,\"Y\":-581.41034,\"Z\":0.0},{\"X\":-174.65966,\"Y\":-581.41035,\"Z\":0.0},{\"X\":-174.89675,\"Y\":-599.40879,\"Z\":0.0},{\"X\":-174.89749,\"Y\":-599.40878,\"Z\":0.0},{\"X\":-175.1568,\"Y\":-619.09442,\"Z\":0.0},{\"X\":-173.65694,\"Y\":-619.11418,\"Z\":0.0}]},\"Voids\":[],\"Id\":\"82060be1-c38b-4eaf-aa5f-6792f6839f37\",\"Name\":null}]";
-            var otherPolys = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Profile>>(otherPolysJson);
+            var otherPolys = Element.Deserialize<List<Profile>>(otherPolysJson);
             var result = Elements.Geometry.Profile.Difference(new[] { p1 }, otherPolys);
         }
 
@@ -433,7 +433,7 @@ namespace Elements.Tests
         {
             this.Name = nameof(DifferenceFail2);
             var json = File.ReadAllText("../../../models/Geometry/differenceFail2.json");
-            var profiles = JsonConvert.DeserializeObject<Dictionary<string, IEnumerable<Profile>>>(json);
+            var profiles = Element.Deserialize<Dictionary<string, IEnumerable<Profile>>>(json);
             var firstSet = profiles["levelBoundaryCleaned"];
             var secondSet = profiles["insetProfiles"];
             var diff = Elements.Geometry.Profile.Difference(firstSet, secondSet);
@@ -448,10 +448,10 @@ namespace Elements.Tests
         {
             Name = "SplitDonutProfileFromFunction";
 
-            var perim = Newtonsoft.Json.JsonConvert.DeserializeObject<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":76.30921,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":-30.00397,\"Z\":0.0},{\"X\":76.30921,\"Y\":-30.00397,\"Z\":0.0}]}");
-            var voids = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Polygon>>("[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-69.42933,\"Y\":-24.00397,\"Z\":0.0},{\"X\":-69.42933,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.30921,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.30921,\"Y\":-24.00397,\"Z\":0.0}]}]");
+            var perim = JsonSerializer.Deserialize<Polygon>("{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":76.30921,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":-30.00397,\"Z\":0.0},{\"X\":76.30921,\"Y\":-30.00397,\"Z\":0.0}]}");
+            var voids = JsonSerializer.Deserialize<List<Polygon>>("[{\"discriminator\":\"Elements.Geometry.Polygon\",\"Vertices\":[{\"X\":-69.42933,\"Y\":-24.00397,\"Z\":0.0},{\"X\":-69.42933,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.30921,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.30921,\"Y\":-24.00397,\"Z\":0.0}]}]");
             var profileToSplit = new Profile(perim, voids, Guid.NewGuid(), null);
-            var splitters = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Polyline>>("[{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":76.40920999999999,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.52932999999997,\"Y\":46.63686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-75.42933,\"Y\":46.83686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":-30.20397,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-75.52932999999999,\"Y\":-30.00397,\"Z\":0.0},{\"X\":76.40920999999997,\"Y\":-30.00397,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":76.30921,\"Y\":-30.20397,\"Z\":0.0},{\"X\":76.30921,\"Y\":46.83686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-69.42933,\"Y\":-30.103969999999997,\"Z\":0.0},{\"X\":-69.42933,\"Y\":46.73686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-69.52932999999999,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.40920999999997,\"Y\":40.63686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":70.30921,\"Y\":46.73686000000001,\"Z\":0.0},{\"X\":70.30921,\"Y\":-30.103969999999997,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":70.40920999999999,\"Y\":-24.00397,\"Z\":0.0},{\"X\":-69.52932999999997,\"Y\":-24.00397,\"Z\":0.0}]}]");
+            var splitters = JsonSerializer.Deserialize<List<Polyline>>("[{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":76.40920999999999,\"Y\":46.63686,\"Z\":0.0},{\"X\":-75.52932999999997,\"Y\":46.63686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-75.42933,\"Y\":46.83686,\"Z\":0.0},{\"X\":-75.42933,\"Y\":-30.20397,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-75.52932999999999,\"Y\":-30.00397,\"Z\":0.0},{\"X\":76.40920999999997,\"Y\":-30.00397,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":76.30921,\"Y\":-30.20397,\"Z\":0.0},{\"X\":76.30921,\"Y\":46.83686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-69.42933,\"Y\":-30.103969999999997,\"Z\":0.0},{\"X\":-69.42933,\"Y\":46.73686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":-69.52932999999999,\"Y\":40.63686,\"Z\":0.0},{\"X\":70.40920999999997,\"Y\":40.63686,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":70.30921,\"Y\":46.73686000000001,\"Z\":0.0},{\"X\":70.30921,\"Y\":-30.103969999999997,\"Z\":0.0}]},{\"discriminator\":\"Elements.Geometry.Polyline\",\"Vertices\":[{\"X\":70.40920999999999,\"Y\":-24.00397,\"Z\":0.0},{\"X\":-69.52932999999997,\"Y\":-24.00397,\"Z\":0.0}]}]");
             Model.AddElement(perim);
             voids.ForEach((v) => Model.AddElement(v));
             Model.AddElements(splitters.Select(s => new ModelCurve(s, BuiltInMaterials.XAxis)));
@@ -518,8 +518,8 @@ namespace Elements.Tests
         public void DifferenceToleratesBadGeometry()
         {
             Name = nameof(DifferenceToleratesBadGeometry);
-            var cp = JsonConvert.DeserializeObject<List<Profile>>(File.ReadAllText("../../../models/Geometry/corridorProfiles.json"));
-            var lb = JsonConvert.DeserializeObject<Profile>(File.ReadAllText("../../../models/Geometry/levelBoundary.json"));
+            var cp = Element.Deserialize<List<Profile>>(File.ReadAllText("../../../models/Geometry/corridorProfiles.json"));
+            var lb = Element.Deserialize<Profile>(File.ReadAllText("../../../models/Geometry/levelBoundary.json"));
             var results = Elements.Geometry.Profile.Difference(new[] { lb }, cp);
             Model.AddElements(results);
             Model.AddElements(results.SelectMany(r => r.ToModelCurves()));
@@ -529,11 +529,13 @@ namespace Elements.Tests
         [Fact]
         public void SplitComplexProfileWithInnerVoids()
         {
+            throw new Exception("This test fails during deserialization validation, and it can't be caught because the new deserializer doesn't handle exceptions. We need to figure this out before we release.");
+
             Name = nameof(SplitComplexProfileWithInnerVoids);
             var profileJson = File.ReadAllText("../../../models/Geometry/complex-profile-w-voids.json");
             var segmentsJson = File.ReadAllText("../../../models/Geometry/splitsegments.json");
-            var profiles = JsonConvert.DeserializeObject<List<Profile>>(profileJson);
-            var segments = JsonConvert.DeserializeObject<List<Line>>(segmentsJson);
+            var profiles = JsonSerializer.Deserialize<List<Profile>>(profileJson);
+            var segments = JsonSerializer.Deserialize<List<Line>>(segmentsJson);
             var splits = Elements.Geometry.Profile.Split(profiles, segments.Select(l => l.ToPolyline(1)));
             // Value determined experimentally. If this test breaks, verify output visually —
             // it's not necessarily the end of the world if the number changes slightly, but we want to

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -13,6 +15,7 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<BoundedCurve>))]
         public BoundedCurve Curve { get; set; }
 
         /// <summary>
@@ -28,6 +31,7 @@ namespace Elements
         /// <summary>
         /// The structural framing's profile.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile { get; set; }
 
         /// <summary>
@@ -36,7 +40,15 @@ namespace Elements
         public double Rotation { get; set; }
 
         /// <summary>
-        /// Construct a beam.
+        /// Construct a structural framing element.
+        /// </summary>
+        public StructuralFraming()
+        {
+            // Empty construction for JSON serialization.
+        }
+
+        /// <summary>
+        /// Construct a structural framing element.
         /// </summary>
         /// <param name="curve">The center line of the beam.</param>
         /// <param name="profile">The structural framing's profile.</param>
@@ -69,11 +81,6 @@ namespace Elements
             SetProperties(curve, profile, startSetback, endSetback, rotation);
             this.UpdateRepresentations();
         }
-
-        /// <summary>
-        /// Construct a framing element.
-        /// </summary>
-        public StructuralFraming() { }
 
         private void SetProperties(BoundedCurve curve,
                                    Profile profile,

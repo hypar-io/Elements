@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 
 namespace Elements.Serialization
@@ -17,6 +17,7 @@ namespace Elements.Serialization
         {
             this.Layers = new List<Layer>();
         }
+
         /// <summary>
         /// The layer configurations for this model.
         /// </summary>
@@ -34,6 +35,7 @@ namespace Elements.Serialization
             public Layer()
             {
             }
+
             /// <summary>
             /// The name of the layer.
             /// </summary>
@@ -48,6 +50,8 @@ namespace Elements.Serialization
             /// <summary>
             /// How items on this layer should have their colors determined.
             /// </summary>
+            [JsonConverter(typeof(JsonStringEnumConverter))]
+
             public ElementColorSetting ElementColorSetting { get; set; } = ElementColorSetting.ByLayer;
 
             /// <summary>

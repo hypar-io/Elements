@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 
@@ -28,7 +29,7 @@ namespace Elements.Fittings
             this.InsertionDepth = insertionDepth;
         }
 
-        [Newtonsoft.Json.JsonConstructor]
+        [JsonConstructor]
         public ExpansionSocket(double @insertionDepth,
                                Port @start,
                                Port @end,

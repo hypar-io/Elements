@@ -19,28 +19,28 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Base class for information about pressure calculations of a fitting.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
-    public partial class PressureCalculationBase 
+    public partial class PressureCalculationBase
     {
         [JsonConstructor]
         public PressureCalculationBase(System.Guid @elementId)
         {
             this.ElementId = @elementId;
-            }
-        
+        }
+
         // Empty constructor
         public PressureCalculationBase()
         {
         }
-    
+
         /// <summary>The Id of the element this data applies to.</summary>
         [JsonProperty("ElementId", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid ElementId { get; set; }
-    
-    
+
+
     }
 }

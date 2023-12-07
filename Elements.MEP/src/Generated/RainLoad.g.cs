@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>The amount of rain that needs to be drained.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class RainLoad : Element
     {
@@ -32,22 +32,22 @@ namespace Elements
         {
             this.RainLoad1 = @rainLoad;
             this.RoofSection = @roofSection;
-            }
-        
+        }
+
         // Empty constructor
         public RainLoad()
             : base()
         {
         }
-    
+
         /// <summary>The amount of water in L/s that needs to be drained.</summary>
         [JsonProperty("Rain Load", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double RainLoad1 { get; set; }
-    
+
         /// <summary>ID of the roof section that is associated with this load</summary>
         [JsonProperty("Roof Section", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid RoofSection { get; set; }
-    
-    
+
+
     }
 }

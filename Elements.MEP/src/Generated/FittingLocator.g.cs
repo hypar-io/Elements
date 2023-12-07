@@ -19,12 +19,12 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>Data necessary to localize a fitting in a fitting network.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
-    public partial class FittingLocator 
+    public partial class FittingLocator
     {
         [JsonConstructor]
         public FittingLocator(string @networkReference, string @sectionKey, int @indexInSection)
@@ -32,25 +32,25 @@ namespace Elements.Fittings
             this.NetworkReference = @networkReference;
             this.SectionKey = @sectionKey;
             this.IndexInSection = @indexInSection;
-            }
-        
+        }
+
         // Empty constructor
         public FittingLocator()
         {
         }
-    
+
         /// <summary>The reference label of the network.</summary>
         [JsonProperty("Network Reference", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string NetworkReference { get; set; }
-    
+
         /// <summary>The key used to locate the section in the network (topologically).</summary>
         [JsonProperty("Section Key", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string SectionKey { get; set; }
-    
+
         /// <summary>The index of this fitting in the section.</summary>
         [JsonProperty("Index In Section", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int IndexInSection { get; set; }
-    
-    
+
+
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Elements.Geometry;
 using Elements.Search;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,14 +26,12 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <summary>
         /// Vertices by ID.
         /// </summary>
-        [JsonProperty]
-        private Dictionary<ulong, Vertex> _vertices = new Dictionary<ulong, Vertex>();
+        public Dictionary<ulong, Vertex> Vertices = new Dictionary<ulong, Vertex>();
 
         /// <summary>
         /// Edges by ID.
         /// </summary>
-        [JsonProperty]
-        private Dictionary<ulong, Edge> _edges = new Dictionary<ulong, Edge>();
+        public Dictionary<ulong, Edge> Edges = new Dictionary<ulong, Edge>();
 
         // See Edge.GetHash for how edges are identified as unique.
         private Dictionary<string, ulong> _edgesLookup = new Dictionary<string, ulong>();
@@ -325,7 +322,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public Vertex GetVertex(ulong vertexId)
         {
-            this._vertices.TryGetValue(vertexId, out var vertex);
+            this.Vertices.TryGetValue(vertexId, out var vertex);
             return vertex;
         }
 
@@ -335,7 +332,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public List<Vertex> GetVertices()
         {
-            return this._vertices.Values.ToList();
+            return this.Vertices.Values.ToList();
         }
 
         /// <summary>
@@ -344,7 +341,7 @@ namespace Elements.Spatial.AdaptiveGrid
         /// <returns></returns>
         public List<Edge> GetEdges()
         {
-            return this._edges.Values.ToList();
+            return this.Edges.Values.ToList();
         }
 
         /// <summary>
@@ -374,7 +371,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 id = this._vertexId;
                 var vertex = new Vertex(id, point);
                 AddToXYZLookup(vertex, yzLookup, zLookup);
-                _vertices[id] = vertex;
+                Vertices[id] = vertex;
                 this._vertexId++;
                 return vertex;
             }
@@ -676,7 +673,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 return;
             }
 
-            if (!this._edges.Remove(edge.Id))
+            if (!this.Edges.Remove(edge.Id))
             {
                 return;
             }
@@ -776,17 +773,18 @@ namespace Elements.Spatial.AdaptiveGrid
             clone._edgeId = _edgeId;
             clone._vertexId = _vertexId;
 
-            clone._edges = _edges.ToDictionary(
+            clone.Edges = Edges.ToDictionary(
                 e => e.Key,
                 e => new Edge(e.Value.Id, e.Value.StartId, e.Value.EndId));
 
-            clone._vertices = _vertices.ToDictionary(
+            clone.Vertices = Vertices.ToDictionary(
                 e => e.Key,
-                e => {
+                e =>
+                {
                     var v = new Vertex(e.Value.Id, e.Value.Point);
                     foreach (var edge in e.Value.Edges)
                     {
-                        v.Edges.Add(clone._edges[edge.Id]);
+                        v.Edges.Add(clone.Edges[edge.Id]);
                     }
                     return v;
                 });
@@ -839,7 +837,7 @@ namespace Elements.Spatial.AdaptiveGrid
                 edgeId = edge.Id;
 
                 this._edgesLookup[hash] = edgeId;
-                this._edges.Add(edgeId, edge);
+                this.Edges.Add(edgeId, edge);
 
                 startVertex.Edges.Add(edge);
                 endVertex.Edges.Add(edge);
@@ -849,7 +847,7 @@ namespace Elements.Spatial.AdaptiveGrid
             }
             else
             {
-                this._edges.TryGetValue(edgeId, out var edge);
+                this.Edges.TryGetValue(edgeId, out var edge);
                 return edge;
             }
         }
@@ -1306,8 +1304,8 @@ namespace Elements.Spatial.AdaptiveGrid
 
         private void DeleteVertex(ulong id)
         {
-            var vertex = _vertices[id];
-            _vertices.Remove(id);
+            var vertex = Vertices[id];
+            Vertices.Remove(id);
             DeleteFromXYZLookup(vertex);
         }
 
@@ -1371,15 +1369,15 @@ namespace Elements.Spatial.AdaptiveGrid
             points.Sort((p, q) => Math.Sign(lineVector.Dot(p.Point - q.Point)));
             for (int i = 1; i < points.Count; ++i)
             {
-                resultingSegments.Add((points[i-1], points[i]));
+                resultingSegments.Add((points[i - 1], points[i]));
             }
             return resultingSegments;
         }
 
         private List<(Vertex Start, Vertex End)> SplitLineSegmentsWithParameters(
-            IEnumerable<Line> segmentsToSplit, 
-            double lineParameter, 
-            List<double> parametersOnLine, 
+            IEnumerable<Line> segmentsToSplit,
+            double lineParameter,
+            List<double> parametersOnLine,
             bool isU,
             List<Vertex> collectedPoints,
             Transform fromGrid)

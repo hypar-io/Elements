@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Newtonsoft.Json;
 using Elements.Geometry.Solids;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Elements
 {
@@ -14,21 +14,21 @@ namespace Elements
                 /// <summary>The material to be used on the door frame</summary>
                 public Material FrameMaterial { get; set; } = new Material(Colors.Gray, 0.5, 0.25, false, null, false, false, null, false, null, 0, false, default, "Silver Frame");
                 /// <summary>The opening type of the door that should be placed</summary>
-                [JsonProperty("Door Opening Type")]
-                [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+                [JsonPropertyName("Door Opening Type")]
+                [JsonConverter(typeof(JsonStringEnumConverter))]
                 public DoorOpeningType OpeningType { get; private set; }
                 /// <summary>The opening side of the door that should be placed</summary>
-                [JsonProperty("Door Opening Side")]
-                [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+                [JsonPropertyName("Door Opening Side")]
+                [JsonConverter(typeof(JsonStringEnumConverter))]
                 public DoorOpeningSide OpeningSide { get; private set; }
                 /// <summary>Width of a door without a frame.</summary>
-                [JsonProperty("Door Width")]
+                [JsonPropertyName("Door Width")]
                 public double DoorWidth { get; set; }
                 /// <summary>Height of a door without a frame.</summary>
-                [JsonProperty("Door Height")]
+                [JsonPropertyName("Door Height")]
                 public double DoorHeight { get; set; }
                 /// <summary>Type of door (Glass or Solid).</summary>
-                [JsonProperty("Door Type")]
+                [JsonPropertyName("Door Type")]
                 public string DoorType { get; set; }
                 /// <summary>Default door thickness.</summary>
                 public static double DEFAULT_DOOR_THICKNESS = Units.InchesToMeters(2.0);

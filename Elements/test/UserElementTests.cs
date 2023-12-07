@@ -1,8 +1,10 @@
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements.Serialization.JSON;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Xunit;
 
 namespace Elements.Tests
@@ -12,12 +14,15 @@ namespace Elements.Tests
         public Line CenterLine { get; set; }
 
         // Used to test serialization of top level elements.
+        [JsonConverter(typeof(ElementConverter<Profile>))]
         public Profile Profile { get; set; }
 
         // Used to test serialization of lists of sub elements.
+        [JsonConverter(typeof(ElementConverter<List<Mass>>))]
         public List<Mass> SubElements { get; set; }
 
         // Used to test dictionaries of sub elements.
+        [JsonConverter(typeof(ElementConverter<Dictionary<string, Element>>))]
         public Dictionary<string, Element> DictionaryElements { get; set; }
 
         internal TestUserElement() : base(null,
@@ -74,15 +79,16 @@ namespace Elements.Tests
             var m = new Material("UserElementGreen", Colors.Green);
             var ue = new TestUserElement(line, new Profile(Polygon.L(1, 2, 0.5)), m);
 
-            var p = new Profile(Polygon.Rectangle(1, 1));
+            var p = new Profile(Polygon.Rectangle(2, 2));
             var m1 = new Mass(p, 1, BuiltInMaterials.Wood);
             ue.SubElements.Add(m1);
+            ue.DictionaryElements.Add("foo", m1);
 
             this.Model.AddElement(ue);
 
             var json = this.Model.ToJson();
-            var newModel = Model.FromJson(json, out var errors);
-            Assert.Empty(errors);
+            var newModel = Model.FromJson(json);
+
             var newUe = newModel.AllElementsOfType<TestUserElement>().First();
 
             // Plus one because of the profile that will be added from
@@ -92,6 +98,8 @@ namespace Elements.Tests
             Assert.Equal(ue.Representation.SolidOperations.Count, newUe.Representation.SolidOperations.Count);
             Assert.Equal(ue.Id, newUe.Id);
             Assert.Equal(ue.Transform, newUe.Transform);
+            Assert.Equal(ue.SubElements[0].Id, newUe.SubElements[0].Id);
+            Assert.Equal(ue.DictionaryElements["foo"].Id, newUe.DictionaryElements["foo"].Id);
 
             // Three profiles.
             // 1. The user element

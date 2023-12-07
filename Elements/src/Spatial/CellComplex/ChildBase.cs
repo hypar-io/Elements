@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 
 namespace Elements.Spatial.CellComplex

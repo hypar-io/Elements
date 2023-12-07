@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>The base class for FittingTree components</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class ComponentBase : GeometricElement
     {
@@ -31,17 +31,17 @@ namespace Elements.Fittings
             : base(transform, material, representation, isElementDefinition, id, name)
         {
             this.ComponentLocator = @componentLocator;
-            }
-        
+        }
+
         // Empty constructor
         public ComponentBase()
             : base()
         {
         }
-    
+
         [JsonProperty("ComponentLocator", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public FittingLocator ComponentLocator { get; set; }
-    
-    
+
+
     }
 }

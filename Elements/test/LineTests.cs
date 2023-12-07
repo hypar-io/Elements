@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Elements.Tests;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using Xunit;
+using System.Text.Json;
 
 namespace Elements.Geometry.Tests
 {
@@ -326,8 +327,8 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void TrimLineThatStartsAtPolygonEdge()
         {
-            var polygon = JsonConvert.DeserializeObject<Polygon>(File.ReadAllText("../../../models/Geometry/ConcavePolygon.json"));
-            var line = JsonConvert.DeserializeObject<Line>(File.ReadAllText("../../../models/Geometry/LineThatFailsTrim.json"));
+            var polygon = JsonSerializer.Deserialize<Polygon>(File.ReadAllText("../../../models/Geometry/ConcavePolygon.json"));
+            var line = JsonSerializer.Deserialize<Line>(File.ReadAllText("../../../models/Geometry/LineThatFailsTrim.json"));
             var lines = line.Trim(polygon, out var _);
 
             Assert.Equal(4.186147, lines[0].Length(), 2);
@@ -336,8 +337,8 @@ namespace Elements.Geometry.Tests
         [Fact]
         public void LineIntersectAtEnd()
         {
-            var line1 = JsonConvert.DeserializeObject<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":22.63192881973488,\"Y\":23.07673264883112,\"Z\":0.0},\"End\":{\"X\":26.239210000000003,\"Y\":32.009170000000005,\"Z\":0.0}}");
-            var line2 = JsonConvert.DeserializeObject<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":26.23921,\"Y\":32.00917,\"Z\":0.0},\"End\":{\"X\":24.47373,\"Y\":32.72215,\"Z\":0.0}}");
+            var line1 = JsonSerializer.Deserialize<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":22.63192881973488,\"Y\":23.07673264883112,\"Z\":0.0},\"End\":{\"X\":26.239210000000003,\"Y\":32.009170000000005,\"Z\":0.0}}");
+            var line2 = JsonSerializer.Deserialize<Line>("{\"discriminator\":\"Elements.Geometry.Line\",\"Start\":{\"X\":26.23921,\"Y\":32.00917,\"Z\":0.0},\"End\":{\"X\":24.47373,\"Y\":32.72215,\"Z\":0.0}}");
             line1.Intersects(line2, out var intersection, false, true);
         }
 
@@ -424,13 +425,13 @@ namespace Elements.Geometry.Tests
         public void ExtendToProfile()
         {
             Name = "ExtendToProfile";
-            var polygons = JsonConvert.DeserializeObject<List<Polygon>>("[{\"Vertices\":[{\"X\":-3.3239130434782611,\"Y\":2.534782608695652,\"Z\":0.0},{\"X\":1.924698097225491,\"Y\":6.0910303088278326,\"Z\":0.0},{\"X\":2.5714592294272105,\"Y\":3.5518940120358997,\"Z\":0.0},{\"X\":1.1956521739130428,\"Y\":2.1760869565217393,\"Z\":0.0},{\"X\":1.7456521739130428,\"Y\":0.47826086956521707,\"Z\":0.0},{\"X\":0.69347826086956554,\"Y\":-1.2195652173913047,\"Z\":0.0},{\"X\":2.9652173913043476,\"Y\":-1.3391304347826083,\"Z\":0.0},{\"X\":3.2760869565217394,\"Y\":-2.7978260869565217,\"Z\":0.0},{\"X\":1.5065217391304346,\"Y\":-3.347826086956522,\"Z\":0.0},{\"X\":-0.43043478260869589,\"Y\":-1.482608695652174,\"Z\":0.0},{\"X\":-1.4586956521739132,\"Y\":-1.7695652173913039,\"Z\":0.0},{\"X\":-3.3239130434782611,\"Y\":-2.1043478260869568,\"Z\":0.0}]},{\"Vertices\":[{\"X\":0.070768827751857444,\"Y\":-0.75686629107050352,\"Z\":0.0},{\"X\":1.1928650019807621,\"Y\":0.39683822609442632,\"Z\":0.0},{\"X\":-1.1303482038171115,\"Y\":2.5936180601481968,\"Z\":0.0},{\"X\":-1.3358024329012763,\"Y\":2.2617304593199297,\"Z\":0.0}]}]");
+            var polygons = JsonSerializer.Deserialize<List<Polygon>>("[{\"Vertices\":[{\"X\":-3.3239130434782611,\"Y\":2.534782608695652,\"Z\":0.0},{\"X\":1.924698097225491,\"Y\":6.0910303088278326,\"Z\":0.0},{\"X\":2.5714592294272105,\"Y\":3.5518940120358997,\"Z\":0.0},{\"X\":1.1956521739130428,\"Y\":2.1760869565217393,\"Z\":0.0},{\"X\":1.7456521739130428,\"Y\":0.47826086956521707,\"Z\":0.0},{\"X\":0.69347826086956554,\"Y\":-1.2195652173913047,\"Z\":0.0},{\"X\":2.9652173913043476,\"Y\":-1.3391304347826083,\"Z\":0.0},{\"X\":3.2760869565217394,\"Y\":-2.7978260869565217,\"Z\":0.0},{\"X\":1.5065217391304346,\"Y\":-3.347826086956522,\"Z\":0.0},{\"X\":-0.43043478260869589,\"Y\":-1.482608695652174,\"Z\":0.0},{\"X\":-1.4586956521739132,\"Y\":-1.7695652173913039,\"Z\":0.0},{\"X\":-3.3239130434782611,\"Y\":-2.1043478260869568,\"Z\":0.0}]},{\"Vertices\":[{\"X\":0.070768827751857444,\"Y\":-0.75686629107050352,\"Z\":0.0},{\"X\":1.1928650019807621,\"Y\":0.39683822609442632,\"Z\":0.0},{\"X\":-1.1303482038171115,\"Y\":2.5936180601481968,\"Z\":0.0},{\"X\":-1.3358024329012763,\"Y\":2.2617304593199297,\"Z\":0.0}]}]");
             var profile = new Profile(polygons);
             var mcs = profile.ToModelCurves(material: BuiltInMaterials.XAxis);
             Model.AddElements(mcs);
-            var intersectsAtVertex = JsonConvert.DeserializeObject<Vector3>("{\"X\":1.9248644534137522,\"Y\":-2.3794833726732039,\"Z\":0.0}");
-            var doesntIntersect = JsonConvert.DeserializeObject<Vector3>("{\"X\":-3.5077580495618728,\"Y\":3.5797588753975274,\"Z\":0.0}");
-            var hitsVoid = JsonConvert.DeserializeObject<Vector3>("{\"X\":-0.73780074305628141,\"Y\":-0.976285760075414,\"Z\":0.0}");
+            var intersectsAtVertex = JsonSerializer.Deserialize<Vector3>("{\"X\":1.9248644534137522,\"Y\":-2.3794833726732039,\"Z\":0.0}");
+            var doesntIntersect = JsonSerializer.Deserialize<Vector3>("{\"X\":-3.5077580495618728,\"Y\":3.5797588753975274,\"Z\":0.0}");
+            var hitsVoid = JsonSerializer.Deserialize<Vector3>("{\"X\":-0.73780074305628141,\"Y\":-0.976285760075414,\"Z\":0.0}");
             var lineDir = new Vector3(0.1, 0.1);
             var iavLine = new Line(intersectsAtVertex, intersectsAtVertex + lineDir).ExtendTo(profile);
             var diLine = new Line(doesntIntersect, doesntIntersect + lineDir).ExtendTo(profile);

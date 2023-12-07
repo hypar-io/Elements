@@ -19,10 +19,10 @@ using Polygon = Elements.Geometry.Polygon;
 
 namespace Elements.Fittings
 {
-    #pragma warning disable // Disable all warnings
+#pragma warning disable // Disable all warnings
 
     /// <summary>An elbow in a pipe network.</summary>
-    [JsonConverter(typeof(Elements.Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.21.0 (Newtonsoft.Json v13.0.0.0)")]
     public partial class Elbow : Fitting
     {
@@ -36,36 +36,36 @@ namespace Elements.Fittings
             this.Start = @start;
             this.PressureCalculations = @pressureCalculations;
             this.BendRadius = @bendRadius;
-            }
-        
+        }
+
         // Empty constructor
         public Elbow()
             : base()
         {
         }
-    
+
         /// <summary>The design diameter of the elbow.</summary>
         [JsonProperty("Diameter", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Diameter { get; set; }
-    
+
         /// <summary>The angle of the elbow.</summary>
         [JsonProperty("Angle", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double Angle { get; set; }
-    
+
         /// <summary>The end of the elbow.</summary>
         [JsonProperty("End", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port End { get; set; }
-    
+
         /// <summary>The start of the elbow.</summary>
         [JsonProperty("Start", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public Port Start { get; set; }
-    
+
         [JsonProperty("Pressure Calculations", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public PressureCalculationElbow PressureCalculations { get; set; }
-    
+
         [JsonProperty("BendRadius", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double BendRadius { get; set; }
-    
-    
+
+
     }
 }

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry;
-using Newtonsoft.Json;
 using Xunit;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -160,8 +160,8 @@ namespace Elements.Tests
         public void Serialization()
         {
             var pc = CreateTestPolycurve();
-            var json = JsonConvert.SerializeObject(pc);
-            var pc2 = JsonConvert.DeserializeObject<IndexedPolycurve>(json);
+            var json = JsonSerializer.Serialize(pc);
+            var pc2 = JsonSerializer.Deserialize<IndexedPolycurve>(json);
             var mc1 = new ModelCurve(pc, BuiltInMaterials.XAxis);
             var mc2 = new ModelCurve(pc2, BuiltInMaterials.YAxis);
             Assert.Equal(pc.Vertices, pc2.Vertices);
@@ -210,7 +210,7 @@ namespace Elements.Tests
         {
             var pc = new IndexedPolycurve(new List<Vector3>()
             {
-                (0, 0), (2, 0), (2, 2), (0, 2), (0, 3) 
+                (0, 0), (2, 0), (2, 2), (0, 2), (0, 3)
             });
             var parameters = pc.GetSubdivisionParameters();
             Assert.Equal(5, parameters.Count());

@@ -70,7 +70,8 @@ namespace Elements.Tests
                 if (this.GenerateJson)
                 {
                     var jsonPath = $"models/{this._name}.json";
-                    File.WriteAllText(jsonPath, this._model.ToJson());
+                    var json = this._model.ToJson();
+                    File.WriteAllText(jsonPath, json);
 
                     var newModel = Model.FromJson(File.ReadAllText(jsonPath));
 

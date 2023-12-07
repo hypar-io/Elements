@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
+using Elements.Serialization.JSON;
 
 namespace Elements
 {
@@ -35,6 +38,7 @@ namespace Elements
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
         /// </summary>
+        [JsonConverter(typeof(ElementConverter<BoundedCurve>))]
         public BoundedCurve Curve { get; set; }
 
         /// <summary>
@@ -77,7 +81,7 @@ namespace Elements
 
             var circleVertexTransform = GetCircleTransform();
             var circle = new Arc(circleVertexTransform, Radius);
-            
+
             renderVertices.AddRange(circle.RenderVertices());
 
             if (ExtensionBeginning > 0)

@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
 using Elements.Geometry.Tessellation;
 using Elements.Search;
 using Elements.Utilities;
 using glTFLoader.Schema;
-using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -17,7 +17,8 @@ namespace Elements
     public class SolidRepresentation : ElementRepresentation
     {
         /// <summary>A collection of solid operations.</summary>
-        [JsonProperty("SolidOperations", Required = Required.Always)]
+        [JsonPropertyName("SolidOperations")]
+        [JsonInclude]
         [System.ComponentModel.DataAnnotations.Required]
         public IList<SolidOperation> SolidOperations { get; set; } = new List<SolidOperation>();
 
@@ -54,7 +55,7 @@ namespace Elements
         /// A flag to disable CSG operations on this representation. Instead,
         /// all solids will be meshed, and all voids will be ignored.
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [JsonIgnore]
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         public bool SkipCSGUnion { get; set; } = false;
 

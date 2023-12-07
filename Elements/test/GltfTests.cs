@@ -6,9 +6,8 @@ using System.Linq;
 using glTFLoader.Schema;
 using System;
 using System.IO;
-using Newtonsoft.Json;
 using Elements.Geometry.Solids;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 namespace Elements.Tests
 {
@@ -83,7 +82,7 @@ namespace Elements.Tests
         public void ThinObjectsGenerateCorrectly()
         {
             var json = File.ReadAllText("../../../models/Geometry/Single-Panel.json");
-            var panel = JsonConvert.DeserializeObject<Panel>(json);
+            var panel = Element.Deserialize<Panel>(json);
             var model = new Model();
             model.AddElement(panel);
             var modelsDir = Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location), "models");
@@ -118,7 +117,7 @@ namespace Elements.Tests
             // Add one more solid operation to ensure that we hit the path
             // which computes CSGs. Attempting to create a CSG with scale 0
             // will throw an exception which will be handled and added to
-            // the errors collection. 
+            // the errors collection.
 
             var t = l.TransformAt(0.5);
             beam.Representation.SolidOperations.Add(new Extrude(Polygon.Rectangle(0.5, 0.5), 0.5, t.ZAxis, isVoid: false));
@@ -174,43 +173,62 @@ namespace Elements.Tests
 
             model.ToGlTF(gltfPath, true);
             var gltf = Interface.LoadModel(gltfPath);
+
             Assert.Contains(gltf.ExtensionsUsed, (s) => "HYPAR_info" == s);
+
+            Assert.Contains(gltf.Nodes, (n) =>
+            {
+                if (n.Extensions != null &&
+                    n.Extensions.TryGetValue("HYPAR_info", out object obj) && // Get the value as an object
+                    obj is JsonElement info) // Cast the object to JsonElement
+                {
+                    if (info.TryGetProperty("id", out JsonElement idElement) &&
+                        idElement.GetString() == modelCurve.Id.ToString() &&
+                        info.TryGetProperty("selectable", out JsonElement selectableElement) &&
+                        selectableElement.GetBoolean() == false)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            });
+
             Assert.Contains(gltf.Nodes, (n) =>
             {
                 return n.Extensions != null &&
-                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
-                    info is JObject j &&
-                    j["id"].Value<string>() == modelCurve.Id.ToString() &&
-                    j["selectable"].Value<bool>() == false;
+                    n.Extensions.TryGetValue("HYPAR_info", out object obj) &&
+                    obj is JsonElement info &&
+                    info.TryGetProperty("id", out JsonElement idElement) &&
+                    idElement.GetString() == mass.Id.ToString();
             });
+
             Assert.Contains(gltf.Nodes, (n) =>
             {
                 return n.Extensions != null &&
-                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
-                    info is JObject j &&
-                    j["id"].Value<string>() == mass.Id.ToString();
+                       n.Extensions.TryGetValue("HYPAR_info", out object obj) &&
+                       obj is JsonElement info &&
+                       info.TryGetProperty("id", out JsonElement idElement) &&
+                       idElement.GetString() == instance.Id.ToString();
             });
+
             Assert.Contains(gltf.Nodes, (n) =>
             {
                 return n.Extensions != null &&
-                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
-                    info is JObject j &&
-                    j["id"].Value<string>() == instance.Id.ToString();
+                       n.Extensions.TryGetValue("HYPAR_info", out object obj) &&
+                       obj is JsonElement info &&
+                       info.TryGetProperty("id", out JsonElement idElement) &&
+                       idElement.GetString() == contentElement.Id.ToString();
             });
+
             Assert.Contains(gltf.Nodes, (n) =>
             {
                 return n.Extensions != null &&
-                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
-                    info is JObject j &&
-                    j["id"].Value<string>() == contentElement.Id.ToString();
+                       n.Extensions.TryGetValue("HYPAR_info", out object obj) &&
+                       obj is JsonElement info &&
+                       info.TryGetProperty("id", out JsonElement idElement) &&
+                       idElement.GetString() == contentInstance.Id.ToString();
             });
-            Assert.Contains(gltf.Nodes, (n) =>
-            {
-                return n.Extensions != null &&
-                    n.Extensions.TryGetValue("HYPAR_info", out var info) &&
-                    info is JObject j &&
-                    j["id"].Value<string>() == contentInstance.Id.ToString();
-            });
+
         }
     }
 }

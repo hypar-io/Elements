@@ -9,6 +9,7 @@ using Elements.Geometry;
 using System.Reflection;
 using Elements.Generate.StringUtils;
 using System.Globalization;
+using System.Text.Json;
 
 namespace Elements.Generate
 {
@@ -142,10 +143,10 @@ namespace Elements.Generate
                             codeToAdd = $"new Vector3({v.X},{v.Y},{v.Z})";
                             break;
                         case IList<Symbol> symbols:
-                            codeToAdd = $"JsonConvert.DeserializeObject<List<Symbol>>(\"{System.Web.HttpUtility.JavaScriptStringEncode(Newtonsoft.Json.JsonConvert.SerializeObject(symbols))}\")";
+                            codeToAdd = $"JsonSerializer.Deserialize<List<Symbol>>(\"{System.Web.HttpUtility.JavaScriptStringEncode(JsonSerializer.Serialize(symbols))}\")";
                             break;
                         case Dictionary<string, object> dict:
-                            codeToAdd = "@\"" + Newtonsoft.Json.JsonConvert.SerializeObject(dict).Replace("\"", "\"\"") + "\"";
+                            codeToAdd = "@\"" + JsonSerializer.Serialize(dict).Replace("\"", "\"\"") + "\"";
                             break;
                         case Material material:
                             // new Material(material.Color,

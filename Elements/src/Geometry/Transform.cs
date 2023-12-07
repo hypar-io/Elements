@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 
@@ -37,7 +37,6 @@ namespace Elements.Geometry
         public Vector3 ZAxis => this.Matrix.ZAxis;
 
         /// <summary>The transform's matrix.</summary>
-        [JsonProperty("Matrix", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         public Matrix Matrix { get; set; } = new Matrix();
 

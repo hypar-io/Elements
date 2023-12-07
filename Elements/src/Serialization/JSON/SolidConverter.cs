@@ -2,27 +2,27 @@
 
 using Elements.Geometry.Solids;
 using System;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Elements.Geometry;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace Elements.Serialization.JSON
 {
     /// <summary>
-    /// The SolidConverter is used to serialize and deserialize a Solid.
+    /// The SolidConverter is used to deserialize a Solid.
     /// Solids have a self-referencing structure which does not serialize
     /// effectively using the default serialization logic. The SolidConverter
     /// serializes and deserializes starting at the Solid's Faces, using
     /// Vertex and Edge ids to reconstruct and link the Edges and Vertices as necessary.
     /// </summary>
-    internal class SolidConverter : JsonConverter
+    internal class SolidConverter : JsonConverter<Solid>
     {
         private List<Type> _solidTypes;
 
-        public SolidConverter(IDictionary<Guid, Material> materials)
+        public SolidConverter()
         {
             LoadSolidTypes();
         }
@@ -33,7 +33,7 @@ namespace Elements.Serialization.JSON
             {
                 _solidTypes = Assembly.GetExecutingAssembly().GetTypes().Where(t => typeof(Solid).IsAssignableFrom(t)).ToList();
             }
-            catch (System.Reflection.ReflectionTypeLoadException ex)
+            catch (ReflectionTypeLoadException ex)
             {
                 foreach (var x in ex.LoaderExceptions)
                 {
@@ -42,87 +42,101 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        public SolidConverter()
+        public override Solid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            LoadSolidTypes();
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            return typeof(Solid).IsAssignableFrom(objectType);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var obj = JObject.Load(reader);
-            var typeName = (string)obj.GetValue("type");
-            var foundType = _solidTypes.FirstOrDefault(t => t.FullName.ToLower() == typeName);
-            if (foundType == null)
+            using (var obj = JsonDocument.ParseValue(ref reader))
             {
-                throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
-            }
+                // TODO: REMOVE OLD CODE BEFORE SYSTEM.TEXT.JSON UPDATES
+                //     throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
+                // }
 
-            var solid = (Solid)Activator.CreateInstance(foundType, new object[] { });
+                // var solid = (Solid)Activator.CreateInstance(foundType, new object[] { });
 
-            foreach (JObject vobj in (JArray)obj.GetValue("vertices"))
-            {
-                var id = (uint)vobj.GetValue("id");
-                var x = (double)vobj.GetValue("x");
-                var y = (double)vobj.GetValue("y");
-                var z = (double)vobj.GetValue("z");
-                solid.AddVertex(id, new Vector3(x, y, z));
-            }
+                // foreach (JObject vobj in (JArray)obj.GetValue("vertices"))
+                // {
+                //     var id = (uint)vobj.GetValue("id");
+                //     var x = (double)vobj.GetValue("x");
+                //     var y = (double)vobj.GetValue("y");
+                //     var z = (double)vobj.GetValue("z");
+                //     solid.AddVertex(id, new Vector3(x, y, z));
+                // }
 
-            foreach (JObject face in (JArray)obj.GetValue("faces"))
-            {
-                var id = (uint)face.GetValue("id");
+                // foreach (JObject face in (JArray)obj.GetValue("faces"))
+                // {
+                //     var id = (uint)face.GetValue("id");
 
-                var outer = new Loop();
+                //     var outer = new Loop();
 
-                foreach (JObject heobj in (JArray)face.GetValue("outer"))
+                //     foreach (JObject heobj in (JArray)face.GetValue("outer"))
+
+                var root = obj.RootElement;
+                var typeName = root.GetProperty("Type").GetString();
+                var foundType = _solidTypes.FirstOrDefault(t => t.FullName.ToLower() == typeName);
+                if (foundType == null)
                 {
-                    ReadHalfEdge(heobj, outer, solid);
+                    throw new Exception($"The object with type name, {typeName}, could not be deserialzed.");
                 }
 
-                JToken innerobjs;
-                var inners = new List<Loop>();
-                if (face.TryGetValue("inner", out innerobjs))
+                var solid = (Solid)Activator.CreateInstance(foundType, new object[] { });
+
+                foreach (var vobj in root.GetProperty("Vertices").EnumerateArray())
                 {
-                    foreach (JArray innerobj in innerobjs)
+                    var id = (uint)vobj.GetProperty("Id").GetInt64();
+                    var x = vobj.GetProperty("X").GetDouble();
+                    var y = vobj.GetProperty("Y").GetDouble();
+                    var z = vobj.GetProperty("Z").GetDouble();
+                    solid.AddVertex(id, new Vector3(x, y, z));
+                }
+
+                foreach (var face in root.GetProperty("Faces").EnumerateArray())
+                {
+                    var id = (uint)face.GetProperty("Id").GetInt64();
+
+                    var outer = new Loop();
+
+                    foreach (var heobj in face.GetProperty("Outer").EnumerateArray())
                     {
-                        var inner = new Loop();
-                        inners.Add(inner);
-                        foreach (JObject heobj in innerobj)
+                        ReadHalfEdge(heobj, outer, solid);
+                    }
+
+                    var inners = new List<Loop>();
+                    if (face.TryGetProperty("Inner", out var innerobjs))
+                    {
+                        foreach (var innerobj in innerobjs.EnumerateArray())
                         {
-                            ReadHalfEdge(heobj, inner, solid);
+                            var inner = new Loop();
+                            inners.Add(inner);
+                            foreach (var heobj in innerobj.EnumerateArray())
+                            {
+                                ReadHalfEdge(heobj, inner, solid);
+                            }
                         }
                     }
+                    solid.AddFace(id, outer, inners.ToArray());
                 }
-                solid.AddFace(id, outer, inners.ToArray());
-            }
 
-            return solid;
+                return solid;
+            }
         }
 
-        private void ReadHalfEdge(JObject heobj, Loop loop, Solid solid)
+        private void ReadHalfEdge(JsonElement heobj, Loop loop, Solid solid)
         {
-            var vobj = (JObject)heobj.GetValue("vertex");
-            var vid = (long)heobj.GetValue("vertex_id");
+            // var vobj = heobj.GetProperty("vertex");
+            var vid = heobj.GetProperty("vertex_id").GetInt64();
             var v = solid.Vertices[vid];
 
             var he = new HalfEdge(v, loop);
             loop.AddEdgeToEnd(he);
 
-            var eid = (uint)heobj.GetValue("edge_id");
-            Edge edge;
-            if (!solid.Edges.TryGetValue(eid, out edge))
+            var eid = (uint)heobj.GetProperty("edge_id").GetInt64();
+            if (!solid.Edges.TryGetValue(eid, out Edge edge))
             {
                 edge = solid.AddEdge(eid);
             }
 
             he.Edge = edge;
 
-            var side = (string)heobj.GetValue("edge_side");
+            var side = heobj.GetProperty("edge_side").GetString();
             if (side == "left")
             {
                 edge.Left = he;
@@ -133,52 +147,50 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        public override void Write(Utf8JsonWriter writer, Solid value, JsonSerializerOptions options)
         {
-            var solid = (Solid)value;
-
             writer.WriteStartObject();
-            writer.WritePropertyName("type");
-            writer.WriteValue(value.GetType().FullName.ToLower());
+            writer.WritePropertyName("Type");
+            writer.WriteStringValue(value.GetType().FullName.ToLower());
 
-            writer.WritePropertyName("vertices");
+            writer.WritePropertyName("Vertices");
             writer.WriteStartArray();
-            foreach (var v in solid.Vertices.Values)
+            foreach (var v in value.Vertices.Values)
             {
                 writer.WriteStartObject();
-                writer.WritePropertyName("id");
-                writer.WriteValue(v.Id);
-                writer.WritePropertyName("x");
-                writer.WriteValue(v.Point.X);
-                writer.WritePropertyName("y");
-                writer.WriteValue(v.Point.Y);
-                writer.WritePropertyName("z");
-                writer.WriteValue(v.Point.Z);
+                writer.WritePropertyName("Id");
+                writer.WriteNumberValue(v.Id);
+                writer.WritePropertyName("X");
+                writer.WriteNumberValue(v.Point.X);
+                writer.WritePropertyName("Y");
+                writer.WriteNumberValue(v.Point.Y);
+                writer.WritePropertyName("Z");
+                writer.WriteNumberValue(v.Point.Z);
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();
 
-            writer.WritePropertyName("faces");
+            writer.WritePropertyName("Faces");
             writer.WriteStartArray();
 
-            foreach (var f in solid.Faces.Values)
+            foreach (var f in value.Faces.Values)
             {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("id");
-                writer.WriteValue(f.Id);
+                writer.WritePropertyName("Id");
+                writer.WriteNumberValue(f.Id);
 
-                writer.WritePropertyName("outer");
+                writer.WritePropertyName("Outer");
                 writer.WriteStartArray();
                 foreach (var he in f.Outer.Edges)
                 {
-                    WriteHalfEdge(he, writer, value);
+                    WriteHalfEdge(he, writer);
                 }
                 writer.WriteEndArray();
 
                 if (f.Inner != null)
                 {
-                    writer.WritePropertyName("inner");
+                    writer.WritePropertyName("Inner");
                     writer.WriteStartArray();
 
                     foreach (var loop in f.Inner)
@@ -186,7 +198,7 @@ namespace Elements.Serialization.JSON
                         writer.WriteStartArray();
                         foreach (var he in loop.Edges)
                         {
-                            WriteHalfEdge(he, writer, value);
+                            WriteHalfEdge(he, writer);
                         }
                         writer.WriteEndArray();
                     }
@@ -200,15 +212,15 @@ namespace Elements.Serialization.JSON
             writer.WriteEndObject();
         }
 
-        private void WriteHalfEdge(HalfEdge he, JsonWriter writer, object value)
+        private void WriteHalfEdge(HalfEdge he, Utf8JsonWriter writer)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("vertex_id");
-            writer.WriteValue(he.Vertex.Id);
+            writer.WriteNumberValue(he.Vertex.Id);
             writer.WritePropertyName("edge_id");
-            writer.WriteValue(he.Edge.Id);
+            writer.WriteNumberValue(he.Edge.Id);
             writer.WritePropertyName("edge_side");
-            writer.WriteValue(he.Edge.Left == he ? "left" : "right");
+            writer.WriteStringValue(he.Edge.Left == he ? "left" : "right");
             writer.WriteEndObject();
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Elements.Geometry.Solids;
 using Elements.Geometry;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Elements.Spatial.CellComplex
 {
@@ -68,7 +68,7 @@ namespace Elements.Spatial.CellComplex
         /// Used for deserialization only!
         /// </summary>
         [JsonConstructor]
-        internal Cell(ulong id, List<ulong> faceIds, ulong? bottomFaceId, ulong? topFaceId) : base(id, null)
+        public Cell(ulong id, List<ulong> faceIds, ulong? bottomFaceId, ulong? topFaceId) : base(id, null)
         {
             this.FaceIds = faceIds;
             this.BottomFaceId = bottomFaceId;

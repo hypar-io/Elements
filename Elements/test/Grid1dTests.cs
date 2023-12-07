@@ -4,7 +4,9 @@ using Elements.Spatial;
 using Xunit;
 using Elements.Geometry;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 namespace Elements.Tests
 {
@@ -160,8 +162,21 @@ namespace Elements.Tests
             var grid = new Grid1d(polyline);
             grid.DivideByCount(4);
             grid[3].DivideByFixedLength(0.4);
-            var json = JsonConvert.SerializeObject(grid);
-            var deserialized = JsonConvert.DeserializeObject<Grid1d>(json);
+
+            var options = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true,
+                AllowTrailingCommas = true,
+                IncludeFields = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+            };
+
+            options.Converters.Add(new ElementConverterFactory());
+            options.Converters.Add(new PolylineConverter());
+            options.Converters.Add(new ElementConverter<BoundedCurve>());
+
+            var json = JsonSerializer.Serialize(grid, options);
+            var deserialized = Element.Deserialize<Grid1d>(json);
             Assert.Equal(grid.GetCells().Count, deserialized.GetCells().Count);
             Assert.Equal(0, (grid.Curve as Polyline).Start.DistanceTo((deserialized.Curve as Polyline).Start));
         }

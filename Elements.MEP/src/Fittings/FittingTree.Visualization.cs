@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Elements.Flow;
-using Newtonsoft.Json;
 
 [assembly: InternalsVisibleTo("Elements.MEP.Tests")]
 namespace Elements.Fittings

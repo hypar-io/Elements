@@ -5,6 +5,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 using System.IO;
+using System.Text.Json.Serialization;
 
 namespace Elements.Analysis
 {
@@ -45,6 +46,15 @@ namespace Elements.Analysis
         private double _numPixelsX;
         private double _numPixelsY;
         private int _imgPixels;
+
+        /// <summary>
+        /// Create an analysis image.
+        /// </summary>
+        [JsonConstructor]
+        public AnalysisImage()
+        {
+
+        }
 
         /// <summary>
         /// An AnalysisImage is similar to an AnalysisMesh in that it renders a mesh with analysis colors.
