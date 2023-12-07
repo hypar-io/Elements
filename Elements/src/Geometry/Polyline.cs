@@ -15,8 +15,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolylineTests.cs?name=example)]
     /// </example>
-    ///
-    [JsonConverter(typeof(ElementConverter<Polyline>))]
+    [JsonConverter(typeof(PolylineConverter))]
     public class Polyline : IndexedPolycurve
     {
         /// <summary>

@@ -41,13 +41,22 @@ namespace Elements.Geometry.Solids
             }
         }
 
+
+        [JsonConstructor]
+        /// <summary>
+        /// Construct a lamina. This method is mainly for the System.Text.Json Serializer
+        /// </summary>
+        public Lamina(bool isVoid)
+            : base(isVoid)
+        {
+        }
+
         /// <summary>
         /// Construct a lamina.
         /// </summary>
         /// <param name="perimeter"></param>
         /// <param name="voids"></param>
         /// <param name="isVoid"></param>
-        [JsonConstructor]
         public Lamina(Polygon @perimeter, IList<Polygon> @voids, bool @isVoid)
             : base(isVoid)
         {

@@ -10,6 +10,8 @@ using Elements.Geometry.Interfaces;
 using Elements.Search;
 using Elements.Spatial;
 using LibTessDotNet.Double;
+using System.Text.Json.Serialization;
+using Elements.Serialization.JSON;
 
 [assembly: InternalsVisibleTo("Hypar.Elements.Tests")]
 
@@ -18,6 +20,7 @@ namespace Elements.Geometry.Solids
     /// <summary>
     /// A boundary representation of a solid.
     /// </summary>
+    [JsonConverter(typeof(SolidConverter))]
     public partial class Solid : ITessellate
     {
         private uint _faceId;
@@ -471,7 +474,7 @@ namespace Elements.Geometry.Solids
                 var d = facePlane.Normal.Cross(p.Normal).Unitized();
                 edgeResults.Sort(new DirectionComparer(d));
 
-                // Draw segments through the results and add to the 
+                // Draw segments through the results and add to the
                 // half edge graph.
                 for (var j = 0; j < edgeResults.Count - 1; j += 2)
                 {
@@ -517,7 +520,7 @@ namespace Elements.Geometry.Solids
             {
                 // TODO: We could test for known failure modes, but the
                 // iteration over the edge graph before attempting to
-                // graph to identify these modes, is as expensive as 
+                // graph to identify these modes, is as expensive as
                 // the graph attempt.
                 // Known cases there the half edge graph will throw an
                 // exception:
@@ -658,10 +661,10 @@ namespace Elements.Geometry.Solids
         }
 
         // TODO: This method should not be required if we have adequate lookup
-        // operations based on vertex locations and incident edges. This is 
+        // operations based on vertex locations and incident edges. This is
         // currently used in the case where we want to add a face from a polygon
         // but in most cases where we want to do that we already know something
-        // about the shape of the existing solid and should be able to lookup 
+        // about the shape of the existing solid and should be able to lookup
         // existing vertices without doing an O(n) search. Implement a better
         // search strategy!
         private void FindOrCreateVertex(Vector3 pt, int i, Transform transform, bool mergeVerticesAndEdges, Vertex[] verts)

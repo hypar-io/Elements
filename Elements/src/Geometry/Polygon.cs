@@ -20,7 +20,7 @@ namespace Elements.Geometry
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/PolygonTests.cs?name=example)]
     /// </example>
-    [JsonConverter(typeof(ElementConverter<Polygon>))]
+    [JsonConverter(typeof(PolygonConverter))]
     public partial class Polygon : Polyline
     {
         /// <summary>

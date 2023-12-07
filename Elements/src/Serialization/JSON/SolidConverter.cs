@@ -70,7 +70,7 @@ namespace Elements.Serialization.JSON
                 //     foreach (JObject heobj in (JArray)face.GetValue("outer"))
 
                 var root = obj.RootElement;
-                var typeName = root.GetProperty("type").GetString();
+                var typeName = root.GetProperty("Type").GetString();
                 var foundType = _solidTypes.FirstOrDefault(t => t.FullName.ToLower() == typeName);
                 if (foundType == null)
                 {
@@ -79,28 +79,28 @@ namespace Elements.Serialization.JSON
 
                 var solid = (Solid)Activator.CreateInstance(foundType, new object[] { });
 
-                foreach (var vobj in root.GetProperty("vertices").EnumerateArray())
+                foreach (var vobj in root.GetProperty("Vertices").EnumerateArray())
                 {
-                    var id = (uint)vobj.GetProperty("id").GetInt64();
-                    var x = vobj.GetProperty("x").GetDouble();
-                    var y = vobj.GetProperty("y").GetDouble();
-                    var z = vobj.GetProperty("z").GetDouble();
+                    var id = (uint)vobj.GetProperty("Id").GetInt64();
+                    var x = vobj.GetProperty("X").GetDouble();
+                    var y = vobj.GetProperty("Y").GetDouble();
+                    var z = vobj.GetProperty("Z").GetDouble();
                     solid.AddVertex(id, new Vector3(x, y, z));
                 }
 
-                foreach (var face in root.GetProperty("faces").EnumerateArray())
+                foreach (var face in root.GetProperty("Faces").EnumerateArray())
                 {
-                    var id = (uint)face.GetProperty("id").GetInt64();
+                    var id = (uint)face.GetProperty("Id").GetInt64();
 
                     var outer = new Loop();
 
-                    foreach (var heobj in face.GetProperty("outer").EnumerateArray())
+                    foreach (var heobj in face.GetProperty("Outer").EnumerateArray())
                     {
                         ReadHalfEdge(heobj, outer, solid);
                     }
 
                     var inners = new List<Loop>();
-                    if (face.TryGetProperty("inner", out var innerobjs))
+                    if (face.TryGetProperty("Inner", out var innerobjs))
                     {
                         foreach (var innerobj in innerobjs.EnumerateArray())
                         {
@@ -150,37 +150,37 @@ namespace Elements.Serialization.JSON
         public override void Write(Utf8JsonWriter writer, Solid value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("type");
+            writer.WritePropertyName("Type");
             writer.WriteStringValue(value.GetType().FullName.ToLower());
 
-            writer.WritePropertyName("vertices");
+            writer.WritePropertyName("Vertices");
             writer.WriteStartArray();
             foreach (var v in value.Vertices.Values)
             {
                 writer.WriteStartObject();
-                writer.WritePropertyName("id");
+                writer.WritePropertyName("Id");
                 writer.WriteNumberValue(v.Id);
-                writer.WritePropertyName("x");
+                writer.WritePropertyName("X");
                 writer.WriteNumberValue(v.Point.X);
-                writer.WritePropertyName("y");
+                writer.WritePropertyName("Y");
                 writer.WriteNumberValue(v.Point.Y);
-                writer.WritePropertyName("z");
+                writer.WritePropertyName("Z");
                 writer.WriteNumberValue(v.Point.Z);
                 writer.WriteEndObject();
             }
             writer.WriteEndArray();
 
-            writer.WritePropertyName("faces");
+            writer.WritePropertyName("Faces");
             writer.WriteStartArray();
 
             foreach (var f in value.Faces.Values)
             {
                 writer.WriteStartObject();
 
-                writer.WritePropertyName("id");
+                writer.WritePropertyName("Id");
                 writer.WriteNumberValue(f.Id);
 
-                writer.WritePropertyName("outer");
+                writer.WritePropertyName("Outer");
                 writer.WriteStartArray();
                 foreach (var he in f.Outer.Edges)
                 {
@@ -190,7 +190,7 @@ namespace Elements.Serialization.JSON
 
                 if (f.Inner != null)
                 {
-                    writer.WritePropertyName("inner");
+                    writer.WritePropertyName("Inner");
                     writer.WriteStartArray();
 
                     foreach (var loop in f.Inner)

@@ -15,7 +15,7 @@ namespace Elements
         /// <summary>
         /// The center line of the framing element.
         /// </summary>
-        [JsonConverter(typeof(ElementConverter<Curve>))]
+        [JsonConverter(typeof(ElementConverter<BoundedCurve>))]
         public BoundedCurve Curve { get; set; }
 
         /// <summary>

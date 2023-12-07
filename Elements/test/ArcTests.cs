@@ -445,7 +445,7 @@ namespace Elements.Geometry.Tests
 
             // The start, end, and mid points are the same, but we also want to ensure
             // that the curve didn't flip directions as well. We do this by testing
-            // another random parameter. 
+            // another random parameter.
             Assert.Equal(curve.PointAt(equivalentTestParam), curve.PointAtNormalized(testParam));
         }
 

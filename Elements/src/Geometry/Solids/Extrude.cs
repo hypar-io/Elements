@@ -75,6 +75,15 @@ namespace Elements.Geometry.Solids
             }
         }
 
+        [JsonConstructor]
+        /// <summary>
+        /// Construct an extrusion. This method is mainly for the System.Text.Json Serializer
+        /// </summary>
+        public Extrude(bool isVoid = false)
+            : base(isVoid)
+        {
+        }
+
         /// <summary>
         /// Construct an extrusion.
         /// </summary>
@@ -87,7 +96,6 @@ namespace Elements.Geometry.Solids
         /// out, with face normals facing in instead of out. Use with caution if
         /// using with other solid operations in a representation — boolean
         /// results may be unexpected.</param>
-        [JsonConstructor]
         public Extrude(Profile profile, double height, Vector3 direction, bool isVoid = false, bool reverseWinding = false)
             : base(isVoid)
         {

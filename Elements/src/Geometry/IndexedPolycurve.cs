@@ -16,7 +16,7 @@ namespace Elements.Geometry
     /// Parameterization of the curve is 0->n where n is the number of curves.
     /// </summary>
     /// [!code-csharp[Main](../../Elements/test/IndexedPolycurveTests.cs?name=example)]
-    [JsonConverter(typeof(ElementConverter<IndexedPolycurve>))]
+    ///
     public class IndexedPolycurve : BoundedCurve, IEnumerable<BoundedCurve>, IEquatable<IndexedPolycurve>
     {
         /// <summary>

@@ -75,7 +75,7 @@ namespace Elements.Serialization.DXF.Extensions
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="element"></param>
         /// <returns></returns>

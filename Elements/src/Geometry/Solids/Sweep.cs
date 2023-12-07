@@ -14,6 +14,15 @@ namespace Elements.Geometry.Solids
         private double _endSetback;
         private double _profileRotation;
 
+        [JsonConstructor]
+        /// <summary>
+        /// Construct a sweep. This method is mainly for the System.Text.Json Serializer
+        /// </summary>
+        public Sweep(bool isVoid)
+          : base(isVoid)
+        {
+        }
+
         /// <summary>
         /// Construct a sweep.
         /// </summary>
@@ -23,7 +32,7 @@ namespace Elements.Geometry.Solids
         /// <param name="endSetback"></param>
         /// <param name="profileRotation"></param>
         /// <param name="isVoid"></param>
-        [JsonConstructor]
+
         public Sweep(Profile @profile, BoundedCurve @curve, double @startSetback, double @endSetback, double @profileRotation, bool @isVoid)
             : base(isVoid)
         {
@@ -55,6 +64,7 @@ namespace Elements.Geometry.Solids
         /// <summary>The curve along which the profile will be swept.</summary>
         [JsonPropertyName("Curve")]
         [JsonInclude]
+        [JsonConverter(typeof(ElementConverter<BoundedCurve>))]
         public BoundedCurve Curve
         {
             get { return _curve; }
