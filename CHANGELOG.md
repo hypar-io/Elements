@@ -67,6 +67,7 @@
 - `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
 - `Ray.Intersects(Topography)` and `Ray.Intersects(Mesh)` would sometimes return a different intersection than the closest one.
 - `Ray.Intersects(Topography)` now considers the topography's transform.
+- `AdaptiveGrid.AddEdge` no longer delete edges in case where new edge partially overlaps old edges without intersections.
 
 ### Changed
 

@@ -990,6 +990,41 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridAddCutWithOverlap()
+        {
+            var grid = new AdaptiveGrid();
+            //Create single edges, so cut operation process only overlaps and not intersections.
+            grid.AddEdge(new Vector3(0, 0), new Vector3(0, 10));
+
+            //Start point of new edge is outside, end is inside.
+            var v0 = grid.AddVertex(new Vector3(0, -5));
+            var v1 = grid.AddVertex(new Vector3(0, 3));
+            var edges = grid.AddEdge(v0.Id, v1.Id);
+            Assert.Equal(2, edges.Count);
+            Assert.Single(v0.Edges);
+            Assert.Equal(2, v1.Edges.Count);
+            var middle = edges.First().OtherVertexId(v0.Id);
+            var middleVertex = grid.GetVertex(middle);
+            Assert.Equal(new Vector3(0, 0), middleVertex.Point);
+            Assert.Equal(2, middleVertex.Edges.Count);
+
+            //End point of new edge is outside, start is inside.
+            v0 = grid.AddVertex(new Vector3(0, 7));
+            v1 = grid.AddVertex(new Vector3(0, 15));
+            edges = grid.AddEdge(v0.Id, v1.Id);
+            Assert.Equal(2, edges.Count);
+            Assert.Equal(2, v0.Edges.Count);
+            Assert.Single(v1.Edges);
+            middle = edges.Last().OtherVertexId(v1.Id);
+            middleVertex = grid.GetVertex(middle);
+            Assert.Equal(new Vector3(0, 10), middleVertex.Point);
+            Assert.Equal(2, middleVertex.Edges.Count);
+
+            // Result should be strip of 6 vertices.
+            Assert.Equal(6, grid.GetVertices().Count);
+        }
+
+        [Fact]
         public void AdaptiveGridAddVertexWithAngle()
         {
             var grid = new AdaptiveGrid();
