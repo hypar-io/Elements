@@ -358,7 +358,7 @@ namespace Elements.Serialization.JSON
                 return typeof(GeometricElement);
             }
             // If nothing else has worked, see if it has an ID and treat it as a generic element
-            if (jObject.TryGetValue("Id", out _))
+            if (jObject.TryGetValue("Id", out _) && DoesNotLookLikeFolder(objectType))
             {
                 return typeof(Element);
             }
@@ -366,6 +366,11 @@ namespace Elements.Serialization.JSON
             // The default behavior for this converter, as provided by nJSONSchema
             // is to return the base objectType if a derived type can't be found.
             return objectType;
+        }
+
+        private static bool DoesNotLookLikeFolder(Type objectType)
+        {
+            return objectType.GetProperty("Files") == null;
         }
     }
 }
