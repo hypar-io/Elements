@@ -21,6 +21,11 @@ namespace Elements.Components
     /// </summary>
     public class ContentConfiguration
     {
+        /// <summary>
+        /// A collection of additional properties.
+        /// </summary>
+        [Newtonsoft.Json.JsonExtensionData]
+        public IDictionary<string, object> AdditionalProperties { get; set; } = new Dictionary<string, object>();
 
         /// <summary>
         /// A rectangular boundary around this content configuration.
@@ -119,7 +124,7 @@ namespace Elements.Components
         public BoundaryDefinition CellBoundary { get; set; }
 
         /// <summary>
-        /// The individual content itmems in this configuration.
+        /// The individual content items in this configuration.
         /// </summary>
 
         public List<ContentItem> ContentItems { get; set; }
@@ -127,12 +132,12 @@ namespace Elements.Components
         /// <summary>
         /// The width of the configuration boundary.
         /// </summary>
-        public double Width => this.CellBoundary.Width;
+        public double Width => CellBoundary.Width;
 
         /// <summary>
         /// The depth of the configuration boundary.
         /// </summary>
-        public double Depth => this.CellBoundary.Depth;
+        public double Depth => CellBoundary.Depth;
 
         /// <summary>
         /// Allow rotation of the configuration
@@ -173,7 +178,7 @@ namespace Elements.Components
         /// </summary>
         public List<Vector3> Anchors()
         {
-            var baseRect = Polygon.Rectangle(this.CellBoundary.Min, this.CellBoundary.Max);
+            var baseRect = Polygon.Rectangle(CellBoundary.Min, CellBoundary.Max);
             var baseAnchors = AnchorsFromRect(baseRect);
             return baseAnchors;
         }
