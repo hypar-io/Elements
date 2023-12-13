@@ -442,6 +442,7 @@ namespace Elements
                     args.ErrorContext.Handled = true;
                 }
             });
+
             deserializationErrors.AddRange(JsonInheritanceConverter.GetAndClearDeserializationWarnings());
             errors = deserializationErrors;
             JsonInheritanceConverter.Elements.Clear();
