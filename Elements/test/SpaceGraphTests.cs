@@ -50,13 +50,13 @@ namespace Elements.Tests
             };
 
             var wall1d = walls[0].CenterLine.Direction();
-            var wall1n = wall1d.Cross(Vector3.ZAxis);
-            var sofaT = new Transform(walls[0].CenterLine.PointAtNormalized(0.3) + wall1n * -(Units.FeetToMeters(1) + wallThickness / 2), wall1d, Vector3.ZAxis);
+            var wall1n = wall1d.Cross(Vector3.ZAxis).Negate();
+            var sofaT = new Transform(walls[0].CenterLine.PointAtNormalized(0.3) + wall1n * (Units.FeetToMeters(1) + wallThickness / 2), wall1d, wall1n, Vector3.ZAxis);
             sofa.Transform = sofaT;
 
             var wall3d = walls[2].CenterLine.Direction();
-            var wall3n = wall3d.Cross(Vector3.ZAxis);
-            var deskT = new Transform(walls[2].CenterLine.PointAtNormalized(0.3) + wall3n * -(Units.FeetToMeters(1) + wallThickness / 2), wall3d, Vector3.ZAxis);
+            var wall3n = wall3d.Cross(Vector3.ZAxis).Negate();
+            var deskT = new Transform(walls[2].CenterLine.PointAtNormalized(0.3) + wall3n * (Units.FeetToMeters(1) + wallThickness / 2), wall3d, wall3n, Vector3.ZAxis);
             desk.Transform = deskT;
 
             var lampT = deskT.Concatenated(new Transform(new Vector3(Units.FeetToMeters(1.5), 0, Units.FeetToMeters(3))));
@@ -68,6 +68,9 @@ namespace Elements.Tests
             model.AddElement(desk);
             model.AddElement(lamp);
             model.AddElement(table);
+
+            // Update the representations so that 
+            // bounding boxes are computed correctly.
             model.UpdateRepresentations();
             model.UpdateBoundsAndComputedSolids();
 
