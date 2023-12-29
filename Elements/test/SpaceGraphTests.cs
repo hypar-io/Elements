@@ -33,20 +33,40 @@ namespace Elements.Tests
                 Name = "Sofa",
                 Material = BuiltInMaterials.Wood
             };
+
             var desk = new Mass(Polygon.Rectangle(Units.FeetToMeters(4), Units.FeetToMeters(2)), Units.FeetToMeters(3))
             {
                 Name = "Desk",
                 Material = BuiltInMaterials.Wood
             };
+
             var lamp = new Mass(Polygon.Rectangle(Units.FeetToMeters(0.5), Units.FeetToMeters(0.5)), Units.FeetToMeters(1.5))
             {
                 Name = "Lamp",
                 Material = BuiltInMaterials.Steel
             };
+
             var table = new Mass(new Circle(Vector3.Origin, 1).ToPolygon(), Units.FeetToMeters(2.5))
             {
                 Name = "Table",
                 Material = BuiltInMaterials.Mass
+            };
+
+            var chair1 = new Mass(Polygon.Rectangle(Units.FeetToMeters(1.5), Units.FeetToMeters(1.5)), Units.FeetToMeters(2))
+            {
+                Name = "Chair",
+                Material = BuiltInMaterials.Wood
+            };
+
+            var chair2 = new Mass(Polygon.Rectangle(Units.FeetToMeters(1.5), Units.FeetToMeters(1.5)), Units.FeetToMeters(2))
+            {
+                Name = "Chair",
+                Material = BuiltInMaterials.Wood
+            };
+
+            var vase = new Mass(new Circle(0.1).ToPolygon(), material: BuiltInMaterials.XAxis)
+            {
+                Name = "Vase"
             };
 
             var wall1d = walls[0].CenterLine.Direction();
@@ -59,8 +79,18 @@ namespace Elements.Tests
             var deskT = new Transform(walls[2].CenterLine.PointAtNormalized(0.3) + wall3n * (Units.FeetToMeters(1) + wallThickness / 2), wall3d, wall3n, Vector3.ZAxis);
             desk.Transform = deskT;
 
+            vase.Transform = new Transform(new Vector3(0.1, 0.1, Units.FeetToMeters(2.5)));
+
             var lampT = deskT.Concatenated(new Transform(new Vector3(Units.FeetToMeters(1.5), 0, Units.FeetToMeters(3))));
             lamp.Transform = lampT;
+
+            var chair1T = new Transform(new Vector3(1.0, 0));
+            chair1T.Rotate(15);
+            chair1.Transform = chair1T;
+
+            var chair2T = new Transform(new Vector3(1.0, 0));
+            chair1T.Rotate(180);
+            chair2.Transform = chair2T;
 
             var model = new Model();
             model.AddElements(walls);
@@ -68,6 +98,9 @@ namespace Elements.Tests
             model.AddElement(desk);
             model.AddElement(lamp);
             model.AddElement(table);
+            model.AddElement(chair1);
+            model.AddElement(chair2);
+            model.AddElement(vase);
 
             // Update the representations so that 
             // bounding boxes are computed correctly.
@@ -80,6 +113,8 @@ namespace Elements.Tests
             model.AddElements(sofaT.ToModelCurves());
             model.AddElements(deskT.ToModelCurves());
             model.AddElements(lampT.ToModelCurves());
+            model.AddElements(chair1T.ToModelCurves());
+            model.AddElements(chair2T.ToModelCurves());
 
             this.Model = model;
             graph.ToDot("spacegraph.dot");
