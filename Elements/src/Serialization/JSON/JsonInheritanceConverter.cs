@@ -50,7 +50,20 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        private static List<string> _deserializationWarnings = new List<string>();
+        [System.ThreadStatic]
+        private static List<string> _deserializationWarnings;
+
+        public static List<string> DeserializationWarnings
+        {
+            get
+            {
+                if (_deserializationWarnings == null)
+                {
+                    _deserializationWarnings = new List<string>();
+                }
+                return _deserializationWarnings;
+            }
+        }
 
         public JsonInheritanceConverter()
         {
@@ -247,8 +260,8 @@ namespace Elements.Serialization.JSON
 
         public static List<string> GetAndClearDeserializationWarnings()
         {
-            var warnings = _deserializationWarnings.ToList();
-            _deserializationWarnings.Clear();
+            var warnings = DeserializationWarnings.ToList();
+            DeserializationWarnings.Clear();
             return warnings;
         }
 
@@ -261,7 +274,7 @@ namespace Elements.Serialization.JSON
                 var id = Guid.Parse(reader.Value.ToString());
                 if (!Elements.ContainsKey(id))
                 {
-                    _deserializationWarnings.Add($"Element {id} was not found during deserialization. Check for other deserialization errors.");
+                    DeserializationWarnings.Add($"Element {id} was not found during deserialization. Check for other deserialization errors.");
                     return null;
                 }
                 return Elements[id];
@@ -318,7 +331,7 @@ namespace Elements.Serialization.JSON
 
                 if (discriminator != null)
                 {
-                    _deserializationWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
+                    DeserializationWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
                     return null;
 
                 }
@@ -353,12 +366,12 @@ namespace Elements.Serialization.JSON
 
             // If it's not in the type cache see if it's got a representation.
             // Import it as a GeometricElement.
-            if (jObject.TryGetValue("Representation", out _))
+            if (jObject.TryGetValue("Representation", out _) && discriminator != null)
             {
                 return typeof(GeometricElement);
             }
             // If nothing else has worked, see if it has an ID and treat it as a generic element
-            if (jObject.TryGetValue("Id", out _))
+            if (jObject.TryGetValue("Id", out _) && discriminator != null)
             {
                 return typeof(Element);
             }
