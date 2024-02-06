@@ -182,17 +182,24 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="model">The model to convert to an IFC document.</param>
         /// <param name="stream">The stream in which to write the IFC document.</param>
-        /// <param name="path">The path to the generated IFC STEP file.</param>
         /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
-
+        /// <param name="leaveOpen">Indicates whether the underlying stream should be left open.</param>
+        /// <remarks>
+        /// This method provides two options for stream handling:
+        /// 1. When the stream is left open for further access (using leaveOpen: true with StreamWriter).
+        /// Users must ensure proper resource management and close the StreamWriter when done.
+        /// 2. When the StreamWriter is closed (default - using leaveOpen: false with StreamWriter), ensuring proper resource cleanup.
+        /// Users can reopen the stream if further access is needed (use stream.Seek(0, SeekOrigin.Begin) to reset the position).
+        /// </remarks>
         public static void ToIFC(this Model model,
                                  MemoryStream stream,
-                                 bool updateElementsRepresentation = true)
+                                 bool updateElementsRepresentation = true,
+                                 bool leaveOpen = false)
         {
             var ifc = CreateIfcDocument(model, updateElementsRepresentation);
-            using (var writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream, leaveOpen: leaveOpen))
             {
-                writer.Write(ifc);
+                writer.Write(ifc.ToSTEP());
             }
         }
     }
