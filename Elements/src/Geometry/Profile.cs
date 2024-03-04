@@ -13,11 +13,11 @@ namespace Elements.Geometry
     public class Profile : Element, IEquatable<Profile>
     {
         /// <summary>The perimeter of the profile.</summary>
-        [JsonProperty("Perimeter", Required = Required.AllowNull)]
+        [JsonProperty("Perimeter", Required = Required.Always)]
         public Polygon Perimeter { get; set; }
 
         /// <summary>A collection of Polygons representing voids in the profile.</summary>
-        [JsonProperty("Voids", Required = Required.AllowNull)]
+        [JsonProperty("Voids")]
         public IList<Polygon> Voids { get; set; }
 
         /// <summary>

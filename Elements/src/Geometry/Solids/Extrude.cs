@@ -16,7 +16,7 @@ namespace Elements.Geometry.Solids
         private bool _reverseWinding;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [JsonProperty("Profile", Required = Required.AllowNull)]
+        [JsonProperty("Profile", Required = Required.Always)]
         public Profile Profile
         {
             get { return _profile; }
@@ -47,7 +47,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [JsonProperty("Direction", Required = Required.AllowNull)]
+        [JsonProperty("Direction", Required = Required.Always)]
         public Vector3 Direction
         {
             get { return _direction; }
