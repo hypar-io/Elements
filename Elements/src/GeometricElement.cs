@@ -39,15 +39,15 @@ namespace Elements
         public BBox3 Bounds => _bounds;
 
         /// <summary>The element's transform.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
+        [JsonProperty("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonProperty("Material")]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [JsonProperty("Representation", Required = Required.AllowNull)]
+        [JsonProperty("Representation")]
         public Representation Representation { get; set; }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Elements
         public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("IsElementDefinition", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>

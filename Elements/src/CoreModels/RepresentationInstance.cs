@@ -43,7 +43,7 @@ namespace Elements
         /// <summary>
         /// The representation's material.
         /// </summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonProperty("Material")]
         public Material Material { get; set; }
 
         /// <summary>

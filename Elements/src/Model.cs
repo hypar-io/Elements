@@ -22,12 +22,12 @@ namespace Elements
     public class Model
     {
         /// <summary>The origin of the model.</summary>
-        [JsonProperty("Origin", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Origin", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         [Obsolete("Use Transform instead.")]
         public Position Origin { get; set; }
 
         /// <summary>The transform of the model.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
+        [JsonProperty("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>A collection of Elements keyed by their identifiers.</summary>

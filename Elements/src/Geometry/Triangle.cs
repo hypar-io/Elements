@@ -17,7 +17,7 @@ namespace Elements.Geometry
         public IList<Vertex> Vertices { get; set; } = new List<Vertex>();
 
         /// <summary>The triangle's normal.</summary>
-        [JsonProperty("Normal", Required = Required.AllowNull)]
+        [JsonProperty("Normal")]
         public Vector3 Normal { get; set; }
 
         /// <summary>

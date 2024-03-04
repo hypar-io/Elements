@@ -12,7 +12,7 @@ namespace Elements.Geometry.Solids
         private IList<Polygon> _voids;
 
         /// <summary>The perimeter.</summary>
-        [JsonProperty("Perimeter", Required = Required.AllowNull)]
+        [JsonProperty("Perimeter", Required = Required.Always)]
         public Polygon Perimeter
         {
             get { return _perimeter; }
@@ -29,7 +29,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// A collection of voids.
         /// </summary>
-        [JsonProperty("Voids", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Voids", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Polygon> Voids
         {
             get { return _voids; }
