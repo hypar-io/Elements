@@ -25,6 +25,8 @@ namespace Elements.Components
         public static void SetCatalogFilePath(string path)
         {
             catalogFilePath = path;
+            // if we already have a catalog loaded, clear it out.
+            catalog = null;
         }
 
         /// <summary>
