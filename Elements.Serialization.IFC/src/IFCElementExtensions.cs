@@ -59,6 +59,13 @@ namespace Elements.Serialization.IFC
                 geoElement = (GeometricElement)e;
                 id = geoElement.Id;
                 trans = geoElement.Transform;
+
+                // Origin of Elements.Door is in the center. Origin of IFCDoor is in the corner.
+                if (e is Door door)
+                {
+                    var correctedOrigin = door.Transform.Origin - 0.5 * door.DoorWidth * door.Transform.XAxis;
+                    trans = new Transform(correctedOrigin, door.Transform.XAxis, door.Transform.YAxis, door.Transform.ZAxis);
+                }
             }
 
             if (updateElementRepresentation)

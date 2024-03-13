@@ -24,13 +24,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
         {
-            if (!(ifcRepresentationItem is IfcBooleanClippingResult ifcBooleanClippingResult))
+            if (ifcRepresentationItem is not IfcBooleanClippingResult ifcBooleanClippingResult)
             {
                 return null;
             }
 
             // TODO: Apply clipping operation with second operand.
-            if (!(ifcBooleanClippingResult.FirstOperand.Choice is IfcRepresentationItem firstOperand))
+            if (ifcBooleanClippingResult.FirstOperand.Choice is not IfcRepresentationItem firstOperand)
             {
                 return null;
             }
