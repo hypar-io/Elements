@@ -1,5 +1,5 @@
 using ClipperLib;
-using Elements.Geometry.Profiles;
+// using Elements.Geometry.Profiles;
 using Elements.Search;
 using Elements.Spatial;
 using Newtonsoft.Json;
