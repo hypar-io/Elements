@@ -14,6 +14,14 @@ namespace Elements.Components
     public class SpaceConfiguration : Dictionary<string, ContentConfiguration>
     {
         internal static Dictionary<string, ContentElement> contentDict = new Dictionary<string, ContentElement>();
+
+        /// <summary>
+        /// Clear the internal content cache.  Do this if content catalogs have changed.
+        /// </summary>
+        public static void ResetContentCache()
+        {
+            contentDict.Clear();
+        }
     }
 
     /// <summary>
