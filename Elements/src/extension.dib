@@ -92,10 +92,9 @@ const fitCameraToObject = function (scene, offset = 1.25) {
         camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
     }
 
-    const minZ = boundingBox.min.y;
-    const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
+    const cameraToFarEdge = camera.position.distanceTo(center) + maxDim;
 
-    camera.far = cameraToFarEdge * 30;
+    camera.far = cameraToFarEdge * 5;
     camera.updateProjectionMatrix();
 
     if (controls) {
