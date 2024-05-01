@@ -25,7 +25,7 @@ using System;
 using System.IO;
 
 var viewerSrc = @"
-<div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
+<div id=""main_DIV_ID"" style=""height:HEIGHT_VARpx;width:WIDTH_VARpx;""></div>
 </div>
 <script type=""module"">
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
@@ -92,10 +92,9 @@ const fitCameraToObject = function (scene, offset = 1.25) {
         camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
     }
 
-    const minZ = boundingBox.min.z;
-    const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
+    const cameraToFarEdge = camera.position.distanceTo(center) + maxDim;
 
-    camera.far = cameraToFarEdge * 10;
+    camera.far = cameraToFarEdge * 5;
     camera.updateProjectionMatrix();
 
     if (controls) {
