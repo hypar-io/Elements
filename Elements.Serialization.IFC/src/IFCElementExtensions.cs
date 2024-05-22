@@ -5,6 +5,7 @@ using Elements.Geometry;
 using Elements.Geometry.Interfaces;
 using Elements.Geometry.Solids;
 using Elements.Interfaces;
+using Elements;
 using IFC;
 
 namespace Elements.Serialization.IFC
@@ -192,17 +193,17 @@ namespace Elements.Serialization.IFC
             var ifcRepresentations = new List<IfcRepresentationItem>();
             if (op is Sweep sweep)
             {
-                // Neither of these entities, which are part of the 
-                // IFC4 specification, and which would allow a sweep 
-                // along a curve, are supported by many applications 
+                // Neither of these entities, which are part of the
+                // IFC4 specification, and which would allow a sweep
+                // along a curve, are supported by many applications
                 // which are supposedly IFC4 compliant (Revit). For
                 // Those applications where these entities appear,
-                // the rotation of the profile is often wrong or 
+                // the rotation of the profile is often wrong or
                 // inconsistent.
                 // geom = sweep.ToIfcSurfaceCurveSweptAreaSolid(doc);
                 // geom = sweep.ToIfcFixedReferenceSweptAreaSolid(geoElement.Transform, doc);
 
-                // Instead, we'll divide the curve and create a set of 
+                // Instead, we'll divide the curve and create a set of
                 // linear extrusions instead.
                 Polyline pline;
                 if (sweep.Curve is Line)
@@ -273,8 +274,8 @@ namespace Elements.Serialization.IFC
                 localPlacement,
                 shape,
                 null,
-                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.ClearHeight)),
-                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.ClearWidth)),
+                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.DoorHeight)),
+                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.DoorWidth)),
                 IfcDoorTypeEnum.DOOR,
                 door.GetIfcDoorTypeOperation(),
                 null

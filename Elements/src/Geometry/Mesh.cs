@@ -259,7 +259,8 @@ Triangles:{Triangles.Count}";
         public void RemoveTriangle(Triangle face)
         {
             this.Triangles.Remove(face);
-            foreach(var vert in face.Vertices) {
+            foreach (var vert in face.Vertices)
+            {
                 vert.Triangles.Remove(face);
             }
         }
@@ -450,10 +451,10 @@ Triangles:{Triangles.Count}";
         }
 
         /// <summary>
-        /// Does the provided ray intersect this mesh mesh?
+        /// Does the provided ray intersect this mesh?
         /// </summary>
         /// <param name="ray">The Ray to intersect.</param>
-        /// <param name="intersection">The location of intersection.</param>
+        /// <param name="intersection">The location of the closest intersection.</param>
         /// <returns>True if an intersection result occurs.
         /// False if no intersection occurs.</returns>
         public bool Intersects(Ray ray, out Vector3 intersection)
@@ -461,14 +462,20 @@ Triangles:{Triangles.Count}";
             var nearbyVertices = GetOctree().GetNearby(ray, _maxTriangleSize).ToList();
             var nearbyTriangles = nearbyVertices.SelectMany(v => v.Triangles).Distinct();
             intersection = default;
+            var closest = double.MaxValue;
             foreach (var t in nearbyTriangles)
             {
-                if (ray.Intersects(t, out intersection))
+                if (ray.Intersects(t, out var triangleIntersection))
                 {
-                    return true;
+                    var d = triangleIntersection.DistanceTo(ray.Origin);
+                    if (d < closest)
+                    {
+                        intersection = triangleIntersection;
+                        closest = d;
+                    }
                 }
             }
-            return false;
+            return closest < double.MaxValue;
         }
 
         private double SignedVolumeOfTriangle(Triangle t)

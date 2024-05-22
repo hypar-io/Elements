@@ -39,7 +39,7 @@ namespace Elements.Fittings
 
         public override Port[] GetPorts()
         {
-            return new[] {Trunk}.Concat(Branches).ToArray();
+            return new[] { Trunk }.Concat(Branches).ToArray();
         }
 
         public override Port TrunkSidePort()

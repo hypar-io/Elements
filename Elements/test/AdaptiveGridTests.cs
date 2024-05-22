@@ -990,6 +990,41 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void AdaptiveGridAddCutWithOverlap()
+        {
+            var grid = new AdaptiveGrid();
+            //Create single edges, so cut operation process only overlaps and not intersections.
+            grid.AddEdge(new Vector3(0, 0), new Vector3(0, 10));
+
+            //Start point of new edge is outside, end is inside.
+            var v0 = grid.AddVertex(new Vector3(0, -5));
+            var v1 = grid.AddVertex(new Vector3(0, 3));
+            var edges = grid.AddEdge(v0.Id, v1.Id);
+            Assert.Equal(2, edges.Count);
+            Assert.Single(v0.Edges);
+            Assert.Equal(2, v1.Edges.Count);
+            var middle = edges.First().OtherVertexId(v0.Id);
+            var middleVertex = grid.GetVertex(middle);
+            Assert.Equal(new Vector3(0, 0), middleVertex.Point);
+            Assert.Equal(2, middleVertex.Edges.Count);
+
+            //End point of new edge is outside, start is inside.
+            v0 = grid.AddVertex(new Vector3(0, 7));
+            v1 = grid.AddVertex(new Vector3(0, 15));
+            edges = grid.AddEdge(v0.Id, v1.Id);
+            Assert.Equal(2, edges.Count);
+            Assert.Equal(2, v0.Edges.Count);
+            Assert.Single(v1.Edges);
+            middle = edges.Last().OtherVertexId(v1.Id);
+            middleVertex = grid.GetVertex(middle);
+            Assert.Equal(new Vector3(0, 10), middleVertex.Point);
+            Assert.Equal(2, middleVertex.Edges.Count);
+
+            // Result should be strip of 6 vertices.
+            Assert.Equal(6, grid.GetVertices().Count);
+        }
+
+        [Fact]
         public void AdaptiveGridAddVertexWithAngle()
         {
             var grid = new AdaptiveGrid();
@@ -1144,6 +1179,37 @@ namespace Elements.Tests
             Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D));
             Assert.False(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint3D));
             Assert.True(horizontalEdgeInfo.HasAnyFlag(EdgeFlags.UserDefinedHint2D | EdgeFlags.UserDefinedHint3D));
+        }
+
+        [Fact]
+        public void AdaptiveGridClone()
+        {
+            var grid = SampleGrid();
+            var clone = grid.Clone();
+
+            grid.GetVertex(4).Point.IsAlmostEqualTo(new Vector3(5, 5));
+            clone.GetVertex(4).Point.IsAlmostEqualTo(new Vector3(5, 5));
+
+            grid.AddVertex(new Vector3(5, -5),
+                new ConnectVertexStrategy(grid.GetVertex(1), grid.GetVertex(3)), cut: false);
+            clone.RemoveVertex(clone.GetVertex(5));
+            clone.AddEdge(grid.GetVertex(2), grid.GetVertex(4));
+
+            Assert.True(grid.TryGetVertexIndex((5, 2), out var index));
+            Assert.False(clone.TryGetVertexIndex((5, 2), out index));
+
+            Assert.True(grid.TryGetVertexIndex((5, -5), out index));
+            Assert.False(clone.TryGetVertexIndex((5, -5), out index));
+
+            var v = grid.GetVertex(4);
+            Assert.Equal(2, grid.GetVertex(4).Edges.Count);
+            Assert.Null(v.GetEdge(2));
+
+            Assert.True(clone.TryGetVertexIndex((5, 5), out index));
+            Assert.Equal(4u, index);
+            v = clone.GetVertex(index);
+            Assert.Equal(3, v.Edges.Count);
+            Assert.NotNull(v.GetEdge(2));
         }
 
         //          (4)

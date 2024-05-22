@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Elements.Validators;
 using Newtonsoft.Json;
 
@@ -15,7 +16,7 @@ namespace Elements.Geometry.Solids
         private bool _reverseWinding;
 
         /// <summary>The id of the profile to extrude.</summary>
-        [JsonProperty("Profile", Required = Required.AllowNull)]
+        [JsonProperty("Profile", Required = Required.Always)]
         public Profile Profile
         {
             get { return _profile; }
@@ -46,7 +47,7 @@ namespace Elements.Geometry.Solids
         }
 
         /// <summary>The direction in which to extrude.</summary>
-        [JsonProperty("Direction", Required = Required.AllowNull)]
+        [JsonProperty("Direction", Required = Required.Always)]
         public Vector3 Direction
         {
             get { return _direction; }
@@ -106,6 +107,37 @@ namespace Elements.Geometry.Solids
 
             this.PropertyChanged += (sender, args) => { UpdateGeometry(); };
             UpdateGeometry();
+        }
+
+        internal override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var result = new List<SnappingPoints>();
+            var localTransform = new Transform(Direction * Height);
+            var bottomVertices = new List<Vector3>();
+            // add perimeter bottom points
+            result.Add(new SnappingPoints(Profile.Perimeter.Vertices, SnappingEdgeMode.LineLoop));
+            bottomVertices.AddRange(Profile.Perimeter.Vertices);
+            // add perimeter top points
+            result.Add(new SnappingPoints(Profile.Perimeter.TransformedPolygon(localTransform).Vertices, SnappingEdgeMode.LineLoop));
+
+            // add each void
+            foreach (var item in Profile.Voids)
+            {
+                result.Add(new SnappingPoints(item.Vertices, SnappingEdgeMode.LineLoop));
+                bottomVertices.AddRange(item.Vertices);
+                result.Add(new SnappingPoints(item.TransformedPolygon(localTransform).Vertices, SnappingEdgeMode.LineLoop));
+            }
+
+            // connect top and bottom points
+            var edges = new List<Vector3>();
+            foreach (var item in bottomVertices)
+            {
+                edges.Add(item);
+                edges.Add(localTransform.OfPoint(item));
+            }
+            result.Add(new SnappingPoints(edges, SnappingEdgeMode.Lines));
+
+            return result;
         }
 
         private void UpdateGeometry()

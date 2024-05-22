@@ -18,13 +18,14 @@ using Microsoft.DotNet.Interactive;
 using Microsoft.DotNet.Interactive.Formatting;
 using Elements;
 using Elements.Geometry;
+using Elements.Geometry.Solids;
 using Elements.Serialization.glTF;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 
 var viewerSrc = @"
-<div id=""main_DIV_ID"" style=""height:WIDTH_VAR;width:HEIGHT_VARpx;""></div>
+<div id=""main_DIV_ID"" style=""height:HEIGHT_VARpx;width:WIDTH_VARpx;""></div>
 </div>
 <script type=""module"">
 import * as THREE from 'https://unpkg.com/three@0.126.0/build/three.module.js';
@@ -91,10 +92,9 @@ const fitCameraToObject = function (scene, offset = 1.25) {
         camera.position.copy(center.clone().add(size.clone().multiplyScalar(offset)))
     }
 
-    const minZ = boundingBox.min.z;
-    const cameraToFarEdge = (minZ < 0) ? -minZ + cameraZ : cameraZ - minZ;
+    const cameraToFarEdge = camera.position.distanceTo(center) + maxDim;
 
-    camera.far = cameraToFarEdge * 10;
+    camera.far = cameraToFarEdge * 5;
     camera.updateProjectionMatrix();
 
     if (controls) {
@@ -134,6 +134,7 @@ if (KernelInvocationContext.Current is { } currentContext)
 double DEFAULT_MODEL_WIDTH = 600;
 double DEFAULT_MODEL_HEIGHT = 400;
 Material DEFAULT_CURVE_MATERIAL = BuiltInMaterials.XAxis;
+Material DEFAULT_SOLID_MATERIAL = BuiltInMaterials.Default;
 
 string GetModelViewerSrc(Model model, double? width=null, double? height=null) {
     var gltf = model.ToGlTF();
@@ -193,6 +194,45 @@ Formatter.Register<Model>((model, writer) => {
     writer.Write(src);
 }, "text/html");
 
+Formatter.Register<SolidOperation>((solidOp, writer) => {
+    var model = new Model();
+    model.AddElement(new GeometricElement { Representation = solidOp, Material= DEFAULT_SOLID_MATERIAL});
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+Formatter.Register<Representation>((representation, writer) => {
+    var model = new Model();
+    model.AddElement(new GeometricElement { Representation = representation, Material= DEFAULT_SOLID_MATERIAL});
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+Formatter.Register<IEnumerable<SolidOperation>>((solidOps, writer) => {
+    var model = new Model();
+    foreach(var solidOp in solidOps) {
+        model.AddElement(new GeometricElement { Representation = solidOp, Material= DEFAULT_SOLID_MATERIAL});
+    }
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+
+}, "text/html");
+Formatter.Register<Transform>((xform, writer) => {
+    var model = new Model();
+        model.AddElements(xform.ToModelCurves());
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
+Formatter.Register<IEnumerable<Transform>>((xforms, writer) => {
+    var model = new Model();
+    foreach(var xform in xforms) {
+        model.AddElements(xform.ToModelCurves());
+    }
+    var src = GetModelViewerSrc(model);
+    writer.Write(src);
+}, "text/html");
+
 void DisplayModel(Model model, double? width=null, double? height=null) {
     var src = GetModelViewerSrc(model, width ?? DEFAULT_MODEL_WIDTH, height ?? DEFAULT_MODEL_HEIGHT);
     KernelInvocationContext.Current.DisplayAs(src, "text/html");
@@ -205,4 +245,8 @@ void SetDefaultDisplaySize(double width, double height) {
 
 void SetDefaultCurveMaterial(Material mat) {
     DEFAULT_CURVE_MATERIAL = mat;
+}
+
+void SetDefaultSolidMaterial(Material mat) {
+    DEFAULT_SOLID_MATERIAL = mat;
 }

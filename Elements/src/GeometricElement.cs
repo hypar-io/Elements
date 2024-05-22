@@ -39,15 +39,15 @@ namespace Elements
         public BBox3 Bounds => _bounds;
 
         /// <summary>The element's transform.</summary>
-        [JsonProperty("Transform", Required = Required.AllowNull)]
+        [JsonProperty("Transform")]
         public Transform Transform { get; set; }
 
         /// <summary>The element's material.</summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonProperty("Material")]
         public Material Material { get; set; }
 
         /// <summary>The element's representation.</summary>
-        [JsonProperty("Representation", Required = Required.AllowNull)]
+        [JsonProperty("Representation")]
         public Representation Representation { get; set; }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Elements
         public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
 
         /// <summary>When true, this element will act as the base definition for element instances, and will not appear in visual output.</summary>
-        [JsonProperty("IsElementDefinition", Required = Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("IsElementDefinition", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public bool IsElementDefinition { get; set; } = false;
 
         /// <summary>
@@ -213,7 +213,6 @@ namespace Elements
             var graphVertices = new List<Vector3>();
             var graphEdges = new List<List<(int from, int to, int? tag)>>();
 
-            var intersectionPoints = new List<Vector3>();
             var beyondPolygonsList = new List<Polygon>();
 
             if (Representation != null && _csg != null)
@@ -252,7 +251,7 @@ namespace Elements
 
                     var d = csgNormal.Cross(plane.Normal).Unitized();
                     edgeResults.Sort(new DirectionComparer(d));
-                    intersectionPoints.AddRange(edgeResults);
+                    AddToGraph(edgeResults, graphVertices, graphEdges);
                 }
             }
 
@@ -268,39 +267,12 @@ namespace Elements
 
                     if (instance.Representation is SolidRepresentation solidRepresentation)
                     {
-                        intersectionPoints.AddRange(solidRepresentation.CalculateIntersectionPoints(this, plane,
-                            out var beyondPolygonsLocal));
-                        beyondPolygonsList.AddRange(beyondPolygonsLocal);
+                        foreach (var intersection in solidRepresentation.CalculateIntersectionPoints(this, plane,
+                            out var beyondPolygonsLocal))
+                        {
+                            AddToGraph(intersection, graphVertices, graphEdges);
+                        }
                     }
-                }
-            }
-
-            if (!intersectionPoints.Any())
-            {
-                return false;
-            }
-
-            // Draw segments through the results and add to the
-            // half edge graph.
-            for (var j = 0; j < intersectionPoints.Count - 1; j += 2)
-            {
-                // Don't create zero-length edges.
-                if (intersectionPoints[j].IsAlmostEqualTo(intersectionPoints[j + 1]))
-                {
-                    continue;
-                }
-
-                var a = Solid.FindOrCreateGraphVertex(intersectionPoints[j], graphVertices, graphEdges);
-                var b = Solid.FindOrCreateGraphVertex(intersectionPoints[j + 1], graphVertices, graphEdges);
-                var e1 = (a, b, 0);
-                var e2 = (b, a, 0);
-                if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
-                {
-                    continue;
-                }
-                else
-                {
-                    graphEdges[a].Add(e1);
                 }
             }
 
@@ -360,6 +332,33 @@ namespace Elements
             {
                 Debug.WriteLine(ex.Message);
                 return false;
+            }
+        }
+
+        private static void AddToGraph(List<Vector3> intersectionPoints, List<Vector3> graphVertices, List<List<(int from, int to, int? tag)>> graphEdges)
+        {
+            // Draw segments through the results and add to the
+            // half edge graph.
+            for (var j = 0; j < intersectionPoints.Count - 1; j += 2)
+            {
+                // Don't create zero-length edges.
+                if (intersectionPoints[j].IsAlmostEqualTo(intersectionPoints[j + 1]))
+                {
+                    continue;
+                }
+
+                var a = Solid.FindOrCreateGraphVertex(intersectionPoints[j], graphVertices, graphEdges);
+                var b = Solid.FindOrCreateGraphVertex(intersectionPoints[j + 1], graphVertices, graphEdges);
+                var e1 = (a, b, 0);
+                var e2 = (b, a, 0);
+                if (graphEdges[a].Contains(e1) || graphEdges[b].Contains(e2))
+                {
+                    continue;
+                }
+                else
+                {
+                    graphEdges[a].Add(e1);
+                }
             }
         }
 

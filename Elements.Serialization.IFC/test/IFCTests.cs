@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 using System.Collections.Generic;
 using Elements.Geometry.Profiles;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Elements.IFC.Tests
 {
@@ -28,16 +29,56 @@ namespace Elements.IFC.Tests
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc")]
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc")]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1972, 120, 530, 270, 9, 140, 10, 2)]
+        // TODO: Some walls are extracted incorrectly and intersecting the roof. It happens because
+        // IfcBooleanClippingResultParser doesn't handle the boolean clipping operation.
+        // In order to fix it surface support is required.
+        // The Plane case isn't implemented because some critical information about IfcPlane is
+        // missing during it's extraction.
+        // TODO: German names are converted incorrectly.
+        // TODO: The entrance door has an incorrect representation. It happens because during
+        // the UpdateRepresentation the default representation of a door is created instead of
+        // the extracted one.
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1513, 5, 570, 121, 7, 82, 0, 21)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
-        public void IFC4(string name, string ifcPath)
+        public void FromIFC4(string name,
+                         string ifcPath,
+                         int expectedElementsCount,
+                         int expectedCountOfFloors,
+                         int expectedCountOfOpenings,
+                         int expectedCountOfWalls,
+                         int expectedCountOfDoors,
+                         int expectedCountOfSpaces,
+                         int expectedCountOfBeams,
+                         int expectedCountOfErrors
+            )
         {
             var model = IFCModelExtensions.FromIFC(Path.Combine(Environment.CurrentDirectory, ifcPath), out var ctorErrors);
+
+            int countOfFloors = model.AllElementsOfType<Floor>().Count();
+            int countOfOpenings = model.AllElementsOfType<Opening>().Count();
+            int countOfWalls = model.AllElementsOfType<Wall>().Count();
+            int countOfDoors = model.AllElementsOfType<Door>().Count();
+            int countOfSpaces = model.AllElementsOfType<Space>().Count();
+            int countOfBeams = model.AllElementsOfType<Beam>().Count();
+
+            Assert.Equal(expectedElementsCount, model.Elements.Count);
+
+            Assert.Equal(expectedCountOfFloors, countOfFloors);
+            Assert.Equal(expectedCountOfOpenings, countOfOpenings);
+            Assert.Equal(expectedCountOfWalls, countOfWalls);
+            Assert.Equal(expectedCountOfDoors, countOfDoors);
+            Assert.Equal(expectedCountOfSpaces, countOfSpaces);
+            Assert.Equal(expectedCountOfBeams, countOfBeams);
+
             foreach (var e in ctorErrors)
             {
                 this.output.WriteLine(e);
             }
+
+            Assert.Equal(expectedCountOfErrors, ctorErrors.Count);
+
+            model.ToJson(ConstructJsonPath(name));
             model.ToGlTF(ConstructGlbPath(name));
         }
 
@@ -78,6 +119,15 @@ namespace Elements.IFC.Tests
         }
 
         [Fact]
+        public void SpaceTemplate()
+        {
+            var model = System.IO.File.ReadAllText("../../../models/Hypar/space-planning.json");
+            var hyparModel = Model.FromJson(model);
+            var path = ConstructIfcPath("space-planning-test");
+            hyparModel.ToIFC(path);
+        }
+
+        [Fact]
         public void Doors()
         {
             var model = new Model();
@@ -85,18 +135,21 @@ namespace Elements.IFC.Tests
             // Add 2 walls.
             var wallLine1 = new Line(Vector3.Origin, new Vector3(10, 10, 0));
             var wallLine2 = new Line(new Vector3(10, 10, 0), new Vector3(10, 15, 0));
-            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "wall1");
-            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "wall2");
+            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "Wall1");
+            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "Wall2");
+
+            var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+            var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
+
+            wall1.AddDoorOpening(door1);
+            wall2.AddDoorOpening(door2);
 
             model.AddElement(wall1);
             model.AddElement(wall2);
-
-            var door1 = new Door(wall1, wallLine1, 0.5, 1.5, 2.0, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-            var door2 = new Door(wall2, wallLine2, 0.5, 1.5, 1.8, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-
             model.AddElement(door1);
             model.AddElement(door2);
 
+            model.ToJson(ConstructJsonPath("IfcDoor"));
             model.ToIFC(ConstructIfcPath("IfcDoor"));
         }
 
@@ -131,7 +184,7 @@ namespace Elements.IFC.Tests
             var planShape = Polygon.L(2, 4, 1.5);
             var floor = new Floor(planShape, 0.1);
             var floor1 = new Floor(planShape, 0.1, new Transform(0, 0, 2));
-            var o = new Opening(Polygon.Rectangle(0.5, 0.5), transform: new Transform(0.5, 0.5, 0));
+            var o = new Opening(Polygon.Rectangle(0.5, 0.5), Vector3.ZAxis, transform: new Transform(0.5, 0.5, 0));
             floor.Openings.Add(o);
 
             var model = new Model();
@@ -229,6 +282,16 @@ namespace Elements.IFC.Tests
                 Directory.CreateDirectory(modelsDirectory);
             }
             return Path.GetFullPath(Path.Combine(modelsDirectory, $"{modelName}.glb"));
+        }
+
+        private string ConstructJsonPath(string modelName)
+        {
+            var modelsDirectory = Path.Combine(Environment.CurrentDirectory, basePath);
+            if (!Directory.Exists(modelsDirectory))
+            {
+                Directory.CreateDirectory(modelsDirectory);
+            }
+            return Path.GetFullPath(Path.Combine(modelsDirectory, $"{modelName}.json"));
         }
     }
 }

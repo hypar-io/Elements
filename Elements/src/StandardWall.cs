@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Elements.Geometry;
 using Elements.Geometry.Solids;
+using Elements;
 
 namespace Elements
 {
@@ -92,7 +93,7 @@ namespace Elements
         public Opening AddOpening(double width, double height, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(Polygon.Rectangle(width, height), depthFront, depthBack, openingTransform);
+            var o = new Opening(Polygon.Rectangle(width, height), Vector3.ZAxis, depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }
@@ -109,7 +110,7 @@ namespace Elements
         public Opening AddOpening(Polygon perimeter, double x, double y, double depthFront = 1.0, double depthBack = 1.0)
         {
             var openingTransform = GetOpeningTransform(x, y);
-            var o = new Opening(perimeter, depthFront, depthBack, openingTransform);
+            var o = new Opening(perimeter, Vector3.ZAxis, depthFront, depthBack, openingTransform);
             this.Openings.Add(o);
             return o;
         }
@@ -117,7 +118,8 @@ namespace Elements
         private Transform GetOpeningTransform(double x, double y)
         {
             var xAxis = this.CenterLine.Direction();
-            var openingTransform = new Transform(this.CenterLine.Start + xAxis * x + Vector3.ZAxis * y, xAxis, xAxis.Cross(Vector3.ZAxis));
+            var outOfPlane = xAxis.Cross(Vector3.ZAxis);
+            var openingTransform = new Transform(this.CenterLine.Start + xAxis * x + Vector3.ZAxis * y - outOfPlane, xAxis, xAxis.Cross(Vector3.ZAxis));
             return openingTransform;
         }
 
@@ -131,6 +133,17 @@ namespace Elements
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
             this.Representation.SolidOperations.Add(new Extrude(profile, this.Height, Vector3.ZAxis, false));
+        }
+
+        /// <summary>
+        /// Creates an opening that suits <paramref name="door"/>.
+        /// </summary>
+        /// <param name="door">Properties of <paramref name="door"/> will be used to create an opening.</param>
+        public void AddDoorOpening(Door door)
+        {
+            var halfThickness = 0.5 * Thickness;
+            var opening = door.CreateDoorOpening(halfThickness, halfThickness, false);
+            Openings.Add(opening);
         }
     }
 }

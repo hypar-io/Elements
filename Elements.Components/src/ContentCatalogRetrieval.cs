@@ -18,13 +18,16 @@ namespace Elements.Components
         private static string catalogFilePath = null;
 
         /// <summary>
-        /// If you're using a different location for the catalog file, you can 
+        /// If you're using a different location for the catalog file, you can
         /// set it here.
         /// </summary>
         /// <param name="path"></param>
         public static void SetCatalogFilePath(string path)
         {
             catalogFilePath = path;
+            // if we already have a catalog loaded, clear it out.
+            catalog = null;
+            SpaceConfiguration.ResetContentCache();
         }
 
         /// <summary>

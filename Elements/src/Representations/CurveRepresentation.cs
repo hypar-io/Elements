@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Elements.Geometry;
 using glTFLoader.Schema;
 
@@ -44,6 +45,15 @@ namespace Elements
             id = _isSelectable ? $"{element.Id}_curve" : $"unselectable_{element.Id}_curve";
             mode = _curve.IsClosedForRendering ? glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_LOOP : glTFLoader.Schema.MeshPrimitive.ModeEnum.LINE_STRIP;
             return true;
+        }
+
+        /// <inheritdoc/>
+        protected override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var snappingPoints = new List<SnappingPoints>();
+            var curvePoints = _curve.RenderVertices();
+            snappingPoints.Add(new SnappingPoints(curvePoints));
+            return snappingPoints;
         }
     }
 }

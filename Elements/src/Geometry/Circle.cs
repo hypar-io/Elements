@@ -13,7 +13,7 @@ namespace Elements.Geometry
     public class Circle : Curve, IConic
     {
         /// <summary>The center of the circle.</summary>
-        [JsonProperty("Center", Required = Required.AllowNull)]
+        [JsonProperty("Center", Required = Required.Always)]
         public Vector3 Center
         {
             get

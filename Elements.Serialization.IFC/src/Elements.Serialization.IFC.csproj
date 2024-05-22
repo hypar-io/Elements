@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>Hypar.Elements.Serialization.IFC</AssemblyName>
     <PackageTitle>Hypar Elements Serialization IFC</PackageTitle>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hypar.IFC4" Version="0.1.4.1" />
+    <PackageReference Include="Hypar.IFC4" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,11 +9,11 @@ namespace Elements.Geometry
     public class Vertex
     {
         /// <summary>The vertex's position.</summary>
-        [JsonProperty("Position", Required = Required.AllowNull)]
+        [JsonProperty("Position", Required = Required.Always)]
         public Vector3 Position { get; set; }
 
         /// <summary>The vertex's normal.</summary>
-        [JsonProperty("Normal", Required = Required.AllowNull)]
+        [JsonProperty("Normal")]
         public Vector3 Normal { get; set; }
 
         /// <summary>The vertex's color.</summary>

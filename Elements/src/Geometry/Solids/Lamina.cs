@@ -12,7 +12,7 @@ namespace Elements.Geometry.Solids
         private IList<Polygon> _voids;
 
         /// <summary>The perimeter.</summary>
-        [JsonProperty("Perimeter", Required = Required.AllowNull)]
+        [JsonProperty("Perimeter", Required = Required.Always)]
         public Polygon Perimeter
         {
             get { return _perimeter; }
@@ -29,7 +29,7 @@ namespace Elements.Geometry.Solids
         /// <summary>
         /// A collection of voids.
         /// </summary>
-        [JsonProperty("Voids", Required = Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        [JsonProperty("Voids", NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public IList<Polygon> Voids
         {
             get { return _voids; }
@@ -80,6 +80,19 @@ namespace Elements.Geometry.Solids
         public Lamina(Profile profile, bool isVoid = false) : this(profile.Perimeter, profile.Voids, isVoid)
         {
 
+        }
+
+        internal override List<SnappingPoints> CreateSnappingPoints(GeometricElement element)
+        {
+            var result = new List<SnappingPoints>();
+            result.Add(new SnappingPoints(Perimeter.Vertices, SnappingEdgeMode.LineLoop));
+
+            foreach (var item in Voids)
+            {
+                result.Add(new SnappingPoints(item.Vertices, SnappingEdgeMode.LineLoop));
+            }
+
+            return result;
         }
 
         private void UpdateGeometry()

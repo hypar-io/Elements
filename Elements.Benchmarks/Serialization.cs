@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 using Elements.Geometry.Profiles;
@@ -33,6 +34,15 @@ namespace Elements.Benchmarks
         public void DeserializeFromJSON()
         {
             Model.FromJson(_json);
+        }
+
+        [Benchmark(Description = "Deserialize invalid Elements from JSON.")]
+        public void DeserializeInvalidsFromJSON()
+        {
+            var guids = Enumerable.Range(0, 1000000).Select(i => Guid.NewGuid().ToString()).ToArray();
+            var basElements = String.Join(",", guids.Select(g => $"'{g}':{{'discriminator':'Elements.Baz'}}").ToArray());
+            var toDeserialize = _json.Replace("'Elements':{", $"'Elements':{{{basElements},");
+            Model.FromJson(toDeserialize);
         }
 
         [Benchmark(Description = "Serialize to glTF.")]

@@ -56,10 +56,9 @@ namespace Elements.Fittings
             {
                 return false;
             }
-            
             var angle = Direction.AngleTo(other.Direction);
 
-            return angle.ApproximatelyEquals(180, angleTolerance);        
+            return angle.ApproximatelyEquals(180, angleTolerance);
         }
 
         public bool IsIdenticalConnector(Port other, double positionTolerance = Vector3.EPSILON, double angleTolerance = 0.5)
@@ -68,22 +67,23 @@ namespace Elements.Fittings
             {
                 return false;
             }
-            
             var angle = Direction.AngleTo(other.Direction);
 
             return angle.ApproximatelyEquals(0, angleTolerance);
         }
 
-        public Sweep[] GetArrow(Vector3 relativeTo, double arrowLineLength = 0.1)
+        public Sweep[] GetArrow(Vector3 relativeTo, double arrowLineLength = 0.1, Transform fittingRotationTransform = null)
         {
+            var fittingRotationTransformInverted = fittingRotationTransform == null || !ComponentBase.UseRepresentationInstances ? new Transform() : fittingRotationTransform.Inverted();
+
             var arrayHeadLength = 0.01;
             if (ShowArrows)
             {
-                var transformedOrigin = Position - relativeTo;
+                var transformedPosition = fittingRotationTransformInverted.OfPoint(Position - relativeTo);
                 var arrowProfile = new Circle(Vector3.Origin, 0.01).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
-                var arrowLine = new Line(transformedOrigin, transformedOrigin + Direction * arrowLineLength);
+                var arrowLine = new Line(transformedPosition, transformedPosition + fittingRotationTransformInverted.OfPoint(Direction) * arrowLineLength);
                 var headProfile = new Circle(Vector3.Origin, 0.02).ToPolygon(FlowSystemConstants.CIRCLE_SEGMENTS);
-                var headLine = new Line(transformedOrigin + Direction * arrowLineLength, transformedOrigin + Direction * (arrowLineLength + arrayHeadLength));
+                var headLine = new Line(transformedPosition + fittingRotationTransformInverted.OfPoint(Direction) * arrowLineLength, transformedPosition + fittingRotationTransformInverted.OfPoint(Direction) * (arrowLineLength + arrayHeadLength));
                 var shaft = new Sweep(arrowProfile, arrowLine, 0, 0, 0, false);
                 var head = new Sweep(headProfile, headLine, 0, 0, 0, false);
                 return new Sweep[] { shaft, head };

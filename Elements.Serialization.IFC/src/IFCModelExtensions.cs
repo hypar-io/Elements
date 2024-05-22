@@ -1,5 +1,7 @@
 using Elements.Analysis;
 using Elements.Geometry;
+using Elements.Interfaces;
+using Elements.Serialization.IFC.IFCToHypar;
 using IFC;
 using STEP;
 using System;
@@ -25,141 +27,9 @@ namespace Elements.Serialization.IFC
         /// <returns>A model.</returns>
         public static Model FromIFC(string path, out List<string> constructionErrors, IList<string> idsToConvert = null)
         {
-            List<STEPError> errors;
-            var ifcModel = new Document(path, out errors);
-            foreach (var error in errors)
-            {
-                Console.WriteLine("***IFC ERROR***" + error.Message);
-            }
-
-            IEnumerable<IfcSlab> ifcSlabs = null;
-            IEnumerable<IfcSpace> ifcSpaces = null;
-            IEnumerable<IfcWallStandardCase> ifcWalls = null;
-            IEnumerable<IfcBeam> ifcBeams = null;
-            IEnumerable<IfcColumn> ifcColumns = null;
-            IEnumerable<IfcRelVoidsElement> ifcVoids = null;
-            IEnumerable<IfcRelAssociatesMaterial> ifcMaterials = null;
-            IEnumerable<IfcDoor> ifcDoors = null;
-
-            if (idsToConvert != null && idsToConvert.Count > 0)
-            {
-                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>().Where(i => idsToConvert.Contains(i.GlobalId));
-                ifcDoors = ifcModel.AllInstancesOfType<IfcDoor>().Where(i => idsToConvert.Contains(i.GlobalId));
-            }
-            else
-            {
-                ifcSlabs = ifcModel.AllInstancesOfType<IfcSlab>();
-                ifcSpaces = ifcModel.AllInstancesOfType<IfcSpace>();
-                ifcWalls = ifcModel.AllInstancesOfType<IfcWallStandardCase>();
-                ifcBeams = ifcModel.AllInstancesOfType<IfcBeam>();
-                ifcColumns = ifcModel.AllInstancesOfType<IfcColumn>();
-                ifcVoids = ifcModel.AllInstancesOfType<IfcRelVoidsElement>();
-                ifcMaterials = ifcModel.AllInstancesOfType<IfcRelAssociatesMaterial>();
-                ifcDoors = ifcModel.AllInstancesOfType<IfcDoor>();
-            }
-
-            constructionErrors = new List<string>();
-
-            var slabs = new List<Floor>();
-            foreach (var s in ifcSlabs)
-            {
-                try
-                {
-                    slabs.Add(s.ToFloor(ifcVoids.Where(v => v.RelatingBuildingElement == s).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-
-            }
-
-            var spaces = new List<Space>();
-            foreach (var sp in ifcSpaces)
-            {
-                try
-                {
-                    spaces.Add(sp.ToSpace());
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var walls = new List<Wall>();
-            foreach (var w in ifcWalls)
-            {
-                try
-                {
-                    walls.Add(w.ToWall(ifcVoids.Where(v => v.RelatingBuildingElement == w).Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()));
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var beams = new List<Beam>();
-            foreach (var b in ifcBeams)
-            {
-                try
-                {
-                    beams.Add(b.ToBeam());
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var columns = new List<Column>();
-            foreach (var c in ifcColumns)
-            {
-                try
-                {
-                    columns.Add(c.ToColumn());
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var doors = new List<Door>();
-            foreach (var d in ifcDoors)
-            {
-                try
-                {
-                    doors.Add(d.ToDoor(walls));
-                }
-                catch (Exception ex)
-                {
-                    constructionErrors.Add(ex.Message);
-                    continue;
-                }
-            }
-
-            var model = new Model();
-            model.AddElements(slabs);
-            model.AddElements(spaces);
-            model.AddElements(walls);
-            model.AddElements(beams);
-            model.AddElements(columns);
-            model.AddElements(doors);
-
-            return model;
+            var modelProvider = new FromIfcModelProvider(path, idsToConvert: idsToConvert);
+            constructionErrors = modelProvider.GetConstructionErrors();
+            return modelProvider.Model;
         }
 
         private static Document CreateIfcDocument(this Model model, bool updateElementsRepresentation = true)
@@ -304,7 +174,7 @@ namespace Elements.Serialization.IFC
             {
                 File.Delete(path);
             }
-            File.WriteAllText(path, ifc.ToSTEP(path));
+            File.WriteAllText(path, ifc.ToSTEP());
         }
 
         /// <summary>
@@ -312,17 +182,24 @@ namespace Elements.Serialization.IFC
         /// </summary>
         /// <param name="model">The model to convert to an IFC document.</param>
         /// <param name="stream">The stream in which to write the IFC document.</param>
-        /// <param name="path">The path to the generated IFC STEP file.</param>
         /// <param name="updateElementsRepresentation">Indicates whether UpdateRepresentation should be called for all elements.</param>
-
+        /// <param name="leaveOpen">Indicates whether the underlying stream should be left open.</param>
+        /// <remarks>
+        /// This method provides two options for stream handling:
+        /// 1. When the stream is left open for further access (using leaveOpen: true with StreamWriter).
+        /// Users must ensure proper resource management and close the StreamWriter when done.
+        /// 2. When the StreamWriter is closed (default - using leaveOpen: false with StreamWriter), ensuring proper resource cleanup.
+        /// Users can reopen the stream if further access is needed (use stream.Seek(0, SeekOrigin.Begin) to reset the position).
+        /// </remarks>
         public static void ToIFC(this Model model,
                                  MemoryStream stream,
-                                 bool updateElementsRepresentation = true)
+                                 bool updateElementsRepresentation = true,
+                                 bool leaveOpen = false)
         {
             var ifc = CreateIfcDocument(model, updateElementsRepresentation);
-            using (var writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream, leaveOpen: leaveOpen))
             {
-                writer.Write(ifc);
+                writer.Write(ifc.ToSTEP());
             }
         }
     }

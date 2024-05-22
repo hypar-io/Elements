@@ -50,6 +50,21 @@ namespace Elements.Serialization.JSON
             }
         }
 
+        [System.ThreadStatic]
+        private static List<string> _deserializationWarnings;
+
+        public static List<string> DeserializationWarnings
+        {
+            get
+            {
+                if (_deserializationWarnings == null)
+                {
+                    _deserializationWarnings = new List<string>();
+                }
+                return _deserializationWarnings;
+            }
+        }
+
         public JsonInheritanceConverter()
         {
             _discriminator = DefaultDiscriminatorName;
@@ -163,13 +178,22 @@ namespace Elements.Serialization.JSON
                 else
                 {
                     var jObject = Newtonsoft.Json.Linq.JObject.FromObject(value, serializer);
+
+                    var discriminatorName = GetDiscriminatorName(value);
+
                     if (jObject.TryGetValue(_discriminator, out JToken token))
                     {
-                        ((JValue)token).Value = GetDiscriminatorName(value);
+                        // Don't update the discriminator value if it is a base class of `GeometricElement` or `Element`.
+                        // This means that the type was likely set due to fallback when a type wasn't found when deserializing.
+                        // So, we should keep the discriminator value until another serializer can handle it.
+                        if (discriminatorName != "Elements.GeometricElement" && discriminatorName != "Elements.Element")
+                        {
+                            ((JValue)token).Value = discriminatorName;
+                        }
                     }
                     else
                     {
-                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, GetDiscriminatorName(value)));
+                        jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, discriminatorName));
                     }
                     writer.WriteToken(jObject.CreateReader());
                 }
@@ -234,6 +258,13 @@ namespace Elements.Serialization.JSON
             return true;
         }
 
+        public static List<string> GetAndClearDeserializationWarnings()
+        {
+            var warnings = DeserializationWarnings.ToList();
+            DeserializationWarnings.Clear();
+            return warnings;
+        }
+
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, System.Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
         {
             // The serialized value is an identifier, so the expectation is
@@ -241,6 +272,11 @@ namespace Elements.Serialization.JSON
             if (typeof(Element).IsAssignableFrom(objectType) && !WritingTopLevelElement(reader.Path) && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
+                if (!Elements.ContainsKey(id))
+                {
+                    DeserializationWarnings.Add($"Element {id} was not found during deserialization. Check for other deserialization errors.");
+                    return null;
+                }
                 return Elements[id];
             }
 
@@ -295,7 +331,9 @@ namespace Elements.Serialization.JSON
 
                 if (discriminator != null)
                 {
-                    throw new Exception($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage} {moreInfoMessage}", ex);
+                    DeserializationWarnings.Add($"An object with the discriminator, {discriminator}, could not be deserialized. {baseMessage}");
+                    return null;
+
                 }
                 else
                 {
@@ -328,9 +366,14 @@ namespace Elements.Serialization.JSON
 
             // If it's not in the type cache see if it's got a representation.
             // Import it as a GeometricElement.
-            if (jObject.TryGetValue("Representation", out _))
+            if (jObject.TryGetValue("Representation", out _) && discriminator != null)
             {
                 return typeof(GeometricElement);
+            }
+            // If nothing else has worked, see if it has an ID and treat it as a generic element
+            if (jObject.TryGetValue("Id", out _) && discriminator != null)
+            {
+                return typeof(Element);
             }
 
             // The default behavior for this converter, as provided by nJSONSchema

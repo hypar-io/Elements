@@ -43,7 +43,7 @@ namespace Elements
         /// <summary>
         /// The representation's material.
         /// </summary>
-        [JsonProperty("Material", Required = Required.AllowNull)]
+        [JsonProperty("Material")]
         public Material Material { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Elements
         public List<string> RepresentationTypes { get; set; } = new List<string>();
 
         /// <summary>
-        /// Indicates if this element representation instance is displayed by default. 
+        /// Indicates if this element representation instance is displayed by default.
         /// Element can have several default representations.
         /// </summary>
         public bool IsDefault { get; set; } = true;

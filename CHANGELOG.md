@@ -49,6 +49,12 @@
 - `Profile.ThickenedEdgePolygons`
 - `Elements.MEP`
 - `GeometricElement.RepresentationInstances`
+- `ContentRepresentation`
+- `Elements.Door`
+- `ComponentBase.UseRepresentationInstances` - an option flag to make generating fitting models faster/smaller.
+- `ContentConfiguration.AllowRotatation`
+- `AdaptiveGrid.Clone`
+- `AdditionalProperties` to ContentConfiguration.
 
 ### Fixed
 
@@ -57,9 +63,15 @@
 - `IndexedPolycurve.GetSubdivisionParameters` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polyline.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
 - `Polygon.Frames` now works correctly with `startSetbackDistance` and `endSetbackDistance` parameters.
-
+- `Polyline.TransformAt` returns correct transformations when parameter on domain is provided.
+- `IndexedPolycurve` constructor that takes list of `BoundedCurve` now produces `CurveIndices` that share vertices and are withing index range. This means `IndexedPolyline.TransformedPolyline` preserves `CurveIndicies` on new `IndexedPolyline`.
+- `BoundedCurve.ToPolyline` now works correctly for `EllipticalArc` class.
+- `Ray.Intersects(Topography)` and `Ray.Intersects(Mesh)` would sometimes return a different intersection than the closest one.
+- `Ray.Intersects(Topography)` now considers the topography's transform.
+- `AdaptiveGrid.AddEdge` no longer delete edges in case where new edge partially overlaps old edges without intersections.
 
 ### Changed
+
 - `GltfExtensions.UseReferencedContentExtension` is now true by default.
 - `GeometricElement.Intersects` method now supports multiple representations.
 - `GltfExtensions.ToGlTF` creates parent node for element and child nodes for representation instances.
