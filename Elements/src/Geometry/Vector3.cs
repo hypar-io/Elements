@@ -281,6 +281,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Scales the vector by a given scalar value.
+        /// </summary>
+        /// <param name="scalar">The scalar value to multiply each component by.</param>
+        /// <returns>A new vector where each component is scaled by the given scalar.</returns>
+        public Vector3 Scale(double scalar)
+        {
+            return new Vector3(X * scalar, Y * scalar, Z * scalar);
+        }
+
+        /// <summary>
         /// The angle in degrees from this vector to the provided vector.
         /// Note that for angles in the plane that can be greater than 180 degrees,
         /// you should use Vector3.PlaneAngleTo.
@@ -992,7 +1002,7 @@ namespace Elements.Geometry
             // within tolerance of each other. If all points are within
             // tolerance/2 of some point, then they must all be within tolerance
             // of each other.
-            return points.All(p => p.IsAlmostEqualTo(average, tolerance / 2.0)); 
+            return points.All(p => p.IsAlmostEqualTo(average, tolerance / 2.0));
         }
 
         /// <summary>
