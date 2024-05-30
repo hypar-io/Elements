@@ -1231,13 +1231,12 @@ namespace Elements.Geometry
         public Line Projected(Line line)
         {
             var lineDirection = line.Direction();
-            var normalizedDirection = new Vector3(lineDirection.X, lineDirection.Y, lineDirection.Z);
 
             Vector3 ProjectPoint(Vector3 point, Vector3 lineStart)
             {
                 var toPoint = point - lineStart;
-                var projectionLength = toPoint.Dot(normalizedDirection);
-                return lineStart + normalizedDirection.Scale(projectionLength);
+                var projectionLength = toPoint.Dot(lineDirection);
+                return lineStart + lineDirection.Scale(projectionLength);
             }
 
             var newLineStart = ProjectPoint(Start, line.Start);
