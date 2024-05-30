@@ -405,8 +405,31 @@ namespace Elements.Geometry
             {
                 return double.PositiveInfinity;
             }
-            var closestPointOnRay = ray.Origin + t * ray.Direction;
+            var closestPointOnRay = Project(ray);
             return closestPointOnRay.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Project a point onto a ray.
+        /// The ray is treated as being infinitely long.
+        /// </summary>
+        /// <param name="ray">The target ray.</param>
+        public Vector3 Project(Ray ray)
+        {
+            var toPoint = this - ray.Origin;
+            var projectionLength = toPoint.Dot(ray.Direction);
+            return ray.Origin + ray.Direction.Scale(projectionLength);
+        }
+
+        /// <summary>
+        /// Project a point onto a constructed ray.
+        /// The ray is treated as being infinitely long.
+        /// </summary>
+        /// <param name="origin">The origin of the line.</param>
+        /// <param name="direction">The direction of the line.</param>
+        public Vector3 Project(Vector3 origin, Vector3 direction)
+        {
+            return Project(new Ray(origin, direction));
         }
 
         internal double ProjectedParameterOn(Ray ray)

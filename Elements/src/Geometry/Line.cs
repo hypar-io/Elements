@@ -1224,7 +1224,7 @@ namespace Elements.Geometry
         }
 
         /// <summary>
-        /// Projects current line orthogonally onto another line
+        /// Projects current line onto another line
         /// </summary>
         /// <param name="line">Line to project on</param>
         /// <returns>New line on a line</returns>
@@ -1232,15 +1232,8 @@ namespace Elements.Geometry
         {
             var lineDirection = line.Direction();
 
-            Vector3 ProjectPoint(Vector3 point, Vector3 lineStart)
-            {
-                var toPoint = point - lineStart;
-                var projectionLength = toPoint.Dot(lineDirection);
-                return lineStart + lineDirection.Scale(projectionLength);
-            }
-
-            var newLineStart = ProjectPoint(Start, line.Start);
-            var newLineEnd = ProjectPoint(End, line.Start);
+            var newLineStart = Start.Project(line.Start, lineDirection);
+            var newLineEnd = End.Project(line.End, lineDirection);
 
             return new Line(newLineStart, newLineEnd);
         }
