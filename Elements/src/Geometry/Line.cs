@@ -1214,13 +1214,28 @@ namespace Elements.Geometry
         /// <summary>
         /// Projects current line onto a plane
         /// </summary>
-        /// <param name="plane">Plane to project</param>
+        /// <param name="plane">Plane to project on</param>
         /// <returns>New line on a plane</returns>
         public Line Projected(Plane plane)
         {
             var start = Start.Project(plane);
             var end = End.Project(plane);
             return new Line(start, end);
+        }
+
+        /// <summary>
+        /// Projects current line onto another line
+        /// </summary>
+        /// <param name="line">Line to project on</param>
+        /// <returns>New line on a line</returns>
+        public Line Projected(Line line)
+        {
+            var lineDirection = line.Direction();
+
+            var newLineStart = Start.Project(line.Start, lineDirection);
+            var newLineEnd = End.Project(line.End, lineDirection);
+
+            return new Line(newLineStart, newLineEnd);
         }
 
         /// <summary>

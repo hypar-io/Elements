@@ -281,6 +281,16 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Scales the vector by a given scalar value.
+        /// </summary>
+        /// <param name="scalar">The scalar value to multiply each component by.</param>
+        /// <returns>A new vector where each component is scaled by the given scalar.</returns>
+        public Vector3 Scale(double scalar)
+        {
+            return new Vector3(X * scalar, Y * scalar, Z * scalar);
+        }
+
+        /// <summary>
         /// The angle in degrees from this vector to the provided vector.
         /// Note that for angles in the plane that can be greater than 180 degrees,
         /// you should use Vector3.PlaneAngleTo.
@@ -395,8 +405,31 @@ namespace Elements.Geometry
             {
                 return double.PositiveInfinity;
             }
-            var closestPointOnRay = ray.Origin + t * ray.Direction;
+            var closestPointOnRay = Project(ray);
             return closestPointOnRay.DistanceTo(this);
+        }
+
+        /// <summary>
+        /// Project a point onto a ray.
+        /// The ray is treated as being infinitely long.
+        /// </summary>
+        /// <param name="ray">The target ray.</param>
+        public Vector3 Project(Ray ray)
+        {
+            var toPoint = this - ray.Origin;
+            var projectionLength = toPoint.Dot(ray.Direction);
+            return ray.Origin + ray.Direction.Scale(projectionLength);
+        }
+
+        /// <summary>
+        /// Project a point onto a constructed ray.
+        /// The ray is treated as being infinitely long.
+        /// </summary>
+        /// <param name="origin">The origin of the line.</param>
+        /// <param name="direction">The direction of the line.</param>
+        public Vector3 Project(Vector3 origin, Vector3 direction)
+        {
+            return Project(new Ray(origin, direction));
         }
 
         internal double ProjectedParameterOn(Ray ray)
@@ -992,7 +1025,7 @@ namespace Elements.Geometry
             // within tolerance of each other. If all points are within
             // tolerance/2 of some point, then they must all be within tolerance
             // of each other.
-            return points.All(p => p.IsAlmostEqualTo(average, tolerance / 2.0)); 
+            return points.All(p => p.IsAlmostEqualTo(average, tolerance / 2.0));
         }
 
         /// <summary>

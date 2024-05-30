@@ -141,7 +141,7 @@ namespace Elements.Geometry.Tests
         public void IntersectsCircle()
         {
             Circle c = new Circle(new Vector3(5, 5, 5), 5);
-            
+
             // Intersects circle at one point and touches at other.
             Line l = new Line(new Vector3(0, 5, 5), new Vector3(15, 5, 5));
             Assert.True(l.Intersects(c, out var results));
@@ -599,6 +599,72 @@ namespace Elements.Geometry.Tests
             var l1 = new Line(a, b);
             var l2 = new Line(b, a);
             Assert.NotEqual(l1.GetHashCode(), l2.GetHashCode());
+        }
+
+        [Fact]
+        public void ProjectedLine()
+        {
+            // Identical Line Projection
+            var line = new Line(new Vector3(0, 0, 0), new Vector3(1, 1, 1));
+            var result = line.Projected(line);
+
+            Assert.Equal(line.Start, result.Start);
+            Assert.Equal(line.End, result.End);
+
+            // Parallel Line Projection
+            var lineA = new Line(new Vector3(0, 0, 0), new Vector3(1, 0, 0));
+            var parallelLine = new Line(new Vector3(1, 0, 0), new Vector3(2, 0, 0));
+            var resultA = parallelLine.Projected(lineA);
+
+            var expectedStartA = new Vector3(1, 0, 0);
+            var expectedEndA = new Vector3(2, 0, 0);
+
+            Assert.Equal(expectedStartA, resultA.Start);
+            Assert.Equal(expectedEndA, resultA.End);
+
+            // Diagnol Line Projection
+            var lineB = new Line(new Vector3(0, 0, 0), new Vector3(1, 1, 0));
+            var diagonalLine = new Line(new Vector3(1, 1, 1), new Vector3(2, 2, 1));
+            var resultB = diagonalLine.Projected(lineB);
+
+            var expectedStartB = new Vector3(1, 1, 0);
+            var expectedEndB = new Vector3(2, 2, 0);
+
+            Assert.Equal(expectedStartB, resultB.Start);
+            Assert.Equal(expectedEndB, resultB.End);
+
+            // Perpendicular Line Projection
+            var lineC = new Line(new Vector3(0, 0, 0), new Vector3(1, 0, 0));
+            var perpendicularLine = new Line(new Vector3(0, 1, 0), new Vector3(1, 1, 0));
+            var resultC = perpendicularLine.Projected(lineC);
+
+            var expectedStartC = new Vector3(0, 0, 0);
+            var expectedEndC = new Vector3(1, 0, 0);
+
+            Assert.Equal(expectedStartC, resultC.Start);
+            Assert.Equal(expectedEndC, resultC.End);
+
+            // Negative Line Projection
+            var lineD = new Line(new Vector3(-1, -1, -1), new Vector3(-2, -2, -2));
+            var otherLineD = new Line(new Vector3(-3, -3, -3), new Vector3(-4, -4, -4));
+            var resultD = otherLineD.Projected(lineD);
+
+            var expectedStartD = new Vector3(-3, -3, -3);
+            var expectedEndD = new Vector3(-4, -4, -4);
+
+            Assert.Equal(expectedStartD, resultD.Start);
+            Assert.Equal(expectedEndD, resultD.End);
+
+            // Arbitrary Line Projection
+            var lineE = new Line(new Vector3(0, 0, 0), new Vector3(1, 2, 3));
+            var otherLineE = new Line(new Vector3(1, 1, 1), new Vector3(2, 3, 4));
+            var resultE = otherLineE.Projected(lineE);
+
+            var expectedStartE = new Vector3(0.42857, 0.85714, 1.28571); // approximate expected values
+            var expectedEndE = new Vector3(1.42857, 2.85714, 4.28571); // approximate expected values
+
+            Assert.True(resultE.Start.IsAlmostEqualTo(expectedStartE));
+            Assert.True(resultE.End.IsAlmostEqualTo(expectedEndE));
         }
 
         [Fact]
@@ -1209,7 +1275,7 @@ namespace Elements.Geometry.Tests
             Assert.Equal(delta.Length(), (new Line(pt12, pt11)).DistanceTo(new Line(pt21, pt22)), 12);
             Assert.Equal(delta.Length(), (new Line(pt12, pt11)).DistanceTo(new Line(pt22, pt21)), 12);
             //The segments (pt12, pt13) and (pt21, pt22) does not intersect.
-            //The shortest distance is from an endpoint to another segment - difference between lines plus between endpoints. 
+            //The shortest distance is from an endpoint to another segment - difference between lines plus between endpoints.
             var expected = (q12 * v1).DistanceTo(new Line(delta + q21 * v2, delta + q22 * v2));
             Assert.Equal(expected, (new Line(pt12, pt13)).DistanceTo(new Line(pt21, pt22)), 12);
             Assert.Equal(expected, (new Line(pt12, pt13)).DistanceTo(new Line(pt22, pt21)), 12);

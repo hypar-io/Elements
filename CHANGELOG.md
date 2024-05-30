@@ -55,6 +55,7 @@
 - `ContentConfiguration.AllowRotatation`
 - `AdaptiveGrid.Clone`
 - `AdditionalProperties` to ContentConfiguration.
+- `Line.Projected(Line line)`
 
 ### Fixed
 
