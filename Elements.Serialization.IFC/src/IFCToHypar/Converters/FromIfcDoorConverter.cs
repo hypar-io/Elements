@@ -13,7 +13,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcDoor ifcDoor))
+            if (ifcProduct is not IfcDoor ifcDoor)
             {
                 return null;
             }
@@ -44,13 +44,14 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                                   doorThickness,
                                   openingSide,
                                   openingType,
-                                  repData.Transform,
-                                  repData.Material,
-                                  new Representation(repData.SolidOperations),
-                                  false,
-                                  IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
-                                  ifcDoor.Name
-                                  );
+                                  transform: repData.Transform,
+                                  isElementDefinition: false,
+                                  id: IfcGuid.FromIfcGUID(ifcDoor.GlobalId),
+                                  name: ifcDoor.Name ?? ""
+                                  )
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
 
             return result;
         }

@@ -26,7 +26,6 @@ namespace Elements.Serialization.IFC.IFCToHypar
         private readonly List<IfcRelationship> _ifcRelationships;
 
         private readonly Dictionary<Element, IfcProduct> _elementToIfcProduct;
-        private readonly Dictionary<Guid, GeometricElement> _elementDefinitions;
         private readonly List<string> _constructionErrors;
 
         private readonly MaterialExtractor _materialExtractor;
@@ -70,7 +69,6 @@ namespace Elements.Serialization.IFC.IFCToHypar
             _materialExtractor = new MaterialExtractor(styledItems);
 
             _elementToIfcProduct = new Dictionary<Element, IfcProduct>();
-            _elementDefinitions = new Dictionary<Guid, GeometricElement>();
 
             _representationDataExtractor = representationExtractor ?? GetDefaultRepresentationDataExtractor(_materialExtractor);
             _fromIfcToElementsConverter = fromIfcConverter ?? GetDefaultFromIfcConverter();
@@ -136,39 +134,6 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 return null;
             }
 
-            // If the product has IfcMappedItem representation, it will be used
-            // to create an ElementInstance. If the definition isn't exist in
-            // _elementDefinitions, it will be extracted from IfcMappedItem
-            // and added to _elementDefinitions.
-            if (repData.MappingInfo != null)
-            {
-                // TODO: Handle IfcMappedItem
-                // - Idea: Make Representations an Element, so that they can be shared.
-                // - Idea: Make PropertySet an Element. PropertySets can store type properties.
-                if (!_elementDefinitions.TryGetValue(repData.MappingInfo.MappingId, out var definition))
-                {
-                    definition = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
-
-                    if (definition == null)
-                    {
-                        //Debug.Assert(false, "Cannot convert definition to GeometricElement.");
-                        return null;
-                    }
-
-                    definition.IsElementDefinition = true;
-                    _elementDefinitions.Add(repData.MappingInfo.MappingId, definition);
-                    //definition.SkipCSGUnion = true;
-                }
-
-                // The cartesian transform needs to be applied 
-                // before the element transformation because it
-                // may contain scale and rotation.
-                var instanceTransform = new Transform(repData.MappingInfo.MappingTransform);
-                instanceTransform.Concatenate(repData.Transform);
-                var instance = definition.CreateInstance(instanceTransform, product.Name ?? "");
-                return instance;
-            }
-
             // If the product doesn't have an IfcMappedItem representation, it will be converted to
             // a GeometricElement.
             var element = _fromIfcToElementsConverter.ConvertToElement(product, repData, _constructionErrors);
@@ -224,10 +189,10 @@ namespace Elements.Serialization.IFC.IFCToHypar
         /// </summary>
         private static IfcRepresentationDataExtractor GetDefaultRepresentationDataExtractor(MaterialExtractor materialExtractor)
         {
-            IfcRepresentationDataExtractor extractor = new IfcRepresentationDataExtractor(materialExtractor);
+            IfcRepresentationDataExtractor extractor = new IfcRepresentationDataExtractor();
 
-            extractor.AddRepresentationParser(new IfcFacetedBrepParser());
-            extractor.AddRepresentationParser(new IfcExtrudedAreaSolidParser());
+            extractor.AddRepresentationParser(new IfcFacetedBrepParser(materialExtractor));
+            extractor.AddRepresentationParser(new IfcExtrudedAreaSolidParser(materialExtractor));
             extractor.AddRepresentationParser(new IfcMappedItemParser(extractor));
             extractor.AddRepresentationParser(new IfcBooleanClippingResultParser(extractor));
 
