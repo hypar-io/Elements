@@ -72,12 +72,11 @@ namespace Elements.Fittings
             var arrows = this.Start.GetArrow(branchSideTransformInverted.OfPoint(startNodeTransform.Origin))
                  .Concat(this.End.GetArrow(endNodeTransform.Origin)).Concat(GetExtensions());
 
-            this.RepresentationInstances.Add(new RepresentationInstance(new SolidRepresentation(sweep1), this.Material));
-            this.RepresentationInstances.Add(new RepresentationInstance(new SolidRepresentation(sweep2), this.Material));
-            foreach (var arrow in arrows)
-            {
-                this.RepresentationInstances.Add(new RepresentationInstance(new SolidRepresentation(arrow), this.Material));
-            }
+            // TODO: Update the Factory pattern for setting representationInstances to work with Reducer transforms.
+            // It would also be ideal to fully understand the geometry artifacts seen with certain Reducers that result in
+            // bad boolean graphics which result in invisible or fractured geometry.
+            var solidOperations = new List<SolidOperation> { sweep1, sweep2 }.Concat(arrows).ToList();
+            FittingRepresentationStorage.SetFittingRepresentation(this, () => solidOperations, false, false);
         }
 
         public override void ApplyAdditionalTransform()
