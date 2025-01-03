@@ -76,7 +76,10 @@ namespace Elements.Fittings
             // It would also be ideal to fully understand the geometry artifacts seen with certain Reducers that result in
             // bad boolean graphics which result in invisible or fractured geometry.
             var solidOperations = new List<SolidOperation> { sweep1, sweep2 }.Concat(arrows).ToList();
-            FittingRepresentationStorage.SetFittingRepresentation(this, () => solidOperations, false, false);
+            foreach (var solidOperation in solidOperations)
+            {
+                this.RepresentationInstances.Add(new RepresentationInstance(new SolidRepresentation(solidOperation), this.Material));
+            }
         }
 
         public override void ApplyAdditionalTransform()
