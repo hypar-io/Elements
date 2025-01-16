@@ -50,6 +50,20 @@ namespace Elements.Serialization.JSON
             }
         }
 
+        private static Dictionary<Guid, SharedObject> _sharedObjects = null;
+
+        public static Dictionary<Guid, SharedObject> SharedObjects
+        {
+            get
+            {
+                if (_sharedObjects == null)
+                {
+                    _sharedObjects = new Dictionary<Guid, SharedObject>();
+                }
+                return _sharedObjects;
+            }
+        }
+
         [System.ThreadStatic]
         private static List<string> _deserializationWarnings;
 
@@ -170,9 +184,15 @@ namespace Elements.Serialization.JSON
 
                 // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
-                if (value is Element element && !WritingTopLevelElement(writer.Path) && !ElementwiseSerialization)
+                var element = value as Element;
+                if (element != null && !WritingTopLevelElement(writer.Path) && !ElementwiseSerialization)
                 {
                     var ident = element;
+                    writer.WriteValue(ident.Id);
+                }
+                else if (value is SharedObject sharedObject && !WritingTopLevelSharedObject(writer.Path) && !ElementwiseSerialization)
+                {
+                    var ident = sharedObject;
                     writer.WriteValue(ident.Id);
                 }
                 else
@@ -195,6 +215,13 @@ namespace Elements.Serialization.JSON
                     {
                         jObject.AddFirst(new Newtonsoft.Json.Linq.JProperty(_discriminator, discriminatorName));
                     }
+
+                    // Remove properties that are the same as in SharedObject
+                    if (element != null && element.SharedObject != null)
+                    {
+                        RemovePropertiesSameAsInSharedObject(element, jObject);
+
+                    }
                     writer.WriteToken(jObject.CreateReader());
                 }
             }
@@ -204,10 +231,64 @@ namespace Elements.Serialization.JSON
             }
         }
 
+        private void RemovePropertiesSameAsInSharedObject(Element element, JObject jObject)
+        {
+            var sharedProperties = element.SharedObject.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var elementProperties = element.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var property in elementProperties)
+            {
+                // Check if property is in SharedObject
+                var sharedProperty = sharedProperties.FirstOrDefault(p => p.Name == property.Name);
+                if (sharedProperty != null)
+                {
+                    var sharedValue = sharedProperty.GetValue(element.SharedObject);
+                    var elementValue = property.GetValue(element);
+
+                    // If property value in SharedObject and Element are the same, remove property from jObject
+                    if (Equals(sharedValue, elementValue)) // Compare values
+                    {
+                        jObject.Remove(property.Name);
+                    }
+                    // If property has JsonExtensionDataAttribute (e.g. AdditionalProperties)
+                    // compare each value in the dictionary
+                    else if (Attribute.IsDefined(sharedProperty, typeof(JsonExtensionDataAttribute)))
+                    {
+                        if (sharedProperty.GetValue(element.SharedObject) is IDictionary<string, object> extraDataFromSharedObject
+                            && property.GetValue(element) is IDictionary<string, object> extraDataFromElement)
+                        {
+                            foreach (var extraDataFromSharedObjectKey in extraDataFromSharedObject.Keys)
+                            {
+                                if (string.Equals(extraDataFromSharedObjectKey, _discriminator))
+                                {
+                                    continue;
+                                }
+                                if (extraDataFromElement.ContainsKey(extraDataFromSharedObjectKey) &&
+                                Equals(extraDataFromSharedObject[extraDataFromSharedObjectKey], extraDataFromElement[extraDataFromSharedObjectKey]))
+                                {
+                                    jObject.Remove(extraDataFromSharedObjectKey);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private static bool WritingTopLevelElement(string path)
         {
             var parts = path.Split('.');
             if (parts.Length == 2 && parts[0] == "Elements" && Guid.TryParse(parts[1], out var _))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private static bool WritingTopLevelSharedObject(string path)
+        {
+            var parts = path.Split('.');
+            if (parts.Length == 2 && parts[0] == "SharedObjects" && Guid.TryParse(parts[1], out var _))
             {
                 return true;
             }
@@ -280,6 +361,17 @@ namespace Elements.Serialization.JSON
                 return Elements[id];
             }
 
+            if (typeof(SharedObject).IsAssignableFrom(objectType) && !WritingTopLevelSharedObject(reader.Path) && reader.Value != null)
+            {
+                var id = Guid.Parse(reader.Value.ToString());
+                if (!SharedObjects.ContainsKey(id))
+                {
+                    DeserializationWarnings.Add($"SharedObject {id} was not found during deserialization. Check for other deserialization errors.");
+                    return null;
+                }
+                return SharedObjects[id];
+            }
+
             var jObject = serializer.Deserialize<Newtonsoft.Json.Linq.JObject>(reader);
             if (jObject == null)
             {
@@ -319,6 +411,15 @@ namespace Elements.Serialization.JSON
                     if (!Elements.ContainsKey(ident.Id))
                     {
                         Elements.Add(ident.Id, ident);
+                    }
+                }
+
+                if (typeof(SharedObject).IsAssignableFrom(objectType) && WritingTopLevelSharedObject(reader.Path))
+                {
+                    var ident = (SharedObject)obj;
+                    if (!SharedObjects.ContainsKey(ident.Id))
+                    {
+                        SharedObjects.Add(ident.Id, ident);
                     }
                 }
 
