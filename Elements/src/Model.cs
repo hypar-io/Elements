@@ -35,6 +35,11 @@ namespace Elements
         [System.ComponentModel.DataAnnotations.Required]
         public System.Collections.Generic.IDictionary<Guid, Element> Elements { get; set; } = new System.Collections.Generic.Dictionary<Guid, Element>();
 
+        /// <summary>A collection of SharedObjects keyed by their identifiers.</summary>
+        [JsonProperty("SharedObjects", Required = Required.Default)]
+        [System.ComponentModel.DataAnnotations.Required]
+        public System.Collections.Generic.IDictionary<Guid, SharedObject> SharedObjects { get; set; } = new System.Collections.Generic.Dictionary<Guid, SharedObject>();
+
         /// <summary>
         /// Collection of subelements from shared objects or RepresentationInstances (e.g. SolidRepresentation.Profile or RepresentationInstance.Material).
         /// We do not serialize shared objects to json, but we do include them in other formats like gltf.
@@ -123,7 +128,7 @@ namespace Elements
                 // to the elements dictionary first. This will ensure that
                 // those elements will be read out and be available before
                 // an attempt is made to deserialize the element itself.
-                var subElements = RecursiveGatherSubElements(element, out var elementsToIgnore);
+                var (subElements, sharedObjects) = RecursiveGatherSubElements(element, out var elementsToIgnore);
                 foreach (var e in subElements)
                 {
                     if (!this.Elements.ContainsKey(e.Id))
@@ -135,6 +140,14 @@ namespace Elements
                             geoE.UpdateRepresentations();
                         }
                         this.Elements.Add(e.Id, e);
+                    }
+                }
+
+                foreach (var sharedObject in sharedObjects)
+                {
+                    if (!SharedObjects.ContainsKey(sharedObject.Id))
+                    {
+                        SharedObjects.Add(sharedObject.Id, sharedObject);
                     }
                 }
 
@@ -453,23 +466,24 @@ namespace Elements
             return FromJson(json, out _, forceTypeReload);
         }
 
-        private List<Element> RecursiveGatherSubElements(object obj, out List<Element> elementsToIgnore)
+        private (List<Element> elements, List<SharedObject> sharedObjects) RecursiveGatherSubElements(object obj, out List<Element> sharedObjectSubElements)
         {
             // A dictionary created for the purpose of caching properties
             // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
 
-            return RecursiveGatherSubElementsInternal(obj, props, out elementsToIgnore);
+            return RecursiveGatherSubElementsInternal(obj, props, out sharedObjectSubElements);
         }
 
-        private List<Element> RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties, out List<Element> elementsToIgnore)
+        private (List<Element> elements, List<SharedObject> sharedObjects) RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties, out List<Element> sharedObjectSubElements)
         {
             var elements = new List<Element>();
-            elementsToIgnore = new List<Element>();
+            sharedObjectSubElements = new List<Element>();
+            var sharedObjects = new List<SharedObject>();
 
             if (obj == null)
             {
-                return elements;
+                return (elements, sharedObjects);
             }
 
             var e = obj as Element;
@@ -478,7 +492,7 @@ namespace Elements
                 // Do nothing. The Element has already
                 // been added. This assumes that that the sub-elements
                 // have been added as well and we don't need to continue.
-                return elements;
+                return (elements, sharedObjects);
             }
 
             // This explicit loop is because we have mappings marked as internal so it's elements won't be automatically serialized.
@@ -491,6 +505,16 @@ namespace Elements
                 }
             }
 
+            var sharedObject = obj as SharedObject;
+
+            if (sharedObject != null)
+            {
+                if (SharedObjects.ContainsKey(sharedObject.Id))
+                {
+                    return (elements, sharedObjects);
+                }
+            }
+
             var t = obj.GetType();
 
             // Ignore value types and strings
@@ -498,7 +522,7 @@ namespace Elements
             // could be elements.
             if (!t.IsClass || t == typeof(string))
             {
-                return elements;
+                return (elements, sharedObjects);
             }
 
             List<PropertyInfo> constrainedProps;
@@ -516,6 +540,7 @@ namespace Elements
             }
 
             var elementsFromProperties = new List<Element>();
+            var sharedObjectsFromProperties = new List<SharedObject>();
             foreach (var p in constrainedProps)
             {
                 try
@@ -526,12 +551,21 @@ namespace Elements
                         continue;
                     }
 
+                    // Do not save shared object to the model if it is marked with JsonIgnore (e.g. ElementRepresentation)
+                    bool hasJsonIgnore = p.GetCustomAttributes(typeof(JsonIgnoreAttribute), true).Any();
+
                     if (pValue is IList elems)
                     {
                         foreach (var item in elems)
                         {
-                            elementsFromProperties.AddRange(RecursiveGatherSubElementsInternal(item, properties, out var elementsFromItemToIgnore));
-                            elementsToIgnore.AddRange(elementsFromItemToIgnore);
+                            var (subElements, subSharedObjects) = RecursiveGatherSubElementsInternal(item, properties, out var elementsFromSharedObjectProperties);
+                            elementsFromProperties.AddRange(subElements);
+                            // do not save shared objects marked with JsonIgnore
+                            if (!hasJsonIgnore)
+                            {
+                                sharedObjectsFromProperties.AddRange(subSharedObjects);
+                            }
+                            sharedObjectSubElements.AddRange(elementsFromSharedObjectProperties);
                         }
                         continue;
                     }
@@ -541,14 +575,26 @@ namespace Elements
                     {
                         foreach (var value in dict.Values)
                         {
-                            elementsFromProperties.AddRange(RecursiveGatherSubElementsInternal(value, properties, out var elementsFromValueToIgnore));
-                            elementsToIgnore.AddRange(elementsFromValueToIgnore);
+                            var (subElements, subSharedObjects) = RecursiveGatherSubElementsInternal(value, properties, out var elementsFromSharedObjectProperties);
+                            elementsFromProperties.AddRange(subElements);
+                            // do not save shared objects marked with JsonIgnore
+                            if (!hasJsonIgnore)
+                            {
+                                sharedObjectsFromProperties.AddRange(subSharedObjects);
+                            }
+                            sharedObjectSubElements.AddRange(elementsFromSharedObjectProperties);
                         }
                         continue;
                     }
 
-                    elementsFromProperties.AddRange(RecursiveGatherSubElementsInternal(pValue, properties, out var elementsFromPropertyToIgnore));
-                    elementsToIgnore.AddRange(elementsFromPropertyToIgnore);
+                    var (gatheredSubElements, gatheredSubSharedObjects) = RecursiveGatherSubElementsInternal(pValue, properties, out var elementsFromPropertyToIgnore);
+                    elementsFromProperties.AddRange(gatheredSubElements);
+                    // do not save shared objects marked with JsonIgnore
+                    if (!hasJsonIgnore)
+                    {
+                        sharedObjectsFromProperties.AddRange(gatheredSubSharedObjects);
+                    }
+                    sharedObjectSubElements.AddRange(elementsFromPropertyToIgnore);
                 }
                 catch (Exception ex)
                 {
@@ -557,19 +603,25 @@ namespace Elements
             }
             if (IsTypeRelatedToSharedObjects(t))
             {
-                elementsToIgnore.AddRange(elementsFromProperties);
+                sharedObjectSubElements.AddRange(elementsFromProperties);
             }
             else
             {
                 elements.AddRange(elementsFromProperties);
             }
+            sharedObjects.AddRange(sharedObjectsFromProperties);
 
             if (e != null)
             {
                 elements.Add(e);
             }
 
-            return elements;
+            if (sharedObject != null)
+            {
+                sharedObjects.Add(sharedObject);
+            }
+
+            return (elements, sharedObjects);
         }
 
         /// <summary>
@@ -624,7 +676,6 @@ namespace Elements
 
         private static bool IsTypeRelatedToSharedObjects(Type t)
         {
-
             return typeof(SharedObject).IsAssignableFrom(t)
                 || typeof(RepresentationInstance).IsAssignableFrom(t);
         }
