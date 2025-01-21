@@ -185,12 +185,12 @@ namespace Elements.Serialization.JSON
                 // Operate on all identifiable Elements with a path less than Entities.xxxxx
                 // This will get all properties.
                 var element = value as Element;
-                if (element != null && !WritingTopLevelElement(writer.Path) && !ElementwiseSerialization)
+                if (element != null && !PathIsTopLevel(writer.Path, "Elements") && !ElementwiseSerialization)
                 {
                     var ident = element;
                     writer.WriteValue(ident.Id);
                 }
-                else if (value is SharedObject sharedObject && !WritingTopLevelSharedObject(writer.Path) && !ElementwiseSerialization)
+                else if (value is SharedObject sharedObject && !PathIsTopLevel(writer.Path, "SharedObjects") && !ElementwiseSerialization)
                 {
                     var ident = sharedObject;
                     writer.WriteValue(ident.Id);
@@ -275,20 +275,10 @@ namespace Elements.Serialization.JSON
             }
         }
 
-        private static bool WritingTopLevelElement(string path)
+        private static bool PathIsTopLevel(string path, string propertyName)
         {
             var parts = path.Split('.');
-            if (parts.Length == 2 && parts[0] == "Elements" && Guid.TryParse(parts[1], out var _))
-            {
-                return true;
-            }
-            return false;
-        }
-
-        private static bool WritingTopLevelSharedObject(string path)
-        {
-            var parts = path.Split('.');
-            if (parts.Length == 2 && parts[0] == "SharedObjects" && Guid.TryParse(parts[1], out var _))
+            if (parts.Length == 2 && parts[0] == propertyName && Guid.TryParse(parts[1], out var _))
             {
                 return true;
             }
@@ -350,7 +340,7 @@ namespace Elements.Serialization.JSON
         {
             // The serialized value is an identifier, so the expectation is
             // that the element with that id has already been deserialized.
-            if (typeof(Element).IsAssignableFrom(objectType) && !WritingTopLevelElement(reader.Path) && reader.Value != null)
+            if (typeof(Element).IsAssignableFrom(objectType) && !PathIsTopLevel(reader.Path, "Elements") && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
                 if (!Elements.ContainsKey(id))
@@ -361,7 +351,7 @@ namespace Elements.Serialization.JSON
                 return Elements[id];
             }
 
-            if (typeof(SharedObject).IsAssignableFrom(objectType) && !WritingTopLevelSharedObject(reader.Path) && reader.Value != null)
+            if (typeof(SharedObject).IsAssignableFrom(objectType) && !PathIsTopLevel(reader.Path, "SharedObjects") && reader.Value != null)
             {
                 var id = Guid.Parse(reader.Value.ToString());
                 if (!SharedObjects.ContainsKey(id))
@@ -405,7 +395,7 @@ namespace Elements.Serialization.JSON
 
                 // Write the id to the cache so that we can retrieve it next time
                 // instead of de-serializing it again.
-                if (typeof(Element).IsAssignableFrom(objectType) && WritingTopLevelElement(reader.Path))
+                if (typeof(Element).IsAssignableFrom(objectType) && PathIsTopLevel(reader.Path, "Elements"))
                 {
                     var ident = (Element)obj;
                     if (!Elements.ContainsKey(ident.Id))
@@ -414,7 +404,7 @@ namespace Elements.Serialization.JSON
                     }
                 }
 
-                if (typeof(SharedObject).IsAssignableFrom(objectType) && WritingTopLevelSharedObject(reader.Path))
+                if (typeof(SharedObject).IsAssignableFrom(objectType) && PathIsTopLevel(reader.Path, "SharedObjects"))
                 {
                     var ident = (SharedObject)obj;
                     if (!SharedObjects.ContainsKey(ident.Id))
