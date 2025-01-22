@@ -96,6 +96,13 @@ namespace Elements
         internal Dictionary<string, MappingBase> Mappings { get; set; } = null;
 
         /// <summary>
+        ///  An optional shared object that can be used to share data between elements.
+        /// </summary>
+        /// <value></value>
+        [JsonProperty("SharedObject", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+        public SharedObject SharedObject { get; set; }
+
+        /// <summary>
         /// The method used to set a mapping for a given context.
         /// </summary>
         /// <param name="context"></param>
