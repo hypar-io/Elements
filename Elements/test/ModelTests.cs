@@ -19,6 +19,15 @@ namespace Elements.Tests
         public string MapProp = "test";
     }
 
+    class ColumnSharedObject : SharedObject
+    {
+        public string Name { get; set; }
+        public Material Material { get; set; }
+
+        [JsonExtensionData]
+        public Dictionary<string, object> AdditionalProperties { get; set; } = new Dictionary<string, object>();
+    }
+
     public class ModelTests
     {
         private ITestOutputHelper _output;
@@ -423,6 +432,155 @@ namespace Elements.Tests
             var panel = new Panel(new Polygon(new[] { a, b, c, d }), BuiltInMaterials.Glass);
             model.AddElement(panel);
             return model;
+        }
+
+        [Fact]
+        public void SharedObjectsAreSerialized()
+        {
+            var model = new Model();
+
+            var column1 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            string commonPropertyName = "CommonProperty";
+            string commonPropertyValue = "CommonValue";
+            column1.AdditionalProperties.Add(commonPropertyName, commonPropertyValue);
+
+            var column2 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            column2.AdditionalProperties.Add(commonPropertyName, commonPropertyValue);
+
+            var column1SharedObject = new ColumnSharedObject
+            {
+                AdditionalProperties = new Dictionary<string, object>()
+                {
+                    { commonPropertyName, commonPropertyValue },
+                },
+            };
+
+            string sharedObjectId = column1SharedObject.Id.ToString();
+            column1.SharedObject = column1SharedObject;
+            column2.SharedObject = column1SharedObject;
+            model.AddElement(column1);
+            model.AddElement(column2);
+
+            var json = model.ToJson();
+            // one shared object is serialized
+            var savedSharedObjects = System.Text.RegularExpressions.Regex.Matches(json, @"""discriminator"":\s*""Elements.Tests.ColumnSharedObject""");
+            Assert.Single(savedSharedObjects);
+
+            // shared object is added as Id to elements
+            var sharedObjectUsage = System.Text.RegularExpressions.Regex.Matches(json, $@"""SharedObject"":\s*""{sharedObjectId}""");
+            Assert.Equal(2, sharedObjectUsage.Count);
+        }
+
+        [Fact]
+        public void ElementPropertiesEqualToSharedObjectPropertiesNotSerialized()
+        {
+            var model = new Model();
+            var red = new Material("Red", Colors.Red);
+            string columnName = "Column Test";
+
+            var column1 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            column1.Material = red;
+            string commonPropertyName = "CommonProperty";
+            string commonPropertyValue = "CommonValue";
+            column1.AdditionalProperties.Add(commonPropertyName, commonPropertyValue);
+            column1.Name = columnName;
+
+            var column2 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            column2.Material = red;
+            column2.AdditionalProperties.Add(commonPropertyName, commonPropertyValue);
+            column2.Name = columnName;
+
+            var column1SharedObject = new ColumnSharedObject
+            {
+                AdditionalProperties = new Dictionary<string, object>()
+                {
+                    { commonPropertyName, commonPropertyValue },
+                },
+                Name = columnName,
+                Material = red
+            };
+
+            column1.SharedObject = column1SharedObject;
+            column2.SharedObject = column1SharedObject;
+            model.AddElement(column1);
+            model.AddElement(column2);
+            model.AddElement(red);
+
+            string materialId = red.Id.ToString();
+
+            var json = model.ToJson();
+            // Material was saved to shared object
+            var sharedMaterial = System.Text.RegularExpressions.Regex.Matches(json, $@"""Material"":\s*""{materialId}""");
+            Assert.Single(sharedMaterial);
+            // material was deleted from elements
+            sharedMaterial = System.Text.RegularExpressions.Regex.Matches(json, $@"""Material"":\s*");
+            Assert.Single(sharedMaterial);
+
+            // common property from AdditionalProperties was saved to shared object once
+            var commonProperty = System.Text.RegularExpressions.Regex.Matches(json, $@"""{commonPropertyName}"":\s*""{commonPropertyValue}""");
+            Assert.Single(commonProperty);
+            // common property was deleted from elements
+            commonProperty = System.Text.RegularExpressions.Regex.Matches(json, $@"""{commonPropertyName}"":\s*");
+            Assert.Single(commonProperty);
+
+            // name property was saved to shared object and deleted from elements
+            var nameProperty = System.Text.RegularExpressions.Regex.Matches(json, $@"""Name"":\s*""{columnName}""");
+            Assert.Single(nameProperty);
+        }
+
+        [Fact]
+        public void ElementPropertiesNotEqualToSharedObjectPropertiesSerializedToELements()
+        {
+            var model = new Model();
+            var red = new Material("Red", Colors.Red);
+            string columnName = "Column Test";
+
+            var column1 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            column1.Material = red;
+            string commonPropertyName = "CommonProperty";
+            string commonPropertyValue = "CommonValue";
+            column1.AdditionalProperties.Add(commonPropertyName, commonPropertyValue);
+            column1.AdditionalProperties.Add("UniqueProperty", "UniqueValue");
+            column1.Name = columnName;
+
+            var column2 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            column2.Material = red;
+            column2.AdditionalProperties.Add(commonPropertyName, commonPropertyValue);
+            column2.AdditionalProperties.Add("UniqueProperty", "UniqueValue");
+            column2.Name = columnName;
+
+            var column3 = new Column(new Vector3(5, 5, 5), 2.0, null, Polygon.Rectangle(1, 1));
+            column3.Material = red;
+            column3.AdditionalProperties.Add(commonPropertyName, "DifferentValue");
+            column3.Name = columnName;
+
+            var column1SharedObject = new ColumnSharedObject
+            {
+                AdditionalProperties = new Dictionary<string, object>()
+                {
+                    { commonPropertyName, commonPropertyValue },
+                },
+                Name = columnName,
+                Material = red
+            };
+
+            column1.SharedObject = column1SharedObject;
+            column2.SharedObject = column1SharedObject;
+            model.AddElement(column1);
+            model.AddElement(column2);
+            model.AddElement(column3);
+            model.AddElement(red);
+
+            string materialId = red.Id.ToString();
+
+            var json = model.ToJson();
+            // Values not from shared object are serialized to both elements
+            var uniqueProperties = System.Text.RegularExpressions.Regex.Matches(json, $@"""UniqueProperty"":\s*""UniqueValue""");
+            Assert.Equal(2, uniqueProperties.Count);
+
+            // common property from AdditionalProperties was saved to shared object and deleted from elements
+            var commonProperty = System.Text.RegularExpressions.Regex.Matches(json, $@"""{commonPropertyName}"":\s*");
+            Assert.Equal(2, commonProperty.Count);
         }
     }
 }
