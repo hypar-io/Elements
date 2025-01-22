@@ -254,8 +254,8 @@ namespace Elements.Serialization.JSON
                     // compare each value in the dictionary
                     else if (Attribute.IsDefined(sharedProperty, typeof(JsonExtensionDataAttribute)))
                     {
-                        if (sharedProperty.GetValue(element.SharedObject) is IDictionary<string, object> extraDataFromSharedObject
-                            && property.GetValue(element) is IDictionary<string, object> extraDataFromElement)
+                        if (sharedValue is IDictionary<string, object> extraDataFromSharedObject
+                            && elementValue is IDictionary<string, object> extraDataFromElement)
                         {
                             foreach (var extraDataFromSharedObjectKey in extraDataFromSharedObject.Keys)
                             {

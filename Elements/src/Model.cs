@@ -34,7 +34,7 @@ namespace Elements
             /// List of elements collected from the shared object's properties.
             ///
             /// If shared object is marked as JsonIgnore (e.g. RepresentationInstance), it will not be
-            /// serialized to JSON, but it's properties will be collected here so they can be used
+            /// serialized to JSON, but its properties will be collected here so they can be used
             /// during gltf serialization.
             /// </summary>
             public List<Element> ElementsFromSharedObjectProperties { get; } = new List<Element>();
