@@ -30,6 +30,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Textures\**\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+    </Content>
+  <ItemGroup>
+  
+  <ItemGroup>
     <Content Include="Topography\**\*.*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
