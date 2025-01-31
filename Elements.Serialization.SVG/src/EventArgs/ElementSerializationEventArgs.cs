@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Svg;
 
 namespace Elements.Serialization.SVG
 {
@@ -35,10 +34,12 @@ namespace Elements.Serialization.SVG
         /// It can be used to create SvgElements
         /// (e.g. polygon.ToSvgPolygon(e.DrawingPlan, e.DrawingPlan.FrontContext) or e.DrawingPlan.CreateText(..))</param>
         /// <param name="element"></param>
-        public ElementSerializationEventArgs(SvgSection drawingPlan, Element element)
+        /// <param name="scale"></param>
+        public ElementSerializationEventArgs(SvgSection drawingPlan, Element element, double scale)
         {
             DrawingPlan = drawingPlan;
             Element = element;
+            Scale = scale;
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace Elements.Serialization.SVG
         /// The set of elements that will be added to the drawing plan if IsProcessed == true
         /// Please add there all new element that you created from the Element
         /// </summary>
-        public List<SvgElement> SvgElements { get; } = new List<SvgElement>();
+        public List<DrawingAction> Actions { get; } = new List<DrawingAction>();
 
         /// <summary>
         /// The element which is processed before being added to the drawing plan
@@ -71,5 +72,10 @@ namespace Elements.Serialization.SVG
         /// 5. Elements that are marked as AfterGridLines
         /// </summary>
         public CreationSequences CreationSequence { get; set; }
+
+        /// <summary>
+        /// The drawing scale
+        /// </summary>
+        public double Scale { get; }
     }
 }
