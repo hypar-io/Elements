@@ -155,7 +155,6 @@ namespace Elements.Serialization.JSON
         {
             if (t.IsPublic && t.IsClass)
             {
-                Console.WriteLine(t);
                 var attrib = t.GetCustomAttribute<JsonConverterAttribute>();
                 if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
                 {
