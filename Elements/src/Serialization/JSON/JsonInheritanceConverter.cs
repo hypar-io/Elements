@@ -89,7 +89,7 @@ namespace Elements.Serialization.JSON
             _discriminator = discriminator;
         }
 
-        private static readonly List<string> TypePrefixesExcludedFromTypeCache = new List<string> { "System", "SixLabors", "Newtonsoft" };
+        private static readonly List<string> TypePrefixesExcludedFromTypeCache = new List<string> { "System", "SixLabors", "Newtonsoft", "pyRevitLabs" };
 
         /// <summary>
         /// When we build up the element type cache, we iterate over all types in the app domain.
@@ -155,6 +155,7 @@ namespace Elements.Serialization.JSON
         {
             if (t.IsPublic && t.IsClass)
             {
+                Console.WriteLine(t);
                 var attrib = t.GetCustomAttribute<JsonConverterAttribute>();
                 if (attrib != null && attrib.ConverterType == typeof(JsonInheritanceConverter))
                 {
