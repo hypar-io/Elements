@@ -402,6 +402,10 @@ namespace Elements.Serialization.JSON
                     {
                         Elements.Add(ident.Id, ident);
                     }
+
+                    // TODO: remove this hack. It's added to make sure that we are not duplicating shared object id to the AdditionalProperties.
+                    // It must be deleted after SharedObjects deserialization is implemented.
+                    ident.AdditionalProperties.Remove(nameof(Element.SharedObject));
                 }
 
                 if (typeof(SharedObject).IsAssignableFrom(objectType) && PathIsTopLevel(reader.Path, "SharedObjects"))
