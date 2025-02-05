@@ -43,7 +43,7 @@ namespace Elements
             {
                 if (isTypeRelatedToSharedObjects)
                 {
-                    ElementsFromSharedObjectProperties.AddRange(gatherResult.ElementsFromSharedObjectProperties);
+                    ElementsFromSharedObjectProperties.AddRange(gatherResult.Elements);
                 }
                 else
                 {
@@ -508,10 +508,10 @@ namespace Elements
             // A dictionary created for the purpose of caching properties
             // that we need to recurse, for types that we've seen before.
             var props = new Dictionary<Type, List<PropertyInfo>>();
-            return RecursiveGatherSubElementsInternal(obj, props);
+            return RecursiveGatherSubElementsInternal(obj, props, false);
         }
 
-        private GatherSubElementsResult RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties)
+        private GatherSubElementsResult RecursiveGatherSubElementsInternal(object obj, Dictionary<Type, List<PropertyInfo>> properties, bool parentHasJsonIgnore)
         {
             GatherSubElementsResult result = new GatherSubElementsResult();
 
@@ -585,13 +585,13 @@ namespace Elements
                     }
 
                     // Do not save shared object to the model if it is marked with JsonIgnore (e.g. ElementRepresentation)
-                    bool hasJsonIgnore = p.GetCustomAttributes(typeof(JsonIgnoreAttribute), true).Any();
+                    bool hasJsonIgnore = parentHasJsonIgnore || p.GetCustomAttributes(typeof(JsonIgnoreAttribute), true).Any();
 
                     if (pValue is IList elems)
                     {
                         foreach (var item in elems)
                         {
-                            var subElements = RecursiveGatherSubElementsInternal(item, properties);
+                            var subElements = RecursiveGatherSubElementsInternal(item, properties, hasJsonIgnore);
                             result.MergeSubResult(subElements, hasJsonIgnore, isTypeRelatedToSharedObjects);
                         }
                         continue;
@@ -602,13 +602,13 @@ namespace Elements
                     {
                         foreach (var value in dict.Values)
                         {
-                            var subElements = RecursiveGatherSubElementsInternal(value, properties);
+                            var subElements = RecursiveGatherSubElementsInternal(value, properties, hasJsonIgnore);
                             result.MergeSubResult(subElements, hasJsonIgnore, isTypeRelatedToSharedObjects);
                         }
                         continue;
                     }
 
-                    var gatheredSubElements = RecursiveGatherSubElementsInternal(pValue, properties);
+                    var gatheredSubElements = RecursiveGatherSubElementsInternal(pValue, properties, hasJsonIgnore);
                     result.MergeSubResult(gatheredSubElements, hasJsonIgnore, isTypeRelatedToSharedObjects);
                 }
                 catch (Exception ex)
