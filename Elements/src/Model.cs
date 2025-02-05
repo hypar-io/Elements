@@ -43,7 +43,7 @@ namespace Elements
             {
                 if (isTypeRelatedToSharedObjects)
                 {
-                    ElementsFromSharedObjectProperties.AddRange(gatherResult.ElementsFromSharedObjectProperties);
+                    ElementsFromSharedObjectProperties.AddRange(gatherResult.Elements);
                 }
                 else
                 {
