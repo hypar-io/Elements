@@ -344,7 +344,7 @@ namespace Elements.Geometry
                 var valid = ignoreRayDirection || t1 >= 0 && t2 >= 0;
                 intersectionResult = valid ? RayIntersectionResult.Intersect : RayIntersectionResult.None;
                 result = valid ? a : default;
-                return valid;
+                return result;
             }
 
             intersectionResult = RayIntersectionResult.None;
