@@ -34,7 +34,7 @@ namespace Elements.Serialization.SVG
             string style = string.Empty;
             if (context.Fill != null)
             {
-                style += $"fill:{context.Fill.Colour.Name.ToLower()}";
+                style = $"fill:{SvgColourServerToString(context.Fill)}";
             }
 
             if (context.Stroke != null)
@@ -43,7 +43,7 @@ namespace Elements.Serialization.SVG
                 {
                     style += "; ";
                 }
-                style += $"stroke:{context.Stroke.Colour.Name.ToLower()}";
+                style += $"stroke:{SvgColourServerToString(context.Stroke)}";
             }
 
             if (!string.IsNullOrEmpty(style))
@@ -53,6 +53,10 @@ namespace Elements.Serialization.SVG
             return svgLine;
         }
 
+        private static string SvgColourServerToString(SvgColourServer colorServer)
+        {
+            return $"rgb({colorServer.Colour.R}, {colorServer.Colour.G}, {colorServer.Colour.B})";
+        }
         /// <summary>
         /// Convert a geometric line to an SVG using a section and a context.
         /// </summary>
@@ -62,7 +66,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG line.</returns>
         public static SvgLine ToSvgLine(this Line line, SvgSection drawingPlan, SvgContext context)
         {
-            return ToSvgLine(line, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+            return ToSvgLine(line, drawingPlan.SceneBounds.Min, drawingPlan.ViewBoxHeight, context);
         }
 
         /// <summary>
@@ -75,14 +79,34 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG polygon.</returns>
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, Vector3 sceneBoundsMin, float viewBoxHeight, SvgContext context)
         {
-            return new SvgPolygon()
+            var svgPolygon = new SvgPolygon()
             {
-                Fill = context.Fill,
-                Stroke = context.Stroke,
                 StrokeWidth = context.StrokeWidth,
                 StrokeDashArray = context.StrokeDashArray,
                 Points = polygon.Vertices.ToSvgPointCollection(sceneBoundsMin, viewBoxHeight)
             };
+
+            string style = string.Empty;
+            if (context.Fill != null)
+            {
+                style += $"fill:{SvgColourServerToString(context.Fill)}";
+            }
+
+            if (context.Stroke != null)
+            {
+                if (!string.IsNullOrEmpty(style))
+                {
+                    style += "; ";
+                }
+                style += $"stroke:{SvgColourServerToString(context.Stroke)}";
+            }
+
+            if (!string.IsNullOrEmpty(style))
+            {
+                svgPolygon.CustomAttributes.Add("style", style);
+            }
+
+            return svgPolygon;
         }
 
         /// <summary>
@@ -94,7 +118,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG polygon.</returns>
         public static SvgPolygon ToSvgPolygon(this Polygon polygon, SvgSection drawingPlan, SvgContext context)
         {
-            return ToSvgPolygon(polygon, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight, context);
+            return ToSvgPolygon(polygon, drawingPlan.SceneBounds.Min, drawingPlan.ViewBoxHeight, context);
         }
 
         /// <summary>
@@ -116,7 +140,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG unit.</returns>
         public static SvgUnit ToXUserUnit(this double x, SvgSection drawingPlan)
         {
-            return ToXUserUnit(x, drawingPlan.GetSceneBounds().Min);
+            return ToXUserUnit(x, drawingPlan.SceneBounds.Min);
         }
 
         /// <summary>
@@ -140,7 +164,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An SVG unit.</returns>
         public static SvgUnit ToYUserUnit(this double y, SvgSection drawingPlan)
         {
-            return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.GetSceneBounds().Min);
+            return ToYUserUnit(y, drawingPlan.ViewBoxHeight, drawingPlan.SceneBounds.Min);
         }
 
         /// <summary>
@@ -169,7 +193,7 @@ namespace Elements.Serialization.SVG
         /// <returns>An collection of SVG points.</returns>
         public static SvgPointCollection ToSvgPointCollection(this IList<Vector3> points, SvgSection drawingPlan)
         {
-            return ToSvgPointCollection(points, drawingPlan.GetSceneBounds().Min, drawingPlan.ViewBoxHeight);
+            return ToSvgPointCollection(points, drawingPlan.SceneBounds.Min, drawingPlan.ViewBoxHeight);
         }
     }
 }
