@@ -1,6 +1,7 @@
 ﻿using IFC;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parsers
 {
@@ -36,25 +37,27 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
         /// </param>
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem ifcRepresentationItem)
         {
-            if (!(ifcRepresentationItem is IfcMappedItem mappedItem))
+            if (ifcRepresentationItem is not IfcMappedItem mappedItem)
             {
                 return null;
             }
 
-            if (_representationsMap.ContainsKey(mappedItem.MappingSource.MappedRepresentation.Id))
+            if (!_representationsMap.TryGetValue(mappedItem.MappingSource.MappedRepresentation.Id, out var definition))
             {
-                var ops = _representationsMap[mappedItem.MappingSource.MappedRepresentation.Id];
-                return ops;
-            }
-            else
-            {
-                var parsedData = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
-                var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
-                var repData = new RepresentationData(mappedItem.MappingSource.MappedRepresentation.Id, mappingTransform, parsedData);
+                definition = _representationDataExtractor.ParseRepresentationItems(mappedItem.MappingSource.MappedRepresentation.Items);
 
-                _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, repData);
-                return repData;
+                if (definition is null)
+                {
+                    return null;
+                }
+
+                _representationsMap.Add(mappedItem.MappingSource.MappedRepresentation.Id, definition);
             }
+
+            var mappingTransform = mappedItem.MappingSource.MappingOrigin.ToTransform().Concatenated(mappedItem.MappingTarget.ToTransform());
+            var representationData = new RepresentationData(definition, mappingTransform);
+
+            return representationData;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Elements.Geometry.Profiles;
 using System.Linq;
 using System.Xml.Linq;
+using IFC;
 
 namespace Elements.IFC.Tests
 {
@@ -29,17 +30,19 @@ namespace Elements.IFC.Tests
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1972, 120, 530, 270, 9, 140, 10, 2)]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 2088, 120, 530, 270, 170, 140, 10, 11)]
         // TODO: Some walls are extracted incorrectly and intersecting the roof. It happens because
         // IfcBooleanClippingResultParser doesn't handle the boolean clipping operation.
         // In order to fix it surface support is required.
         // The Plane case isn't implemented because some critical information about IfcPlane is
         // missing during it's extraction.
         // TODO: German names are converted incorrectly.
-        // TODO: The entrance door has an incorrect representation. It happens because during
-        // the UpdateRepresentation the default representation of a door is created instead of
-        // the extracted one.
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1513, 5, 570, 121, 7, 82, 0, 21)]
+
+        // TODO: The representation of the entrance door is placed incorrectly. For some reason
+        // in happens with windows and doors (and maybe some other) representations, created from BREP.
+        // The Element.Transform is correct in this case, so the door should be placed correctly when
+        // the default representation is used.
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1564, 5, 570, 121, 77, 82, 0, 21)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void FromIFC4(string name,
                          string ifcPath,
@@ -80,6 +83,71 @@ namespace Elements.IFC.Tests
 
             model.ToJson(ConstructJsonPath(name));
             model.ToGlTF(ConstructGlbPath(name));
+        }
+
+        [Fact]
+        public void HyparIFCHyparTest()
+        {
+            string name = "HyparToIFCAndBack";
+            var model = new Model();
+
+            var door = new Door(clearWidth: 1.0,
+                                clearHeight: 2.0,
+                                thickness: Door.DEFAULT_DOOR_THICKNESS,
+                                openingSide: DoorOpeningSide.LeftHand,
+                                openingType: DoorOpeningType.SingleSwing,
+                                transform: new Transform(0.2, 0.3, 0.4),
+                                material: BuiltInMaterials.Glass,
+                                name: "ExcellentDoor");
+
+            var beam = new Beam(new Line((0.2, 0.3, 0.4), (0.5, 0.6, 0.7)), _profileFactory.GetProfileByType(WideFlangeProfileType.W10x12), new Transform(5.2, 5.3, 5.4));
+            var column = new Column((10.2, 10.3, 10.4), 7.3, null, _profileFactory.GetProfileByType(WideFlangeProfileType.W10x12), new Transform(10.2, 10.3, 10.4));
+            var floor = new Floor(_profileFactory.GetProfileByType(WideFlangeProfileType.W10x12), 0.5, new Transform(15.2, 15.3, 15.4));
+            var wall = new Wall(_profileFactory.GetProfileByType(WideFlangeProfileType.W10x12), 2.0, transform: new Transform(20.2, 20.3, 20.4));
+
+            model.AddElement(door);
+            model.AddElement(beam);
+            model.AddElement(column);
+            model.AddElement(floor);
+            model.AddElement(wall);
+
+            string ifcPath = ConstructIfcPath(name);
+            model.ToIFC(ifcPath);
+
+            var convertedBackModel = IFCModelExtensions.FromIFC(ifcPath, out var ctorErrors);
+            var convertedBackDoor = convertedBackModel.GetElementOfType<Door>(door.Id);
+            var convertedBackBeam = convertedBackModel.GetElementOfType<Beam>(beam.Id);
+            var convertedBackColumn = convertedBackModel.GetElementOfType<Column>(column.Id);
+            var convertedBackFloor = convertedBackModel.GetElementOfType<Floor>(floor.Id);
+            var convertedBackWall = convertedBackModel.GetElementOfType<Wall>(wall.Id);
+
+            Assert.Empty(ctorErrors);
+
+            Assert.NotNull(convertedBackDoor);
+            Assert.Equal(door.DoorWidth, convertedBackDoor.DoorWidth);
+            Assert.Equal(door.DoorThickness, convertedBackDoor.DoorThickness);
+            Assert.Equal(door.DoorHeight, convertedBackDoor.DoorHeight);
+            Assert.Equal(door.Transform, convertedBackDoor.Transform);
+
+            Assert.NotNull(convertedBackBeam);
+            Assert.Equal(beam.Curve, convertedBackBeam.Curve);
+            Assert.Equal(beam.Profile, convertedBackBeam.Profile);
+            Assert.Equal(beam.Transform, convertedBackBeam.Transform);
+
+            Assert.NotNull(convertedBackColumn);
+            Assert.Equal(column.Location, convertedBackColumn.Location);
+            Assert.Equal(column.Profile, convertedBackColumn.Profile);
+            Assert.Equal(column.Transform, convertedBackColumn.Transform);
+
+            Assert.NotNull(convertedBackFloor);
+            Assert.Equal(floor.Thickness, convertedBackFloor.Thickness);
+            Assert.Equal(floor.Profile, convertedBackFloor.Profile);
+            Assert.Equal(floor.Transform, convertedBackFloor.Transform);
+
+            Assert.NotNull(convertedBackWall);
+            Assert.Equal(wall.Height, convertedBackWall.Height);
+            Assert.Equal(wall.Profile, convertedBackWall.Profile);
+            Assert.Equal(wall.Transform, convertedBackWall.Transform);
         }
 
         [Theory(Skip = "IFC2X3")]

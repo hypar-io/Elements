@@ -13,7 +13,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcSlab slab))
+            if (ifcProduct is not IfcSlab slab)
             {
                 return null;
             }
@@ -24,13 +24,16 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var floor = new Floor(repData.Extrude.Profile,
+            var localTransform = repData.Extrude.LocalTransform ?? new Transform();
+            var floor = new Floor(repData.Extrude.Profile.Transformed(localTransform),
                                   repData.Extrude.Height,
-                                  repData.Transform,
-                                  repData.Material,
-                                  new Representation(repData.SolidOperations),
-                                  false,
-                                  IfcGuid.FromIfcGUID(slab.GlobalId));
+                                  transform: repData.Transform,
+                                  isElementDefinition: false,
+                                  id: IfcGuid.FromIfcGUID(slab.GlobalId),
+                                  name: slab.Name ?? "")
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
 
             return floor;
         }

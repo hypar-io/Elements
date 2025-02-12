@@ -9,18 +9,13 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
     internal class IfcRepresentationDataExtractor
     {
         private readonly List<IIfcRepresentationParser> _ifcRepresentationParsers;
-        private readonly MaterialExtractor _materialExtractor;
 
         /// <summary>
         /// Create an IfcRepresentationDataExtractor.
         /// </summary>
-        /// <param name="materialExtractor">
-        /// Parses materials from IFC and contains information about them.
-        /// </param>
-        public IfcRepresentationDataExtractor(MaterialExtractor materialExtractor)
+        public IfcRepresentationDataExtractor()
         {
             _ifcRepresentationParsers = new List<IIfcRepresentationParser>();
-            _materialExtractor = materialExtractor;
         }
 
         public void AddRepresentationParser(IIfcRepresentationParser ifcRepresentationParser)
@@ -46,7 +41,14 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
             var repItems = rep.Representations.SelectMany(r => r.Items);
             var representation = ParseRepresentationItems(repItems);
-            representation.Transform = GetTransformFromIfcProduct(ifcProduct);
+            var productTransform = GetTransformFromIfcProduct(ifcProduct);
+
+            if (representation.Transform is not null)
+            {
+                productTransform.Concatenate(representation.Transform);
+            }
+
+            representation.Transform = productTransform;
             return representation;
         }
 
@@ -56,7 +58,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
         /// <param name="repItem">IfcRepresentationItem that will be parsed.</param>
         public RepresentationData ParseRepresentationItem(IfcRepresentationItem repItem)
         {
-            var material = _materialExtractor.ExtractMaterial(repItem);
             var matchingParsers = _ifcRepresentationParsers.Where(parser => parser.CanParse(repItem));
 
             if (!matchingParsers.Any())
@@ -67,13 +68,6 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
 
             var repParser = matchingParsers.First();
             var parsedItem = repParser.ParseRepresentationItem(repItem);
-
-            if (parsedItem == null)
-            {
-                return null;
-            }
-
-            parsedItem.Material = material ?? parsedItem.Material;
             return parsedItem;
         }
 
@@ -109,7 +103,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
             var transform = new Transform();
             transform.Concatenate(ifcProduct.ObjectPlacement.ToTransform());
 
-            if (!(ifcProduct is IfcBuildingElement ifcBuildingElement))
+            if (ifcProduct is not IfcBuildingElement ifcBuildingElement)
             {
                 return transform;
             }
@@ -120,7 +114,28 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction.Parser
                 transform.Concatenate(cis.RelatingStructure.ObjectPlacement.ToTransform());
             }
 
+            // Origins of some IfcProducts (like doors and windows) are placed in the corner
+            // when in Hypar they are in the center.
+            if (ifcProduct is IfcDoor ifcDoor)
+            {
+                transform = GetTransformWithCorrectedOffset(transform, (IfcLengthMeasure) ifcDoor.OverallWidth);
+            } 
+            else if (ifcProduct is IfcWindow ifcWindow)
+            {
+                transform = GetTransformWithCorrectedOffset(transform, (IfcLengthMeasure) ifcWindow.OverallWidth);
+            }
+
             return transform;
+        }
+
+        private static Transform GetTransformWithCorrectedOffset(Transform transform, double width)
+        {
+            var correctedOrigin = transform.Origin + 0.5 * width * transform.XAxis;
+            var correctedTransform = new Transform(correctedOrigin,
+                                                   transform.XAxis,
+                                                   transform.YAxis,
+                                                   transform.ZAxis);
+            return correctedTransform;
         }
     }
 }

@@ -102,8 +102,15 @@ namespace Elements.Serialization.IFC.IFCToHypar.RepresentationsExtraction
         /// <param name="repItem">A representation item, from which the Material will be extracted.</param>
         public Material ExtractMaterial(IfcRepresentationItem repItem)
         {
-            MaterialByGuid.TryGetValue(repItem.Id, out var extractedMaterial);
-            return extractedMaterial;
+            // TODO: Sometimes material isn't extracted. It should be investigated
+            // why it is happening. It is unknown if IFC contains material info in
+            // such cases.
+            if (MaterialByGuid.TryGetValue(repItem.Id, out var extractedMaterial))
+            {
+                return extractedMaterial;
+            }
+
+            return BuiltInMaterials.Default;
         }
     }
 }

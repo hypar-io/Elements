@@ -13,12 +13,10 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
     {
         public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData repData, List<string> constructionErrors)
         {
-            if (!(ifcProduct is IfcColumn ifcColumn))
+            if (ifcProduct is not IfcColumn ifcColumn)
             {
                 return null;
             }
-
-            var elementTransform = repData.Transform;
 
             if (repData.Extrude == null)
             {
@@ -26,19 +24,22 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
                 return null;
             }
 
-            var result = new Column(repData.ExtrudeTransform.Origin,
+            var originTransform = repData.Extrude.LocalTransform ?? new Transform();
+
+            var result = new Column(originTransform.Origin,
                                     repData.Extrude.Height,
                                     null,
                                     repData.Extrude.Profile,
                                     0,
                                     0,
                                     0,
-                                    elementTransform,
-                                    repData.Material,
-                                    new Representation(repData.SolidOperations),
-                                    false,
-                                    IfcGuid.FromIfcGUID(ifcColumn.GlobalId),
-                                    ifcColumn.Name);
+                                    transform: repData.Transform,
+                                    isElementDefinition: false,
+                                    id: IfcGuid.FromIfcGUID(ifcColumn.GlobalId),
+                                    name: ifcColumn.Name ?? "")
+            {
+                RepresentationInstances = repData.RepresentationInstances
+            };
             return result;
         }
 
