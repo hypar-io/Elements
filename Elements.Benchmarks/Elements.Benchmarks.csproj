@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Elements\src\Elements.csproj" />
+    <ProjectReference Include="..\Elements.Structure\Elements.Structure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
