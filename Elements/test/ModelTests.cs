@@ -242,6 +242,15 @@ namespace Elements.Tests
         }
 
         [Fact]
+        public void DeserializationHandlesZeroThicknessWalls()
+        {
+            var json = File.ReadAllText("../../../models/Elements/zeroThicknessWalls.json");
+            var model = Model.FromJson(json);
+            var walls = model.AllElementsOfType<StandardWall>();
+            Assert.True(walls.Any((w) => w.Thickness == 0));
+        }
+
+        [Fact]
         public void DeserializationSkipsUnknownProperties()
         {
             var column = new Column(Vector3.Origin, 5, null, new Profile(Polygon.Rectangle(1, 1)));
