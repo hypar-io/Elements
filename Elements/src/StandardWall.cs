@@ -168,6 +168,11 @@ namespace Elements
         public override void UpdateRepresentations()
         {
             this.Representation.SolidOperations.Clear();
+            // new versions of walls can have zero thickness representing no wall, and then should not have a solid representation
+            if (WallsVersion != null && Thickness.ApproximatelyEquals(0))
+            {
+                return;
+            }
             var e1 = this.CenterLine.Offset(this.Thickness / 2, false);
             var e2 = this.CenterLine.Offset(this.Thickness / 2, true);
             var profile = new Polygon(new[] { e1.Start, e1.End, e2.End, e2.Start });
