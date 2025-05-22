@@ -56,6 +56,7 @@
 - `AdaptiveGrid.Clone`
 - `AdditionalProperties` to ContentConfiguration.
 - `Line.Projected(Line line)`
+- Make zero thickness walls not error out when creating a solid.
 
 ### Fixed
 
