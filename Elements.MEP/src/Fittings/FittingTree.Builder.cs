@@ -272,6 +272,15 @@ namespace Elements.Fittings
                     var branchSideMatch = OppositeSidePort(connector, branchFitting, out bool hasEnoughSpace);
                     if (branchSideMatch != null && !pipedPorts.Contains(branchSideMatch))
                     {
+                        // Extending additional transform outside the assembly
+                        if (connection is Assembly)
+                        {
+                            var internalFitting = ((Assembly)connection).InternalFittings.FirstOrDefault(f => f.BranchSidePorts().Any(p => p == connector));
+                            if (internalFitting != null && !new Transform().Equals(internalFitting.AdditionalTransform))
+                            {
+                                branch.PropagateAdditionalTransform(internalFitting.AdditionalTransform, TransformDirection.TrunkToBranch);
+                            }
+                        }
                         if (!hasEnoughSpace)
                         {
                             connectorsNotPiped.Add(new FailedStraightSegment(connection,
