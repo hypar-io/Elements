@@ -331,5 +331,16 @@ namespace Elements.Fittings
         {
             throw new NotImplementedException();
         }
+
+        public Transform? GetBranchTransformForConnector(Port connector)
+        {
+            var internalFitting = InternalFittings.FirstOrDefault(f => f.BranchSidePorts().Any(p => p == connector));
+            if (internalFitting?.AdditionalTransform is Transform transform && !new Transform().Equals(transform))
+            {
+                return transform;
+            }
+            return null;
+        }
+
     }
 }
