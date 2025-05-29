@@ -273,12 +273,11 @@ namespace Elements.Fittings
                     if (branchSideMatch != null && !pipedPorts.Contains(branchSideMatch))
                     {
                         // Extending additional transform outside the assembly
-                        if (connection is Assembly)
+                        if (connection is Assembly assembly)
                         {
-                            var internalFitting = ((Assembly)connection).InternalFittings.FirstOrDefault(f => f.BranchSidePorts().Any(p => p == connector));
-                            if (internalFitting != null && !new Transform().Equals(internalFitting.AdditionalTransform))
+                            if (assembly.GetBranchTransformForConnector(connector) is Transform transform)
                             {
-                                branch.PropagateAdditionalTransform(internalFitting.AdditionalTransform, TransformDirection.TrunkToBranch);
+                                branch.PropagateAdditionalTransform(transform, TransformDirection.TrunkToBranch);
                             }
                         }
                         if (!hasEnoughSpace)
