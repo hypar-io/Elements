@@ -23,14 +23,16 @@ namespace Elements
         /// <summary>
         /// Initializes a new instance of the GridLine class.
         /// </summary>
-        public GridLine()
+        public GridLine() : base()
         {
             deserializationIsInProgress = false;
         }
 
         // TODO: Remove this constructor once we remove the Line and Geometry properties.
         [JsonConstructor]
-        private GridLine(BoundedCurve curve, Polyline geometry, Line line)
+        private GridLine(BoundedCurve curve, Polyline geometry, Line line,
+        Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
+            : base(@transform, @material, @representation, @isElementDefinition, @id, @name)
         {
             deserializationIsInProgress = true;
             if (curve != null)
