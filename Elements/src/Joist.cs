@@ -271,9 +271,9 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (Representation.SolidOperations.Count == 0)
+            if (this.Representation == null || this.Representation.SolidOperations.Count == 0)
             {
-                Representation = ConstructRepresentation();
+                this.Representation = ConstructRepresentation();
             }
         }
     }

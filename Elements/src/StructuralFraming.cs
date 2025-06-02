@@ -119,6 +119,10 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
+            if (this.Representation == null)
+            {
+                this.Representation = new Representation(new List<SolidOperation>());
+            }
             if (this.Representation.SolidOperations.Count == 0)
             {
                 if (this.Curve is IndexedPolycurve pc)
