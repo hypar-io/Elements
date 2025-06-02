@@ -87,10 +87,6 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (Representation == null)
-            {
-                Representation = new Representation(new List<SolidOperation>());
-            }
             if (this.Representation.SolidOperations.Count == 0)
             {
                 this.Representation.SolidOperations.Add(new Extrude(this.Profile, this.Height, Vector3.ZAxis, false));

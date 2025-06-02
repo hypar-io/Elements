@@ -167,10 +167,6 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (Representation == null)
-            {
-                Representation = new Representation(new List<SolidOperation>());
-            }
             this.Representation.SolidOperations.Clear();
             // new versions of walls can have zero thickness representing no wall, and then should not have a solid representation
             if (WallsVersion != null && Thickness.ApproximatelyEquals(0))

@@ -88,10 +88,6 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (Representation == null)
-            {
-                Representation = new Representation(new List<SolidOperation>());
-            }
             this.Representation.SolidOperations.Clear();
             var depth = this.DepthFront + this.DepthBack;
             var depthBackTransform = new Transform(-DepthBack * Normal);
