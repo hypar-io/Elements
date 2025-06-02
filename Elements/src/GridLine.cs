@@ -20,6 +20,14 @@ namespace Elements
         // TODO: Remove this flag once we remove the Line and Geometry properties.
         private bool deserializationIsInProgress = false;
 
+        /// <summary>
+        /// Initializes a new instance of the GridLine class.
+        /// </summary>
+        public GridLine()
+        {
+            deserializationIsInProgress = false;
+        }
+
         // TODO: Remove this constructor once we remove the Line and Geometry properties.
         [JsonConstructor]
         private GridLine(BoundedCurve curve, Polyline geometry, Line line)
