@@ -129,10 +129,6 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
-            if (this.Representation == null)
-            {
-                this.Representation = new Representation(new List<SolidOperation>());
-            }
             // Don't override imported geometry.
             if (this.Representation.SolidOperations.Count > 0 && this.Representation.SolidOperations.All(s => s.GetType() == typeof(ConstructedSolid)))
             {
