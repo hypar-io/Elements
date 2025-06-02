@@ -272,6 +272,14 @@ namespace Elements.Fittings
                     var branchSideMatch = OppositeSidePort(connector, branchFitting, out bool hasEnoughSpace);
                     if (branchSideMatch != null && !pipedPorts.Contains(branchSideMatch))
                     {
+                        // Extending additional transform outside the assembly
+                        if (connection is Assembly assembly)
+                        {
+                            if (assembly.GetBranchTransformForConnector(connector) is Transform transform)
+                            {
+                                branch.PropagateAdditionalTransform(transform, TransformDirection.TrunkToBranch);
+                            }
+                        }
                         if (!hasEnoughSpace)
                         {
                             connectorsNotPiped.Add(new FailedStraightSegment(connection,
