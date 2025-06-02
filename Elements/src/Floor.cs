@@ -152,6 +152,10 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
+            if (Representation == null)
+            {
+                Representation = new Representation(new List<SolidOperation>());
+            }
             Representation.SolidOperations.Clear();
             Representation.SolidOperations.Add(new Extrude(Profile, Thickness, Vector3.ZAxis, false));
         }

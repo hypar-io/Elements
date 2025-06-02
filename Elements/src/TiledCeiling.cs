@@ -193,6 +193,10 @@ namespace Elements
         /// </summary>
         public override void UpdateRepresentations()
         {
+            if (Representation == null)
+            {
+                Representation = new Representation(new List<SolidOperation>());
+            }
             this.Representation.SolidOperations.Clear();
 
             var tiles = GetTiles();
