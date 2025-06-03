@@ -51,7 +51,7 @@ namespace Elements
         public Representation Representation { get; set; }
 
         /// <summary>
-        ///  The list of element representations. 
+        ///  The list of element representations.
         /// </summary>
         [JsonIgnore]
         public List<RepresentationInstance> RepresentationInstances { get; set; } = new List<RepresentationInstance>();
@@ -83,7 +83,7 @@ namespace Elements
         {
             this.Transform = @transform ?? new Geometry.Transform();
             this.Material = @material ?? BuiltInMaterials.Default;
-            this.Representation = @representation;
+            this.Representation = @representation ?? new Representation(new List<SolidOperation>());
             this.IsElementDefinition = @isElementDefinition;
         }
 
@@ -196,7 +196,7 @@ namespace Elements
         /// <param name="plane">The plane of intersection.</param>
         /// <param name="intersectionPolygons">A collection of polygons representing
         /// the intersections of the plane and the element's solid geometry.</param>
-        /// <param name="beyondPolygons">A collection of polygons representing coplanar 
+        /// <param name="beyondPolygons">A collection of polygons representing coplanar
         /// faces beyond the plane of intersection.</param>
         /// <param name="lines">A collection of lines representing intersections
         /// of zero-thickness elements with the plane.</param>

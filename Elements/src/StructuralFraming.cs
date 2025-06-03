@@ -133,7 +133,7 @@ namespace Elements
                                                                 false));
                     }
                 }
-                else
+                else if (this.Curve != null)
                 {
                     this.Representation.SolidOperations.Add(new Sweep(this.Profile,
                                                                 this.Curve,
