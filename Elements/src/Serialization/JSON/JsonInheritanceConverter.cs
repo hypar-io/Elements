@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Runtime.Serialization;
 
 namespace Elements.Serialization.JSON
 {
@@ -415,6 +416,11 @@ namespace Elements.Serialization.JSON
                     {
                         SharedObjects.Add(ident.Id, ident);
                     }
+                }
+
+                if (obj is IDeserializationCallback callback)
+                {
+                    callback.OnDeserialization(obj);
                 }
 
                 return obj;
