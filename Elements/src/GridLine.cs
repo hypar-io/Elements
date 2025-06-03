@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Elements.Geometry;
+using Newtonsoft.Json;
 
 namespace Elements
 {
@@ -10,8 +12,43 @@ namespace Elements
     /// <example>
     /// [!code-csharp[Main](../../Elements/test/GridLineTests.cs?name=example)]
     /// </example>
-    public class GridLine : GeometricElement
+    // TODO: remove IDeserializationCallback implementation once we remove the Line and Geometry properties.
+    // Remove its usage from JsonInheritanceConverter..
+    [JsonConverter(typeof(Serialization.JSON.JsonInheritanceConverter), "discriminator")]
+    public class GridLine : GeometricElement, IDeserializationCallback
     {
+        // TODO: Remove this flag once we remove the Line and Geometry properties.
+        private bool deserializationIsInProgress = false;
+
+        /// <summary>
+        /// Initializes a new instance of the GridLine class.
+        /// </summary>
+        public GridLine() : base()
+        {
+            deserializationIsInProgress = false;
+        }
+
+        // TODO: Remove this constructor once we remove the Line and Geometry properties.
+        [JsonConstructor]
+        private GridLine(BoundedCurve curve, Polyline geometry, Line line,
+        Transform @transform = null, Material @material = null, Representation @representation = null, bool @isElementDefinition = false, System.Guid @id = default, string @name = null)
+            : base(@transform, @material, @representation, @isElementDefinition, @id, @name)
+        {
+            deserializationIsInProgress = true;
+            if (curve != null)
+            {
+                Curve = curve;
+            }
+            else if (geometry != null)
+            {
+                Geometry = geometry;
+            }
+            else
+            {
+                Line = line;
+            }
+        }
+
         /// <summary>
         /// Line that runs from the start of the gridline to its end.
         /// </summary>
@@ -19,7 +56,13 @@ namespace Elements
         public Line Line
         {
             get { return this.Curve as Line; }
-            set { this.Curve = value; }
+            set
+            {
+                if (!deserializationIsInProgress)
+                {
+                    this.Curve = value;
+                }
+            }
         }
 
         /// <summary>
@@ -29,8 +72,15 @@ namespace Elements
         public Polyline Geometry
         {
             get { return this.Curve as Polyline; }
-            set { this.Curve = value; }
+            set
+            {
+                if (!deserializationIsInProgress)
+                {
+                    this.Curve = value;
+                }
+            }
         }
+
 
         /// <summary>
         /// Curve that runs from the start of the gridline to its end.
@@ -77,7 +127,7 @@ namespace Elements
 
             var circleVertexTransform = GetCircleTransform();
             var circle = new Arc(circleVertexTransform, Radius);
-            
+
             renderVertices.AddRange(circle.RenderVertices());
 
             if (ExtensionBeginning > 0)
@@ -133,6 +183,14 @@ namespace Elements
         {
             var circleCenter = this.GetCircleTransform();
             texts.Add((circleCenter.Origin, circleCenter.ZAxis, circleCenter.XAxis, this.Name, color));
+        }
+
+        /// <summary>
+        /// This method is called after the object has been deserialized.
+        /// </summary>
+        public void OnDeserialization(object sender)
+        {
+            deserializationIsInProgress = false;
         }
     }
 }
