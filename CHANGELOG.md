@@ -78,6 +78,10 @@
 - `GeometricElement.Intersects` method now supports multiple representations.
 - `GltfExtensions.ToGlTF` creates parent node for element and child nodes for representation instances.
 
+
+### Removed
+- `Elements.Doors` class
+
 ## 2.0.0
 
 ### Added
