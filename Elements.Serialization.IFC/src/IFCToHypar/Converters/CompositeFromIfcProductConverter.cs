@@ -38,7 +38,7 @@ namespace Elements.Serialization.IFC.IFCToHypar.Converters
         public GeometricElement ConvertToElement(IfcProduct ifcProduct, RepresentationData representationData, List<string> constructionErrors)
         {
             GeometricElement result;
-            
+
             foreach (var converter in _converters)
             {
                 if (!converter.CanConvert(ifcProduct))

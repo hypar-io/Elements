@@ -58,7 +58,6 @@ namespace Elements.IFC.Tests
             int countOfFloors = model.AllElementsOfType<Floor>().Count();
             int countOfOpenings = model.AllElementsOfType<Opening>().Count();
             int countOfWalls = model.AllElementsOfType<Wall>().Count();
-            int countOfDoors = model.AllElementsOfType<Door>().Count();
             int countOfSpaces = model.AllElementsOfType<Space>().Count();
             int countOfBeams = model.AllElementsOfType<Beam>().Count();
 
@@ -67,7 +66,6 @@ namespace Elements.IFC.Tests
             Assert.Equal(expectedCountOfFloors, countOfFloors);
             Assert.Equal(expectedCountOfOpenings, countOfOpenings);
             Assert.Equal(expectedCountOfWalls, countOfWalls);
-            Assert.Equal(expectedCountOfDoors, countOfDoors);
             Assert.Equal(expectedCountOfSpaces, countOfSpaces);
             Assert.Equal(expectedCountOfBeams, countOfBeams);
 
@@ -125,32 +123,6 @@ namespace Elements.IFC.Tests
             var hyparModel = Model.FromJson(model);
             var path = ConstructIfcPath("space-planning-test");
             hyparModel.ToIFC(path);
-        }
-
-        [Fact]
-        public void Doors()
-        {
-            var model = new Model();
-
-            // Add 2 walls.
-            var wallLine1 = new Line(Vector3.Origin, new Vector3(10, 10, 0));
-            var wallLine2 = new Line(new Vector3(10, 10, 0), new Vector3(10, 15, 0));
-            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "Wall1");
-            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "Wall2");
-
-            var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-            var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-
-            wall1.AddDoorOpening(door1);
-            wall2.AddDoorOpening(door2);
-
-            model.AddElement(wall1);
-            model.AddElement(wall2);
-            model.AddElement(door1);
-            model.AddElement(door2);
-
-            model.ToJson(ConstructJsonPath("IfcDoor"));
-            model.ToIFC(ConstructIfcPath("IfcDoor"));
         }
 
         [Fact]

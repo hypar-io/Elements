@@ -14,39 +14,6 @@ namespace Elements.Serialization.IFC.IFCToHypar
     /// </summary>
     internal static class IFCExtensions
     {
-        internal static DoorOpeningSide GetDoorOpeningSide(this IfcDoor ifcDoor)
-        {
-            switch (ifcDoor.OperationType)
-            {
-                case IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT:
-                case IfcDoorTypeOperationEnum.DOUBLE_SWING_LEFT:
-                    return DoorOpeningSide.LeftHand;
-                case IfcDoorTypeOperationEnum.SINGLE_SWING_RIGHT:
-                case IfcDoorTypeOperationEnum.DOUBLE_SWING_RIGHT:
-                    return DoorOpeningSide.RightHand;
-                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_SINGLE_SWING:
-                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_DOUBLE_SWING:
-                    return DoorOpeningSide.DoubleDoor;
-            }
-            return DoorOpeningSide.Undefined;
-        }
-
-        internal static DoorOpeningType GetDoorOpeningType(this IfcDoor ifcDoor)
-        {
-            switch (ifcDoor.OperationType)
-            {
-                case IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT:
-                case IfcDoorTypeOperationEnum.SINGLE_SWING_RIGHT:
-                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_SINGLE_SWING:
-                    return DoorOpeningType.SingleSwing;
-                case IfcDoorTypeOperationEnum.DOUBLE_SWING_LEFT:
-                case IfcDoorTypeOperationEnum.DOUBLE_SWING_RIGHT:
-                case IfcDoorTypeOperationEnum.DOUBLE_DOOR_DOUBLE_SWING:
-                    return DoorOpeningType.DoubleSwing;
-            }
-            return DoorOpeningType.Undefined;
-        }
-
         // TODO: In IFC an IfcOpeningElement may have several extrudes.
         // Now they are extracted as separate Openings. As the result
         // initial Guid of IfcOpeningElement is not saved.
