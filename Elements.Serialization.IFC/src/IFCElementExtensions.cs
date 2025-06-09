@@ -264,57 +264,6 @@ namespace Elements.Serialization.IFC
             return ifcOpening;
         }
 
-        private static IfcDoor ToIfc(this Door door, Guid id, IfcLocalPlacement localPlacement, IfcProductDefinitionShape shape)
-        {
-            var ifcDoor = new IfcDoor(IfcGuid.ToIfcGuid(id),
-                null,
-                CreateIfcSafeLabelString(door.Name),
-                null,
-                null,
-                localPlacement,
-                shape,
-                null,
-                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.DoorHeight)),
-                new IfcPositiveLengthMeasure(new IfcLengthMeasure(door.DoorWidth)),
-                IfcDoorTypeEnum.DOOR,
-                door.GetIfcDoorTypeOperation(),
-                null
-            );
-
-            return ifcDoor;
-        }
-
-        private static IfcDoorTypeOperationEnum GetIfcDoorTypeOperation(this Door door)
-        {
-            if (door.OpeningType == DoorOpeningType.SingleSwing)
-            {
-                switch (door.OpeningSide)
-                {
-                    case DoorOpeningSide.LeftHand:
-                        return IfcDoorTypeOperationEnum.SINGLE_SWING_LEFT;
-                    case DoorOpeningSide.RightHand:
-                        return IfcDoorTypeOperationEnum.SINGLE_SWING_RIGHT;
-                    case DoorOpeningSide.DoubleDoor:
-                        return IfcDoorTypeOperationEnum.DOUBLE_DOOR_SINGLE_SWING;
-                }
-            }
-            else if (door.OpeningType == DoorOpeningType.DoubleSwing)
-            {
-                switch (door.OpeningSide)
-                {
-                    case DoorOpeningSide.LeftHand:
-                        return IfcDoorTypeOperationEnum.DOUBLE_SWING_LEFT;
-                    case DoorOpeningSide.RightHand:
-                        return IfcDoorTypeOperationEnum.DOUBLE_SWING_RIGHT;
-                    case DoorOpeningSide.DoubleDoor:
-                        return IfcDoorTypeOperationEnum.DOUBLE_DOOR_DOUBLE_SWING;
-                }
-            }
-
-
-            return IfcDoorTypeOperationEnum.NOTDEFINED;
-        }
-
         internal static IfcLocalPlacement ToIfcLocalPlacement(this Transform transform, Document doc, IfcObjectPlacement parent = null)
         {
             var placement = transform.ToIfcAxis2Placement3D(doc);
@@ -403,10 +352,6 @@ namespace Elements.Serialization.IFC
                 else if (element is Floor floor)
                 {
                     e = floor.ToIfc(id, localPlacement, shape);
-                }
-                else if (element is Door door)
-                {
-                    e = door.ToIfc(id, localPlacement, shape);
                 }
                 else if (element is Space space)
                 {

@@ -29,7 +29,7 @@ namespace Elements.IFC.Tests
         // [InlineData("rac_sample", "../../../models/IFC4/rac_advanced_sample_project.ifc")]
         // [InlineData("rme_sample", "../../../models/IFC4/rme_advanced_sample_project.ifc")]
         // [InlineData("rst_sample", "../../../models/IFC4/rst_advanced_sample_project.ifc")]
-        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1972, 120, 530, 270, 9, 140, 10, 2)]
+        [InlineData("AC-20-Smiley-West-10-Bldg", "../../../models/IFC4/AC-20-Smiley-West-10-Bldg.ifc", 1963, 120, 530, 270, 9, 140, 10, 2)]
         // TODO: Some walls are extracted incorrectly and intersecting the roof. It happens because
         // IfcBooleanClippingResultParser doesn't handle the boolean clipping operation.
         // In order to fix it surface support is required.
@@ -39,7 +39,7 @@ namespace Elements.IFC.Tests
         // TODO: The entrance door has an incorrect representation. It happens because during
         // the UpdateRepresentation the default representation of a door is created instead of
         // the extracted one.
-        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1513, 5, 570, 121, 7, 82, 0, 21)]
+        [InlineData("AC20-Institute-Var-2", "../../../models/IFC4/AC20-Institute-Var-2.ifc", 1506, 5, 570, 121, 7, 82, 0, 21)]
         // [InlineData("20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle", "../../../models/IFC4/20160125WestRiverSide Hospital - IFC4-Autodesk_Hospital_Sprinkle.ifc")]
         public void FromIFC4(string name,
                          string ifcPath,
@@ -58,7 +58,6 @@ namespace Elements.IFC.Tests
             int countOfFloors = model.AllElementsOfType<Floor>().Count();
             int countOfOpenings = model.AllElementsOfType<Opening>().Count();
             int countOfWalls = model.AllElementsOfType<Wall>().Count();
-            int countOfDoors = model.AllElementsOfType<Door>().Count();
             int countOfSpaces = model.AllElementsOfType<Space>().Count();
             int countOfBeams = model.AllElementsOfType<Beam>().Count();
 
@@ -67,7 +66,6 @@ namespace Elements.IFC.Tests
             Assert.Equal(expectedCountOfFloors, countOfFloors);
             Assert.Equal(expectedCountOfOpenings, countOfOpenings);
             Assert.Equal(expectedCountOfWalls, countOfWalls);
-            Assert.Equal(expectedCountOfDoors, countOfDoors);
             Assert.Equal(expectedCountOfSpaces, countOfSpaces);
             Assert.Equal(expectedCountOfBeams, countOfBeams);
 
@@ -125,32 +123,6 @@ namespace Elements.IFC.Tests
             var hyparModel = Model.FromJson(model);
             var path = ConstructIfcPath("space-planning-test");
             hyparModel.ToIFC(path);
-        }
-
-        [Fact]
-        public void Doors()
-        {
-            var model = new Model();
-
-            // Add 2 walls.
-            var wallLine1 = new Line(Vector3.Origin, new Vector3(10, 10, 0));
-            var wallLine2 = new Line(new Vector3(10, 10, 0), new Vector3(10, 15, 0));
-            var wall1 = new StandardWall(wallLine1, 0.2, 3, name: "Wall1");
-            var wall2 = new StandardWall(wallLine2, 0.2, 2, name: "Wall2");
-
-            var door1 = new Door(wallLine1, 0.5, 1.5, 2.0, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-            var door2 = new Door(wallLine2, 0.5, 1.5, 1.8, Door.DEFAULT_DOOR_THICKNESS, DoorOpeningSide.LeftHand, DoorOpeningType.DoubleSwing);
-
-            wall1.AddDoorOpening(door1);
-            wall2.AddDoorOpening(door2);
-
-            model.AddElement(wall1);
-            model.AddElement(wall2);
-            model.AddElement(door1);
-            model.AddElement(door2);
-
-            model.ToJson(ConstructJsonPath("IfcDoor"));
-            model.ToIFC(ConstructIfcPath("IfcDoor"));
         }
 
         [Fact]

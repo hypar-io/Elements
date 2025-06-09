@@ -36,7 +36,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
         /// </summary>
         /// <param name="path">A path to IFC file.</param>
         /// <param name="idsToConvert">Only IfcProducts with these ids will be converted.</param>
-        /// <param name="fromIfcConverter">An object that converts IfcProducts to GeometricElements. 
+        /// <param name="fromIfcConverter">An object that converts IfcProducts to GeometricElements.
         /// If null, a fallback default converter will be created.</param>
         /// <param name="representationExtractor">An object that extracts RepresentationData from IfcRepresentations
         /// of IfcProduct. If null, a fallback default extractor will be created.</param>
@@ -160,7 +160,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
                     //definition.SkipCSGUnion = true;
                 }
 
-                // The cartesian transform needs to be applied 
+                // The cartesian transform needs to be applied
                 // before the element transformation because it
                 // may contain scale and rotation.
                 var instanceTransform = new Transform(repData.MappingInfo.MappingTransform);
@@ -192,13 +192,13 @@ namespace Elements.Serialization.IFC.IFCToHypar
                     .Select(v => v.RelatedOpeningElement).Cast<IfcOpeningElement>()
                     .SelectMany(io => io.ToOpenings());
 
-                var openingsOwner = (IHasOpenings) elementWithOpenings;
+                var openingsOwner = (IHasOpenings)elementWithOpenings;
                 openingsOwner.Openings.AddRange(openings);
             }
         }
 
         /// <summary>
-        /// Create the default IFromIfcProductConverter. It will be used, if 
+        /// Create the default IFromIfcProductConverter. It will be used, if
         /// IFromIfcProductConverter is not specified in the constructor.
         /// </summary>
         private static IFromIfcProductConverter GetDefaultFromIfcConverter()
@@ -208,7 +208,6 @@ namespace Elements.Serialization.IFC.IFCToHypar
                 new FromIfcFloorConverter(),
                 new FromIfcSpaceConverter(),
                 new FromIfcWallConverter(),
-                new FromIfcDoorConverter(),
                 new FromIfcBeamConverter(),
                 new FromIfcColumnConverter()
             };
@@ -219,7 +218,7 @@ namespace Elements.Serialization.IFC.IFCToHypar
         }
 
         /// <summary>
-        /// Create the default IfcRepresentationDataExtractor. It will be used, if 
+        /// Create the default IfcRepresentationDataExtractor. It will be used, if
         /// IfcRepresentationDataExtractor is not specified in the constructor.
         /// </summary>
         private static IfcRepresentationDataExtractor GetDefaultRepresentationDataExtractor(MaterialExtractor materialExtractor)
