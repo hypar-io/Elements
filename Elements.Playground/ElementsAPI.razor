@@ -1,0 +1,152 @@
+@page "/"
+
+@inject IJSRuntime JSRuntime
+
+<div></div>
+
+@code {
+
+    public class Result
+    {
+        public bool Success { get; set; }
+
+        public string Output { get; set; }
+
+        public string ModelJson { get; set; }
+    }
+
+    // Why do we need a component to call Elements compile and
+    // run elements code from the browser?
+    // 1. We need an HttpClient passed in from the framework. We can't
+    // create it because this code runs sandboxed in wasm. It has to
+    // come from blazor and the only way to do that is by injecting it
+    // as a service.
+    // 2. We need the the IJSRuntime to call methods in javascript. This
+    // also needs to be injected as a service.
+
+    private static Globals globals = new Globals();
+    private static IJSRuntime runtime;
+    [Inject] private HttpClient Client { get; set; }
+    private static Func<object[], Task> executionDelegate;
+
+    protected override async Task OnInitializedAsync()
+    {
+        runtime = JSRuntime;
+        await Compiler.InitializeMetadataReferences(Client);
+        await base.OnInitializedAsync();
+        await Task.FromResult(0);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    [JSInvokable]
+    public static async Task<Result> Run()
+    {
+        var sw = Stopwatch.StartNew();
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+        var success = false;
+
+        if (executionDelegate == null)
+        {
+            Console.WriteLine("There is nothing to execute. Try compiling first.");
+            Console.SetOut(currentOut);
+            sw.Stop();
+            return new Result()
+            {
+                Success = success,
+                Output = writer.ToString()
+            };
+        }
+
+        var model = await (Task<object>)executionDelegate(new object[] { globals, null }) as Elements.Model;
+        Console.WriteLine($"Run successful in {sw.ElapsedMilliseconds} ms");
+        sw.Reset();
+
+        await Task.Run(async () =>
+        {
+            sw.Start();
+            var glb = model.ToGlTF();
+            await runtime.InvokeVoidAsync("elements.loadModel", glb);
+            Console.WriteLine($"GlTF loaded in {sw.ElapsedMilliseconds} ms");
+            success = true;
+        });
+
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+
+        return new Result()
+        {
+            Success = success,
+            Output = writer.ToString(),
+            ModelJson = model.ToJson()
+        };
+    }
+
+    [JSInvokable]
+    public static Result Compile(string code)
+    {
+        if (!Compiler.IsReady())
+        {
+            return new Result
+            {
+                Success = false,
+                Output = "Compiler not ready"
+            };
+        }
+        var sw = Stopwatch.StartNew();
+
+        var currentOut = Console.Out;
+        var writer = new StringWriter();
+        Console.SetOut(writer);
+        var compileSuccess = false;
+
+        // Redirect debug to the console.
+        Trace.Listeners.Clear();
+        Trace.Listeners.Add(
+        new TextWriterTraceListener(Console.Out));
+
+        executionDelegate = null;
+
+        // Compilation warnings will be written to console.out
+        // which is redirected here to the writer.
+        var (success, asm, compilation) = Compiler.LoadSource(code);
+        if (success)
+        {
+            var entryPoint = compilation.GetEntryPoint(CancellationToken.None);
+            var type = asm.GetType($"{entryPoint.ContainingNamespace.MetadataName}.{entryPoint.ContainingType.MetadataName}");
+            var entryPointMethod = type.GetMethod(entryPoint.MetadataName);
+
+            executionDelegate = (Func<object[], Task>)entryPointMethod.CreateDelegate(typeof(Func<object[], Task>));
+            Console.WriteLine($"Compilation successful in {sw.ElapsedMilliseconds} ms");
+            compileSuccess = true;
+        }
+        else
+        {
+            Console.WriteLine("Compilation was not successful. The execution will not run.");
+            compileSuccess = false;
+        }
+
+        Console.SetOut(currentOut);
+
+        sw.Stop();
+
+        return new Result()
+        {
+            Success = compileSuccess,
+            Output = writer.ToString()
+        };
+    }
+
+    [JSInvokable]
+    public static void UpdateInputs(string json)
+    {
+        globals.InputJson = json;
+        return;
+    }
+}
