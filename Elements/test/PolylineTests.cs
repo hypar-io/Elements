@@ -257,6 +257,76 @@ namespace Elements.Geometry.Tests
             Assert.Equal(1.5, resultParameter);
             var testPoint = polyline.PointAt(resultParameter);
             Assert.True(point.IsAlmostEqualTo(testPoint));
+
+            polyline = new Polyline(
+              new List<Vector3>()
+              {
+                  new Vector3(1, 5, 0),
+                  new Vector3(5, 20, 0),
+                  new Vector3(5, 0, 0),
+                  new Vector3(9, 5, 0),
+              }
+            );
+            var parameter = 0.5;
+            var testMidpoint = new Vector3(5.0, 14.560525, 0); // Midpoint
+            var testParameterMidpoint = polyline.PointAtNormalizedLength(parameter);
+            Assert.True(testParameterMidpoint.IsAlmostEqualTo(testMidpoint));
+
+            var midlength = polyline.Length() * parameter;
+            var testLengthMidpoint = polyline.PointAtLength(midlength);
+            Assert.True(testLengthMidpoint.IsAlmostEqualTo(testParameterMidpoint));
+
+            var midpoint = polyline.MidPoint();
+            Assert.True(midpoint.IsAlmostEqualTo(testLengthMidpoint));
+        }
+
+        [Fact]
+        public void DivideByLength_SingleSegment()
+        {
+            // Arrange
+            var start = new Vector3(1, 2);
+            var end = new Vector3(1, 4);
+            var polyline = new Polyline(new[] { start, end });
+            var divisionLength = 1.0;
+
+            // Act
+            var segments = polyline.DivideByLength(divisionLength);
+
+            // Assert
+            Assert.Equal(3, segments.Count());
+            Assert.Equal(start, segments[0]);
+            Assert.Equal(new Vector3(1, 3), segments[1]);
+            Assert.Equal(end, segments[2]);
+        }
+
+        [Fact]
+        public void DivideByLength_MultipleSegments()
+        {
+            // Arrange
+            var polyline = new Polyline(new List<Vector3>()
+            {
+                new Vector3(1, 5, 0),
+                new Vector3(5, 20, 0),
+                new Vector3(5, 0, 0),
+                new Vector3(9, 5, 0),
+            });
+            var divisionLength = 5.0;
+
+            // Act
+            var segments = polyline.DivideByLength(divisionLength);
+
+            // Assert
+            Assert.Equal(10, segments.Count());
+            Assert.Equal(new Vector3(1.0, 5.0, 0), segments[0]);
+            Assert.Equal(new Vector3(2.288313, 9.831174, 0), segments[1]);
+            Assert.Equal(new Vector3(3.576626, 14.662349, 0), segments[2]);
+            Assert.Equal(new Vector3(4.864939, 19.493524, 0), segments[3]);
+            Assert.Equal(new Vector3(5.0, 15.524174, 0), segments[4]);
+            Assert.Equal(new Vector3(5.0, 10.524174, 0), segments[5]);
+            Assert.Equal(new Vector3(5.0, 5.524174, 0), segments[6]);
+            Assert.Equal(new Vector3(5.0, 0.524174, 0), segments[7]);
+            Assert.Equal(new Vector3(7.796025, 3.495032, 0), segments[8]);
+            Assert.Equal(new Vector3(9, 5, 0), segments[9]);
         }
 
         [Fact]
