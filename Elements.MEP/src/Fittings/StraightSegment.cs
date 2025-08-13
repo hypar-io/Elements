@@ -166,7 +166,11 @@ namespace Elements.Fittings
 
             if (leftover.IsZero())
             {
-                return false;
+                // returning true here is a hack to let fittings with multiple
+                // branches with different offsets continue to propogate their
+                // transforms.  If this returns false it seems that the other
+                // branches aren't checked.
+                return true;
             }
             else
             {
