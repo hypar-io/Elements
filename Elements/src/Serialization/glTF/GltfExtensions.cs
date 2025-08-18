@@ -1010,7 +1010,10 @@ namespace Elements.Serialization.glTF
 
             var materialsToAdd = model.AllElementsOfType<Material>().ToList();
             materialsToAdd.AddRange(model.SubElementsFromSharedObjects.Values.OfType<Material>());
-            if (drawEdges)
+            var hasLineElements = model.Elements.Values.Any(e =>
+                e is ModelLines || e is GridLine || e is ModelCurve || e is ModelArrows);
+
+            if (drawEdges || hasLineElements)
             {
                 materialsToAdd.Add(BuiltInMaterials.Edges);
             }
@@ -1037,9 +1040,9 @@ namespace Elements.Serialization.glTF
 
             // Lines are stored in a list of lists
             // according to the max available index size.
-            var lines = new List<List<Vector3>>();
-            var currLines = new List<Vector3>();
-            lines.Add(currLines);
+            var meshEdgeLines = new List<List<Vector3>>();
+            var currMeshEdgeLines = new List<Vector3>();
+            meshEdgeLines.Add(currMeshEdgeLines);
 
             var accessors = new List<Accessor>();
             var textures = new List<Texture>();
@@ -1056,10 +1059,10 @@ namespace Elements.Serialization.glTF
                 // Check if we'll overrun the index size
                 // for the current line array. If so,
                 // create a new line array.
-                if (currLines.Count * 2 > ushort.MaxValue)
+                if (currMeshEdgeLines.Count * 2 > ushort.MaxValue)
                 {
-                    currLines = new List<Vector3>();
-                    lines.Add(currLines);
+                    currMeshEdgeLines = new List<Vector3>();
+                    meshEdgeLines.Add(currMeshEdgeLines);
                 }
 
                 try
@@ -1083,7 +1086,7 @@ namespace Elements.Serialization.glTF
                                             nodeElementMap,
                                             meshTransformMap,
                                             representationsMap,
-                                            currLines,
+                                            currMeshEdgeLines,
                                             drawEdges,
                                             updateElementsRepresentations,
                                             mergeVertices);
@@ -1098,9 +1101,9 @@ namespace Elements.Serialization.glTF
                 return null;
             }
 
-            if (drawEdges && lines.Count() > 0)
+            if (drawEdges && meshEdgeLines.Count() > 0)
             {
-                foreach (var lineSet in lines)
+                foreach (var lineSet in meshEdgeLines)
                 {
                     if (lineSet.Count == 0)
                     {
