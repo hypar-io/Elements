@@ -6,19 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Elements Playground</title>
     <base href="/" />
-    <link href="css/app.css" rel="stylesheet" />
-    <link href="Elements.Playground.styles.css" rel="stylesheet" />
-    <script type="module" src="js/model.js"></script>
+    <script type="module" src="js/elements.js"></script>
 </head>
 
 <body>
-    <app>Loading...</app>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.8.1/ace.min.js" crossorigin="anonymous"
-        integrity="sha512-IunksvjFi1CZJ59SN0Fw0dSkjMgLrY1PQ0WVPv1L3er6z1zW0AVLXs9nM2ZoEisoRo8eHDQn8FOs2KsZPwrUww==">
-        </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.8.1/ext-language_tools.js"
-        crossorigin="anonymous"></script>
-    <script src="_framework/blazor.webassembly.js"></script>
+    <app></app>
+    <script src="https://elements.hypar.io/blazor.webassembly.js" autostart="false"></script>
+    <script>
+        // Insert this code into your web application
+        // to load blazor assets locally, for testing,
+        // or from elements.hypar.io, for production.
+        async function startBlazor () {
+            // If you are running locally, replace this with http://localhost:5001
+            let root = 'https://elements.hypar.io'
+            await Blazor.start({
+                loadBootResource: function (type, name, defaultUri, integrity) {
+                    // console.log(`Loading: '${type}', '${name}', '${defaultUri}', '${integrity}'`);
+                    switch (type) {
+                        case 'manifest':
+                        case 'assembly':
+                        case 'globalization':
+                        case 'dotnetjs':
+                        case 'dotnetwasm':
+                        case 'timezonedata':
+                        case 'pdb':
+                            return `${root}/${name}`
+                    }
+                    return null
+                },
+            })
+        }
+        startBlazor()
+
+        async function updateInputs (value) {
+            elements.updateInputs(JSON.stringify({ "height": parseFloat(value) }));
+            let result = await elements.run();
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = result.output;
+        }
+
+        async function compile () {
+            let result = await elements.compile(elements.testCode);
+            let resultDiv = document.getElementById("result");
+            resultDiv.innerHTML = result.output;
+        }
+    </script>
+    <input type="range" min="1" max="100" value="50" class="slider" oninput="updateInputs(this.value)">
+    <input type="button" onclick="compile()" value="Compile" />
+    <div>
+        <p id="result"></p>
+    </div>
 </body>
 
 </html>
