@@ -377,6 +377,11 @@ namespace Elements.Geometry
 
         private double ClippedArea()
         {
+            if (this.Perimeter == null)
+            {
+                return 0;
+            }
+
             if (this.Voids == null || this.Voids.Count == 0)
             {
                 return this.Perimeter.Area();
