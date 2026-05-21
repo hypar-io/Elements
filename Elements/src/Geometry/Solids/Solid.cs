@@ -917,8 +917,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData1 = ((UV uv, uint tag, uint faceId, uint solidId))v1.Data;
-                        av = csgVertices[(int)vData1.tag];
+                        var vData1 = (CsgVertexData)v1.Data;
+                        av = csgVertices[(int)vData1.Tag];
                     }
 
                     if (v2.Data == null)
@@ -928,8 +928,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData2 = ((UV uv, uint tag, uint faceId, uint solidId))v2.Data;
-                        bv = csgVertices[(int)vData2.tag];
+                        var vData2 = (CsgVertexData)v2.Data;
+                        bv = csgVertices[(int)vData2.Tag];
                     }
 
                     if (v3.Data == null)
@@ -939,8 +939,8 @@ namespace Elements.Geometry.Solids
                     }
                     else
                     {
-                        var vData3 = ((UV uv, uint tag, uint faceId, uint solidId))v3.Data;
-                        cv = csgVertices[(int)vData3.tag];
+                        var vData3 = (CsgVertexData)v3.Data;
+                        cv = csgVertices[(int)vData3.Tag];
                     }
 
                     // Don't allow us to create a csg that has zero

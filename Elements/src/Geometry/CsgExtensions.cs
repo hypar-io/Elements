@@ -141,7 +141,7 @@ namespace Elements.Geometry
                 };
 
                 tess.AddContour(p.Vertices.ToContourVertices());
-                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
+                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3, HyparTessCombine.CsgTexTagCombine);
 
                 for (var i = 0; i < tess.ElementCount; i++)
                 {
@@ -153,9 +153,9 @@ namespace Elements.Geometry
                     var b = t2.Position.ToVector3();
                     var c = t3.Position.ToVector3();
 
-                    var dataA = ((Csg.Vector2D, int))t1.Data;
-                    var dataB = ((Csg.Vector2D, int))t2.Data;
-                    var dataC = ((Csg.Vector2D, int))t3.Data;
+                    var dataA = TexTagOrDefault(t1.Data);
+                    var dataB = TexTagOrDefault(t2.Data);
+                    var dataC = TexTagOrDefault(t3.Data);
 
                     var v1 = mesh.FindOrCreateVertex(a, dataA.Item2, dataA.Item1.ToUV(), n);
                     var v2 = mesh.FindOrCreateVertex(b, dataB.Item2, dataB.Item1.ToUV(), n);
@@ -168,6 +168,11 @@ namespace Elements.Geometry
                     }
                 }
             }
+        }
+
+        private static (Csg.Vector2D, int) TexTagOrDefault(object data)
+        {
+            return data is ValueTuple<Csg.Vector2D, int> t ? t : (new Csg.Vector2D(0, 0), 0);
         }
 
         private static Vector3 ToElementsVector(this Csg.Vector3D v)
@@ -244,7 +249,7 @@ namespace Elements.Geometry
                 var cv = new ContourVertex
                 {
                     Position = new Vec3 { X = v.Pos.X, Y = v.Pos.Y, Z = v.Pos.Z },
-                    Data = (v.Tex.ToUV(), (uint)v.Tag, faceId, solidId)
+                    Data = new CsgVertexData(v.Tex.ToUV(), (uint)v.Tag, faceId, solidId)
                 };
                 contour[i] = cv;
             }

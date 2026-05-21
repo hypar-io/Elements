@@ -22,7 +22,7 @@ namespace Elements.Geometry.Solids
                 var cv = new ContourVertex
                 {
                     Position = new Vec3 { X = p.X, Y = p.Y, Z = p.Z },
-                    Data = (default(UV), edge.Vertex.Id, faceId, solidId)
+                    Data = new Tessellation.CsgVertexData(default, edge.Vertex.Id, faceId, solidId)
                 };
                 contour[i] = cv;
             }
