@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.4.0
+
+### Fixed
+
+- CSG `Union` produced corrupt geometry at large coordinates (e.g., survey-scale) due to BSP plane-side precision loss.
+- LibTess tessellation threw `NullReferenceException` for geometry that produced contour synthesis points (T-junctions, self-intersections).
+- Post-union polygon tessellation welded unrelated vertex corners at different positions when CSG `Shared.Tag` collided across faces.
+
 ## 2.1.0
 
 ### Added
