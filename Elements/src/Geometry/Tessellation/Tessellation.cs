@@ -22,7 +22,7 @@ namespace Elements.Geometry.Tessellation
         // Synthetic tag counter used when ContourVertex.Data is missing/malformed.
         // Starts in the upper half of the uint range so it cannot collide with
         // sequentially-allocated Csg.Vertex tags. Shares the same range with
-        // HyparTessCombine; both produce unique values, so collisions between
+        // CombineCallbacks; both produce unique values, so collisions between
         // the two synthetic streams are still avoided through Interlocked semantics
         // on disjoint counters (they only ever live in vertexMap keyed by
         // (tag, faceId, solidId) where faceId == 0 for fallback path).
@@ -114,7 +114,7 @@ namespace Elements.Geometry.Tessellation
                     {
                         // LibTess can synthesize new ContourVertices at intersection
                         // and T-junction points. If the upstream tessellator did not
-                        // register a CombineCallback (see HyparTessCombine) the new
+                        // register a CombineCallback (see CombineCallbacks) the new
                         // vertex's Data field is null. Treat it as a fresh unique
                         // vertex (synthetic tag prevents dedup-map collision) and
                         // fall through to the basis-vector UV fallback below.

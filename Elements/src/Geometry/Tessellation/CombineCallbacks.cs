@@ -5,30 +5,33 @@ using LibTessDotNet.Double;
 namespace Elements.Geometry.Tessellation
 {
     /// <summary>
-    /// Shared <see cref="CombineCallback"/> factory for tessellators that attach
-    /// <see cref="CsgVertexData"/> to <see cref="ContourVertex"/>s.
+    /// Shared <see cref="CombineCallback"/> factories for tessellators.
     ///
     /// LibTess can synthesize new vertices at contour intersection / T-junction points
     /// during <see cref="Tess.Tessellate(WindingRule, ElementType, int, CombineCallback)"/>.
     /// Without a callback, those synthetic vertices end up with <c>Data == null</c>, which
     /// later trips a <see cref="System.NullReferenceException"/> in
     /// <see cref="Tessellation.PackTessellationsIntoBuffers"/> when it unboxes
-    /// <c>v.Data</c> to the 4-tuple shape.
+    /// <c>v.Data</c> to the expected shape.
     ///
-    /// The callback returned here interpolates the UV from the input vertices, preserves the
+    /// Each callback interpolates the UV from the input vertices, preserves the
     /// faceId/solidId of the first non-null input (these are constant within a single
     /// face's tessellation), and assigns a unique synthetic tag drawn from a process-global
-    /// monotonically increasing counter starting at <c>0x80000000</c> so it can never
-    /// collide with the small, sequential tags emitted by the CSG library.
+    /// monotonically increasing counter starting in the upper half of the uint range so it
+    /// can never collide with the small, sequential tags emitted by the CSG library.
     /// </summary>
-    internal static class HyparTessCombine
+    internal static class CombineCallbacks
     {
         // Start synthetic tags in the upper half of the uint range so they cannot
         // collide with Csg.Vertex.Tag values, which are sequentially allocated from 0.
-        private static long _syntheticTagCounter = 0x80000000L;
-        private static long _syntheticCsgTagCounter = 0x90000000L;
+        private static long _dataCombineCounter = 0x80000000L;
+        private static long _csgTexTagCombineCounter = 0x90000000L;
 
-        internal static CombineCallback HyparDataCombine { get; } = Combine;
+        /// <summary>
+        /// Combine callback for tessellation paths that attach
+        /// <see cref="CsgVertexData"/> to <see cref="ContourVertex.Data"/>.
+        /// </summary>
+        internal static CombineCallback DataCombine { get; } = CombineData;
 
         /// <summary>
         /// Combine callback for legacy mesh tessellation paths that store
@@ -36,7 +39,7 @@ namespace Elements.Geometry.Tessellation
         /// </summary>
         internal static CombineCallback CsgTexTagCombine { get; } = CombineCsgTexTag;
 
-        private static object Combine(Vec3 position, object[] data, double[] weights)
+        private static object CombineData(Vec3 position, object[] data, double[] weights)
         {
             var uvU = 0.0;
             var uvV = 0.0;
@@ -60,7 +63,7 @@ namespace Elements.Geometry.Tessellation
                 }
             }
 
-            var tag = (uint)Interlocked.Increment(ref _syntheticTagCounter);
+            var tag = (uint)Interlocked.Increment(ref _dataCombineCounter);
             return new CsgVertexData(new UV(uvU, uvV), tag, faceId, solidId);
         }
 
@@ -78,7 +81,7 @@ namespace Elements.Geometry.Tessellation
                 }
             }
 
-            var tag = (int)Interlocked.Increment(ref _syntheticCsgTagCounter);
+            var tag = (int)Interlocked.Increment(ref _csgTexTagCombineCounter);
             return (new Csg.Vector2D(texX, texY), tag);
         }
     }

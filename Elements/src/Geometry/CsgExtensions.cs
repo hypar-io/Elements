@@ -141,7 +141,7 @@ namespace Elements.Geometry
                 };
 
                 tess.AddContour(p.Vertices.ToContourVertices());
-                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3, HyparTessCombine.CsgTexTagCombine);
+                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3, CombineCallbacks.CsgTexTagCombine);
 
                 for (var i = 0; i < tess.ElementCount; i++)
                 {

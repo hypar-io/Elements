@@ -520,7 +520,7 @@ namespace Elements.Tests
             // polygon contour. With WindingRule.Positive, LibTess synthesizes vertices
             // at the 5 edge crossings. This test routes through the REAL
             // CsgPolygonTessAdapter to prove its callback wiring (not the
-            // HyparTessCombine internals) is the load-bearing piece.
+            // CombineCallbacks internals) is the load-bearing piece.
             var verts = new List<Csg.Vertex>
             {
                 new Csg.Vertex(new Csg.Vector3D(0, 10, 0), new Csg.Vector2D(0.5, 1)),
@@ -547,11 +547,11 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void HyparTessCombine_TwoOverlappingContours_SynthesizedVerticesCarryCsgVertexData()
+        public void CombineCallbacks_TwoOverlappingContours_SynthesizedVerticesCarryCsgVertexData()
         {
             // Two overlapping rectangular contours. With WindingRule.Positive their
             // shared region forces LibTess to synthesize vertices at the boundary
-            // crossings. With HyparDataCombine wired, every synthetic vertex must
+            // crossings. With DataCombine wired, every synthetic vertex must
             // carry CsgVertexData; without the callback it'd be null.
             var contourA = new[]
             {
@@ -634,7 +634,7 @@ namespace Elements.Tests
             {
                 var tess = new Tess { NoEmptyPolygons = true };
                 foreach (var c in _contours) { tess.AddContour(c); }
-                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3, HyparTessCombine.HyparDataCombine);
+                tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3, CombineCallbacks.DataCombine);
                 return tess;
             }
         }
