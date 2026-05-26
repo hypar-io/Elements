@@ -35,7 +35,11 @@ namespace Elements.Geometry.Tessellation
             };
             tess.AddContour(polygon.Vertices.ToContourVertexArray(faceId, solidId));
 
-            tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3);
+            // Register a combine callback so vertices synthesized by LibTess at
+            // intersection / T-junction points carry the same CsgVertexData shape as
+            // the input vertices. Without this, the synthesized vertices' Data field
+            // is null and downstream packing throws a NullReferenceException.
+            tess.Tessellate(WindingRule.Positive, ElementType.Polygons, 3, CombineCallbacks.DataCombine);
             return tess;
         }
     }

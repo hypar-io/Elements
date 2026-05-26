@@ -28,9 +28,8 @@ namespace Elements.Geometry.Tessellation
         {
             foreach (var p in csg.Polygons)
             {
-                // We used the polygon's shared tag, which seems to 
-                // work for planar solids turned into csgs as a discriminator,
-                // but this may break in the future.
+                // Shared.Tag groups coplanar polygons so the pack shares vertices across
+                // them; post-union collisions are caught by position-matched reuse downstream.
                 yield return new CsgPolygonTessAdapter(p, (uint)p.Shared.Tag, solidId);
             }
         }
