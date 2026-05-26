@@ -259,14 +259,25 @@ namespace Elements.Geometry.Tests
         }
 
         [Fact]
-        public void DivideByLength()
+        public void DivideByLengthToPoints()
         {
             var l = new Line(Vector3.Origin, new Vector3(5, 0));
-            var segments = l.DivideByLength(1.1, true);
-            Assert.Equal(4, segments.Count);
+            var segments = l.DivideByLengthToPoints(1.1);
+            Assert.Equal(6, segments.Count());
 
-            var segments1 = l.DivideByLength(1.1);
-            Assert.Equal(5, segments1.Count);
+            var segments1 = l.DivideByLengthToPoints(2);
+            Assert.Equal(4, segments1.Count());
+        }
+
+        [Fact]
+        public void DivideByLengthToPSegments()
+        {
+            var l = new Line(Vector3.Origin, new Vector3(5, 0));
+            var segments = l.DivideByLengthToSegments(1.1);
+            Assert.Equal(5, segments.Count());
+
+            var segments1 = l.DivideByLengthToSegments(2);
+            Assert.Equal(3, segments1.Count());
         }
 
         [Fact]
@@ -783,7 +794,6 @@ namespace Elements.Geometry.Tests
             Assert.Equal(new Line((5, 0, 0), (10, 0, 0)), overlap);
         }
 
-
         [Fact]
         public void GetParameterAt()
         {
@@ -815,6 +825,17 @@ namespace Elements.Geometry.Tests
             var expectedVector = line.PointAt(uValue);
             Assert.InRange(uValue, 0, line.Length());
             Assert.True(vector.IsAlmostEqualTo(expectedVector));
+
+            var parameter = 0.5;
+            var testParameterMidpoint = line.PointAtNormalizedLength(parameter);
+            Assert.True(testParameterMidpoint.IsAlmostEqualTo(middle));
+
+            var midlength = line.Length() * parameter;
+            var testLengthMidpoint = line.PointAtLength(midlength);
+            Assert.True(testLengthMidpoint.IsAlmostEqualTo(testParameterMidpoint));
+
+            var midpoint = line.MidPoint();
+            Assert.True(midpoint.IsAlmostEqualTo(testLengthMidpoint));
         }
 
         [Theory]

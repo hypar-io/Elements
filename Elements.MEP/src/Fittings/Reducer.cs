@@ -36,7 +36,7 @@ namespace Elements.Fittings
 
             var path = reducerAtEnd ? pipe.Path.Segments()[0].Reversed() : pipe.Path.Segments()[0];
 
-            var position = path.DivideByLength(distanceFromEnd)[0].End;
+            var position = path.DivideByLengthToSegments(distanceFromEnd)[0].End;
 
             var orientation = path.Direction();
             // var fittingMaterial = new Material("green", new Color(0, 1, 0, 0.5);
