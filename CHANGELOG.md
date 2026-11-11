@@ -2,6 +2,11 @@
 
 ## 2.4.0
 
+### Added
+
+- `WorldTransformResolver`: resolves an element's world transform when its stored `Transform` is relative to its `Parent`, as the Hypar editor stores conceptual masses in buildings, v4 walls on masses, and doors and windows on walls. Anchor frames are not resolved.
+- `ModelWorldTransformExtensions.GetWorldTransform(this Model model, Element element)`
+
 ### Fixed
 
 - CSG `Union` produced corrupt geometry at large coordinates (e.g., survey-scale) due to BSP plane-side precision loss.
