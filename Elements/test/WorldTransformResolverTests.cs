@@ -23,7 +23,7 @@ namespace Elements.Tests
         private static readonly Transform WallLocal = new Transform(new Vector3(1, 2, 0), 30);
         private static readonly Transform DoorLocal = new Transform(new Vector3(0.5, 0, 0));
 
-        /// <summary>A pringle-shaped transform: { "Matrix": { "Components": [12 numbers] } }.</summary>
+        /// <summary>A transform as the editor writes it: { "Matrix": { "Components": [12 numbers] } }.</summary>
         private static JObject TransformJson(Transform t)
         {
             return new JObject(new JProperty("Matrix",
@@ -138,6 +138,8 @@ namespace Elements.Tests
                 Wall(WallLocal, "4", MassId),
                 Door(DoorLocal, WallId));
             var resolver = new WorldTransformResolver(model);
+            // This door has no Anchor; one the editor placed in the wall does (see DoorAnchoredInWallIsFlagged).
+            Assert.False(WorldTransformResolver.HasAnchor(model.Elements[DoorId]));
 
             var massWorld = MassLocal.Concatenated(MovedRotatedBuilding);
             var wallWorld = WallLocal.Concatenated(massWorld);
@@ -148,6 +150,25 @@ namespace Elements.Tests
             // A point at the wall's local origin lands where the building, mass and wall frames put it.
             var expected = MovedRotatedBuilding.OfPoint(MassLocal.OfPoint(WallLocal.OfPoint(Vector3.Origin)));
             Assert.True(resolver.GetWorldTransform(WallId).OfPoint(Vector3.Origin).IsAlmostEqualTo(expected));
+        }
+
+        [Fact]
+        public void DoorAnchoredInWallIsFlagged()
+        {
+            var door = Door(DoorLocal, WallId);
+            door["Anchor"] = new JObject
+            {
+                ["AnchorType"] = "UVW",
+                ["UVW"] = new JObject { ["X"] = 0.5, ["Y"] = 0.5, ["Z"] = 0 },
+            };
+            var model = ModelFrom(Wall(WallLocal, "4", null), door);
+
+            Assert.True(WorldTransformResolver.HasAnchor(model.Elements[DoorId]));
+
+            var unanchored = Door(DoorLocal, WallId);
+            unanchored["Anchor"] = null;
+            Assert.False(WorldTransformResolver.HasAnchor(ModelFrom(unanchored).Elements[DoorId]));
+            Assert.False(WorldTransformResolver.HasAnchor(null));
         }
 
         [Fact]
@@ -365,7 +386,7 @@ namespace Elements.Tests
 
         [Theory]
         [MemberData(nameof(RelativityCases))]
-        public void RelativityFollowsPringlesTable(string discriminator, string versionProperty, string version, bool relative)
+        public void RelativityFollowsTheEditorsTable(string discriminator, string versionProperty, string version, bool relative)
         {
             var element = new Element(Guid.NewGuid());
             element.AdditionalProperties["discriminator"] = discriminator;
@@ -383,9 +404,9 @@ namespace Elements.Tests
         }
 
         [Fact]
-        public void NumericVersionIsNotRelativeAsInPringle()
+        public void NumericVersionIsNotRelative()
         {
-            // Pringle reads the version only when it is a string.
+            // The editor's rule reads the version only when it is a string.
             var model = ModelFrom(Mass(MassLocal, null), Wall(WallLocal, "4", MassId));
             var wall = (StandardWall)model.Elements[WallId];
             Assert.True(WorldTransformResolver.IsTransformRelativeToParent(wall));

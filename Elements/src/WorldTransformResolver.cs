@@ -12,18 +12,23 @@ namespace Elements
     /// relative to its Parent.
     ///
     /// Hypar's web editor stores some elements' Transform relative to their
-    /// Parent element: a conceptual mass inside a building, a wall on a mass, a
-    /// door on that wall. The JSON does not say which ones, so this class
-    /// ports the editor's rule (see <see cref="IsTransformRelativeToParent"/>)
-    /// and walks the Parent chain, composing
-    /// <c>local.Concatenated(parentWorld)</c> at each step.
+    /// Parent element: a conceptual mass inside a building, a wall on a mass.
+    /// The JSON does not say which ones, so this class ports the editor's rule
+    /// (see <see cref="IsTransformRelativeToParent"/>) and walks the Parent
+    /// chain, composing <c>local.Concatenated(parentWorld)</c> at each step.
     ///
-    /// Not covered: anchor frames. The editor composes some children
-    /// (components, CAD components, clearances, flexible components,
-    /// annotation anchors) against a UVW anchor on the parent's rendered
-    /// bounding box rather than the parent's world transform. That box is not
-    /// in the JSON, so this resolver composes those children against the
-    /// parent's world transform.
+    /// Not covered, so the result is not where the editor draws the element:
+    /// <list type="bullet">
+    /// <item>Anchor frames. An element with an Anchor (see <see cref="HasAnchor"/>),
+    /// such as a door or window placed in a wall, a component or a clearance, is
+    /// stored relative to a point on the parent's rendered bounding box, not to
+    /// the parent's origin. That box is not in the JSON, so this resolver
+    /// composes the element against the parent's world transform.</item>
+    /// <item>A column placed on two gridlines, which is stored relative to their
+    /// intersection and has no Parent, so it reads as world.</item>
+    /// <item>A multi-level stair or elevator, whose world Z the editor replaces
+    /// with its base level's elevation.</item>
+    /// </list>
     ///
     /// <see cref="Model.Transform"/> is not applied.
     ///
@@ -35,18 +40,13 @@ namespace Elements
         /// <summary>The discriminator of a conceptual mass, relative to its parent whenever it has one.</summary>
         public const string ConceptualMassDiscriminator = "Elements.ConceptualMass";
 
-        // THE RULE TABLE. Source of truth: the Hypar web editor (pringle), origin/main:
-        //   src/elements/registries/resolution/levelResolution.ts  transformIsRelativeToParent
-        //   src/elements/registries/ElementPropertiesRegistry.ts    transformIsRelative defaults
-        //   src/elements/elementTypes/Building.ts                   a ConceptualMass with a Parent is relative
-        //   src/elements/packages/packageList.ts                    multi-level package kinds (stair, elevator)
-        // A new relative type is one line here. An element is relative only when it
-        // also has a Parent.
+        // THE RULE TABLE, ported from the Hypar web editor's rule for which stored
+        // Transforms are relative to the Parent. A new relative type is one line here.
+        // An element is relative only when it also has a Parent.
 
         /// <summary>Types whose Transform is relative to their Parent whenever they have one.</summary>
         private static readonly HashSet<string> RelativeWhenParented = new HashSet<string>
         {
-            // ElementPropertiesRegistry.ts defaults.
             "Elements.Annotations.Anchor",
             "Elements.Clearance",
             "Elements.Circulation",
@@ -61,11 +61,11 @@ namespace Elements
             // Multi-level package kinds.
             "Elements.Stair",
             "Elements.Elevator",
-            // Building.ts: a mass's Transform is relative to the Elements.Building group it belongs to.
+            // A mass's Transform is relative to the Elements.Building group it belongs to.
             ConceptualMassDiscriminator,
         };
 
-        /// <summary>Types that are relative only from a version on, read from a string property as pringle's parseInt does.</summary>
+        /// <summary>Types that are relative only from a version on, read from a string property as the editor's parseInt does.</summary>
         private static readonly Dictionary<string, (string Property, int MinimumVersion)> RelativeFromVersion =
             new Dictionary<string, (string, int)>
             {
@@ -77,6 +77,7 @@ namespace Elements
         private const string DiscriminatorKey = "discriminator";
         private const string ParentKey = "Parent";
         private const string TransformKey = "Transform";
+        private const string AnchorKey = "Anchor";
 
         private static readonly ConcurrentDictionary<(Type, string), PropertyInfo> TypedProperties =
             new ConcurrentDictionary<(Type, string), PropertyInfo>();
@@ -112,7 +113,8 @@ namespace Elements
         /// Get the world transform of the element with an id.
         /// </summary>
         /// <param name="id">The element's id.</param>
-        /// <returns>A new transform, or null when there is no such element or it stores no Transform.</returns>
+        /// <returns>A new transform, or null when there is no such element or it stores no Transform
+        /// (a typed GeometricElement always has one; see <see cref="GetWorldTransform(Element)"/>).</returns>
         public Transform GetWorldTransform(Guid id)
         {
             var element = _lookup(id);
@@ -125,9 +127,13 @@ namespace Elements
         /// A missing parent leaves the element's own Transform, as the editor
         /// does. A parent that stores no Transform composes as identity. In a
         /// Parent loop, each element on the loop resolves to its own Transform.
+        /// For an element with an Anchor (<see cref="HasAnchor"/>) the result is
+        /// not where the editor draws it.
         /// </summary>
         /// <param name="element">The element.</param>
-        /// <returns>A new transform, or null when the element stores no Transform.</returns>
+        /// <returns>A new transform, or null when the element stores no Transform.
+        /// A typed GeometricElement always has one: a Transform missing from its
+        /// JSON reads as identity.</returns>
         public Transform GetWorldTransform(Element element)
         {
             if (element == null)
@@ -207,6 +213,8 @@ namespace Elements
         /// transform itself. Use it to write back a moved element that keeps
         /// its Parent. Resolved transforms are cached, so after writing, build a
         /// new resolver before resolving the element or its children again.
+        /// Wrong for an element with an Anchor (<see cref="HasAnchor"/>), which
+        /// the editor stores against an anchor point instead.
         /// </summary>
         /// <param name="element">The element to store the transform on.</param>
         /// <param name="world">The world transform the element should have.</param>
@@ -249,7 +257,7 @@ namespace Elements
             }
             if (RelativeFromVersion.TryGetValue(discriminator, out var versioned))
             {
-                // Pringle reads the version only when it is a string, with parseInt.
+                // The editor's rule reads the version only when it is a string, with parseInt.
                 return TryGetProperty(element, versioned.Property, out var value)
                     && StringValue(value) is string version
                     && TryParseLeadingInt(version, out var number)
@@ -287,7 +295,9 @@ namespace Elements
         /// property or from AdditionalProperties.
         /// </summary>
         /// <param name="element">The element.</param>
-        /// <returns>The stored transform, or null when the element stores none.</returns>
+        /// <returns>The stored transform, or null when the element stores none. A
+        /// typed GeometricElement always has one: a Transform missing from its JSON
+        /// reads as identity.</returns>
         public static Transform GetLocalTransform(Element element)
         {
             if (element == null || !TryGetProperty(element, TransformKey, out var value))
@@ -338,10 +348,27 @@ namespace Elements
             return parentId.HasValue ? _lookup(parentId.Value) : null;
         }
 
+        /// <summary>
+        /// Whether an element has an Anchor, read from a typed Anchor property or
+        /// from AdditionalProperties. The editor stores such an element relative
+        /// to a point on its parent's rendered bounding box, which this resolver
+        /// cannot see, so its resolved transform is not where the editor draws it.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public static bool HasAnchor(Element element)
+        {
+            return element != null && HasValue(element, AnchorKey);
+        }
+
         private static bool HasParent(Element element)
         {
-            // Pringle tests `!element.Parent`: null and the empty string are no parent.
-            if (!TryGetProperty(element, ParentKey, out var value) || value == null)
+            return HasValue(element, ParentKey);
+        }
+
+        private static bool HasValue(Element element, string name)
+        {
+            // As the editor's `!element.Parent`: null and the empty string are no value.
+            if (!TryGetProperty(element, name, out var value) || value == null)
             {
                 return false;
             }
