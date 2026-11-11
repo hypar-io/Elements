@@ -55,12 +55,12 @@ namespace Elements.Tests
             };
         }
 
-        private static JObject Wall(Transform t, string wallsVersion, Guid? parent)
+        private static JObject Wall(Transform t, string wallsVersion, Guid? parent, Guid? id = null)
         {
             return new JObject
             {
                 ["discriminator"] = "Elements.StandardWall",
-                ["Id"] = WallId.ToString(),
+                ["Id"] = (id ?? WallId).ToString(),
                 ["Name"] = "Wall 1",
                 ["CenterLine"] = JObject.FromObject(new Line(Vector3.Origin, new Vector3(4, 0, 0))),
                 ["Thickness"] = 0.2,
@@ -262,6 +262,80 @@ namespace Elements.Tests
 
             Assert.Equal(MassId, WorldTransformResolver.GetParentId(wall));
             AssertSame(WallLocal.Concatenated(MovedRotatedBuilding), model.GetWorldTransform(wall));
+        }
+
+        /// <summary>A function's own mass type whose Transform hides GeometricElement.Transform.</summary>
+        private class HidingMass : GeometricElement
+        {
+            public new Transform Transform { get; set; }
+        }
+
+        private class DerivedHidingMass : HidingMass
+        {
+        }
+
+        [Fact]
+        public void HiddenTransformPropertyIsRead()
+        {
+            var building = new Element(BuildingId, "Building");
+            building.AdditionalProperties["discriminator"] = "Elements.Building";
+            building.AdditionalProperties["Transform"] = TransformJson(MovedRotatedBuilding);
+            var expected = MassLocal.Concatenated(MovedRotatedBuilding);
+
+            foreach (var mass in new HidingMass[] { new HidingMass(), new DerivedHidingMass() })
+            {
+                mass.Id = MassId;
+                mass.Transform = MassLocal;
+                mass.AdditionalProperties["discriminator"] = "Elements.ConceptualMass";
+                mass.AdditionalProperties["Parent"] = BuildingId.ToString();
+                Assert.True(((GeometricElement)mass).Transform.Equals(new Transform()));
+
+                var elements = new Dictionary<Guid, Element> { { BuildingId, building }, { MassId, mass } };
+                var resolver = new WorldTransformResolver(id => elements.TryGetValue(id, out var e) ? e : null);
+                AssertSame(MassLocal, WorldTransformResolver.GetLocalTransform(mass));
+                AssertSame(expected, resolver.GetWorldTransform(mass));
+            }
+        }
+
+        [Fact]
+        public void LookupSpansSeveralModels()
+        {
+            // Building and mass in one input model, a v2 column on the mass in another.
+            var buildingAt = new Transform(new Vector3(100, 0, 0), Vector3.YAxis, Vector3.XAxis.Negate(), Vector3.ZAxis);
+            var massModel = ModelFrom(Building(buildingAt), Mass(new Transform(new Vector3(10, 0, 0)), BuildingId));
+            // As a function that does not register Elements.Column reads it: a plain Element.
+            var column = new Element(WallId, "Column 1");
+            column.AdditionalProperties["discriminator"] = "Elements.Column";
+            column.AdditionalProperties["Transform"] = TransformJson(new Transform());
+            column.AdditionalProperties["ColumnsVersion"] = "2";
+            column.AdditionalProperties["Parent"] = MassId.ToString();
+            var columnModel = new Model();
+            columnModel.AddElement(column);
+            var models = new[] { massModel, columnModel };
+            var resolver = new WorldTransformResolver(id => models.Select(m => m.Elements.TryGetValue(id, out var e) ? e : null).FirstOrDefault(e => e != null));
+
+            Assert.True(resolver.GetWorldTransform(WallId).Origin.IsAlmostEqualTo(new Vector3(100, 10, 0)));
+        }
+
+        [Fact]
+        public void ToLocalTransformRoundTrips()
+        {
+            var model = ModelFrom(
+                Building(MovedRotatedBuilding),
+                Mass(MassLocal, BuildingId),
+                Wall(WallLocal, "4", MassId),
+                Wall(WallLocal, "3", MassId, SpaceId));
+            var resolver = new WorldTransformResolver(model);
+            var newWorld = new Transform(new Vector3(-3, 7, 2), 45);
+
+            // A relative element: the stored transform composes back to the requested world.
+            var wallLocal = resolver.ToLocalTransform(model.Elements[WallId], newWorld);
+            var massWorld = MassLocal.Concatenated(MovedRotatedBuilding);
+            AssertSame(newWorld, wallLocal.Concatenated(massWorld));
+
+            // A world-space element and a root store the world transform as it is.
+            AssertSame(newWorld, resolver.ToLocalTransform(model.Elements[SpaceId], newWorld));
+            AssertSame(newWorld, resolver.ToLocalTransform(model.Elements[BuildingId], newWorld));
         }
 
         public static IEnumerable<object[]> RelativityCases()

@@ -83,6 +83,8 @@ namespace Elements
 
         private readonly Func<Guid, Element> _lookup;
         private readonly Dictionary<Guid, Transform> _worlds = new Dictionary<Guid, Transform>();
+        // Elements resolved to their own Transform, with nothing above them composed in.
+        private readonly HashSet<Guid> _roots = new HashSet<Guid>();
 
         /// <summary>
         /// Create a resolver over a model's elements.
@@ -154,6 +156,7 @@ namespace Elements
                     for (var i = loopStart; i < chain.Count; i++)
                     {
                         _worlds[chain[i].Id] = GetLocalTransform(chain[i]);
+                        _roots.Add(chain[i].Id);
                     }
                     above = _worlds[chain[loopStart].Id];
                     aboveKnown = true;
@@ -175,10 +178,15 @@ namespace Elements
             {
                 var local = GetLocalTransform(chain[i]);
                 Transform world;
-                if (local == null || (i == chain.Count - 1 && !aboveKnown))
+                if (i == chain.Count - 1 && !aboveKnown)
                 {
-                    // The top of the chain is a root, or the element stores no Transform.
+                    // The top of the chain: not relative, or its parent is missing.
                     world = local;
+                    _roots.Add(chain[i].Id);
+                }
+                else if (local == null)
+                {
+                    world = null;
                 }
                 else
                 {
@@ -190,6 +198,36 @@ namespace Elements
 
             var result = _worlds[element.Id];
             return result == null ? null : new Transform(result);
+        }
+
+        /// <summary>
+        /// Get the Transform to store on an element so that its world transform
+        /// becomes <paramref name="world"/>: <c>world.Concatenated(parentWorld.Inverted())</c>
+        /// when the element resolves against its parent, otherwise the world
+        /// transform itself. Use it to write back a moved element that keeps
+        /// its Parent. Resolved transforms are cached, so after writing, build a
+        /// new resolver before resolving the element or its children again.
+        /// </summary>
+        /// <param name="element">The element to store the transform on.</param>
+        /// <param name="world">The world transform the element should have.</param>
+        /// <returns>A new transform.</returns>
+        public Transform ToLocalTransform(Element element, Transform world)
+        {
+            if (element == null)
+            {
+                throw new ArgumentNullException(nameof(element));
+            }
+            if (world == null)
+            {
+                throw new ArgumentNullException(nameof(world));
+            }
+            GetWorldTransform(element);
+            if (_roots.Contains(element.Id))
+            {
+                return new Transform(world);
+            }
+            var parentWorld = _worlds[GetParentId(element).Value] ?? new Transform();
+            return world.Concatenated(parentWorld.Inverted());
         }
 
         /// <summary>
@@ -317,19 +355,8 @@ namespace Elements
         /// <summary>A typed public property wins; otherwise AdditionalProperties.</summary>
         private static bool TryGetProperty(Element element, string name, out object value)
         {
-            var property = TypedProperties.GetOrAdd((element.GetType(), name), key =>
-            {
-                try
-                {
-                    return key.Item1.GetProperty(key.Item2, BindingFlags.Public | BindingFlags.Instance);
-                }
-                catch (AmbiguousMatchException)
-                {
-                    // A derived type hides the property with `new`; take the most derived one.
-                    return key.Item1.GetProperty(key.Item2, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-                }
-            });
-            if (property != null && property.GetIndexParameters().Length == 0)
+            var property = TypedProperties.GetOrAdd((element.GetType(), name), key => MostDerivedProperty(key.Item1, key.Item2));
+            if (property != null)
             {
                 value = property.GetValue(element);
                 return true;
@@ -340,6 +367,26 @@ namespace Elements
             }
             value = null;
             return false;
+        }
+
+        /// <summary>
+        /// The public instance property nearest the most derived type. A function
+        /// that declares its own type, for example a ConceptualMass whose
+        /// `new Transform Transform` hides GeometricElement.Transform, keeps the
+        /// stored value in the hiding property, and Type.GetProperty can throw
+        /// AmbiguousMatchException on it.
+        /// </summary>
+        private static PropertyInfo MostDerivedProperty(Type type, string name)
+        {
+            for (var t = type; t != null; t = t.BaseType)
+            {
+                var property = t.GetProperty(name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+                if (property != null && property.GetGetMethod() != null && property.GetIndexParameters().Length == 0)
+                {
+                    return property;
+                }
+            }
+            return null;
         }
 
         private static string StringValue(object value)
