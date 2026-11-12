@@ -47,7 +47,8 @@ namespace Elements
         public const string ConceptualMassDiscriminator = "Elements.ConceptualMass";
 
         // THE RULE TABLE, ported from the Hypar web editor's rule for which stored
-        // Transforms are relative to the Parent. A new relative type is one line here.
+        // Transforms are relative to the Parent. A new relative type is one line here,
+        // plus its name in the IsTransformRelativeToParent doc list and a RelativityCases row.
         // An element is relative only when it also has a Parent.
 
         /// <summary>Types whose Transform is relative to their Parent whenever they have one.</summary>
