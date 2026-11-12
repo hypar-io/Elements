@@ -132,7 +132,10 @@ namespace Elements
         /// its Parent's world transform when the stored Transform is relative.
         /// A missing parent leaves the element's own Transform, as the editor
         /// does. A parent that stores no Transform composes as identity. In a
-        /// Parent loop, each element on the loop resolves to its own Transform.
+        /// Parent loop, each element on the loop resolves to its own Transform,
+        /// whatever order elements are resolved in. The editor instead drops only
+        /// the link that closes the loop, chosen by the order it loads elements,
+        /// so the other members can differ from where it draws them.
         /// For an element with an Anchor (<see cref="HasAnchor"/>) the result is
         /// not where the editor draws it.
         /// </summary>
