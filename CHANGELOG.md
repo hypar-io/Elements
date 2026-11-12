@@ -5,7 +5,7 @@
 ### Added
 
 - `WorldTransformResolver`: resolves an element's world transform when its stored `Transform` is relative to its `Parent`, as the Hypar editor stores conceptual masses in buildings and v4 walls on masses. Anchor frames are not resolved: `WorldTransformResolver.HasAnchor` flags the elements, such as doors and windows placed in walls, whose result is not where the editor draws them.
-- `ModelWorldTransformExtensions.GetWorldTransform(this Model model, Element element)`
+- `ModelWorldTransformExtensions.GetWorldTransform(this Model model, Element element)`: returns one element's world transform, or null when it stores no `Transform`. It builds a new resolver on each call, so to resolve many elements build one `WorldTransformResolver` and reuse it.
 
 ### Fixed
 

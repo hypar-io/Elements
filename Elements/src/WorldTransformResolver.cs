@@ -8,16 +8,20 @@ using Newtonsoft.Json.Linq;
 namespace Elements
 {
     /// <summary>
+    /// <para>
     /// Resolves the world transform of an element whose stored Transform may be
     /// relative to its Parent.
-    ///
+    /// </para>
+    /// <para>
     /// Hypar's web editor stores some elements' Transform relative to their
     /// Parent element: a conceptual mass inside a building, a wall on a mass.
     /// The JSON does not say which ones, so this class ports the editor's rule
     /// (see <see cref="IsTransformRelativeToParent"/>) and walks the Parent
     /// chain, composing <c>local.Concatenated(parentWorld)</c> at each step.
-    ///
+    /// </para>
+    /// <para>
     /// Not covered, so the result is not where the editor draws the element:
+    /// </para>
     /// <list type="bullet">
     /// <item>Anchor frames. An element with an Anchor (see <see cref="HasAnchor"/>),
     /// such as a door or window placed in a wall, a component or a clearance, is
@@ -29,11 +33,13 @@ namespace Elements
     /// <item>A multi-level stair or elevator, whose world Z the editor replaces
     /// with its base level's elevation.</item>
     /// </list>
-    ///
+    /// <para>
     /// <see cref="Model.Transform"/> is not applied.
-    ///
+    /// </para>
+    /// <para>
     /// Build one resolver per model and reuse it: resolved transforms are cached.
     /// The cache assumes the model does not change while the resolver is in use.
+    /// </para>
     /// </summary>
     public class WorldTransformResolver
     {
@@ -240,8 +246,19 @@ namespace Elements
 
         /// <summary>
         /// Whether an element's stored Transform is relative to its Parent.
-        /// True only when the element has a Parent and its type is one the
-        /// editor stores relative (see the rule table in this file).
+        /// True only when the element has a Parent and its discriminator is one the
+        /// editor stores relative:
+        /// <list type="bullet">
+        /// <item>Always: <c>Elements.ConceptualMass</c>, <c>Elements.Annotations.Anchor</c>,
+        /// <c>Elements.Clearance</c>, <c>Elements.Circulation</c>, <c>Elements.PlanningGrid</c>,
+        /// <c>Elements.CadComponent</c>, <c>Elements.Component</c>, <c>Elements.FlexibleComponent</c>,
+        /// <c>Elements.Door</c>, <c>Elements.Window</c>, <c>Elements.Floor</c>, <c>Elements.Roof</c>,
+        /// <c>Elements.Stair</c> and <c>Elements.Elevator</c>.</item>
+        /// <item>From a version on: <c>Elements.StandardWall</c> when <c>WallsVersion</c> is 4 or more,
+        /// <c>Elements.GridLine</c> when <c>GridlinesVersion</c> is 2 or more, and
+        /// <c>Elements.Column</c> when <c>ColumnsVersion</c> is 2 or more. The version is read
+        /// only from a string, by its leading digits.</item>
+        /// </list>
         /// </summary>
         /// <param name="element">The element.</param>
         public static bool IsTransformRelativeToParent(Element element)

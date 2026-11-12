@@ -15,6 +15,7 @@ namespace Elements.Tests
         private static readonly Guid WallId = new Guid("00000000-0000-0000-0000-000000000001");
         private static readonly Guid DoorId = new Guid("00000000-0000-0000-0000-000000000002");
         private static readonly Guid SpaceId = new Guid("00000000-0000-0000-0000-000000000003");
+        private static readonly Guid V3WallId = new Guid("00000000-0000-0000-0000-000000000004");
 
         // A building moved to (10, 20, 0) and turned 90 degrees about Z.
         private static readonly Transform MovedRotatedBuilding =
@@ -345,7 +346,7 @@ namespace Elements.Tests
                 Building(MovedRotatedBuilding),
                 Mass(MassLocal, BuildingId),
                 Wall(WallLocal, "4", MassId),
-                Wall(WallLocal, "3", MassId, SpaceId));
+                Wall(WallLocal, "3", MassId, V3WallId));
             var resolver = new WorldTransformResolver(model);
             var newWorld = new Transform(new Vector3(-3, 7, 2), 45);
 
@@ -355,7 +356,7 @@ namespace Elements.Tests
             AssertSame(newWorld, wallLocal.Concatenated(massWorld));
 
             // A world-space element and a root store the world transform as it is.
-            AssertSame(newWorld, resolver.ToLocalTransform(model.Elements[SpaceId], newWorld));
+            AssertSame(newWorld, resolver.ToLocalTransform(model.Elements[V3WallId], newWorld));
             AssertSame(newWorld, resolver.ToLocalTransform(model.Elements[BuildingId], newWorld));
         }
 
@@ -379,6 +380,11 @@ namespace Elements.Tests
             yield return new object[] { "Elements.Elevator", null, null, true };
             yield return new object[] { "Elements.Annotations.Anchor", null, null, true };
             yield return new object[] { "Elements.Component", null, null, true };
+            yield return new object[] { "Elements.Clearance", null, null, true };
+            yield return new object[] { "Elements.Circulation", null, null, true };
+            yield return new object[] { "Elements.PlanningGrid", null, null, true };
+            yield return new object[] { "Elements.CadComponent", null, null, true };
+            yield return new object[] { "Elements.FlexibleComponent", null, null, true };
             yield return new object[] { "Elements.Building", null, null, false };
             yield return new object[] { "Elements.Space", null, null, false };
             yield return new object[] { "Elements.SpaceBoundary", null, null, false };
