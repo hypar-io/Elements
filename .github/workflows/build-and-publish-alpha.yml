@@ -8,6 +8,9 @@ on:
 jobs:
   build-bump-alpha-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout repo.
         uses: actions/checkout@v2
@@ -52,11 +55,18 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ steps.bump-with-alpha.outputs.result }}
+      # Trusted Publishing: swaps this job's GitHub OIDC token for a nuget.org key that lasts 1 hour.
+      # `user` must be the nuget.org account that created the trusted publishing policy.
+      - name: NuGet login.
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: SirWassail
       - name: Publish NuGet package.
         run: |
-          dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.CodeGeneration.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.Serialization.DXF.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.Components.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
-          dotnet nuget push ./nupkg/Hypar.Elements.MEP.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}}
+          dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          dotnet nuget push ./nupkg/Hypar.Elements.CodeGeneration.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          dotnet nuget push ./nupkg/Hypar.Elements.Serialization.DXF.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          dotnet nuget push ./nupkg/Hypar.Elements.Serialization.IFC.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          dotnet nuget push ./nupkg/Hypar.Elements.Components.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          dotnet nuget push ./nupkg/Hypar.Elements.MEP.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
