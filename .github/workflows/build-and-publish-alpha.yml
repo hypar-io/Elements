@@ -50,18 +50,19 @@ jobs:
         run: echo "NUGET_VERSION=${{steps.bump-with-alpha.outputs.result}}" >> $GITHUB_ENV
       - name: Build Elements
         run: dotnet build -c release -p:Version=${{ env.NUGET_VERSION }}
-      - name: Create alpha tag.
-        uses: tvdias/github-tagger@v0.0.1
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.bump-with-alpha.outputs.result }}
       # Trusted Publishing: swaps this job's GitHub OIDC token for a nuget.org key that lasts 1 hour.
       # `user` must be the nuget.org account that created the trusted publishing policy.
+      # Log in before tagging, so a policy mismatch fails before an alpha tag exists.
       - name: NuGet login.
         uses: NuGet/login@v1
         id: nuget-login
         with:
           user: SirWassail
+      - name: Create alpha tag.
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.bump-with-alpha.outputs.result }}
       - name: Publish NuGet package.
         run: |
           dotnet nuget push ./nupkg/Hypar.Elements.${{ env.NUGET_VERSION }}.nupkg -s https://api.nuget.org/v3/index.json -k ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
