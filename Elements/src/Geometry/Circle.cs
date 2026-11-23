@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Elements.Validators;
 using Elements.Geometry.Interfaces;
 using Newtonsoft.Json;
 
 namespace Elements.Geometry
 {
     /// <summary>
-    /// A circle. 
+    /// A circle.
     /// Parameterization of the circle is 0 -> 2PI.
     /// </summary>
     public class Circle : Curve, IConic
@@ -26,6 +27,11 @@ namespace Elements.Geometry
         [JsonProperty("Radius", Required = Required.Always)]
         [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
         public double Radius { get; protected set; }
+
+        /// <summary>The circumference of the circle.</summary>
+        [JsonIgnore]
+        [System.ComponentModel.DataAnnotations.Range(0.0D, double.MaxValue)]
+        public double Circumference { get; protected set; }
 
         /// <summary>
         /// The coordinate system of the plane containing the circle.
@@ -50,7 +56,15 @@ namespace Elements.Geometry
         [JsonConstructor]
         public Circle(Vector3 center, double radius = 1.0)
         {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Math.Abs(radius - 0.0) < double.Epsilon ? true : false)
+                {
+                    throw new ArgumentException($"The circle could not be created. The radius of the circle cannot be the zero: radius {radius}");
+                }
+            }
             this.Radius = radius;
+            this.Circumference = 2 * Math.PI * this.Radius;
             this.Transform = new Transform(center);
         }
 
@@ -60,7 +74,15 @@ namespace Elements.Geometry
         /// <param name="radius">The radius of the circle.</param>
         public Circle(double radius = 1.0)
         {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Math.Abs(radius - 0.0) < double.Epsilon ? true : false)
+                {
+                    throw new ArgumentException($"The circle could not be created. The radius of the circle cannot be the zero: radius {radius}");
+                }
+            }
             this.Radius = radius;
+            this.Circumference = 2 * Math.PI * this.Radius;
             this.Transform = new Transform();
         }
 
@@ -69,8 +91,65 @@ namespace Elements.Geometry
         /// </summary>
         public Circle(Transform transform, double radius = 1.0)
         {
+            if (!Validator.DisableValidationOnConstruction)
+            {
+                if (Math.Abs(radius - 0.0) < double.Epsilon ? true : false)
+                {
+                    throw new ArgumentException($"The circle could not be created. The radius of the circle cannot be the zero: radius {radius}");
+                }
+            }
             this.Transform = transform;
             this.Radius = radius;
+            this.Circumference = 2 * Math.PI * this.Radius;
+        }
+
+        /// <summary>
+        /// Calculate the length of the circle between two parameters.
+        /// </summary>
+        public double ArcLength(double start, double end)
+        {
+            // Convert start and end parameters from radians to degrees
+            double _startAngle = start * 180.0 / Math.PI;
+            double _endAngle = end * 180.0 / Math.PI;
+
+            // Ensure the start angle is within the valid domain range of 0 to 360 degrees
+            double startAngle = _startAngle % 360;
+            if (startAngle < 0)
+            {
+                startAngle += 360;
+            }
+
+            // Ensure the end angle is within the valid domain range of 0 to 360 degrees
+            double endAngle = _endAngle % 360;
+            if (endAngle < 0)
+            {
+                endAngle += 360;
+            }
+            else if (endAngle == 0 && Math.Abs(_endAngle) >= 2 * Math.PI)
+            {
+                endAngle = 360;
+            }
+
+            // Calculate the difference in angles
+            double angleDifference = endAngle - startAngle;
+
+            // Adjust the angle difference if it crosses the 360-degree boundary
+            if (angleDifference < 0)
+            {
+                angleDifference += 360;
+            }
+            else if (angleDifference >= 2 * Math.PI)
+            {
+                return Circumference; // Full circle, return circumference
+            }
+
+            // Convert the angle difference back to radians
+            double angleDifferenceRadians = angleDifference * Math.PI / 180.0;
+
+            // Calculate the arc length using the formula: arc length = radius * angle
+            double arcLength = Radius * angleDifferenceRadians;
+
+            return arcLength;
         }
 
         /// <summary>
@@ -95,6 +174,14 @@ namespace Elements.Geometry
         }
 
         /// <summary>
+        /// Are the two circles almost equal?
+        /// </summary>
+        public bool IsAlmostEqualTo(Circle other, double tolerance = Vector3.EPSILON)
+        {
+            return (Center.IsAlmostEqualTo(other.Center, tolerance) && Math.Abs(Radius - other.Radius) < tolerance ? true : false);
+        }
+
+        /// <summary>
         /// Convert a circle to a circular arc.
         /// </summary>
         public static implicit operator Arc(Circle c) => new Arc(c, 0, Math.PI * 2);
@@ -104,6 +191,15 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="c">The bounded curve to convert.</param>
         public static implicit operator ModelCurve(Circle c) => new ModelCurve(c);
+
+        /// <summary>
+        /// Calculates and returns the midpoint of the circle.
+        /// </summary>
+        /// <returns>The midpoint of the circle.</returns>
+        public Vector3 MidPoint()
+        {
+            return PointAt(Math.PI);
+        }
 
         /// <summary>
         /// Return the point at parameter u on the arc.
@@ -120,6 +216,46 @@ namespace Elements.Geometry
             var x = this.Radius * Math.Cos(u);
             var y = this.Radius * Math.Sin(u);
             return new Vector3(x, y);
+        }
+
+        /// <summary>
+        /// Calculates and returns the point on the circle at a specific arc length.
+        /// </summary>
+        /// <param name="length">The arc length along the circumference of the circle.</param>
+        /// <returns>The point on the circle at the specified arc length.</returns>
+        public Vector3 PointAtLength(double length)
+        {
+            double parameter = (length / Circumference) * 2 * Math.PI;
+            return PointAt(parameter);
+        }
+
+        /// <summary>
+        /// Calculates and returns the point on the circle at a normalized arc length.
+        /// </summary>
+        /// <param name="normalizedLength">The normalized arc length between 0 and 1.</param>
+        /// <returns>The point on the circle at the specified normalized arc length.</returns>
+        public Vector3 PointAtNormalizedLength(double normalizedLength)
+        {
+            double parameter = normalizedLength * 2 * Math.PI;
+            return PointAt(parameter);
+        }
+
+        /// <summary>
+        /// Calculates the parameter within the range of 0 to 2π at a given point on the circle.
+        /// </summary>
+        /// <param name="point">The point on the circle.</param>
+        /// <returns>The parameter within the range of 0 to 2π at the given point on the circle.</returns>
+        public double GetParameterAt(Vector3 point)
+        {
+            Vector3 relativePoint = point - Center;
+
+            double theta = Math.Atan2(relativePoint.Y, relativePoint.X);
+
+            if (theta < 0)
+            {
+                theta += 2 * Math.PI;
+            }
+            return theta;
         }
 
         /// <summary>
@@ -141,6 +277,22 @@ namespace Elements.Geometry
 
             t = 0;
             return false;
+        }
+
+        /// <summary>
+        /// Checks if a given point lies on a circle within a specified tolerance.
+        /// </summary>
+        /// <param name="point">The point to be checked.</param>
+        /// <param name="circle">The circle to check against.</param>
+        /// <param name="tolerance">The tolerance value (optional). Default is 1E-05.</param>
+        /// <returns>True if the point lies on the circle within the tolerance, otherwise false.</returns>
+        public static bool PointOnCircle(Vector3 point, Circle circle, double tolerance = 1E-05)
+        {
+            Vector3 centerToPoint = point - circle.Center;
+            double distanceToCenter = centerToPoint.Length();
+
+            // Check if the distance from the point to the center is within the tolerance of the circle's radius
+            return Math.Abs(distanceToCenter - circle.Radius) < tolerance;
         }
 
         private double ParameterAtUntransformed(Vector3 pt)
@@ -187,6 +339,26 @@ namespace Elements.Geometry
             return start + theta;
         }
 
+        /// <summary>
+        /// Divides the circle into segments of the specified length and returns a list of points representing the division.
+        /// </summary>
+        /// <param name="length">The length of each segment.</param>
+        /// <returns>A list of points representing the division of the circle.</returns>
+        public Vector3[] DivideByLength(double length)
+        {
+            List<Vector3> points = new List<Vector3>();
+            int segmentCount = (int)Math.Ceiling(Circumference / length);
+            double segmentLength = Circumference / segmentCount;
+
+            for (int i = 0; i < segmentCount; i++)
+            {
+                double parameter = i * segmentLength / Circumference;
+                points.Add(PointAtNormalizedLength(parameter));
+            }
+
+            return points.ToArray();
+        }
+
         /// <inheritdoc/>
         public override bool Intersects(ICurve curve, out List<Vector3> results)
         {
@@ -194,7 +366,7 @@ namespace Elements.Geometry
             {
                 case BoundedCurve boundedCurve:
                     return boundedCurve.Intersects(this, out results);
-                case InfiniteLine line :
+                case InfiniteLine line:
                     return Intersects(line, out results);
                 case Circle circle:
                     return Intersects(circle, out results);
@@ -219,7 +391,7 @@ namespace Elements.Geometry
             Plane planeA = new Plane(Center, Normal);
             Plane planeB = new Plane(other.Center, other.Normal);
 
-            // Check if two circles are on the same plane. 
+            // Check if two circles are on the same plane.
             if (Normal.IsParallelTo(other.Normal, Vector3.EPSILON * Vector3.EPSILON) &&
                 other.Center.DistanceTo(planeA).ApproximatelyEquals(0))
             {

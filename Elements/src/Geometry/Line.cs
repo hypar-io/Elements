@@ -123,6 +123,48 @@ namespace Elements.Geometry
             return this.BasisCurve.PointAt(u);
         }
 
+        /// <summary>
+        /// The mid point of the curve.
+        /// </summary>
+        /// <returns>The length based midpoint.</returns>
+        public virtual Vector3 MidPoint()
+        {
+            return PointAtNormalizedLength(0.5);
+        }
+
+        /// <summary>
+        /// Returns the point on the line corresponding to the specified length value.
+        /// </summary>
+        /// <param name="length">The length value along the line.</param>
+        /// <returns>The point on the line corresponding to the specified length value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified length is out of range.</exception>
+        public virtual Vector3 PointAtLength(double length)
+        {
+            double totalLength = ArcLength(this.Domain.Min, this.Domain.Max); // Calculate the total length of the Line
+
+            if (length < 0 || length > totalLength)
+            {
+                throw new ArgumentException("The specified length is out of range.");
+            }
+            var lengthParameter = length / totalLength;
+            return this.PointAtNormalized(lengthParameter);
+        }
+
+        /// <summary>
+        /// Returns the point on the line corresponding to the specified normalized length-based parameter value.
+        /// </summary>
+        /// <param name="parameter">The normalized length-based parameter value, ranging from 0 to 1.</param>
+        /// <returns>The point on the line corresponding to the specified normalized length-based parameter value.</returns>
+        /// <exception cref="ArgumentException">Thrown when the specified parameter is out of range.</exception>
+        public virtual Vector3 PointAtNormalizedLength(double parameter)
+        {
+            if (parameter < 0 || parameter > 1)
+            {
+                throw new ArgumentException("The specified parameter is out of range.");
+            }
+            return PointAtLength(parameter * this.ArcLength(this.Domain.Min, this.Domain.Max));
+        }
+
         /// <inheritdoc/>
         public override Curve Transformed(Transform transform)
         {
@@ -558,7 +600,7 @@ namespace Elements.Geometry
         /// </summary>
         /// <param name="l">The length.</param>
         /// <param name="removeShortSegments">A flag indicating whether segments shorter than l should be removed.</param>
-        public List<Line> DivideByLength(double l, bool removeShortSegments = false)
+        public List<Line> DivideByLengthToSegments(double l, bool removeShortSegments = false)
         {
             var len = this.Length();
             if (l > len)
@@ -587,7 +629,50 @@ namespace Elements.Geometry
             return lines;
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Divides the line into segments of the specified length.
+        /// </summary>
+        /// <param name="divisionLength">The desired length of each segment.</param>
+        /// <returns>A list of points representing the segments.</returns>
+        public Vector3[] DivideByLengthToPoints(double divisionLength)
+        {
+            var segments = new List<Vector3>();
+
+            if (this.ArcLength(this.Domain.Min, this.Domain.Max) < double.Epsilon)
+            {
+                // Handle invalid line with insufficient length
+                return new Vector3[0];
+            }
+
+            var currentProgression = 0.0;
+            segments = new List<Vector3> { this.Start };
+
+            // currentProgression from last segment before hitting end
+            if (currentProgression != 0.0)
+            {
+                currentProgression -= divisionLength;
+            }
+            while (this.ArcLength(this.Domain.Min, this.Domain.Max) >= currentProgression + divisionLength)
+            {
+                segments.Add(this.PointAt(currentProgression + divisionLength));
+                currentProgression += divisionLength;
+            }
+            // Set currentProgression from divisionLength less distance from last segment point
+            currentProgression = divisionLength - segments.LastOrDefault().DistanceTo(this.End);
+
+            // Add the last vertex of the polyline as the endpoint of the last segment if it
+            // is not already part of the list
+            if (!segments.LastOrDefault().IsAlmostEqualTo(this.End))
+            {
+                segments.Add(this.End);
+            }
+
+            return segments.ToArray();
+        }
+
+        /// <summary>
+        /// The mid point of the line.
+        /// </summary>
         public override Vector3 Mid()
         {
             return Start.Average(End);
